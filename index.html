@@ -4055,7 +4055,8 @@ function topbar(){
     <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">${CC().icon||'🌳'}</div>
       <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة تدريبية تفاعلية</small></div></div>
     <div class="spacer"></div>
-    <button class="tbtn" onclick="go('guide')">📖 الدليل</button>
+    <button class="tbtn" onclick="go('guide')">📖 دليل المدرب</button>
+    <button class="tbtn" onclick="go('traineeGuide')">🎓 دليل المتدرب</button>
     <button class="tbtn" onclick="go('wishes')">💌 الرسائل</button>
     <button class="tbtn" onclick="go('groups')">👥 المجموعات</button>
     <button class="tbtn" onclick="go('board')">🏆 النتائج</button>
@@ -4075,6 +4076,7 @@ function render(){
   if(v==='groups') return renderGroups();
   if(v==='board') return renderBoard();
   if(v==='guide') return renderGuide();
+  if(v==='traineeGuide') return renderTraineeGuide();
   if(v==='wishes') return renderWishes();
 }
 
@@ -4631,18 +4633,39 @@ function renderGuide(){
     <div class="panel fade-in">
       <h2>📖 دليل المدرب — كيف تُدار الدورة</h2>
       <p class="sub">خطوات بسيطة قبل القاعة وأثناءها.</p>
+      <div class="note" style="margin-bottom:14px"><b>المنصة صارت تضم أكثر من دورة/جزء:</b> زر «🌐 كل الدورات» بالأعلى يرجعك دائمًا لصفحة اختيار الدورة. اخترت أنت أي دورة تفتحها للمتدربين، والخطوات بالأسفل تنطبق على أي دورة تختارها.</div>
       <div class="cardlist">
-        <div class="item"><div class="bnum">1</div><div><b>قبل البدء:</b> افتح «👥 المجموعات» وسجّل أسماء الفرق (٤–٨ فرق).</div></div>
+        <div class="item"><div class="bnum">1</div><div><b>قبل البدء:</b> افتح «👥 المجموعات» وسجّل أسماء الفرق (٤–٨ فرق) — نفس المجموعات تُستخدم مهما بدّلت الدورة.</div></div>
         <div class="item"><div class="bnum">2</div><div><b>آداب الجلسة:</b> شريط الأيقونات أعلى الشاشة — اضغط أي أيقونة فيظهر الدليل الشرعي <b>ويُقرأ صوتيًا</b> على المتدربين.</div></div>
         <div class="item"><div class="bnum">3</div><div><b>اعرض المحور:</b> كل شاشة تُكشف بالتدريج — اطرح السؤال، استمع للحاضرين، ثم اضغط <b>«اكشف التالي ▾»</b> فيظهر الجواب بخطٍّ كبير أخضر.</div></div>
-        <div class="item"><div class="bnum">4</div><div><b>شجرة النموذج:</b> اضغط «الجذور» ثم «الجذع»… فتنمو الشجرة أمام المتدربين طبقةً طبقة.</div></div>
-        <div class="item"><div class="bnum">5</div><div><b>بعد كل محور:</b> يظهر زر النشاط. شغّله على الشاشة، أو أعطِ الفرق <b>«📱 كود اللعبة»</b> ليلعبوا على أجهزتهم في وقت واحد.</div></div>
+        <div class="item"><div class="bnum">4</div><div><b>شجرة النموذج (بالجزء الأول فقط):</b> اضغط «الجذور» ثم «الجذع»… فتنمو الشجرة أمام المتدربين طبقةً طبقة.</div></div>
+        <div class="item"><div class="bnum">5</div><div><b>بعد كل محور فيه نشاط:</b> يظهر زر النشاط. شغّله على الشاشة، أو أعطِ الفرق <b>«📱 كود اللعبة»</b> ليلعبوا على أجهزتهم في وقت واحد. (ملاحظة: الجزء الثاني محتوى نقاشي بدون أنشطة تنافسية بعد — يعتمد على الحوار المباشر).</div></div>
         <div class="item"><div class="bnum">6</div><div><b>تسجيل النتائج:</b> كل فريق ينهي النشاط يحصل على <b>كود نتيجة</b>؛ أدخله في «🏆 النتائج» فيظهر ترتيبه فورًا، و⚡ تعني الأسرع بحلٍّ صحيح.</div></div>
         <div class="item"><div class="bnum">7</div><div><b>الختام:</b> بعد البطولة اضغط <b>«🏆 إعلان الفريق الفائز»</b> — يظهر الاسم والكأس مع الاحتفال، وتُسلَّم الهدية.</div></div>
         <div class="item"><div class="bnum">8</div><div><b>رسائل المتدربين:</b> افتح «💌 الرسائل» لقراءة ما كتبه المتدربون ونتائج الاستبانة، مع زر تنزيلها كملف.</div></div>
+        <div class="item"><div class="bnum">9</div><div><b>دليل المتدرب:</b> زر «🎓 دليل المتدرب» بالأعلى يفتح ملخصًا لمحاور الدورة الحالية — اعرضه في ختام الجلسة أو ابعثه لهم لاحقًا.</div></div>
       </div>
       <div class="note" style="margin-top:16px"><b>نصيحة:</b> اضغط ⛶ لملء الشاشة على السبورة التفاعلية — والشاشة تعمل باللمس مباشرة.</div>
-      <div style="margin-top:18px"><button class="gbtn navy" onclick="go('home')">🏠 الرئيسية</button></div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="gbtn navy" onclick="go('home')">🏠 رئيسية الدورة</button>
+        <button class="gbtn ghost" onclick="go('hub')">🌐 كل الدورات</button>
+      </div>
+    </div>`;
+}
+function renderTraineeGuide(){
+  const c = CC();
+  const rows = c.modules.filter(m=>m.slides && m.slides.length).map(m=>`
+    <div class="item"><div class="bnum">${m.icon}</div><div><b>${m.name}</b><br><span style="color:var(--muted);font-size:.9rem">${m.desc}</span></div></div>`).join('');
+  app.innerHTML = topbar() + `
+    <div class="panel fade-in">
+      <h2>🎓 دليل المتدرب — ${c.title} <small style="font-size:.6em;color:var(--muted)">(${c.partLabel})</small></h2>
+      <p class="sub">${c.tagline} — احتفظ بهذا الملخص لتراجع أهم محاور الدورة بعد انتهاء الجلسة.</p>
+      <div class="cardlist">${rows}</div>
+      <div class="quote" style="margin-top:18px">📚 هذه الدورة من إعداد وتقديم <b>أ. محمد زيتون</b> — ضمن سلسلة «منصة يونس التدريبية». لطلب دورة أخرى من هذه السلسلة، اذكر اسمها لمسؤولي التدريب عندكم.</div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="gbtn navy" onclick="go('home')">🏠 رئيسية الدورة</button>
+        <button class="gbtn ghost" onclick="go('hub')">🌐 كل الدورات</button>
+      </div>
     </div>`;
 }
 
