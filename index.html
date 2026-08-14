@@ -2795,8 +2795,8 @@ const COURSE = {
       pills:['التعارف','النية','قيمة المعلم','ماذا قال النبي ﷺ'] },
 
     { k:'bullets', kicker:'التعريف بالمدرب', title:'من أنا؟',
-      lead:'أ. محمد زيتون — خبرة ٣٣ عامًا في الحقل التعليمي، ومشرف تربوي في مجال الابتكار والذكاء الاصطناعي وأستيم بمدارس الأرقم.',
-      items:[ {n:'📚', b:'مؤلف كتب معتمدة رسميًا في مجالات متعددة:', t:'اللغة العربية («التوضيح في فن الصرف» لطلاب الثانوية الأزهرية، و«الفصحى بين يديك»)، والسلوك التربوي (سلسلة «ارتقِ» لطلاب ما قبل التعليم الأساسي)، وأستيم، والتقنية («رحلة عبر الأردوينو»، «أردوينو بلا قيود»، «دليل المعلم في تعلم الأردوينو»)، والحساب الذهني («فن التدريب للحساب الذهني»، «دليل المعلم في تعلم الحساب الذهني»).'},
+      lead:'أ. محمد زيتون — خبرة ٣٣ عامًا في الحقل التعليمي، ومشرف تربوي في مجال الابتكار والذكاء الاصطناعي و<bdi>STEM</bdi> بمدارس الأرقم.',
+      items:[ {n:'📚', b:'مؤلف كتب معتمدة رسميًا في مجالات متعددة:', t:'اللغة العربية («التوضيح في فن الصرف» لطلاب الثانوية الأزهرية، و«الفصحى بين يديك»)، والسلوك التربوي (سلسلة «ارتقِ» لطلاب ما قبل التعليم الأساسي)، و<bdi>STEM</bdi>، والتقنية («رحلة عبر الأردوينو»، «أردوينو بلا قيود»، «دليل المعلم في تعلم الأردوينو»)، والحساب الذهني («فن التدريب للحساب الذهني»، «دليل المعلم في تعلم الحساب الذهني»).'},
               {n:'🎓', b:'اعتماد ومنصات تدريب:', t:'مدرب معتمد من Microsoft، ومحاضر على منصات رواق وأعناب ونون التعليمية، إلى جانب دورات عديدة في التربية والسلوك وإدارة المشاريع.'},
               {n:'🧠', b:'اختصاص شامل لكل مراحل الطفولة:', t:'من الولادة حتى الجامعة — التغذية، ومهارات التفكير، والتدريب الحر.'},
               {n:'🏛️', b:'عضوية علمية:', t:'عضو في مجمع اللغة العربية.'} ],
@@ -4106,7 +4106,7 @@ function updateNav(){
 function topbar(){
   return `<div class="topbar">
     <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">${CC().icon||'🌳'}</div>
-      <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية</small></div></div>
+      <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة جذور التدريبية</small></div></div>
     <div class="spacer"></div>
     <button class="tbtn" onclick="go('guide')">📖 دليل المدرب</button>
     <button class="tbtn" onclick="go('traineeGuide')">🎓 دليل المتدرب</button>
@@ -4183,8 +4183,8 @@ function renderHub(){
     <div class="hub-bg"><span></span><span></span><span></span></div>
     <div class="hub-hero">
       <div class="hub-logo">🌳</div>
-      <h1 style="direction:ltr;letter-spacing:6px">JUTHOOR</h1>
-      <div class="hub-initials">Y · S · M · S</div>
+      <h1>جذور</h1>
+      <div class="hub-initials"><span style="color:#F0CC7A">Y</span> · <span style="color:#8BA3E0">S</span> · <span style="color:#7FD9B5">M</span> · <span style="color:#E8919B">S</span></div>
       <p>دورات تدريبية تفاعلية للمعلمين والمربين — اختر دورتك وابدأ</p>
     </div>
     <div class="hub-grid">${cards}</div>`;
@@ -4197,7 +4197,7 @@ function renderCourseIntro(){
     <div class="ci-topbar">
       <div class="brand" onclick="go('hub')" style="cursor:pointer;display:flex;align-items:center;gap:12px">
         <div class="logo">${c.icon}</div>
-        <div style="color:#fff;font-weight:800">${c.name}<small style="display:block;font-weight:600;color:var(--gold-light);font-size:.78rem">منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية</small></div>
+        <div style="color:#fff;font-weight:800">${c.name}<small style="display:block;font-weight:600;color:var(--gold-light);font-size:.78rem">منصة جذور التدريبية</small></div>
       </div>
       <div class="spacer"></div>
       <button class="tbtn gold" onclick="go('hub')">🌐 كل الدورات</button>
@@ -4715,7 +4715,7 @@ function renderTraineeGuide(){
       <h2>🎓 دليل المتدرب — ${c.title} <small style="font-size:.6em;color:var(--muted)">(${c.partLabel})</small></h2>
       <p class="sub">${c.tagline} — احتفظ بهذا الملخص لتراجع أهم محاور الدورة بعد انتهاء الجلسة.</p>
       <div class="cardlist">${rows}</div>
-      <div class="quote" style="margin-top:18px">📚 هذه الدورة من إعداد وتقديم <b>أ. محمد زيتون</b> — ضمن سلسلة «منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية». لطلب دورة أخرى من هذه السلسلة، اذكر اسمها لمسؤولي التدريب عندكم.</div>
+      <div class="quote" style="margin-top:18px">📚 هذه الدورة من إعداد وتقديم <b>أ. محمد زيتون</b> — ضمن سلسلة «منصة جذور التدريبية». لطلب دورة أخرى من هذه السلسلة، اذكر اسمها لمسؤولي التدريب عندكم.</div>
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="gbtn navy" onclick="go('home')">🏠 رئيسية الدورة</button>
         <button class="gbtn ghost" onclick="go('hub')">🌐 كل الدورات</button>
