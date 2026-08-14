@@ -4361,7 +4361,11 @@ function qrPanel(title, url, retry){
     <p style="color:var(--muted);line-height:1.7;margin-bottom:10px">
       يخرج قائد كل مجموعة، يصوّر الكود بكاميرا جواله، فتفتح الصفحة عنده — يكتب اسم المجموعة ثم يبدأ.</p>
     <div id="qrbox">${url? '' : '<span style="color:var(--muted)">اضبط رابط المنصة أولًا ↓</span>'}</div>
-    ${url? `<div class="urlline">${url}</div>`:''}
+    ${url? `<div class="urlline">${url}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+        <button class="gbtn ghost" onclick="copyLink('${url}', this)">📋 نسخ الرابط</button>
+      </div>
+      <div class="note" style="margin-bottom:12px"><b>الباركود ما يفتح بالكاميرا؟</b> جرّبوا: بعّدوا الجوال شوي عن الشاشة لين تتضح الصورة، قللوا إضاءة الشاشة (تجنّبوا الوهج)، أو استخدموا زر «📋 نسخ الرابط» فوق وأرسلوه مباشرة للمجموعة.</div>`:''}
     <div class="row" style="margin-top:12px"><label>رابط المنصة بعد رفعها (مرة واحدة فقط):</label>
       <input class="ginput" id="hostUrl" style="width:100%;direction:ltr" placeholder="https://..." value="${state.hostUrl||''}"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -4374,9 +4378,14 @@ function qrPanel(title, url, retry){
   if(url) setTimeout(()=>drawQR(url), 40);
 }
 function saveHost(){ state.hostUrl=(document.getElementById('hostUrl').value||'').trim(); persist(); if(_qrRetry) _qrRetry(); }
+function copyLink(url, btn){
+  const done = ()=>{ const old=btn.textContent; btn.textContent='✓ تم النسخ'; setTimeout(()=> btn.textContent=old, 1500); };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done).catch(done); }
+  else { const t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); try{document.execCommand('copy');}catch(e){} t.remove(); done(); }
+}
 function drawQR(url){
   try{ const qr=qrcode(0,'M'); qr.addData(url); qr.make();
-    document.getElementById('qrbox').innerHTML=qr.createSvgTag({cellSize:5,margin:2});
+    document.getElementById('qrbox').innerHTML=qr.createSvgTag({cellSize:8,margin:4});
   }catch(e){ document.getElementById('qrbox').innerHTML='<span style="color:var(--bad)">تعذر توليد الباركود — تحقق من الرابط</span>'; }
 }
 function howToHost(){
