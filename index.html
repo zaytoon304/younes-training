@@ -372,18 +372,21 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
 .vframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
 /* ===== adab bar (آداب الجلسة) ===== */
-.adabbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
-  background:rgba(255,255,255,.06);border:1px solid rgba(240,204,122,.28);border-radius:var(--r);padding:10px 16px;margin:14px 0}
-.adablbl{color:var(--gold-light);font-weight:800;font-size:.9rem;margin-inline-end:6px}
-.adabbtn{width:46px;height:46px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);
-  cursor:pointer;font-size:1.35rem;transition:.2s}
-.adabbtn:hover{background:rgba(240,204,122,.22);border-color:var(--gold);transform:translateY(-2px)}
+.adabbar{display:flex;flex-direction:column;align-items:center;gap:12px;justify-content:center;
+  background:linear-gradient(135deg,rgba(217,174,75,.14),rgba(255,255,255,.05));border:1.5px solid rgba(240,204,122,.4);
+  border-radius:var(--r);padding:16px 18px;margin:14px 0;box-shadow:0 0 0 1px rgba(217,174,75,.12);animation:adabGlow 3s ease-in-out infinite}
+@keyframes adabGlow{0%,100%{box-shadow:0 0 0 1px rgba(217,174,75,.12)}50%{box-shadow:0 0 0 1px rgba(217,174,75,.4),0 0 24px rgba(217,174,75,.18)}}
+.adablbl{color:var(--gold-light);font-weight:900;font-size:1.05rem;letter-spacing:.3px}
+.adabgrid{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.adabbtn{width:66px;height:66px;border-radius:18px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);
+  cursor:pointer;font-size:2rem;transition:.2s}
+.adabbtn:hover{background:rgba(240,204,122,.25);border-color:var(--gold);transform:translateY(-3px) scale(1.06)}
 .adab-modal{text-align:center}
-.adab-ic{font-size:3.2rem}
-.adab-modal h3{color:var(--navy-800);font-size:1.3rem;margin:8px 0 14px}
-.adab-text{background:#EAF7F1;border:1.5px solid #B9E3CE;border-radius:14px;padding:16px 18px;font-size:1.14rem;
+.adab-ic{font-size:4.2rem}
+.adab-modal h3{color:var(--navy-800);font-size:1.55rem;margin:10px 0 16px}
+.adab-text{background:#EAF7F1;border:1.5px solid #B9E3CE;border-radius:14px;padding:18px 20px;font-size:1.32rem;
   line-height:2;color:#0B5F44;font-weight:700;text-align:center}
-.adab-tip{background:#FAF3DF;border-radius:12px;padding:12px 16px;margin-top:12px;color:#5A4A1F;font-weight:700;line-height:1.7;font-size:.95rem}
+.adab-tip{background:#FAF3DF;border-radius:12px;padding:14px 18px;margin-top:12px;color:#5A4A1F;font-weight:700;line-height:1.8;font-size:1.1rem}
 
 /* ===== effect box (خمّن) ===== */
 .effect-box{border-radius:16px;padding:18px 20px;margin-top:14px;line-height:1.85}
@@ -2786,8 +2789,16 @@ const COURSE = {
       lead:'لن نبدأ بالمحتوى. سنبدأ بثلاثة أشياء تصنع الفرق: مَن أنا، ولماذا نحن هنا، وما قيمة ما تفعلونه كل يوم.',
       pills:['التعارف','النية','قيمة المعلم','ماذا قال النبي ﷺ'] },
 
-    { k:'bullets', kicker:'التعريف بالمدرب', title:'من أنا؟ ولماذا هذه الدورة؟',
-      lead:'أ. محمد زيتون — مربٍّ ومدرب، أمضيت سنوات بين الفصول والبيوت، أراقب سؤالًا واحدًا: لماذا ينجح طالب في الاختبار ويسقط في الحياة؟',
+    { k:'bullets', kicker:'التعريف بالمدرب', title:'من أنا؟',
+      lead:'أ. محمد زيتون — خبرة ٣٣ عامًا في الحقل التعليمي، ومشرف تربوي في مجال الابتكار والذكاء الاصطناعي وأستيم بمدارس الأرقم.',
+      items:[ {n:'📚', b:'مؤلف كتب معتمدة رسميًا في مجالات متعددة:', t:'اللغة العربية («التوضيح في فن الصرف» لطلاب الثانوية الأزهرية، و«الفصحى بين يديك»)، والسلوك التربوي (سلسلة «ارتقِ» لطلاب ما قبل التعليم الأساسي)، وأستيم، والتقنية («رحلة عبر الأردوينو»، «أردوينو بلا قيود»، «دليل المعلم في تعلم الأردوينو»)، والحساب الذهني («فن التدريب للحساب الذهني»، «دليل المعلم في تعلم الحساب الذهني»).'},
+              {n:'🎓', b:'اعتماد ومنصات تدريب:', t:'مدرب معتمد من Microsoft، ومحاضر على منصات رواق وأعناب ونون التعليمية، إلى جانب دورات عديدة في التربية والسلوك وإدارة المشاريع.'},
+              {n:'🧠', b:'اختصاص شامل لكل مراحل الطفولة:', t:'من الولادة حتى الجامعة — التغذية، ومهارات التفكير، والتدريب الحر.'},
+              {n:'🏛️', b:'عضوية علمية:', t:'عضو في مجمع اللغة العربية.'} ],
+      quote:'ثلاثة وثلاثون عامًا لم تصنع خبرة فقط… بل صنعت رسالة: كل طفل يستحق من يفهمه، لا من يُلقّنه فقط.' },
+
+    { k:'bullets', kicker:'ولماذا هذه الدورة تحديدًا؟', title:'لماذا هذه الدورة؟',
+      lead:'أمضيت سنوات بين الفصول والبيوت، أراقب سؤالًا واحدًا: لماذا ينجح طالب في الاختبار ويسقط في الحياة؟',
       items:[ {n:'🌱', b:'من أين جاءت الفكرة؟', t:'من ملاحظة متكررة: نُصلح الأوراق ونترك الجذور، فيكبر الطفل جميلًا من الخارج هشًّا من الداخل.'},
               {n:'🎯', b:'ما هدفي من الدورة؟', t:'ألّا تخرجوا بمعلومات… بل بجُمَل جديدة تقولونها غدًا لأطفالكم وطلابكم.'},
               {n:'🤝', b:'ما دوري معكم اليوم؟', t:'لست واعظًا ولا مُحاضرًا — أنا زميل يشاركم التجربة، وأنتم شركاء في كل موقف سنناقشه.'} ],
@@ -4000,24 +4011,14 @@ function adabModal(i){
     <div class="adab-text" id="adabTxt">${a.text}</div>
     <div class="adab-tip">💡 ${a.tip}</div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
-      <button class="gbtn" id="playAdab">🔊 استمع</button>
-      <button class="gbtn ghost" onclick="stopSpeak()">⏹ إيقاف</button>
       <button class="gbtn ghost" onclick="closeModal()">إغلاق</button>
     </div>
-    <div class="feedback" id="adabMsg" style="font-size:.82rem"></div>
   </div>`);
-  const play = ()=>{
-    const ok = speak(a.title + '. ' + a.text + '. ' + a.tip);
-    const m = document.getElementById('adabMsg');
-    if(m) m.textContent = ok ? '' : 'التشغيل الصوتي غير مدعوم في هذا المتصفح — النص أمامك.';
-  };
-  document.getElementById('playAdab').onclick = play;
-  setTimeout(play, 250);
 }
 function adabBar(){
   return `<div class="adabbar" title="آداب الجلسة">
-    <span class="adablbl">آداب الجلسة 🔊</span>
-    ${ADAB.map((a,i)=>`<button class="adabbtn" onclick="adabModal(${i})" title="${a.title}">${a.icon}</button>`).join('')}
+    <span class="adablbl">✦ آداب الجلسة — اضغط للعرض ✦</span>
+    <div class="adabgrid">${ADAB.map((a,i)=>`<button class="adabbtn" onclick="adabModal(${i})" title="${a.title}">${a.icon}</button>`).join('')}</div>
   </div>`;
 }
 
