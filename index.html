@@ -2772,6 +2772,9 @@ var qrcode = function() {
 /* ================= COURSE CONTENT ================= */
 const COURSE = {
   title: 'كيف تعرف طلابك؟',
+  titleHTML: '<span class="g">كيف</span> تعرف طلابك؟',
+  partLabel: 'الجزء الأول',
+  icon: '🌳',
   tagline: 'من الطفل العنيد إلى الشاب صاحب القرار',
   subtitle: 'مبنية على نموذج يونس للتعلم — البداية من الجذور',
   author: 'إعداد وتقديم: أ. محمد زيتون',
@@ -3217,6 +3220,97 @@ const COURSE = {
     { k:'title', noveil:true, kicker:'شكرًا لكم', title:'وفّقكم الله في بناء جيلٍ لا تجتثه الرياح 🌳',
       lead:'إعداد وتقديم: أ. محمد زيتون — نموذج يونس للتعلم',
       pills:['الملف المرجعي العلمي مرفق','لوحة النتائج جاهزة لإعلان الفائز'] },
+  ]},
+]};
+
+/* ================= COURSE 2 CONTENT ================= */
+const COURSE2 = {
+  title: 'كيف تعرف طلابك؟',
+  titleHTML: 'كيف تعرف طلابك؟ <span class="g">(الجزء الثاني)</span>',
+  partLabel: 'الجزء الثاني',
+  icon: '🌉',
+  tagline: 'فجوة الأجيال — لماذا نتصادم مع طلاب اليوم؟',
+  subtitle: 'يكمل الجزء الأول — فهم الفجوة بين معلّم الأمس وطالب اليوم',
+  author: 'إعداد وتقديم: أ. محمد زيتون',
+  modules: [
+
+  /* ============ P2M0 : بداية الجزء الثاني ============ */
+  { id:'p2m0', icon:'🌉', name:'مرحبًا بعودتكم', desc:'ما وعدناكم به في نهاية الجزء الأول — هذا هو', game:null, slides:[
+    { k:'title', noveil:true, kicker:'الجزء الثاني — استكمال الرحلة', title:'مرحبًا بعودتكم… هذا ما طلبتموه',
+      lead:'في نهاية الجزء الأول وعدناكم بجزء أعمق يشرح لماذا يبدو طالب اليوم "مخلوقًا مختلفًا" عمّن سبقه — هذا هو.',
+      pills:['فجوة الأجيال','فهم الطالب الرقمي','حلول عملية فورية'] },
+    { k:'bullets', kicker:'قبل أن نبدأ', title:'ماذا أخذتم من الجزء الأول؟',
+      lead:'بسرعة — من يذكر لنا مهارة واحدة تدربنا عليها هناك؟',
+      items:[ {b:'تذكير سريع:', t:'الجزء الأول علّمنا كيف نفهم «لا» الطفل ونحوّل عناده إلى استقلال. اليوم نتحدث عن جيلٍ كامل يقول «لا» بطريقته الخاصة — بشاشة صامتة، أو بنظرة شاردة في منتصف الحصة.'} ] },
+  ]},
+
+  /* ============ P2M1 : لماذا نتصادم — فهم الفجوة ============ */
+  { id:'p2m1', icon:'🕰️', name:'لماذا نتصادم؟', desc:'فهم الفجوة العقلية والزمنية بين المعلم والطالب', game:null, slides:[
+    { k:'title', kicker:'السؤال الجوهري', title:'معلّم القرن العشرين… أمام طالب القرن الحادي والعشرين',
+      lead:'نفس الفصل، نفس السبورة، لكن عقلين مختلفين تمامًا يلتقيان كل حصة.' },
+    { k:'cols', kicker:'تحليل مقارن', title:'لماذا نتصادم؟ فهم الفجوة العقلية والزمنية',
+      lead:'قارنوا بصدق… أين ترون أنفسكم؟',
+      cards:[ {cls:'badc',h:'🕰️ عقلية المعلم',b:'يقدّس الانضباط<br>الأوامر المطلقة<br>الهدوء التام مقياس النجاح'},
+              {cls:'okc',h:'📱 عقلية الطالب',b:'اعتاد على الاختيار<br>التفاعل السريع<br>الحرية الرقمية'} ],
+      quote:'الفجوة ليست صراعًا بين طرفين… بل دعوة لفهم أعمق، وبناء جسر من التواصل بدل جدار من اللوائح.' },
+    { k:'mawqif', title:'موقف حقيقي: السبورة التي «هكرها» الطلاب',
+      sit:'معلم فتح السبورة الذكية بحماس ليشرح درسه، فإذا بالطلاب يتناقلون فيما بينهم كيف يغلقونها أو يغيّرون إعداداتها خلال ثوانٍ — والمعلم لا يعرف حتى نصف إمكانيات جهازه.',
+      wrong:'هذا جيل قليل أدب، ما عاد يحترم المعلم!',
+      right:'أنا لم أطوّر نفسي بالسرعة التي يتطور بها هذا الجيل — فلأتعلم أدواته لأقودها بدل أن تُفلت مني.' },
+    { k:'bullets', kicker:'السبب الحقيقي', title:'المشكلة ليست في الجيل… المشكلة فينا نحن',
+      items:[ {n:'📱', b:'أقوى معلم يشتري أحدث جوال', t:'لكنه لا يعرف حتى نصف خصائصه — بينما طلابه يتقنون كل تفصيلة فيه خلال يوم واحد.'},
+              {n:'💻', b:'السبورة الذكية مثال يومي', t:'يفتحها المعلم ليشرح فتتحول إلى ملعب تقني يتقنه الطلاب أكثر منه.'},
+              {n:'🗣️', b:'اتهام جاهز', t:'«جيل قليل أدب» — عبارة تُقال بدل السؤال الحقيقي: هل طوّرت نفسي لأواكبهم؟'} ],
+      quote:'الطفل لا يحترم من يعرف أكثر منه فقط… بل من يفهمه أكثر من غيره.' },
+    { k:'bullets', kicker:'خمس فجوات نعبرها معًا', title:'أين تحديدًا تتسع الفجوة؟',
+      items:[ {n:'📵', b:'فجوة الشاشة:', t:'الجوال يعرض له ألف مثير في الدقيقة… وأنت تنافسه بصوتك فقط. الحل ليس محاربة الشاشة، بل استعارة أسلوبها: مقاطع قصيرة، تفاعل سريع، مفاجآت متتالية داخل الحصة.'},
+              {n:'🗣️', b:'فجوة اللغة:', t:'«انضباط، التزام، احترام» كلمات جيلك… «تفاعل، اختيار، معنى» كلمات جيله. تحدّث بلغته لا بلغتك.'},
+              {n:'❤️', b:'فجوة العلاقة:', t:'الطالب لا يتعلم ممن لا يحبه. اسأل عن اسمه وهوايته وآخر لعبة يلعبها — قبل أن تسأله عن واجبه.'},
+              {n:'🎯', b:'فجوة المعنى:', t:'«لماذا أدرس هذا؟» سؤال بسيط يستحق جوابًا صادقًا، لا صمتًا ولا «لأنه بالمنهج».'},
+              {n:'⚖️', b:'فجوة الانضباط:', t:'بين فصل فوضوي يديره الطلاب، وفصل مرعب يخنقهم صمته — طريق ثالث: حزم هادئ بقواعد واضحة يشارك الطلاب في صياغتها.'} ],
+      quote:'من يفهم الفجوة… يعبرها. ومن ينكرها… يسقط فيها، ويكرر كل عام: «هذا جيل صعب».' },
+  ]},
+
+  /* ============ P2M2 : فهم جذور الطفل قبل المدرسة ============ */
+  { id:'p2m2', icon:'🌱', name:'فهم جذور الطفل', desc:'قبل أن نلوم الطالب الكبير… ارجعوا معي لأول ست سنوات', game:null, slides:[
+    { k:'title', kicker:'قبل أن نلوم الطالب الكبير…', title:'ارجعوا معي لأول ست سنوات من عمره',
+      lead:'كثير مما نراه «قلة أدب» في المتوسط والثانوي، بذرته زُرعت في الحضانة والصف الأول — بأيدٍ تحبه، لكنها لم تكن تعرف.' },
+    { k:'bullets', kicker:'مراجع نافعة للمتعمّق', title:'من أدبيات التربية العربية المعاصرة',
+      lead:'يتفق كثير من المتخصصين في تربية الطفل بالوطن العربي — ومنهم د. جاسم المطوع ود. مصطفى أبو سعد في مؤلفاتهما عن الطفولة المبكرة — على أفكار جوهرية مثل:',
+      items:[ {n:'🌱', b:'الطفل يبني شخصيته بالتكرار لا بالتلقين', t:'حين يسأل السؤال نفسه عشر مرات، هو يثبّت معرفته فطريًا — لا يتحدّاك.'},
+              {n:'🛡️', b:'كثرة «لا» تصنع إما طفلًا خائفًا أو طفلًا متمردًا', t:'ولا يوجد طريق ثالث إلا بضبط عدد مرات المنع وسببه.'},
+              {n:'🎁', b:'حق الطفل في ممتلكاته له أثر نفسي بالغ', t:'إجباره على مشاركة لعبته «عشان عيب» يعلّمه أن حدوده تُنتهك متى ضغط عليه الكبار.'},
+              {n:'🏃', b:'الحركة الزائدة في عمر السادسة سلوك طبيعي غالبًا', t:'وليست بالضرورة اضطرابًا — التشخيص يحتاج مختصًا، لا انطباع معلم.'} ] },
+    { k:'mawqif', title:'موقف: «خلاص زهقت، قلت لك مية مرة!»',
+      sit:'طفل يسأل أمه السؤال نفسه للمرة العاشرة، فتضجر وتقول: «خلاص زهقت، قلت لك مية مرة!» رغم أن الطفل لا يتعمّد الإزعاج.',
+      wrong:'خلاص زهقت، وش تبى مني أكثر من كذا؟!',
+      right:'حبيبي، سألتني هالسؤال قبل شوي، تعال نجاوب عليه سوا مرة ثانية عشان يثبت بذاكرتك.' },
+    { k:'mawqif', title:'موقف: «عيب، خلّه يلعب معك»',
+      sit:'طفل يلعب بلعبته الخاصة، فيأتي طفل آخر مع أحد الوالدين، فيقول الوالد لابنه: «عيب، خلّه يلعب معك» أو يجبره على إعطائه اللعبة.',
+      wrong:'عيب عليك، أعطه اللعبة حالًا وإلا زعلت منك!',
+      right:'هذه لعبتك وحرّ فيها، لو حبيت تشاركه فرصة حلوة، ولو ما حبيت لا بأس — بس بأدب اعتذر له.' },
+    { k:'mawqif', title:'موقف: «فرط الحركة» أم طفولة طبيعية؟',
+      sit:'طفل صف أول لا يتحمل الجلوس طويلًا بسبب الحركة الزائدة، فيصفه أحد المعلمين بأنه «قليل أدب»، أو يشخّصه بأنه مصاب بفرط الحركة دون أي تقييم مختص.',
+      wrong:'هذا طفل ما يستحمل، قليل أدب وما يعرف يجلس!',
+      right:'هذا عمر طبيعي للحركة — أصمم له فقرة تسمح له يتحرك بين كل نشاط وآخر، بدل ما أحاربه.' },
+    { k:'bullets', kicker:'القاعدة الذهبية', title:'المشكلة نادرًا ما تكون في الطفل',
+      items:[ {b:'المشكلة غالبًا في:', t:'أدوات الكبار اليومية — كلماتهم، صبرهم، وفهمهم لمرحلة الطفل العمرية.'} ],
+      quote:'كما قلنا في الجزء الأول: من أصلح الجذور… صنع جيلًا لا تجتثه الرياح. واليوم نضيف: من فهم جذوره… لم يعد يخافها.' },
+  ]},
+
+  /* ============ P2M3 : خاتمة الجزء الثاني ============ */
+  { id:'p2m3', icon:'🏁', name:'خاتمة الجزء الثاني', desc:'الخلاصة، ثلاث خطوات عملية، ودعوة للجزء الثالث', game:null, slides:[
+    { k:'title', kicker:'الخلاصة', title:'الفجوة لن تُغلق بالشكوى… بل بالفهم',
+      lead:'معلم الجيل الجديد ليس من يرفع صوته أعلى، بل من يفهم أعمق.',
+      pills:['فجوة الشاشة','فجوة اللغة','فجوة العلاقة','فجوة المعنى','فجوة الانضباط'] },
+    { k:'bullets', kicker:'ماذا بعد؟', title:'ثلاث خطوات تبدأ بها من الغد',
+      items:[ {n:'1', b:'اختر فجوة واحدة', t:'من الخمس، وابدأ فيها هذا الأسبوع فقط.'},
+              {n:'2', b:'راقب نفسك قبل أن تراقب طلابك', t:'سجّل كم مرة قلت «جيل صعب» هذا الأسبوع — وحاول تصفيرها.'},
+              {n:'3', b:'شارك زميلًا واحدًا', t:'ما تعلمته اليوم، فالأثر يكبر حين ينتقل.'} ],
+      quote:'أخبرني بما تحتاجه في الجزء الثالث… وسأبنيه لك 💌' },
+    { k:'title', noveil:true, kicker:'شكرًا لكم', title:'إلى لقاء قريب في رحلة الفهم القادمة 🌉',
+      lead:'إعداد وتقديم: أ. محمد زيتون — نموذج يونس للتعلم',
+      pills:['📝 شاركني رأيك','💌 اطلب محاور الجزء الثالث'] },
   ]},
 ]};
 </script>
@@ -3845,7 +3939,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, courseIdx:0, phoneMode:false, phoneGame:null, phoneWish:false,
+  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', phoneMode:false, phoneGame:null, phoneWish:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -3859,6 +3953,8 @@ function persist(){
 }
 function go(view,a,b){ if(typeof stopTimers==='function') stopTimers(); stopSpeak();
   state.view=view; if(view==='module'){state.mi=a; state.si=b||0;} window.scrollTo({top:0}); render(); }
+function CC(){ return state.courseKey==='p2' ? COURSE2 : COURSE; }
+function openCourse(key){ state.courseKey=key; state.mi=0; state.si=0; go('home'); }
 
 /* ================= CONFETTI ================= */
 function fireConfetti(n){
@@ -3941,7 +4037,7 @@ function revealNext(){ const el=veiled()[0]; if(el){ markShown(el); beep(true); 
 function revealAll(){ RVQ.forEach(markShown); updateNav(); }
 function updateNav(){
   const btn=document.getElementById('mainNext'); if(!btn) return;
-  const left=veiled().length, m=COURSE.modules[state.mi], last=state.si===m.slides.length-1;
+  const left=veiled().length, m=CC().modules[state.mi], last=state.si===m.slides.length-1;
   const cnt=document.getElementById('rvCount');
   if(cnt) cnt.textContent = RVQ.length? `مكشوف ${RVQ.length-left} من ${RVQ.length}` : '';
   const allBtn=document.getElementById('revealAllBtn');
@@ -3956,8 +4052,8 @@ function updateNav(){
 /* ================= TOPBAR ================= */
 function topbar(){
   return `<div class="topbar">
-    <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">🌳</div>
-      <div>كيف تعرف طلابك؟<small>نموذج يونس للتعلم — منصة تدريبية تفاعلية</small></div></div>
+    <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">${CC().icon||'🌳'}</div>
+      <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة تدريبية تفاعلية</small></div></div>
     <div class="spacer"></div>
     <button class="tbtn" onclick="go('guide')">📖 الدليل</button>
     <button class="tbtn" onclick="go('wishes')">💌 الرسائل</button>
@@ -3984,8 +4080,10 @@ function render(){
 
 /* ================= HUB (course catalog) ================= */
 const CATALOG = [
-  { active:true, icon:'🌳', name:'كيف تعرف طلابك؟',
+  { active:true, courseKey:'p1', icon:'🌳', name:'كيف تعرف طلابك؟ (الجزء الأول)',
     desc:'نموذج يونس للتعلم — من عناد الطفولة إلى استقلالية وثقة وقرار واعٍ.' },
+  { active:true, courseKey:'p2', icon:'🌉', name:'كيف تعرف طلابك؟ (الجزء الثاني)',
+    desc:'فجوة الأجيال — لماذا يبدو طالب اليوم مخلوقًا مختلفًا؟ ولماذا نتصادم معه؟' },
   { icon:'🧰', name:'أدوات المعلم المبدع',
     desc:'حقيبة أدوات وأفكار عملية لصناعة معلم مؤثر وحاضر البديهة داخل الصف.',
     topics:['الحضور والتأثير','فن طرح الأسئلة','إدارة الوقت الصفي','أدوات تحفيز سريعة'] },
@@ -4017,8 +4115,8 @@ const CATALOG = [
 function renderHub(){
   const cards = CATALOG.map((c,i)=>{
     const cls = 'hub-card ' + (c.active? 'active':'soon');
-    const badge = c.active? '✓ الدورة النشطة — ابدأ الآن' : '📚 ابدأ الآن';
-    const click = c.active? `go('home')` : `openCourseIntro(${i})`;
+    const badge = c.active? '✓ ابدأ الآن' : '📚 ابدأ الآن';
+    const click = c.courseKey? `openCourse('${c.courseKey}')` : `openCourseIntro(${i})`;
     return `<div class="${cls}" style="animation-delay:${(i*.08).toFixed(2)}s" onclick="${click}">
       <div class="hc-ic">${c.icon}</div>
       <h3>${c.name}</h3>
@@ -4062,7 +4160,7 @@ function renderCourseIntro(){
 /* ================= HOME ================= */
 function renderHome(){
   const tiles=[];
-  COURSE.modules.forEach((m,i)=>{
+  CC().modules.forEach((m,i)=>{
     const done=state.doneModules[m.id];
     tiles.push(`<div class="mcard ${done?'completed':''}" onclick="go('module',${i})">
       <div class="done">✓ تم</div><div class="num">${String(i).padStart(2,'0')}</div>
@@ -4090,10 +4188,10 @@ function renderHome(){
     </div></div>`);
   app.innerHTML = topbar() + `
     <div class="hero fade-in">
-      <div class="kicker">✦ دورة تدريبية تفاعلية للمعلمين والمربين ✦</div>
-      <h1><span class="g">كيف</span> تعرف طلابك؟</h1>
-      <p>${COURSE.tagline} · ${COURSE.subtitle}</p>
-      <p style="margin-top:4px">${COURSE.author}</p>
+      <div class="kicker">✦ ${CC().partLabel} — دورة تدريبية تفاعلية للمعلمين والمربين ✦</div>
+      <h1>${CC().titleHTML}</h1>
+      <p>${CC().tagline} · ${CC().subtitle}</p>
+      <p style="margin-top:4px">${CC().author}</p>
       <div class="docline">بتوثيق علمي عالمي: OECD 2030 · فنلندا · اليابان · ماليزيا · CASEL · هارفارد</div>
     </div>
     ${adabBar()}
@@ -4106,7 +4204,7 @@ function renderHome(){
 
 /* ================= MODULE ================= */
 function renderModule(){
-  const m=COURSE.modules[state.mi], s=m.slides[state.si];
+  const m=CC().modules[state.mi], s=m.slides[state.si];
   const dots=m.slides.map((_,i)=>`<span class="dot ${i<=state.si?'on':''}"></span>`).join('');
   app.innerHTML = topbar() + `
     <div class="stage-wrap fade-in">
@@ -4130,7 +4228,7 @@ function renderModule(){
 function nextSlide(){ stopSpeak(); state.si++; renderModule(); }
 function prevSlide(){ if(state.si>0){ stopSpeak(); state.si--; renderModule(); } }
 function finModule(withGame){
-  const m=COURSE.modules[state.mi];
+  const m=CC().modules[state.mi];
   state.doneModules[m.id]=true; persist();
   if(withGame) preGame(m.game); else go('home');
 }
