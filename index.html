@@ -4106,7 +4106,7 @@ function updateNav(){
 function topbar(){
   return `<div class="topbar">
     <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">${CC().icon||'🌳'}</div>
-      <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة جذور التدريبية</small></div></div>
+      <div>${CC().title} — ${CC().partLabel}<small>نموذج يونس للتعلم — منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية</small></div></div>
     <div class="spacer"></div>
     <button class="tbtn" onclick="go('guide')">📖 دليل المدرب</button>
     <button class="tbtn" onclick="go('traineeGuide')">🎓 دليل المتدرب</button>
@@ -4183,7 +4183,7 @@ function renderHub(){
     <div class="hub-bg"><span></span><span></span><span></span></div>
     <div class="hub-hero">
       <div class="hub-logo">🌳</div>
-      <h1>جذور</h1>
+      <h1 style="direction:ltr;letter-spacing:6px">JUTHOOR</h1>
       <div class="hub-initials">Y · S · M · S</div>
       <p>دورات تدريبية تفاعلية للمعلمين والمربين — اختر دورتك وابدأ</p>
     </div>
@@ -4197,7 +4197,7 @@ function renderCourseIntro(){
     <div class="ci-topbar">
       <div class="brand" onclick="go('hub')" style="cursor:pointer;display:flex;align-items:center;gap:12px">
         <div class="logo">${c.icon}</div>
-        <div style="color:#fff;font-weight:800">${c.name}<small style="display:block;font-weight:600;color:var(--gold-light);font-size:.78rem">منصة جذور التدريبية</small></div>
+        <div style="color:#fff;font-weight:800">${c.name}<small style="display:block;font-weight:600;color:var(--gold-light);font-size:.78rem">منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية</small></div>
       </div>
       <div class="spacer"></div>
       <button class="tbtn gold" onclick="go('hub')">🌐 كل الدورات</button>
@@ -4715,7 +4715,7 @@ function renderTraineeGuide(){
       <h2>🎓 دليل المتدرب — ${c.title} <small style="font-size:.6em;color:var(--muted)">(${c.partLabel})</small></h2>
       <p class="sub">${c.tagline} — احتفظ بهذا الملخص لتراجع أهم محاور الدورة بعد انتهاء الجلسة.</p>
       <div class="cardlist">${rows}</div>
-      <div class="quote" style="margin-top:18px">📚 هذه الدورة من إعداد وتقديم <b>أ. محمد زيتون</b> — ضمن سلسلة «منصة جذور التدريبية». لطلب دورة أخرى من هذه السلسلة، اذكر اسمها لمسؤولي التدريب عندكم.</div>
+      <div class="quote" style="margin-top:18px">📚 هذه الدورة من إعداد وتقديم <b>أ. محمد زيتون</b> — ضمن سلسلة «منصة <span dir="ltr" style="letter-spacing:1px">JUTHOOR</span> التدريبية». لطلب دورة أخرى من هذه السلسلة، اذكر اسمها لمسؤولي التدريب عندكم.</div>
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="gbtn navy" onclick="go('home')">🏠 رئيسية الدورة</button>
         <button class="gbtn ghost" onclick="go('hub')">🌐 كل الدورات</button>
