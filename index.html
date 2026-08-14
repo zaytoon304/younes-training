@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>منصة الدورة التفاعلية | من الطفل العنيد إلى الشاب صاحب القرار — نموذج يونس للتعلم</title>
+<title>منصة الدورة التفاعلية | كيف تعرف طلابك؟ — نموذج يونس للتعلم</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -2771,7 +2771,8 @@ var qrcode = function() {
 <script>
 /* ================= COURSE CONTENT ================= */
 const COURSE = {
-  title: 'من الطفل العنيد إلى الشاب صاحب القرار',
+  title: 'كيف تعرف طلابك؟',
+  tagline: 'من الطفل العنيد إلى الشاب صاحب القرار',
   subtitle: 'مبنية على نموذج يونس للتعلم — البداية من الجذور',
   author: 'إعداد وتقديم: أ. محمد زيتون',
   modules: [
@@ -3956,7 +3957,7 @@ function updateNav(){
 function topbar(){
   return `<div class="topbar">
     <div class="brand" onclick="go('hub')" style="cursor:pointer" title="كل الدورات"><div class="logo">🌳</div>
-      <div>من الطفل العنيد إلى الشاب صاحب القرار<small>نموذج يونس للتعلم — منصة تدريبية تفاعلية</small></div></div>
+      <div>كيف تعرف طلابك؟<small>نموذج يونس للتعلم — منصة تدريبية تفاعلية</small></div></div>
     <div class="spacer"></div>
     <button class="tbtn" onclick="go('guide')">📖 الدليل</button>
     <button class="tbtn" onclick="go('wishes')">💌 الرسائل</button>
@@ -3983,7 +3984,7 @@ function render(){
 
 /* ================= HUB (course catalog) ================= */
 const CATALOG = [
-  { active:true, icon:'🌳', name:'من الطفل العنيد إلى الشاب صاحب القرار',
+  { active:true, icon:'🌳', name:'كيف تعرف طلابك؟',
     desc:'نموذج يونس للتعلم — من عناد الطفولة إلى استقلالية وثقة وقرار واعٍ.' },
   { icon:'🧰', name:'أدوات المعلم المبدع',
     desc:'حقيبة أدوات وأفكار عملية لصناعة معلم مؤثر وحاضر البديهة داخل الصف.',
@@ -4090,8 +4091,9 @@ function renderHome(){
   app.innerHTML = topbar() + `
     <div class="hero fade-in">
       <div class="kicker">✦ دورة تدريبية تفاعلية للمعلمين والمربين ✦</div>
-      <h1>من الطفل العنيد إلى <span class="g">الشاب صاحب القرار</span></h1>
-      <p>${COURSE.subtitle} — ${COURSE.author}</p>
+      <h1><span class="g">كيف</span> تعرف طلابك؟</h1>
+      <p>${COURSE.tagline} · ${COURSE.subtitle}</p>
+      <p style="margin-top:4px">${COURSE.author}</p>
       <div class="docline">بتوثيق علمي عالمي: OECD 2030 · فنلندا · اليابان · ماليزيا · CASEL · هارفارد</div>
     </div>
     ${adabBar()}
@@ -4335,7 +4337,7 @@ function addWish(){
   renderWishes();
 }
 function exportBox(){
-  let txt = 'رسائل المتدربين — دورة من الطفل العنيد إلى الشاب صاحب القرار\n\n';
+  let txt = 'رسائل المتدربين — دورة كيف تعرف طلابك؟\n\n';
   state.wishes.forEach((w,i)=>{ txt += `${i+1}) ${w.name} — ${w.at}\n${w.text}\n\n`; });
   if(state.surveys.length){
     txt += '\n=== الاستبانات ===\n\n';
@@ -4552,7 +4554,7 @@ function renderPhone(){
   if(state.phoneWish){
     app.innerHTML = `<div class="phone-wrap fade-in">
       <div class="phone-logo">💌</div>
-      <div class="phone-course">من الطفل العنيد إلى الشاب صاحب القرار</div>
+      <div class="phone-course">كيف تعرف طلابك؟</div>
       <div class="phone-card">
         <div class="phone-ic">✍️</div><h2>ماذا تريد في الجزء القادم؟</h2>
         <p>اكتب ما تحتاجه من محاور أو مهارات — تصل رسالتك إلى المدرب مباشرة.</p>
@@ -4567,7 +4569,7 @@ function renderPhone(){
   app.innerHTML = `
     <div class="phone-wrap fade-in">
       <div class="phone-logo">🌳</div>
-      <div class="phone-course">من الطفل العنيد إلى الشاب صاحب القرار</div>
+      <div class="phone-course">كيف تعرف طلابك؟</div>
       <div class="phone-card">
         <div class="phone-ic">${g.icon}</div>
         <h2>${g.name}</h2>
