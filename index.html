@@ -415,39 +415,44 @@ textarea.ginput{resize:vertical;font-family:inherit}
 
 /* ===== HUB (multi-course landing) ===== */
 .hub-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.hub-bg span{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;animation:hubDrift 22s ease-in-out infinite}
+.hub-bg span{position:absolute;border-radius:50%;filter:blur(55px);opacity:.4;animation:hubDrift 11s ease-in-out infinite}
 .hub-bg span:nth-child(1){width:420px;height:420px;background:var(--gold);top:-120px;inset-inline-end:-100px}
-.hub-bg span:nth-child(2){width:360px;height:360px;background:var(--navy-500);bottom:-140px;inset-inline-start:-80px;animation-duration:26s;animation-delay:-6s}
-.hub-bg span:nth-child(3){width:260px;height:260px;background:#8BA3E0;top:38%;inset-inline-start:58%;animation-duration:19s;animation-delay:-11s}
-@keyframes hubDrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.15)}}
+.hub-bg span:nth-child(2){width:360px;height:360px;background:var(--navy-500);bottom:-140px;inset-inline-start:-80px;animation-duration:13s;animation-delay:-3s}
+.hub-bg span:nth-child(3){width:260px;height:260px;background:#8BA3E0;top:38%;inset-inline-start:58%;animation-duration:9s;animation-delay:-5s}
+@keyframes hubDrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,50px) scale(1.25)}}
 
 .hub-hero{position:relative;z-index:1;text-align:center;padding:44px 10px 6px;color:#fff}
 .hub-hero .hub-logo{width:74px;height:74px;margin:0 auto 16px;border-radius:22px;background:linear-gradient(145deg,var(--gold),var(--gold-dark));
-  display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 10px 30px rgba(217,174,75,.45);animation:hubLogoFloat 4s ease-in-out infinite}
-@keyframes hubLogoFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-4deg)}}
+  display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 10px 30px rgba(217,174,75,.45);animation:hubLogoFloat 2.4s ease-in-out infinite}
+@keyframes hubLogoFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(-6deg)}}
 .hub-hero h1{font-size:clamp(1.8rem,4.4vw,3.2rem);font-weight:900;background:linear-gradient(90deg,#fff,var(--gold-light),#fff);
-  background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hubShine 5s linear infinite}
+  background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hubShine 2.6s linear infinite}
 @keyframes hubShine{to{background-position:-220% center}}
 .hub-hero p{color:#C7CFE6;margin-top:10px;font-size:clamp(.95rem,1.6vw,1.15rem)}
 
 .hub-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:34px auto 0;max-width:1200px;padding:0 4px 20px}
 .hub-card{position:relative;border-radius:26px;padding:26px 22px;cursor:pointer;overflow:hidden;
-  background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);
+  background:rgba(24,38,88,.55);border:1.5px solid rgba(255,255,255,.14);
   transition:transform .3s,border-color .3s,background .3s;opacity:0;animation:fadeIn .5s ease forwards}
 .hub-card:hover{transform:translateY(-8px) scale(1.02);background:rgba(255,255,255,.1)}
 .hub-card .hc-ic{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:14px;
-  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.06));transition:.3s}
-.hub-card:hover .hc-ic{transform:scale(1.12) rotate(-6deg)}
+  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.06));transition:transform .3s;animation:hcBob 2.6s ease-in-out infinite}
+@keyframes hcBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hub-card:hover .hc-ic{transform:scale(1.15) rotate(-8deg)}
 .hub-card h3{color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:8px}
 .hub-card p{color:#B9C2DD;font-size:.86rem;line-height:1.7;min-height:44px}
-.hub-card .hc-badge{display:inline-block;margin-top:14px;font-size:.78rem;font-weight:800;padding:6px 14px;border-radius:999px}
+.hub-card .hc-badge{display:inline-block;margin-top:14px;font-size:.78rem;font-weight:800;padding:6px 14px;border-radius:999px;background:var(--gold);color:var(--navy-900)}
 .hub-card.active{border-color:var(--gold);background:linear-gradient(150deg,rgba(217,174,75,.18),rgba(217,174,75,.05));
-  box-shadow:0 0 0 1px rgba(217,174,75,.3),0 20px 45px rgba(217,174,75,.18);animation:fadeIn .5s ease forwards,hubPulse 3s ease-in-out infinite}
-@keyframes hubPulse{0%,100%{box-shadow:0 0 0 1px rgba(217,174,75,.3),0 20px 45px rgba(217,174,75,.18)}50%{box-shadow:0 0 0 1px rgba(217,174,75,.55),0 20px 55px rgba(217,174,75,.32)}}
+  box-shadow:0 0 0 1px rgba(217,174,75,.3),0 20px 45px rgba(217,174,75,.18);animation:fadeIn .5s ease forwards,hubPulse 1.8s ease-in-out infinite}
+@keyframes hubPulse{0%,100%{box-shadow:0 0 0 1px rgba(217,174,75,.3),0 20px 45px rgba(217,174,75,.18)}50%{box-shadow:0 0 0 1px rgba(217,174,75,.6),0 20px 55px rgba(217,174,75,.38)}}
 .hub-card.active .hc-ic{background:linear-gradient(145deg,var(--gold),var(--gold-dark));color:var(--navy-900)}
-.hub-card.active .hc-badge{background:var(--gold);color:var(--navy-900)}
-.hub-card.soon .hc-badge{background:rgba(255,255,255,.12);color:#B9C2DD}
-.hub-card.soon:hover{background:rgba(255,255,255,.09)}
+.hub-card.soon{border-color:rgba(240,204,122,.35)}
+
+/* ===== course intro (catalog placeholder) ===== */
+.ci-topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:rgba(255,255,255,.06);border:1px solid rgba(240,204,122,.25);
+  backdrop-filter:blur(10px);border-radius:var(--r);padding:12px 18px;margin-bottom:20px}
+.ci-topbar .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,var(--gold),var(--gold-dark));
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 14px rgba(217,174,75,.4)}
 </style>
 </head>
 <body>
@@ -3835,7 +3840,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, phoneMode:false, phoneGame:null, phoneWish:false,
+  view:'hub', mi:0, si:0, courseIdx:0, phoneMode:false, phoneGame:null, phoneWish:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -3962,6 +3967,7 @@ function render(){
   if(state.phoneMode) return renderPhone();
   const v=state.view;
   if(v==='hub') return renderHub();
+  if(v==='courseIntro') return renderCourseIntro();
   if(v==='home') return renderHome();
   if(v==='module') return renderModule();
   if(v==='game') return renderGameShell();
@@ -3976,21 +3982,38 @@ const CATALOG = [
   { active:true, icon:'🌳', name:'من الطفل العنيد إلى الشاب صاحب القرار',
     desc:'نموذج يونس للتعلم — من عناد الطفولة إلى استقلالية وثقة وقرار واعٍ.' },
   { icon:'🧰', name:'أدوات المعلم المبدع',
-    desc:'حقيبة أدوات وأفكار عملية لصناعة معلم مؤثر وحاضر البديهة داخل الصف.' },
+    desc:'حقيبة أدوات وأفكار عملية لصناعة معلم مؤثر وحاضر البديهة داخل الصف.',
+    topics:['الحضور والتأثير','فن طرح الأسئلة','إدارة الوقت الصفي','أدوات تحفيز سريعة'] },
   { icon:'⚡', name:'التعلم النشط',
-    desc:'استراتيجيات تُشرك الطالب فعليًا وتحوّل الحصة من تلقٍّ إلى مشاركة.' },
+    desc:'استراتيجيات تُشرك الطالب فعليًا وتحوّل الحصة من تلقٍّ إلى مشاركة.',
+    topics:['التعلم بالمحطات','التعلم التعاوني','العصف الذهني الموجّه','التعلم بالمشاريع'] },
   { icon:'🎮', name:'التعلم بالتلعيب',
-    desc:'تحويل المحتوى الدراسي إلى تجارب لعب تحفّز الطالب وتُثبّت المعلومة.' },
+    desc:'تحويل المحتوى الدراسي إلى تجارب لعب تحفّز الطالب وتُثبّت المعلومة.',
+    topics:['أساسيات نظام النقاط','شارات الإنجاز','التحديات الجماعية','لوحات الصدارة'] },
   { icon:'🧭', name:'الإدارة الصفية الحديثة',
-    desc:'أساليب عملية لإدارة الصف بحزم وهدوء دون صراخ أو فوضى.' },
+    desc:'أساليب عملية لإدارة الصف بحزم وهدوء دون صراخ أو فوضى.',
+    topics:['القواعد الصفية الذكية','لغة الجسد والحزم الهادئ','التعامل مع السلوك الصعب','روتين بداية الحصة'] },
   { icon:'🧩', name:'مشكلات ومواقف صفية',
-    desc:'حلول واقعية وجاهزة لأصعب المواقف اليومية داخل الصف.' },
+    desc:'حلول واقعية وجاهزة لأصعب المواقف اليومية داخل الصف.',
+    topics:['الطالب المشاغب','الخلافات بين الطلاب','ضعف الدافعية','التعامل مع أولياء الأمور'] },
+  { icon:'🤖', name:'تعلم الروبوت — أردوينو',
+    desc:'من الصفر إلى بناء أول مشروع روبوت حقيقي بلوحة أردوينو.',
+    topics:['مكونات الأردوينو الأساسية','البرمجة بلغة C','الحساسات والمحركات','مشروع تخرج بسيط'] },
+  { icon:'📡', name:'تعلم الروبوت — ESP32',
+    desc:'التحكم عن بُعد وإنترنت الأشياء بمتحكم ESP32 خطوة بخطوة.',
+    topics:['التعريف بمتحكم ESP32','الاتصال بالواي فاي','إنترنت الأشياء (IoT)','مشروع تحكم عن بُعد'] },
+  { icon:'🍓', name:'تعلم الروبوت — Raspberry Pi',
+    desc:'من إعداد الجهاز إلى أول برنامج بايثون يتحكم بالعتاد فعليًا.',
+    topics:['نظام التشغيل والإعداد','لغة بايثون للمبتدئين','GPIO والتحكم بالعتاد','مشروع كاميرا أو مستشعر'] },
+  { icon:'🧮', name:'الحساب الذهني — المستوى الأول والثاني',
+    desc:'بناء سرعة ودقة الحساب الذهني لدى الطالب عبر تدرّج منهجي بمستويين.',
+    topics:['أساسيات العدّ الذهني','الجمع والطرح السريع','الضرب الذهني','تحديات المستوى الثاني'] },
 ];
 function renderHub(){
   const cards = CATALOG.map((c,i)=>{
     const cls = 'hub-card ' + (c.active? 'active':'soon');
-    const badge = c.active? '✓ الدورة النشطة — ابدأ الآن' : '🚧 قريبًا';
-    const click = c.active? `go('home')` : `comingSoon('${c.name.replace(/'/g,"\\'")}','${c.icon}')`;
+    const badge = c.active? '✓ الدورة النشطة — ابدأ الآن' : '📚 ابدأ الآن';
+    const click = c.active? `go('home')` : `openCourseIntro(${i})`;
     return `<div class="${cls}" style="animation-delay:${(i*.08).toFixed(2)}s" onclick="${click}">
       <div class="hc-ic">${c.icon}</div>
       <h3>${c.name}</h3>
@@ -4007,13 +4030,28 @@ function renderHub(){
     </div>
     <div class="hub-grid">${cards}</div>`;
 }
-function comingSoon(name, icon){
-  modal(`<div style="text-align:center">
-    <div style="font-size:3rem;line-height:1;margin-bottom:10px">${icon}</div>
-    <h3>${name}</h3>
-    <p style="color:var(--muted);line-height:1.8;margin-top:8px">هذه الدورة قيد الإعداد حاليًا وستُضاف قريبًا إلى المنصة 🚧</p>
-    <button class="gbtn" style="margin-top:16px" onclick="closeModal()">تمام</button>
-  </div>`);
+function openCourseIntro(i){ state.courseIdx=i; go('courseIntro'); }
+function renderCourseIntro(){
+  const c = CATALOG[state.courseIdx];
+  const pills = (c.topics||[]).map(t=>`<span class="pill">${t}</span>`).join('');
+  app.innerHTML = `
+    <div class="ci-topbar">
+      <div class="brand" onclick="go('hub')" style="cursor:pointer;display:flex;align-items:center;gap:12px">
+        <div class="logo">${c.icon}</div>
+        <div style="color:#fff;font-weight:800">${c.name}<small style="display:block;font-weight:600;color:var(--gold-light);font-size:.78rem">منصة يونس التدريبية</small></div>
+      </div>
+      <div class="spacer"></div>
+      <button class="tbtn gold" onclick="go('hub')">🌐 كل الدورات</button>
+    </div>
+    <div class="hero fade-in">
+      <div class="kicker">✦ دورة تدريبية تفاعلية للمعلمين والمربين ✦</div>
+      <h1>${c.icon} <span class="g">${c.name}</span></h1>
+      <p>${c.desc}</p>
+    </div>
+    <div class="stage-wrap fade-in" style="padding:clamp(20px,4vw,44px)">
+      <div class="s-kicker">محاور الدورة</div>
+      <div class="pillrow">${pills}</div>
+    </div>`;
 }
 
 /* ================= HOME ================= */
