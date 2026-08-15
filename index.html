@@ -4010,7 +4010,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', phoneMode:false, phoneGame:null, phoneWish:false,
+  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -4158,6 +4158,7 @@ function render(){
   if(v==='game') return renderGameShell();
   if(v==='groups') return renderGroups();
   if(v==='board') return renderBoard();
+  if(v==='gameBoard') return renderGameBoard(state.gameBoardIdx);
   if(v==='guide') return renderGuide();
   if(v==='traineeGuide') return renderTraineeGuide();
   if(v==='wishes') return renderWishes();
@@ -4261,6 +4262,7 @@ function renderHome(){
         <div class="gcard-btns">
           <button class="minibtn gold" onclick="event.stopPropagation();preGame(${m.game})">▶ ابدأ على الشاشة</button>
           <button class="minibtn" onclick="event.stopPropagation();qrGame(${m.game})">📱 كود اللعبة</button>
+          <button class="minibtn" onclick="event.stopPropagation();openGameBoard(${m.game})">🏆 ترتيب اللعبة</button>
         </div></div>`);
     }
   });
@@ -4625,7 +4627,7 @@ function renderBoard(){
         ${w && w.tot.played>0 ? `<button class="gbtn navy" onclick="crownWinner()">🏆 إعلان الفريق الفائز</button>`:''}
       </div>
       <div style="overflow-x:auto"><table class="lb-table">
-        <tr><th></th><th>المجموعة</th>${GAMES.map(g=>`<th style="text-align:center">${g.icon}<br><span style="font-size:.7rem">${g.short}</span></th>`).join('')}<th style="text-align:center">المجموع</th></tr>
+        <tr><th></th><th>المجموعة</th>${GAMES.map((g,gi)=>`<th style="text-align:center;cursor:pointer" title="ترتيب ${g.name}" onclick="openGameBoard(${gi})">${g.icon}<br><span style="font-size:.7rem">${g.short}</span></th>`).join('')}<th style="text-align:center">المجموع</th></tr>
         ${rows || `<tr><td colspan="${GAMES.length+3}" style="text-align:center;color:var(--muted)">سجّل المجموعات أولًا من صفحة «المجموعات»</td></tr>`}
       </table></div>
     </div>`;
@@ -4641,6 +4643,49 @@ function crownWinner(){
     <div style="font-size:1.15rem;font-weight:800;color:var(--navy-700)">${w.tot.s} نقطة · ${w.tot.t} ثانية · ${w.tot.played} أنشطة</div>
     <p style="color:var(--muted);margin-top:10px">🎁 يستحق الهدية! صفقوا لهم 👏</p>
     <button class="gbtn" style="margin-top:14px" onclick="fireConfetti(200)">🎉 مرة أخرى!</button>
+    <button class="gbtn ghost" style="margin-top:14px" onclick="closeModal()">إغلاق</button></div>`);
+}
+function openGameBoard(gi){ state.gameBoardIdx=gi; go('gameBoard'); }
+function gameRanked(gi){
+  return state.groups.map((gr,i)=>({gr,i,r:gr.scores[gi]})).filter(x=>x.r)
+    .sort((a,b)=> b.r.score-a.r.score || a.r.t-b.r.t);
+}
+function renderGameBoard(gi){
+  const g = GAMES[gi];
+  const ranked = gameRanked(gi);
+  const notYet = state.groups.filter(gr=>!gr.scores[gi]);
+  const rows = ranked.map((x,ri)=>`<tr class="${ri===0?'first':''}">
+    <td><span class="rank-badge">${ri+1}</span></td>
+    <td>${ri===0?'🏆 ':''}${x.gr.name}</td>
+    <td style="text-align:center"><b style="color:var(--gold-dark);font-size:1.2rem">${x.r.score}</b></td>
+    <td style="text-align:center">${x.r.t}ث</td></tr>`).join('');
+  app.innerHTML = topbar() + `
+    <div class="panel fade-in">
+      <h2>${g.icon} ترتيب: ${g.name}</h2>
+      <p class="sub">الفريق الأول أنهى بأعلى نقاط وأسرع وقت، ثم البقية بالترتيب — تتحدّث القائمة فور إدخال كل كود نتيجة.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="gbtn" onclick="codeModal()">⌨️ إدخال كود نتيجة</button>
+        <button class="gbtn ghost" onclick="go('board')">🏆 لوحة النتائج الكاملة</button>
+        ${ranked.length? `<button class="gbtn navy" onclick="crownGameWinner(${gi})">🎉 إعلان فريق هذه اللعبة</button>`:''}
+      </div>
+      <div style="overflow-x:auto"><table class="lb-table">
+        <tr><th></th><th>المجموعة</th><th style="text-align:center">النقاط</th><th style="text-align:center">الوقت</th></tr>
+        ${rows || `<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا نتائج بعد لهذه اللعبة</td></tr>`}
+      </table></div>
+      ${notYet.length? `<div class="note" style="margin-top:14px"><b>لسه ما أنهت:</b> ${notYet.map(g=>g.name).join('، ')}</div>`:''}
+    </div>`;
+}
+function crownGameWinner(gi){
+  const g = GAMES[gi];
+  const ranked = gameRanked(gi);
+  const w = ranked[0]; if(!w) return;
+  fireConfetti(200);
+  modal(`<div style="text-align:center">
+    <div style="font-size:5rem;line-height:1">🏆</div>
+    <h3 style="font-size:1.5rem">فريق ${g.name}</h3>
+    <div style="font-size:2.3rem;font-weight:900;color:var(--gold-dark);margin:10px 0">${w.gr.name}</div>
+    <div style="font-size:1.15rem;font-weight:800;color:var(--navy-700)">${w.r.score} نقطة · ${w.r.t} ثانية</div>
+    <button class="gbtn" style="margin-top:14px" onclick="fireConfetti(160)">🎉 مرة أخرى!</button>
     <button class="gbtn ghost" style="margin-top:14px" onclick="closeModal()">إغلاق</button></div>`);
 }
 function codeModal(){
