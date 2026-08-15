@@ -3748,7 +3748,7 @@ function finishGame(){
       </details>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
         <button class="gbtn" onclick="replayGame()">🔄 إعادة المحاولة</button>
-        ${phone? '' : `<button class="gbtn navy" onclick="go('board')">🏆 لوحة النتائج</button>
+        ${phone? '' : `<button class="gbtn navy" onclick="openBoard()">🏆 لوحة النتائج</button>
         <button class="gbtn ghost" onclick="go('home')">🏠 الرئيسية</button>`}
       </div>
     </div>`;
@@ -4151,7 +4151,7 @@ function topbar(){
     <button class="tbtn" onclick="go('traineeGuide')">🎓 دليل المتدرب</button>
     <button class="tbtn" onclick="go('wishes')">💌 الرسائل</button>
     <button class="tbtn" onclick="go('groups')">👥 المجموعات</button>
-    <button class="tbtn" onclick="go('board')">🏆 النتائج</button>
+    <button class="tbtn" onclick="openBoard()">🏆 النتائج</button>
     <button class="tbtn gold" onclick="go('home')">🏠 رئيسية الدورة</button>
     <button class="tbtn" onclick="go('hub')">🌐 كل الدورات</button>
   </div>`;
@@ -4629,67 +4629,100 @@ function pushResultToCloud(courseKey, gi, groupName, score, t){
   cloudResultsCol(courseKey, gi).add({ groupName, score, t, ts: Date.now() })
     .catch(e=> console.error('cloud write failed:', e.message));
 }
-let _gbUnsub = null;
-function stopGameBoardListener(){ if(_gbUnsub){ _gbUnsub(); _gbUnsub=null; } }
+let _cloudUnsubs = [];
+function stopCloudListeners(){ _cloudUnsubs.forEach(u=>{ try{u();}catch(e){} }); _cloudUnsubs=[]; }
+function stopGameBoardListener(){ stopCloudListeners(); }
+function ingestSnapshot(gi, snap){
+  const best={};
+  snap.forEach(doc=>{
+    const d=doc.data(); if(!d.groupName) return;
+    const cur=best[d.groupName];
+    if(!cur || d.score>cur.score || (d.score===cur.score && d.t<cur.t)) best[d.groupName]={score:d.score,t:d.t};
+  });
+  state.cloudResults = state.cloudResults||{};
+  state.cloudResults[gi] = best;
+}
 function listenGameBoard(courseKey, gi){
-  stopGameBoardListener();
+  stopCloudListeners();
   if(!fbReady) return;
-  _gbUnsub = cloudResultsCol(courseKey, gi).onSnapshot(snap=>{
-    const best={};
-    snap.forEach(doc=>{
-      const d=doc.data(); if(!d.groupName) return;
-      const cur=best[d.groupName];
-      if(!cur || d.score>cur.score || (d.score===cur.score && d.t<cur.t)) best[d.groupName]={score:d.score,t:d.t};
-    });
-    state.cloudResults = state.cloudResults||{};
-    state.cloudResults[gi] = best;
+  const unsub = cloudResultsCol(courseKey, gi).onSnapshot(snap=>{
+    ingestSnapshot(gi, snap);
     if(state.view==='gameBoard' && state.gameBoardIdx===gi && !state.phoneMode) renderGameBoard(gi);
   }, e=> console.error('cloud listen failed:', e.message));
+  _cloudUnsubs.push(unsub);
 }
-function groupTotal(g){ let s=0,t=0,p=0; for(let i=0;i<GAMES.length;i++){const r=g.scores[i]; if(r){s+=r.score;t+=r.t;p++;}} return {s,t,played:p}; }
-function fastestOf(gi){
+function listenAllGames(courseKey){
+  stopCloudListeners();
+  if(!fbReady) return;
+  GAMES.forEach((_,gi)=>{
+    const unsub = cloudResultsCol(courseKey, gi).onSnapshot(snap=>{
+      ingestSnapshot(gi, snap);
+      if(state.view==='board' && !state.phoneMode) renderBoard();
+    }, e=> console.error('cloud listen failed:', e.message));
+    _cloudUnsubs.push(unsub);
+  });
+}
+function openBoard(){ go('board'); listenAllGames(state.courseKey); }
+function allGroupNames(){
+  const names = new Set(state.groups.map(g=>g.name));
+  GAMES.forEach((_,gi)=>{ const c=state.cloudResults && state.cloudResults[gi]; if(c) Object.keys(c).forEach(n=>names.add(n)); });
+  return [...names];
+}
+function resultFor(name, gi){
+  const cloud = state.cloudResults && state.cloudResults[gi] && state.cloudResults[gi][name];
+  const local = state.groups.find(g=>g.name===name);
+  const localR = local && local.scores[gi];
+  if(cloud && localR) return (cloud.score>=localR.score)? cloud : localR;
+  return cloud || localR || null;
+}
+function totalForName(name){
+  let s=0,t=0,p=0;
+  GAMES.forEach((_,gi)=>{ const r=resultFor(name,gi); if(r){s+=r.score;t+=r.t;p++;} });
+  return {s,t,played:p};
+}
+function fastestOfName(gi){
   let best=null;
-  state.groups.forEach((g,i)=>{ const r=g.scores[gi]; if(!r) return;
-    if(!best || r.score>best.r.score || (r.score===best.r.score && r.t<best.r.t)) best={i,r}; });
+  allGroupNames().forEach(name=>{ const r=resultFor(name,gi); if(!r) return;
+    if(!best || r.score>best.r.score || (r.score===best.r.score && r.t<best.r.t)) best={name,r}; });
   return best;
 }
 function renderBoard(){
-  const ranked=state.groups.map((g,i)=>({g,i,tot:groupTotal(g)})).sort((a,b)=> b.tot.s-a.tot.s || a.tot.t-b.tot.t);
-  const fast=GAMES.map((_,gi)=>fastestOf(gi));
+  const ranked=allGroupNames().map(name=>({name,tot:totalForName(name)})).sort((a,b)=> b.tot.s-a.tot.s || a.tot.t-b.tot.t);
+  const fast=GAMES.map((_,gi)=>fastestOfName(gi));
   const rows=ranked.map((r,ri)=>{
     const cells=GAMES.map((_,gi)=>{
-      const sc=r.g.scores[gi], isFast = fast[gi] && fast[gi].i===r.i;
+      const sc=resultFor(r.name,gi), isFast = fast[gi] && fast[gi].name===r.name;
       return `<td style="text-align:center">${sc? `<b>${sc.score}</b>${isFast?' <span class="fastb">⚡</span>':''}<br><small style="color:var(--muted)">${sc.t}ث</small>`:'—'}</td>`;
     }).join('');
     const champ = ri===0 && r.tot.played>0;
     return `<tr class="${champ?'first':''}">
       <td><span class="rank-badge">${ri+1}</span></td>
-      <td>${champ?'🏆 ':''}${r.g.name}</td>${cells}
+      <td>${champ?'🏆 ':''}${r.name}</td>${cells}
       <td style="text-align:center"><b style="color:var(--gold-dark);font-size:1.2rem">${r.tot.s}</b><br><small style="color:var(--muted)">${r.tot.t}ث</small></td></tr>`;
   }).join('');
   const w=ranked[0];
   app.innerHTML = topbar() + `
     <div class="panel fade-in">
       <h2>🏆 لوحة النتائج — الشاشة التفاعلية</h2>
-      <p class="sub">⚡ = المجموعة الأسرع بحلٍّ صحيح في ذلك النشاط. المجموعة الأعلى نقاطًا تفوز بالكأس 🏆 (وعند التعادل: الأسرع زمنًا).</p>
+      <p class="sub">${fbReady? '📡 تحديث تلقائي مباشر — النتائج تظهر فور انتهاء كل فريق، بلا تسجيل مسبق. ':''}⚡ = المجموعة الأسرع بحلٍّ صحيح في ذلك النشاط. المجموعة الأعلى نقاطًا تفوز بالكأس 🏆 (وعند التعادل: الأسرع زمنًا).</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-        <button class="gbtn" onclick="codeModal()">⌨️ إدخال كود نتيجة من جهاز مجموعة</button>
+        <button class="gbtn ghost" onclick="codeModal()">⌨️ إدخال كود (بدون إنترنت)</button>
         ${w && w.tot.played>0 ? `<button class="gbtn navy" onclick="crownWinner()">🏆 إعلان الفريق الفائز</button>`:''}
       </div>
       <div style="overflow-x:auto"><table class="lb-table">
         <tr><th></th><th>المجموعة</th>${GAMES.map((g,gi)=>`<th style="text-align:center;cursor:pointer" title="ترتيب ${g.name}" onclick="openGameBoard(${gi})">${g.icon}<br><span style="font-size:.7rem">${g.short}</span></th>`).join('')}<th style="text-align:center">المجموع</th></tr>
-        ${rows || `<tr><td colspan="${GAMES.length+3}" style="text-align:center;color:var(--muted)">سجّل المجموعات أولًا من صفحة «المجموعات»</td></tr>`}
+        ${rows || `<tr><td colspan="${GAMES.length+3}" style="text-align:center;color:var(--muted)">لا نتائج بعد — أول فريق يخلّص أي تدريب يظهر هنا تلقائيًا</td></tr>`}
       </table></div>
     </div>`;
 }
 function crownWinner(){
-  const ranked=state.groups.map(g=>({g,tot:groupTotal(g)})).sort((a,b)=> b.tot.s-a.tot.s || a.tot.t-b.tot.t);
+  const ranked=allGroupNames().map(name=>({name,tot:totalForName(name)})).sort((a,b)=> b.tot.s-a.tot.s || a.tot.t-b.tot.t);
   const w=ranked[0]; if(!w) return;
   fireConfetti(240);
   modal(`<div style="text-align:center">
     <div style="font-size:5rem;line-height:1">🏆</div>
     <h3 style="font-size:1.5rem">الفريق الفائز</h3>
-    <div style="font-size:2.3rem;font-weight:900;color:var(--gold-dark);margin:10px 0">${w.g.name}</div>
+    <div style="font-size:2.3rem;font-weight:900;color:var(--gold-dark);margin:10px 0">${w.name}</div>
     <div style="font-size:1.15rem;font-weight:800;color:var(--navy-700)">${w.tot.s} نقطة · ${w.tot.t} ثانية · ${w.tot.played} أنشطة</div>
     <p style="color:var(--muted);margin-top:10px">🎁 يستحق الهدية! صفقوا لهم 👏</p>
     <button class="gbtn" style="margin-top:14px" onclick="fireConfetti(200)">🎉 مرة أخرى!</button>
@@ -4724,7 +4757,7 @@ function renderGameBoard(gi){
       <p class="sub">${fbReady? '📡 تحديث تلقائي مباشر — نتيجة كل فريق تظهر فور انتهائه بدون أي كود.' : ''} الفريق الأول أنهى بأعلى نقاط وأسرع وقت، ثم البقية بالترتيب.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         <button class="gbtn ghost" onclick="codeModal()">⌨️ إدخال كود (بدون إنترنت)</button>
-        <button class="gbtn ghost" onclick="go('board')">🏆 لوحة النتائج الكاملة</button>
+        <button class="gbtn ghost" onclick="openBoard()">🏆 لوحة النتائج الكاملة</button>
         ${ranked.length? `<button class="gbtn navy" onclick="crownGameWinner(${gi})">🎉 إعلان فريق هذه اللعبة</button>`:''}
       </div>
       <div style="overflow-x:auto"><table class="lb-table">
