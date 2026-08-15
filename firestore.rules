@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /courses/{courseKey}/games/{gi}/results/{resultId} {
+      allow read: if true;
+      allow create: if request.resource.data.groupName is string
+                    && request.resource.data.groupName.size() > 0
+                    && request.resource.data.groupName.size() < 40
+                    && request.resource.data.score is number
+                    && request.resource.data.t is number;
+      allow update, delete: if false;
+    }
+  }
+}

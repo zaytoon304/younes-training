@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --navy-900:#0A1230; --navy-800:#101B45; --navy-700:#182658; --navy-600:#22346F;
@@ -3720,10 +3722,14 @@ function finishGame(){
   stopTimers();
   if(!document.getElementById('gameBody')) return;
   const t = gTime(), score = G.score, code = makeCode(G.gi, score, t);
+  const realName = G.groupName || (G.groupIdx!=null && state.groups[G.groupIdx] ? state.groups[G.groupIdx].name : null);
   let saved = '';
   if(G.groupIdx!=null && state.groups[G.groupIdx]){
     saveResult(G.gi, G.groupIdx, score, t);
-    saved = `<div class="feedback ok">✓ سُجّلت النتيجة لمجموعة «${state.groups[G.groupIdx].name}» على لوحة النتائج</div>`;
+  }
+  if(realName){
+    pushResultToCloud(state.courseKey, G.gi, realName, score, t);
+    saved = `<div class="feedback ok">✓ سُجّلت نتيجة «${realName}» تلقائيًا على الشاشة الكبيرة 🏆</div>`;
   }
   fireConfetti(score>=700?150:60);
   const phone = state.phoneMode;
@@ -3735,9 +3741,11 @@ function finishGame(){
       <div class="score-big">${score} نقطة</div>
       <div style="color:var(--muted);font-weight:700">الزمن: ${t} ثانية</div>
       ${saved}
-      <div style="margin-top:14px;font-weight:800;color:var(--navy-700)">كود النتيجة — اقرأه للمدرب:</div>
-      <div class="code-box">${code}</div>
-      <p class="hint">يكتبه المدرب في «لوحة النتائج» على الشاشة الكبيرة، فيظهر اسم مجموعتكم وترتيبها فورًا.</p>
+      <p class="hint" style="margin-top:10px">${fbReady? '📡 نتيجتكم ظهرت تلقائيًا الآن على الشاشة الكبيرة.' : ''}</p>
+      <details style="margin-top:10px;color:var(--muted);font-size:.85rem">
+        <summary style="cursor:pointer;font-weight:700">بدون إنترنت؟ اقرأ هذا الكود للمدرب</summary>
+        <div class="code-box" style="margin-top:8px">${code}</div>
+      </details>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
         <button class="gbtn" onclick="replayGame()">🔄 إعادة المحاولة</button>
         ${phone? '' : `<button class="gbtn navy" onclick="go('board')">🏆 لوحة النتائج</button>
@@ -4023,6 +4031,7 @@ function persist(){
   store.set('hostUrl',state.hostUrl); store.set('wishes',state.wishes); store.set('surveys',state.surveys);
 }
 function go(view,a,b){ if(typeof stopTimers==='function') stopTimers(); stopSpeak();
+  if(view!=='gameBoard' && typeof stopGameBoardListener==='function') stopGameBoardListener();
   state.view=view; if(view==='module'){state.mi=a; state.si=b||0;} window.scrollTo({top:0}); render(); }
 function CC(){ return state.courseKey==='p2' ? COURSE2 : COURSE; }
 function openCourse(key){ state.courseKey=key; state.mi=0; state.si=0; go('home'); }
@@ -4597,6 +4606,46 @@ function delGroup(i){ state.groups.splice(i,1); persist(); renderGroups(); }
 function resetAll(){ if(confirm('سيتم مسح المجموعات والنتائج والتقدم — متأكد؟')){ state.groups=[]; state.doneModules={}; persist(); go('home'); } }
 
 /* ================= LEADERBOARD ================= */
+/* ================= CLOUD SYNC (Firebase) — نتائج تلقائية بلا كود ================= */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyDGZ189UFD7Abp3S_AWXMbAjtlAz-Vs2_c",
+  authDomain:        "younes-training-app.firebaseapp.com",
+  projectId:         "younes-training-app",
+  storageBucket:     "younes-training-app.firebasestorage.app",
+  messagingSenderId: "711299008550",
+  appId:             "1:711299008550:web:dd252ae5bcabf04f2d7ee7"
+};
+let fbReady=false, fdb=null;
+try{
+  firebase.initializeApp(FIREBASE_CONFIG);
+  fdb = firebase.firestore();
+  fbReady = true;
+}catch(e){ console.error('Firebase init failed:', e.message); }
+function cloudResultsCol(courseKey, gi){
+  return fdb.collection('courses').doc(courseKey).collection('games').doc(String(gi)).collection('results');
+}
+function pushResultToCloud(courseKey, gi, groupName, score, t){
+  if(!fbReady || !groupName) return;
+  cloudResultsCol(courseKey, gi).add({ groupName, score, t, ts: Date.now() })
+    .catch(e=> console.error('cloud write failed:', e.message));
+}
+let _gbUnsub = null;
+function stopGameBoardListener(){ if(_gbUnsub){ _gbUnsub(); _gbUnsub=null; } }
+function listenGameBoard(courseKey, gi){
+  stopGameBoardListener();
+  if(!fbReady) return;
+  _gbUnsub = cloudResultsCol(courseKey, gi).onSnapshot(snap=>{
+    const best={};
+    snap.forEach(doc=>{
+      const d=doc.data(); if(!d.groupName) return;
+      const cur=best[d.groupName];
+      if(!cur || d.score>cur.score || (d.score===cur.score && d.t<cur.t)) best[d.groupName]={score:d.score,t:d.t};
+    });
+    state.cloudResults = state.cloudResults||{};
+    state.cloudResults[gi] = best;
+    if(state.view==='gameBoard' && state.gameBoardIdx===gi && !state.phoneMode) renderGameBoard(gi);
+  }, e=> console.error('cloud listen failed:', e.message));
+}
 function groupTotal(g){ let s=0,t=0,p=0; for(let i=0;i<GAMES.length;i++){const r=g.scores[i]; if(r){s+=r.score;t+=r.t;p++;}} return {s,t,played:p}; }
 function fastestOf(gi){
   let best=null;
@@ -4646,10 +4695,19 @@ function crownWinner(){
     <button class="gbtn" style="margin-top:14px" onclick="fireConfetti(200)">🎉 مرة أخرى!</button>
     <button class="gbtn ghost" style="margin-top:14px" onclick="closeModal()">إغلاق</button></div>`);
 }
-function openGameBoard(gi){ state.gameBoardIdx=gi; go('gameBoard'); }
+function openGameBoard(gi){ state.gameBoardIdx=gi; go('gameBoard'); listenGameBoard(state.courseKey, gi); }
 function gameRanked(gi){
-  return state.groups.map((gr,i)=>({gr,i,r:gr.scores[gi]})).filter(x=>x.r)
-    .sort((a,b)=> b.r.score-a.r.score || a.r.t-b.r.t);
+  const byName={};
+  state.groups.forEach((gr,i)=>{ const r=gr.scores[gi]; if(r) byName[gr.name]={gr,i,r}; });
+  const cloud=(state.cloudResults && state.cloudResults[gi])||{};
+  Object.keys(cloud).forEach(name=>{
+    const r=cloud[name], cur=byName[name];
+    if(!cur || r.score>cur.r.score || (r.score===cur.r.score && r.t<cur.r.t)){
+      const idx=state.groups.findIndex(g=>g.name===name);
+      byName[name]={ gr: idx>=0? state.groups[idx] : {name}, i: idx, r };
+    }
+  });
+  return Object.values(byName).sort((a,b)=> b.r.score-a.r.score || a.r.t-b.r.t);
 }
 function renderGameBoard(gi){
   const g = GAMES[gi];
@@ -4663,9 +4721,9 @@ function renderGameBoard(gi){
   app.innerHTML = topbar() + `
     <div class="panel fade-in">
       <h2>${g.icon} ترتيب: ${g.name}</h2>
-      <p class="sub">الفريق الأول أنهى بأعلى نقاط وأسرع وقت، ثم البقية بالترتيب — تتحدّث القائمة فور إدخال كل كود نتيجة.</p>
+      <p class="sub">${fbReady? '📡 تحديث تلقائي مباشر — نتيجة كل فريق تظهر فور انتهائه بدون أي كود.' : ''} الفريق الأول أنهى بأعلى نقاط وأسرع وقت، ثم البقية بالترتيب.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-        <button class="gbtn" onclick="codeModal()">⌨️ إدخال كود نتيجة</button>
+        <button class="gbtn ghost" onclick="codeModal()">⌨️ إدخال كود (بدون إنترنت)</button>
         <button class="gbtn ghost" onclick="go('board')">🏆 لوحة النتائج الكاملة</button>
         ${ranked.length? `<button class="gbtn navy" onclick="crownGameWinner(${gi})">🎉 إعلان فريق هذه اللعبة</button>`:''}
       </div>
@@ -4836,7 +4894,7 @@ function renderPhone(){
         <button class="gbtn" style="width:100%;margin-top:12px;font-size:1.1rem;padding:16px" onclick="phoneStart()">▶ ابدأ النشاط</button>
         <div class="feedback" id="pgMsg"></div>
       </div>
-      <div class="phone-foot">بعد الانتهاء سيظهر لكم <b>كود النتيجة</b> — اقرؤوه للمدرب ليظهر اسمكم على الشاشة الكبيرة 🏆 · اسم مجموعتكم يُحفظ تلقائيًا في هذا الجهاز لباقي تدريبات الدورة.</div>
+      <div class="phone-foot">بعد الانتهاء، نتيجتكم تظهر <b>تلقائيًا</b> على الشاشة الكبيرة 🏆 · اسم مجموعتكم يُحفظ تلقائيًا في هذا الجهاز لباقي تدريبات الدورة.</div>
     </div>`;
 }
 function phoneStart(){
