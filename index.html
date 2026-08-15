@@ -4025,6 +4025,7 @@ const state = {
   wishes: store.get('wishes', []),
   surveys: store.get('surveys', []),
   myGroupName: store.get('myGroupName', ''),
+  resetAt: store.get('resetAt', 0),
 };
 function persist(){
   store.set('groups',state.groups); store.set('doneModules',state.doneModules);
@@ -4603,7 +4604,12 @@ function addGroup(){
   state.groups.push({name,scores:{}}); persist(); renderGroups();
 }
 function delGroup(i){ state.groups.splice(i,1); persist(); renderGroups(); }
-function resetAll(){ if(confirm('سيتم مسح المجموعات والنتائج والتقدم — متأكد؟')){ state.groups=[]; state.doneModules={}; persist(); go('home'); } }
+function resetAll(){
+  if(!confirm('سيبدأ تصفير كامل: تُمسح المجموعات محليًا، ولن تظهر أي نتائج سابقة (حتى لو وصلت من جوالات لم تُصفَّر) — مناسب لبدء الدورة مع دفعة جديدة من المتدربين. متأكد؟')) return;
+  state.groups=[]; state.doneModules={}; state.cloudResults={};
+  state.resetAt = Date.now(); store.set('resetAt', state.resetAt);
+  persist(); go('home');
+}
 
 /* ================= LEADERBOARD ================= */
 /* ================= CLOUD SYNC (Firebase) — نتائج تلقائية بلا كود ================= */
@@ -4636,6 +4642,7 @@ function ingestSnapshot(gi, snap){
   const best={};
   snap.forEach(doc=>{
     const d=doc.data(); if(!d.groupName) return;
+    if(d.ts!=null && d.ts < state.resetAt) return; // نتائج دورة سابقة قبل التصفير — تُتجاهل
     const cur=best[d.groupName];
     if(!cur || d.score>cur.score || (d.score===cur.score && d.t<cur.t)) best[d.groupName]={score:d.score,t:d.t};
   });
@@ -4708,6 +4715,7 @@ function renderBoard(){
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         <button class="gbtn ghost" onclick="codeModal()">⌨️ إدخال كود (بدون إنترنت)</button>
         ${w && w.tot.played>0 ? `<button class="gbtn navy" onclick="crownWinner()">🏆 إعلان الفريق الفائز</button>`:''}
+        <button class="gbtn ghost" onclick="resetAll()">🔄 دورة جديدة (تصفير الكل)</button>
       </div>
       <div style="overflow-x:auto"><table class="lb-table">
         <tr><th></th><th>المجموعة</th>${GAMES.map((g,gi)=>`<th style="text-align:center;cursor:pointer" title="ترتيب ${g.name}" onclick="openGameBoard(${gi})">${g.icon}<br><span style="font-size:.7rem">${g.short}</span></th>`).join('')}<th style="text-align:center">المجموع</th></tr>
