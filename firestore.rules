@@ -10,5 +10,15 @@ service cloud.firestore {
                     && request.resource.data.t is number;
       allow update, delete: if false;
     }
+    match /courses/{courseKey}/selfrate/{entryId} {
+      allow read: if true;
+      allow create: if request.resource.data.mode in ['pre', 'post']
+                    && request.resource.data.vals is list
+                    && request.resource.data.vals.size() == 5
+                    && request.resource.data.total is number
+                    && request.resource.data.ts is number
+                    && request.resource.data.keys().hasOnly(['mode','vals','total','ts']);
+      allow update, delete: if false;
+    }
   }
 }
