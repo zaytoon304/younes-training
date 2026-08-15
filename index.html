@@ -105,12 +105,30 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
 .quote{margin-top:18px;background:linear-gradient(135deg,var(--navy-700),var(--navy-800));color:#fff;
   border-radius:var(--r);padding:20px 26px;font-size:clamp(1rem,1.9vw,1.25rem);font-weight:700;line-height:1.8;position:relative}
 .quote::before{content:"❝";position:absolute;top:8px;left:16px;font-size:2rem;color:var(--gold)}
-.quote.quote-flash{animation:quoteFlash 2s ease-in-out infinite;box-shadow:0 8px 26px rgba(0,0,0,.3)}
-@keyframes quoteFlash{
+.quote.quote-flash{animation-duration:2.2s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;box-shadow:0 8px 26px rgba(0,0,0,.3)}
+.quote-flash-1{animation-name:qf1}
+.quote-flash-2{animation-name:qf2}
+.quote-flash-3{animation-name:qf3}
+.quote-flash-4{animation-name:qf4}
+@keyframes qf1{
   0%,100%{background:linear-gradient(135deg,var(--navy-700),var(--navy-800))}
-  25%{background:linear-gradient(135deg,#B0862E,#D9AE4B)}
-  50%{background:linear-gradient(135deg,#1f7a52,#2E9E6B)}
-  75%{background:linear-gradient(135deg,#a52e2e,#D64545)}
+  33%{background:linear-gradient(135deg,#B0862E,#D9AE4B)}
+  66%{background:linear-gradient(135deg,#1f7a52,#2E9E6B)}
+}
+@keyframes qf2{
+  0%,100%{background:linear-gradient(135deg,var(--navy-700),var(--navy-800))}
+  33%{background:linear-gradient(135deg,#1e3a8a,#3B5BDB)}
+  66%{background:linear-gradient(135deg,#5b21b6,#7C3AED)}
+}
+@keyframes qf3{
+  0%,100%{background:linear-gradient(135deg,var(--navy-700),var(--navy-800))}
+  33%{background:linear-gradient(135deg,#115e59,#0d9488)}
+  66%{background:linear-gradient(135deg,#92400e,#d97706)}
+}
+@keyframes qf4{
+  0%,100%{background:linear-gradient(135deg,var(--navy-700),var(--navy-800))}
+  33%{background:linear-gradient(135deg,#9d174d,#db2777)}
+  66%{background:linear-gradient(135deg,#a52e2e,#D64545)}
 }
 .cardlist{display:grid;gap:12px;margin-top:14px}
 .cardlist .item{background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 18px;
@@ -2815,7 +2833,7 @@ const COURSE = {
       items:[ {n:'🌱', b:'من أين جاءت الفكرة؟', qa:true, t:'من ملاحظة متكررة: نُصلح الأوراق ونترك الجذور، فيكبر الطفل جميلًا من الخارج هشًّا من الداخل.'},
               {n:'🎯', b:'ما هدفي من الدورة؟', qa:true, t:'ألّا تخرجوا بمعلومات وكلام تقليدي غير واقعي ولا يواكب العصر… بل بجُمَل جديدة تقولونها غدًا لأطفالكم وطلابكم، وأساليب تواكب الحياة بشكلها الجديد.'},
               {n:'🤝', b:'ما دوري معكم اليوم؟', qa:true, t:'لست واعظًا ولا مُحاضرًا — أنا زميل يشاركم التجربة، وأنتم شركاء في كل موقف سنناقشه.'} ],
-      quote:'ما سأقوله ليس رأيًا شخصيًا — كل ركن فيه سند علمي عالمي سترونه بأعينكم.', quoteFlash:true },
+      quote:'ما سأقوله ليس رأيًا شخصيًا — كل ركن فيه سند علمي عالمي سترونه بأعينكم.' },
 
     { k:'bullets', kicker:'من هدي النبي ﷺ', title:'ماذا قال النبي ﷺ عن تربية الطفل؟',
       lead:'قبل كل نظرية حديثة… كان هذا الهدي النبوي يضع الأصول كاملة.',
@@ -4297,12 +4315,13 @@ function finModule(withGame){
   if(withGame) preGame(m.game); else go('home');
 }
 
+function qClass(){ return `quote-flash quote-flash-${((state.mi*3+state.si)%4)+1}`; }
 function slideHTML(s){
   const V = s.noveil ? (h=>h) : RV;
   const kick = s.kicker? `<div class="s-kicker">${s.kicker}</div>`:'';
   const leadOpen = s.lead? `<p class="s-lead">${s.lead}</p>`:'';
   const lead = s.lead? V(`<p class="s-lead">${s.lead}</p>`):'';
-  const quote= s.quote? V(`<div class="quote${s.quoteFlash?' quote-flash':''}">${s.quote}</div>`):'';
+  const quote= s.quote? V(`<div class="quote ${qClass()}">${s.quote}</div>`):'';
   const pills= s.pills? V(`<div class="pillrow">${s.pills.map(p=>`<span class="pill">${p}</span>`).join('')}</div>`):'';
   switch(s.k){
     case 'title': return `${kick}<h2 class="s-title" style="font-size:clamp(1.6rem,3.4vw,2.5rem)">${s.title}</h2>${lead}${pills}${quote}`;
@@ -4334,7 +4353,7 @@ function slideHTML(s){
       <div class="theory"><div class="badge"><div class="big">${s.badge}</div><div class="src">${s.src}</div></div>
       <div><h2 class="s-title" style="font-size:clamp(1.2rem,2.4vw,1.7rem)">${s.title}</h2>
       <div class="cardlist">${s.points.map(p=>V(`<div class="item"><div class="bnum">✓</div><div>${p}</div></div>`)).join('')}</div>
-      ${V(`<div class="quote" style="margin-top:14px"><b style="color:var(--gold-light)">ماذا يعني هذا لنموذج يونس؟</b><br>${s.meaning}</div>`)}</div></div>`;
+      ${V(`<div class="quote ${qClass()}" style="margin-top:14px"><b style="color:var(--gold-light)">ماذا يعني هذا لنموذج يونس؟</b><br>${s.meaning}</div>`)}</div></div>`;
     case 'growtree': {
       const lays=s.layers.map((L,i)=>`<button class="lay glay" data-i="${i}" ${i>0?'disabled':''}>
         <div class="dot2">${L[2]}</div>
@@ -4359,7 +4378,7 @@ function slideHTML(s){
           <img src="${IMG.strong}" alt="شجرة بجذور عميقة">
           ${V(`<div class="phnote">جذورها تمتد في العمق… فتثبت وتُثمر.</div>`)}</figure>
       </div>
-      ${V(`<div class="quote" style="text-align:center">${s.q}</div>`)}`;
+      ${V(`<div class="quote ${qClass()}" style="text-align:center">${s.q}</div>`)}`;
     case 'video': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}
       <div class="videobox" id="videoBox" data-vid="${s.vid}">
         <div class="vthumb" onclick="playVideo('${s.vid}')">
@@ -4368,7 +4387,7 @@ function slideHTML(s){
           <div class="vlabel">اضغط للتشغيل</div>
         </div>
       </div>
-      ${s.after? V(`<div class="quote">${s.after}</div>`):''}
+      ${s.after? V(`<div class="quote ${qClass()}">${s.after}</div>`):''}
       <p class="s-body" style="text-align:center;color:var(--muted);font-size:.84rem">يحتاج التشغيل اتصالًا بالإنترنت ·
         <a href="https://youtu.be/${s.vid}" target="_blank" style="color:var(--gold-dark);font-weight:800">فتح على يوتيوب</a></p>`;
     case 'skill': return `<div class="s-kicker">${s.kicker}</div>
@@ -4389,7 +4408,7 @@ function slideHTML(s){
         <div class="item"><div class="bnum">👁️</div><div><b>الموقف:</b> ${s.sit}</div></div>
         <div class="item" style="background:#FAF3DF"><div class="bnum">📝</div><div><b>المطلوب منكم:</b> ${s.task} — ناقشوا في مجموعتكم أولًا!</div></div>
       </div>
-      ${V(`<div class="quote" style="margin-top:14px"><b style="color:var(--gold-light)">💡 إجابة مقترحة:</b><br>«${s.answer}»</div>`)}`;
+      ${V(`<div class="quote ${qClass()}" style="margin-top:14px"><b style="color:var(--gold-light)">💡 إجابة مقترحة:</b><br>«${s.answer}»</div>`)}`;
     case 'survey': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}${surveyForm()}`;
   }
   return '';
