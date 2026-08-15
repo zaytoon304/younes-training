@@ -4112,7 +4112,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false,
+  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false, phoneFollowup:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -4120,7 +4120,7 @@ const state = {
   surveys: store.get('surveys', []),
   myGroupName: store.get('myGroupName', ''),
   resetAt: store.get('resetAt', 0),
-  cloudSelfRate: {pre:[], post:[]},
+  cloudSelfRate: {pre:[], post:[], followup:[]},
 };
 function persist(){
   store.set('groups',state.groups); store.set('doneModules',state.doneModules);
@@ -4627,21 +4627,24 @@ function selfRateForm(mode){
     <div id="srResult-${mode}"></div>
   </div>`;
 }
+function selfStoreKey(mode){ return 'self'+mode.charAt(0).toUpperCase()+mode.slice(1); }
 function submitSelfRate(mode){
   const vals = SELF_Q.map((_,i)=>{ const el=document.querySelector(`input[name="sr${mode}${i}"]:checked`); return el? +el.value : 0; });
   const msg=document.getElementById('srMsg-'+mode);
   if(vals.some(v=>v===0)){ msg.className='feedback no'; msg.textContent='من فضلك أجب عن كل العبارات الخمس قبل الإرسال.'; return; }
   const total = vals.reduce((a,b)=>a+b,0);
-  store.set(mode==='pre'?'selfPre':'selfPost', { vals, total, at: Date.now() });
+  store.set(selfStoreKey(mode), { vals, total, at: Date.now() });
   pushSelfRateToCloud(state.courseKey, mode, vals, total);
   msg.className='feedback ok';
-  msg.textContent = mode==='pre' ? '✓ تم حفظ تقييمك على هذا الجهاز — ستقارنه بنفسك في نهاية الدورة.' : '✓ تم حفظ تقييمك.';
+  msg.textContent = mode==='pre' ? '✓ تم حفظ تقييمك على هذا الجهاز — ستقارنه بنفسك في نهاية الدورة.'
+    : mode==='followup' ? '✓ وصل تقييمك — شكرًا لك على المتابعة بعد 30 يومًا، هذا نادر وقيّم جدًا.'
+    : '✓ تم حفظ تقييمك.';
   fireConfetti(50);
   renderSelfRateResult(mode);
 }
 function renderSelfRateResult(mode){
   const box = document.getElementById('srResult-'+mode); if(!box) return;
-  if(mode==='pre'){ box.innerHTML=''; return; }
+  if(mode!=='post'){ box.innerHTML=''; return; }
   const pre = store.get('selfPre', null), post = store.get('selfPost', null);
   if(!pre || !post){ box.innerHTML = `<div class="note" style="margin-top:10px">لم يُسجَّل تقييمك في بداية الدورة على هذا الجهاز، فلا تتوفر مقارنة الآن — لكن نتيجتك الحالية محفوظة.</div>`; return; }
   const rows = SELF_Q.map((q,i)=>{
@@ -4747,20 +4750,23 @@ function downloadCommitmentReminder(){
   store.set('commitText', txt);
   const remindAt = new Date(Date.now() + 30*24*60*60*1000);
   const esc = s=> s.replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+  const followupUrl = location.origin + location.pathname + '#followup=1';
+  const desc = `${txt}\n\nقيّم نفسك الآن بعد 30 يومًا (دقيقة واحدة، مجهول تمامًا): ${followupUrl}`;
   const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//جذور//التزام تربوي//AR','CALSCALE:GREGORIAN',
     'BEGIN:VEVENT',
     `UID:${Date.now()}@younes-training`,
     `DTSTAMP:${icsDate(new Date())}`,
     `DTSTART:${icsDate(remindAt)}`,
     `SUMMARY:تذكير من دورة «كيف تعرف طلابك؟» — التزامك التربوي`,
-    `DESCRIPTION:${esc(txt)}`,
+    `DESCRIPTION:${esc(desc)}`,
+    `URL:${followupUrl}`,
     'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:تذكير بالتزامك التربوي','TRIGGER:-PT0M','END:VALARM',
     'END:VEVENT','END:VCALENDAR'].join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
   a.download='تذكير_التزامي_بعد_30_يوم.ics'; a.click();
   msg.className='feedback ok';
-  msg.textContent='✓ نزّل الملف وافتحه لإضافته إلى تقويمك — راح يذكّرك بالضبط بعد 30 يومًا بنفس التزامك.';
+  msg.textContent='✓ نزّل الملف وافتحه لإضافته إلى تقويمك — راح يذكّرك بالضبط بعد 30 يومًا بنفس التزامك، مع رابط تقييم سريع مجهول لمعرفة هل استمر الأثر.';
   fireConfetti(40);
 }
 
@@ -4817,7 +4823,7 @@ function addGroup(){
 function delGroup(i){ state.groups.splice(i,1); persist(); renderGroups(); }
 function resetAll(){
   if(!confirm('سيبدأ تصفير كامل: تُمسح المجموعات محليًا، ولن تظهر أي نتائج سابقة (حتى لو وصلت من جوالات لم تُصفَّر) — مناسب لبدء الدورة مع دفعة جديدة من المتدربين. متأكد؟')) return;
-  state.groups=[]; state.doneModules={}; state.cloudResults={}; state.cloudSelfRate={pre:[],post:[]};
+  state.groups=[]; state.doneModules={}; state.cloudResults={}; state.cloudSelfRate={pre:[],post:[],followup:[]};
   state.resetAt = Date.now(); store.set('resetAt', state.resetAt);
   persist(); go('home');
 }
@@ -4890,14 +4896,14 @@ function pushSelfRateToCloud(courseKey, mode, vals, total){
     .catch(e=> console.error('cloud selfrate write failed:', e.message));
 }
 function ingestSelfRateSnapshot(snap){
-  const pre=[], post=[];
+  const pre=[], post=[], followup=[];
   snap.forEach(doc=>{
     const d=doc.data();
     if(d.ts!=null && d.ts < state.resetAt) return;
     if(!Array.isArray(d.vals) || d.vals.length!==5) return;
-    (d.mode==='post'? post : pre).push(d);
+    (d.mode==='post'? post : d.mode==='followup'? followup : pre).push(d);
   });
-  state.cloudSelfRate = { pre, post };
+  state.cloudSelfRate = { pre, post, followup };
 }
 function listenSelfRate(courseKey){
   stopCloudListeners();
@@ -4984,40 +4990,45 @@ function crownWinner(){
 function openGameBoard(gi){ state.gameBoardIdx=gi; go('gameBoard'); listenGameBoard(state.courseKey, gi); }
 
 /* ================= IMPACT REPORT (تجميع مجهول للتقييم الذاتي قبل/بعد) ================= */
+function impactRow(label1, label2, avg1, avg2, cls1, cls2){
+  const rows = SELF_Q.map((q,i)=>{
+    const a=avg1.perQ[i], b=avg2.perQ[i], d=b-a;
+    const dLabel = d>0.05? `▲ تحسّن ${d.toFixed(1)}` : (d<-0.05? `▼ تراجع ${Math.abs(d).toFixed(1)}` : '= بلا تغيير يُذكر');
+    const dColor = d>0.05?'var(--ok)':(d<-0.05?'var(--bad)':'var(--muted)');
+    return `<div class="rate-row">
+      <div class="rate-q">${i+1}. ${q}</div>
+      <div class="rate-bars">
+        <div class="rate-bar"><span>${label1}</span><div class="rate-bar-track"><div class="rate-bar-fill ${cls1}" style="width:${a*20}%"></div></div></div>
+        <div class="rate-bar"><span>${label2}</span><div class="rate-bar-track"><div class="rate-bar-fill ${cls2}" style="width:${b*20}%"></div></div></div>
+      </div>
+      <div class="rate-delta" style="color:${dColor}">${dLabel}</div>
+    </div>`;
+  }).join('');
+  const totalDelta = avg2.avgTotal - avg1.avgTotal;
+  return `<div class="rate-compare">
+    <div class="rate-total">متوسط المجموع ${label1}: <b>${avg1.avgTotal.toFixed(1)}</b> / 25 ← ${label2}: <b>${avg2.avgTotal.toFixed(1)}</b> / 25
+      <span style="color:${totalDelta>=0?'var(--ok)':'var(--bad)'}">(${totalDelta>=0?'+':''}${totalDelta.toFixed(1)})</span></div>
+    ${rows}
+  </div>`;
+}
 function renderImpactReport(){
-  const cs = state.cloudSelfRate || {pre:[], post:[]};
-  const preAvg = selfRateAvg(cs.pre), postAvg = selfRateAvg(cs.post);
+  const cs = state.cloudSelfRate || {pre:[], post:[], followup:[]};
+  const preAvg = selfRateAvg(cs.pre), postAvg = selfRateAvg(cs.post), followAvg = selfRateAvg(cs.followup);
   let body;
-  if(!preAvg && !postAvg){
+  if(!preAvg && !postAvg && !followAvg){
     body = `<div class="note">لا توجد تقييمات ذاتية مُرسَلة بعد من هذه الدفعة. الشاشة تتحدث تلقائيًا فور بدء المتدربين بتعبئة تقييم "قبل الدورة".</div>`;
   } else {
     const countsLine = `<div class="note" style="margin-bottom:16px">
-      أكملوا التقييم القَبلي: <b>${preAvg? preAvg.count : 0}</b> متدرّبًا · أكملوا التقييم البَعدي: <b>${postAvg? postAvg.count : 0}</b> متدرّبًا.
-      ${(!postAvg)? ' لا مقارنة بعد — تظهر تلقائيًا فور وصول أول تقييم بَعدي.' : ''}
+      أكملوا التقييم القَبلي: <b>${preAvg? preAvg.count : 0}</b> · أكملوا التقييم البَعدي: <b>${postAvg? postAvg.count : 0}</b> · أكملوا متابعة الـ٣٠ يومًا: <b>${followAvg? followAvg.count : 0}</b>.
+      ${(!postAvg)? ' لا مقارنة قبل/بعد بعد — تظهر تلقائيًا فور وصول أول تقييم بَعدي.' : ''}
     </div>`;
     let compareRows = '';
-    if(preAvg && postAvg){
-      const rows = SELF_Q.map((q,i)=>{
-        const a=preAvg.perQ[i], b=postAvg.perQ[i], d=b-a;
-        const dLabel = d>0.05? `▲ تحسّن ${d.toFixed(1)}` : (d<-0.05? `▼ تراجع ${Math.abs(d).toFixed(1)}` : '= بلا تغيير يُذكر');
-        const dColor = d>0.05?'var(--ok)':(d<-0.05?'var(--bad)':'var(--muted)');
-        return `<div class="rate-row">
-          <div class="rate-q">${i+1}. ${q}</div>
-          <div class="rate-bars">
-            <div class="rate-bar"><span>قبل</span><div class="rate-bar-track"><div class="rate-bar-fill pre" style="width:${a*20}%"></div></div></div>
-            <div class="rate-bar"><span>بعد</span><div class="rate-bar-track"><div class="rate-bar-fill post" style="width:${b*20}%"></div></div></div>
-          </div>
-          <div class="rate-delta" style="color:${dColor}">${dLabel}</div>
-        </div>`;
-      }).join('');
-      const totalDelta = postAvg.avgTotal - preAvg.avgTotal;
-      compareRows = `<div class="rate-compare">
-        <div class="rate-total">متوسط المجموع قبل الدورة: <b>${preAvg.avgTotal.toFixed(1)}</b> / 25 ← متوسط المجموع الآن: <b>${postAvg.avgTotal.toFixed(1)}</b> / 25
-          <span style="color:${totalDelta>=0?'var(--ok)':'var(--bad)'}">(${totalDelta>=0?'+':''}${totalDelta.toFixed(1)})</span></div>
-        ${rows}
-      </div>`;
-    } else if(preAvg){
-      compareRows = `<div class="note">التقييم القَبلي فقط متاح الآن (متوسط المجموع: ${preAvg.avgTotal.toFixed(1)} / 25) — المقارنة الكاملة تظهر بعد اكتمال التقييم البَعدي في نهاية الدورة.</div>`;
+    if(preAvg && postAvg) compareRows += impactRow('قبل','بعد', preAvg, postAvg, 'pre','post');
+    else if(preAvg) compareRows += `<div class="note">التقييم القَبلي فقط متاح الآن (متوسط المجموع: ${preAvg.avgTotal.toFixed(1)} / 25) — المقارنة الكاملة تظهر بعد اكتمال التقييم البَعدي في نهاية الدورة.</div>`;
+    if(postAvg && followAvg){
+      compareRows += `<h3 style="color:var(--navy-800);margin:20px 0 8px">🗓️ هل استمر الأثر بعد 30 يومًا؟</h3>` + impactRow('بعد الدورة','بعد 30 يوم', postAvg, followAvg, 'post','pre');
+    } else if(followAvg){
+      compareRows += `<div class="note" style="margin-top:14px">وصلت متابعة بعد 30 يومًا (متوسط المجموع: ${followAvg.avgTotal.toFixed(1)} / 25) لكن لا يوجد تقييم بَعدي كافٍ للمقارنة معها بعد.</div>`;
     }
     body = countsLine + compareRows;
   }
@@ -5191,6 +5202,18 @@ function renderGuide(){
         <div class="item"><div class="bnum">➕</div><div><b>م٩–م١٠ (اختياري) + التقييم الذاتي البعدي + الاستبانة:</b> ٢٥ دقيقة<br><small style="color:var(--muted)">تيسير: قبل التقييم البعدي ذكّر المتدربين بصمت "فكّروا لحظة بأول تقييم سويتوه اليوم" — يرفع جدية الإجابة الثانية.</small></div></div>
       </div>
       <div class="note" style="margin-top:14px"><b>الإجمالي التقريبي: ٤ إلى ٥ ساعات صافية</b> بدون فترات الاستراحة — أي أن الدورة تحتاج فعليًا <b>يوم تدريب كامل</b>، لا محاضرة واحدة قصيرة. إذا كان وقتك المتاح أقل، يمكنك تأجيل م٩ ومحور «إكمال الدورة» (م١٠) لجلسة لاحقة دون أن يفقد المتدربون التقييم البعدي — فقط أعد فتحه معهم في نهاية أي جلسة تختارها.</div>
+
+      <h3 style="color:var(--navy-800);margin:24px 0 10px">🎓 كيف تُدير كل نوع شريحة — دليل يتكرر مع كل ظهور لنفس النوع</h3>
+      <p class="sub" style="margin-bottom:10px">هذا الجدول أهم من ميزانية الوقت: كل نوع شريحة يظهر عشرات المرات بالدورة بنفس النمط — تعلّم إدارته مرة واحدة يكفيك طوال الدورة.</p>
+      <div class="cardlist">
+        <div class="item"><div class="bnum">⚖️</div><div><b>موقف تدريبي (مثل مواقف م٥ ولعبة م٧):</b> لا تكشف الخطأ/الصواب فورًا. اسأل المجموعات «شو رأيكم؟» وانتظر إجابتين على الأقل قبل الضغط على الكشف.</div></div>
+        <div class="item"><div class="bnum">📝</div><div><b>تدريب عملي (tatbiqi):</b> اطلب من كل مجموعة تكتب ردها على ورقة أو تقولها بصوت عالٍ قبل أن تعرض «الإجابة المقترحة» — التأكيد: مقترحة لا وحيدة صحيحة.</div></div>
+        <div class="item"><div class="bnum">🗺️</div><div><b>خمّنوا قبل الكشف (map):</b> غطِّ العمود الأيمن بيدك أو اطلب من الحاضرين إغماض أعينهم لحظة، ثم اكشف صفًا صفًا لا الجدول كله دفعة واحدة.</div></div>
+        <div class="item"><div class="bnum">🌍</div><div><b>بطاقة توثيق عالمي (theory):</b> اربط كل بطاقة بمثال من مدرستك أنت قبل الانتقال للتالية — التوثيق يقنع العقل، والمثال المحلي يقنع القلب.</div></div>
+        <div class="item"><div class="bnum">🌳</div><div><b>شجرة تفاعلية (growtree):</b> لا تضغط الأزرار بنفسك — نادِ متدربًا مختلفًا لكل طبقة (جذور/جذع/فروع/أوراق/ثمار) ليشعر الجميع بالمشاركة.</div></div>
+        <div class="item"><div class="bnum">🎯</div><div><b>تحقق سريع من الهدف (objcheck):</b> بعد ظهور النتيجة، اسأل من اختار الإجابة الخاطئة «ليش اخترتها؟» — نقاشهم أهم من الدرجة نفسها.</div></div>
+        <div class="item"><div class="bnum">📊</div><div><b>تقييم ذاتي (selfrate):</b> لا تعلّق ولا تمر بين الصفوف أثناء التعبئة — الجدية تحتاج خصوصية حتى لو كان مجهولًا.</div></div>
+      </div>
       <div class="note" style="margin-top:16px"><b>نصيحة:</b> اضغط ⛶ لملء الشاشة على السبورة التفاعلية — والشاشة تعمل باللمس مباشرة.</div>
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="gbtn navy" onclick="go('home')">🏠 رئيسية الدورة</button>
@@ -5232,6 +5255,17 @@ function renderPhone(){
       </div></div>`;
     return;
   }
+  if(state.phoneFollowup){
+    app.innerHTML = `<div class="phone-wrap fade-in">
+      <div class="phone-logo">🗓️</div>
+      <div class="phone-course">كيف تعرف طلابك؟ — متابعة بعد 30 يومًا</div>
+      <div class="phone-card">
+        <div class="phone-ic">📊</div><h2>هل ما زال التغيير مستمرًا؟</h2>
+        <p>مرّ شهر على الدورة. أجب بصدق عن نفس العبارات — إجابتك مجهولة تمامًا، وتساعد في معرفة هل الأثر يستمر فعلًا أم يتلاشى مع الوقت.</p>
+        ${selfRateForm('followup')}
+      </div></div>`;
+    return;
+  }
   const g=GAMES[state.phoneGame];
   app.innerHTML = `
     <div class="phone-wrap fade-in">
@@ -5270,6 +5304,7 @@ document.addEventListener('keydown', e=>{
 (function boot(){
   const h = location.hash||'';
   if(/[#&]wish=1/.test(h)){ state.phoneMode=true; state.phoneWish=true; state.view='phone'; }
+  else if(/[#&]followup=1/.test(h)){ state.phoneMode=true; state.phoneFollowup=true; state.view='phone'; }
   else {
     const m=/[#&]g=(\d+)/.exec(h);
     if(m){ const gi=+m[1]; if(gi>=0 && gi<GAMES.length){ state.phoneMode=true; state.phoneGame=gi; state.view='phone'; } }

@@ -12,7 +12,7 @@ service cloud.firestore {
     }
     match /courses/{courseKey}/selfrate/{entryId} {
       allow read: if true;
-      allow create: if request.resource.data.mode in ['pre', 'post']
+      allow create: if request.resource.data.mode in ['pre', 'post', 'followup']
                     && request.resource.data.vals is list
                     && request.resource.data.vals.size() == 5
                     && request.resource.data.total is number
