@@ -443,6 +443,16 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
 textarea.ginput{resize:vertical;font-family:inherit}
 .obj-banner{display:flex;align-items:flex-start;gap:12px;background:#FAF3DF;border:1.5px solid #E8D5A0;border-radius:14px;padding:14px 18px;margin:0 0 14px;font-size:.95rem;line-height:1.7;color:var(--navy-800)}
 .obj-ic{font-size:1.3rem;flex-shrink:0}
+.objcheck{margin-top:10px}
+.oc-opts{display:flex;flex-direction:column;gap:10px}
+.oc-opt{text-align:right;padding:14px 18px;border:2px solid var(--line);border-radius:14px;background:#fff;font-family:inherit;font-size:1rem;font-weight:700;color:var(--navy-700);cursor:pointer;transition:.15s}
+.oc-opt:hover:not(:disabled){border-color:var(--gold)}
+.oc-opt:disabled{cursor:default}
+.oc-opt.correct{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.oc-opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.oc-fb{margin-top:12px;font-weight:800;text-align:center;min-height:24px}
+.oc-fb.ok{color:var(--ok)}
+.oc-fb.no{color:var(--bad)}
 .rate-compare{margin-top:14px;display:flex;flex-direction:column;gap:16px}
 .rate-total{font-weight:800;color:var(--navy-800);text-align:center;padding:12px;background:#F6F3EA;border-radius:14px;font-size:1rem}
 .rate-row{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -2908,7 +2918,7 @@ const COURSE = {
 
   /* ============ M1 : مقدمة الدورة ============ */
   { id:'m1', icon:'🏠', name:'مقدمة الدورة', desc:'لماذا هذه الدورة؟ خريطة الرحلة ومنهجية التدريب',
-    obj:'تحدّد أهداف الدورة الثلاثة، وتتوقع مسار رحلتها الزمنية قبل أن تبدأ.', game:1, slides:[
+    obj:'ترسم خريطة محاور الدورة الخمسة بترتيبها، وتشرح لزميل أسلوب التعلم فيها (موقف ← خطأ/صواب ← نشاط).', game:1, slides:[
     { k:'title', noveil:true, kicker:'دورة تدريبية للمعلمين والمربين', title:'من الطفل العنيد إلى الشاب صاحب القرار',
       lead:'كيف نحوّل عناد الطفولة إلى استقلالٍ وثقةٍ ومسؤولية وقرارٍ واعٍ؟',
       pills:['بتوثيق علمي عالمي','OECD 2030','فنلندا','اليابان','ماليزيا','CASEL'],
@@ -2929,6 +2939,8 @@ const COURSE = {
               {n:'⚖️', b:'الخطأ والصواب', t:'مقارنة الرد الذي يكسر بالرد الذي يبني — يُكشف بعد نقاشكم.'},
               {n:'💬', b:'رد جاهز للتطبيق', t:'صياغة تربوية عملية تقولها كما هي.'},
               {n:'🎮', b:'نشاط تدريبي بعد كل محور', t:'منافسة بين المجموعات، والأسرع يتصدر لوحة النتائج.'} ] },
+    { k:'objcheck', noveil:true, qid:'m1', kicker:'تحقق سريع من الهدف', title:'ما الذي يحدث بين كل محور والمحور الذي يليه؟',
+      opts:['نشاط تدريبي تنافسي بين المجموعات','اختبار ورقي فردي طويل','استراحة بلا أي نشاط','واجب منزلي يُسلَّم لاحقًا'], a:0 },
   ]},
 
   /* ============ M2 : نموذج التحوّل الجذري ============ */
@@ -2974,6 +2986,8 @@ const COURSE = {
       lead:'الواجهة هي الاختبارات والشهادات والمظاهر. أما الأساس فهو الطفل والمربي والبيئة الآمنة والتغذية والقيم.',
       pills:['الطفل','المربي','البيئة الآمنة','التغذية','القيم'],
       quote:'ابنِ الأساس أولًا… يثبت البناء للأبد.' },
+    { k:'objcheck', noveil:true, qid:'m2', kicker:'تحقق سريع من الهدف', title:'أي جذر من الجذور الخمسة معناه «حرية داخل حدود، وخطأ بلا إهانة»؟',
+      opts:['الطفل','البيئة الآمنة','التغذية','القيم'], a:1 },
   ]},
 
   /* ============ M3 : التوثيق العالمي ============ */
@@ -3040,6 +3054,8 @@ const COURSE = {
     { k:'title', kicker:'خلاصة التوثيق', title:'ما يقوله نموذج التحوّل الجذري… تقوله أفضل أنظمة التعليم في العالم',
       lead:'هذا ليس اجتهادًا فرديًا — إنه خلاصة علم التربية الحديث، موثقة بالمصادر في الملف المرجعي المرفق مع الدورة.',
       pills:['OECD: وكالة الطالب','فنلندا: الرفاه أولًا','اليابان: الطفل الكامل','ماليزيا: القيم رسميًا','CASEL: القرار المسؤول'] },
+    { k:'objcheck', noveil:true, qid:'m3', kicker:'تحقق سريع من الهدف', title:'أي إطار عالمي يربط عناد الطفل بحاجته للاستقلالية؟',
+      opts:['نظرية التقرير الذاتي (SDT)','توكاتسو الياباني','مخطط ماليزيا 2013–2025','إطار CASEL'], a:0 },
   ]},
 
   /* ============ M4 : فهم العناد ============ */
@@ -3081,6 +3097,8 @@ const COURSE = {
       items:[ {n:'01', b:'الاستقلال'}, {n:'02', b:'اتخاذ القرار'}, {n:'03', b:'قول «لا» بأدب'},
               {n:'04', b:'الإصرار والمثابرة'}, {n:'05', b:'التفاوض والتعبير عن الرغبة'} ],
       lead:'سنتدرب على كل مهارة بمواقف واقعية: الخطأ الشائع… والصواب التربوي الجاهز للتطبيق.' },
+    { k:'objcheck', noveil:true, qid:'m4', kicker:'تحقق سريع من الهدف', title:'حين يقول الطفل «دعوني أجرب» في مرحلة العناد، أي حاجة يعبّر عنها؟',
+      opts:['حاجة التجربة','حاجة النوم فقط','حاجة الطعام فقط','لا يعبّر عن أي حاجة حقيقية'], a:0 },
   ]},
 
   /* ============ M5 : المهارات الخمس ============ */
@@ -3226,6 +3244,8 @@ const COURSE = {
               {n:'💬', b:'جملة واحدة', t:'سأستبدلها بجملة تربوية.'},
               {n:'🧭', b:'قرارًا واحدًا', t:'سأعطيه فيه اختيارًا مناسبًا.'} ],
       quote:'التغيير لا يبدأ من الطفل… بل من جملة واحدة نغيرها نحن.' },
+    { k:'objcheck', noveil:true, qid:'m6', kicker:'تحقق سريع من الهدف', title:'أيّ وصف ينطبق على «الحزم» لا «القسوة»؟',
+      opts:['حدود واضحة، كلام هادئ، ثبات في القرار، احترام للطفل','إهانة وصراخ وتهديد وكسر للنفس','ترك الطفل يقودك بالصراخ','تجاهل الموقف تمامًا'], a:0 },
   ]},
 
   /* ============ M7 : تدرّب — خمّن الصحيح والخطأ ============ */
@@ -3278,12 +3298,12 @@ const COURSE = {
     { k:'title', kicker:'وصلنا', title:'أنهينا محاور الجزء الأول 🎉',
       lead:'من الجذور إلى الثمار… ومن العناد إلى القرار.',
       pills:['نموذج التحوّل الجذري','التوثيق العالمي','فهم العناد','المهارات الخمس','المربي والتطبيق'] },
-    { k:'bullets', kicker:'خلاصة الرحلة', title:'خمس رسائل تخرج بها اليوم',
-      items:[ {n:'1', b:'ابدأ من الجذور:', t:'لا تطلب ثمرة لم تزرع جذرها.'},
-              {n:'2', b:'العناد ليس عدوًا:', t:'إنه طاقة نمو تحتاج توجيهًا لا كسرًا.'},
-              {n:'3', b:'الخيار داخل حدود:', t:'أقوى أداة تربوية أثبتها العلم.'},
-              {n:'4', b:'حازم في القرار رحيم في الأسلوب:', t:'الأسلوب الأعلى نتائج عالميًا.'},
-              {n:'5', b:'التغيير يبدأ منك:', t:'جملة واحدة تغيّرها… تغيّر طفلًا كاملًا.'} ],
+    { k:'bullets', kicker:'خلاصة الرحلة — حاول تسترجعها قبل الكشف', title:'خمس رسائل تخرج بها اليوم',
+      items:[ {n:'1', b:'ابدأ من الجذور:', qa:true, t:'لا تطلب ثمرة لم تزرع جذرها.'},
+              {n:'2', b:'العناد ليس عدوًا:', qa:true, t:'إنه طاقة نمو تحتاج توجيهًا لا كسرًا.'},
+              {n:'3', b:'الخيار داخل حدود:', qa:true, t:'أقوى أداة تربوية أثبتها العلم.'},
+              {n:'4', b:'حازم في القرار رحيم في الأسلوب:', qa:true, t:'الأسلوب الأعلى نتائج عالميًا.'},
+              {n:'5', b:'التغيير يبدأ منك:', qa:true, t:'جملة واحدة تغيّرها… تغيّر طفلًا كاملًا.'} ],
       quote:'من أصلح الجذور… صنع جيلًا لا تجتثه الرياح.' },
     { k:'title', kicker:'حان وقت التتويج', title:'البطولة الختامية بين الفرق 🏆',
       lead:'أسئلة من كل المحاور، والفريق الأعلى نقاطًا يرفع الكأس.',
@@ -4509,6 +4529,11 @@ function slideHTML(s){
       ${V(`<div class="quote ${qClass()}" style="margin-top:14px"><b style="color:var(--gold-light)">💡 إجابة مقترحة:</b><br>«${s.answer}»</div>`)}`;
     case 'survey': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}${surveyForm()}`;
     case 'selfrate': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}${selfRateForm(s.mode)}`;
+    case 'objcheck': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}
+      <div class="objcheck" id="objcheck-${s.qid}">
+        <div class="oc-opts">${s.opts.map((o,i)=>`<button class="oc-opt" onclick="answerObjCheck('${s.qid}',${i},${s.a})">${o}</button>`).join('')}</div>
+        <div class="oc-fb" id="ocfb-${s.qid}"></div>
+      </div>`;
     case 'commit': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}
       <div class="cardlist">
         <div class="item" style="background:#FAF3DF"><div class="bnum">✍️</div><div style="flex:1">
@@ -4701,6 +4726,17 @@ function exportBox(){
   a.download='رسائل_المتدربين.txt'; a.click();
 }
 function clearBox(){ if(confirm('حذف كل الرسائل والاستبانات؟')){ state.wishes=[]; state.surveys=[]; persist(); renderWishes(); } }
+
+/* ================= OBJECTIVE CHECK (تحقق مباشر من هدف المحور) ================= */
+function answerObjCheck(qid, i, correctIdx){
+  const box = document.getElementById('objcheck-'+qid); if(!box) return;
+  const btns = [...box.querySelectorAll('.oc-opt')];
+  btns.forEach((b,bi)=>{ b.disabled=true; if(bi===correctIdx) b.classList.add('correct'); else if(bi===i) b.classList.add('wrong'); });
+  const fb = document.getElementById('ocfb-'+qid);
+  fb.className = 'oc-fb ' + (i===correctIdx ? 'ok':'no');
+  fb.textContent = i===correctIdx ? '✓ صحيح — هذا هو جوهر هدف هذا المحور.' : '✗ ليست هذه — لاحظ التلوين الأخضر للإجابة الصحيحة.';
+  if(i===correctIdx) fireConfetti(30);
+}
 
 /* ================= COMMITMENT REMINDER (تذكير .ics بعد 30 يومًا) ================= */
 function icsDate(d){ return d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z'; }
