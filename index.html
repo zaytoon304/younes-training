@@ -623,6 +623,12 @@ body.theme-ard .lcd-display{box-shadow:0 0 30px rgba(0,151,157,.5),inset 0 0 20p
 .lcd-display.unlocked{border-color:#3FB08A;animation:lockGlow 1s ease-in-out infinite}
 .lcd-display.unlocked .lcd-digit{color:#7FE0B8}
 @keyframes lockGlow{0%,100%{box-shadow:0 0 30px rgba(63,176,138,.5),inset 0 0 20px rgba(0,0,0,.6)}50%{box-shadow:0 0 55px rgba(63,176,138,.9),inset 0 0 20px rgba(0,0,0,.6)}}
+.ayah-box{max-width:560px;margin:22px auto 0;text-align:center;padding:22px 26px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(217,174,75,.14),rgba(217,174,75,.05));border:1.5px solid rgba(217,174,75,.5);
+  font-size:1.5rem;font-weight:800;color:var(--gold-light);line-height:2;animation:ayahIn .6s ease}
+body.theme-ard .ayah-box{border-color:rgba(0,151,157,.55);background:linear-gradient(180deg,rgba(0,151,157,.14),rgba(0,151,157,.05))}
+.ayah-box .ayah-ref{display:block;margin-top:8px;font-size:.95rem;font-weight:600;color:var(--muted,#a9b3c9);letter-spacing:.5px}
+@keyframes ayahIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .keypad{display:grid;direction:ltr;grid-template-columns:repeat(3,84px);gap:12px;justify-content:center;margin:0 auto}
 .key{width:84px;height:64px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);
   color:#fff;font-size:1.5rem;font-weight:800;cursor:pointer;transition:.15s;font-family:ui-monospace,monospace}
@@ -4668,6 +4674,7 @@ function renderIcebreaker(){
         <button class="key key-go" onclick="pressKey('OK')">فتح 🔓</button>
       </div>
       <div class="lock-msg" id="lockMsg"></div>
+      <div id="lockAyah"></div>
       <div id="lockStart" style="text-align:center;margin-top:22px"></div>
       <div style="text-align:center;margin-top:14px">
         <button class="minibtn ghost" onclick="go('home')">تخطّي ▸</button>
@@ -4692,6 +4699,8 @@ function unlockSuccess(){
   document.querySelectorAll('.key').forEach(b=> b.disabled=true);
   const msg=document.getElementById('lockMsg'); msg.className='lock-msg ok'; msg.textContent='🔓 تم فك الشيفرة! أحسنتم';
   fireConfetti(160);
+  const ayahBox = document.getElementById('lockAyah');
+  if(ayahBox) ayahBox.innerHTML = `<div class="ayah-box">﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾<span class="ayah-ref">سورة طه، الآية ١١٤</span></div>`;
   const startBox = document.getElementById('lockStart');
   if(startBox) startBox.innerHTML = `<button class="gbtn" style="font-size:1.15rem;padding:16px 32px" onclick="go('home')">🚀 ابدأ الدورة الآن</button>`;
 }
