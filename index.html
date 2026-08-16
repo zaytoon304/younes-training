@@ -5593,7 +5593,7 @@ document.addEventListener('keydown', e=>{
 });
 
 /* ================= BOOT ================= */
-(function boot(){
+function routeHash(){
   const h = location.hash||'';
   if(/[#&]wish=1/.test(h)){ state.phoneMode=true; state.phoneWish=true; state.view='phone'; }
   else if(/[#&]followup=1/.test(h)){ state.phoneMode=true; state.phoneFollowup=true; state.view='phone'; }
@@ -5603,11 +5603,15 @@ document.addEventListener('keydown', e=>{
     if(m){ const gi=+m[1]; if(gi>=0 && gi<GAMES.length){ state.phoneMode=true; state.phoneGame=gi; state.view='phone'; } }
     else {
       const cm=/[#&]course=([a-z0-9]+)/i.exec(h);
-      if(cm && ['p1','p2','ard1'].includes(cm[1])){ state.courseKey=cm[1]; state.mi=0; state.si=0; state.view='home'; }
+      if(cm && ['p1','p2','ard1'].includes(cm[1])){ state.phoneMode=false; state.courseKey=cm[1]; state.mi=0; state.si=0; state.view='home'; }
+      else return false;
     }
   }
-  render();
-})();
+  return true;
+}
+routeHash();
+render();
+window.addEventListener('hashchange', ()=>{ routeHash(); render(); });
 </script>
 </body>
 </html>
