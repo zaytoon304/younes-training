@@ -468,17 +468,17 @@ body.theme-ard .colcard{border-radius:6px}
   background:linear-gradient(135deg,rgba(217,174,75,.14),rgba(255,255,255,.05));border:1.5px solid rgba(240,204,122,.4);
   border-radius:var(--r);padding:16px 18px;margin:14px 0;box-shadow:0 0 0 1px rgba(217,174,75,.12);animation:adabGlow 3s ease-in-out infinite}
 @keyframes adabGlow{0%,100%{box-shadow:0 0 0 1px rgba(217,174,75,.12)}50%{box-shadow:0 0 0 1px rgba(217,174,75,.4),0 0 24px rgba(217,174,75,.18)}}
-.adablbl{color:var(--gold-light);font-weight:900;font-size:1.05rem;letter-spacing:.3px}
-.adabgrid{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
-.adabbtn{width:66px;height:66px;border-radius:18px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);
-  cursor:pointer;font-size:2rem;transition:.2s}
+.adablbl{color:var(--gold-light);font-weight:900;font-size:1.3rem;letter-spacing:.3px}
+.adabgrid{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
+.adabbtn{width:88px;height:88px;border-radius:22px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);
+  cursor:pointer;font-size:2.7rem;transition:.2s}
 .adabbtn:hover{background:rgba(240,204,122,.25);border-color:var(--gold);transform:translateY(-3px) scale(1.06)}
 .adab-modal{text-align:center}
-.adab-ic{font-size:4.2rem}
-.adab-modal h3{color:var(--navy-800);font-size:1.55rem;margin:10px 0 16px}
-.adab-text{background:#EAF7F1;border:1.5px solid #B9E3CE;border-radius:14px;padding:18px 20px;font-size:1.32rem;
+.adab-ic{font-size:5.6rem}
+.adab-modal h3{color:var(--navy-800);font-size:2rem;margin:12px 0 18px}
+.adab-text{background:#EAF7F1;border:1.5px solid #B9E3CE;border-radius:14px;padding:22px 24px;font-size:1.7rem;
   line-height:2;color:#0B5F44;font-weight:700;text-align:center}
-.adab-tip{background:#FAF3DF;border-radius:12px;padding:14px 18px;margin-top:12px;color:#5A4A1F;font-weight:700;line-height:1.8;font-size:1.1rem}
+.adab-tip{background:#FAF3DF;border-radius:12px;padding:16px 20px;margin-top:14px;color:#5A4A1F;font-weight:700;line-height:1.8;font-size:1.35rem}
 .attn-flash{position:fixed;top:0;inset-inline:0;z-index:200;pointer-events:none;text-align:center;padding:22px 10px;
   font-size:clamp(1.8rem,5vw,3.2rem);font-weight:900;color:#fff;background:linear-gradient(135deg,var(--bad),#8f2323);
   animation:attnPulse .7s ease-in-out infinite;box-shadow:0 6px 30px rgba(0,0,0,.4)}
@@ -3966,7 +3966,7 @@ const ADAB = [
     tip:'عُدّ إلى ثلاثة بعد انتهاء السؤال… ثم أجب. الإجابة المتأنية أثبت من السريعة.' },
   { icon:'✋', title:'مقاطعة الزميل أثناء حديثه',
     text:'لا مقاطعة لأي متحدث حتى ينهي فكرته.',
-    tip:'القاطع يظن أنه يضيف… وهو في الحقيقة يُلغي. انتظر النقطة الأخيرة.' },
+    tip:'القاطع يظن أنه يضيف… وهو في الحقيقة يُعرقل. لا بدّ أن تنتظر نهاية حديث زميلك كاملًا قبل أن تتكلم.' },
   { icon:'⚔️', title:'الاعتراض بأسلوب غير لائق وكأن الخلاف قتال',
     text:'اختلاف الرأي لا يعني خصومة.',
     tip:'قل: «أفهم وجهة نظرك، ولي رأيٌ آخر…» — الخلاف في الرأي لا يُفسد للودّ قضية.' },
@@ -4341,7 +4341,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false, phoneFollowup:false,
+  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false, phoneFollowup:false, phoneSurvey:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -4450,8 +4450,8 @@ function bindReveal(){
 }
 function veiled(){ return RVQ.filter(x=>x.classList.contains('veil')); }
 function markShown(el){ el.classList.remove('veil'); el.classList.add('shown'); }
-function revealUpTo(i){ for(let k=0;k<=i;k++) markShown(RVQ[k]); beep(true); updateNav(); }
-function revealNext(){ const el=veiled()[0]; if(el){ markShown(el); beep(true); updateNav(); } }
+function revealUpTo(i){ for(let k=0;k<=i;k++) markShown(RVQ[k]); updateNav(); }
+function revealNext(){ const el=veiled()[0]; if(el){ markShown(el); updateNav(); } }
 function revealAll(){ RVQ.forEach(markShown); updateNav(); }
 function updateNav(){
   const btn=document.getElementById('mainNext'); if(!btn) return;
@@ -4479,6 +4479,7 @@ function topbar(){
     <button class="tbtn" onclick="go('groups')">👥 المجموعات</button>
     <button class="tbtn" onclick="openBoard()">🏆 النتائج</button>
     <button class="tbtn" onclick="openImpact()">📊 تقرير الأثر</button>
+    <button class="tbtn" onclick="qrCourse()">🔗 رابط الدورة</button>
     <button class="tbtn gold" onclick="go('home')">🏠 رئيسية الدورة</button>
     <button class="tbtn" onclick="go('hub')">🌐 كل الدورات</button>
   </div>`;
@@ -4762,7 +4763,10 @@ function slideHTML(s){
         <div class="item" style="background:#FAF3DF"><div class="bnum">📝</div><div><b>المطلوب منكم:</b> ${s.task} — ناقشوا في مجموعتكم أولًا!</div></div>
       </div>
       ${V(`<div class="quote ${qClass()}" style="margin-top:14px"><b style="color:var(--gold-light)">💡 إجابة مقترحة:</b><br>«${s.answer}»</div>`)}`;
-    case 'survey': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}${surveyForm()}`;
+    case 'survey': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="gbtn ghost" onclick="qrSurvey()">📱 باركود الاستبانة لكل المعلمين</button>
+      </div>${surveyForm()}`;
     case 'selfrate': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}${selfRateForm(s.mode)}`;
     case 'objcheck': return `${kick}<h2 class="s-title">${s.title}</h2>${leadOpen}
       <div class="objcheck" id="objcheck-${s.qid}">
@@ -4815,7 +4819,6 @@ function selectRadialItem(i){
     tip.innerHTML = `<span class="rt-title">${it.icon} ${it.label}</span>${it.text}`;
     tip.classList.add('show');
   }
-  try{ beep(true); }catch(e){}
 }
 /* ---- progressive tree growth ---- */
 const GROW_STEPS = [63, 50, 39, 25, 0];   // clip-top % : جذور، جذع، فروع، أوراق، ثمار
@@ -4828,7 +4831,7 @@ function bindGrowTree(s){
     b.onclick=()=>{
       const i=+b.dataset.i;
       if(i!==step+1) return;
-      step=i; beep(true);
+      step=i;
       img.style.clipPath=`inset(${GROW_STEPS[i]}% 0 0 0)`;
       b.classList.add('active'); b.disabled=true;
       b.querySelector('.laystate').textContent='✓';
@@ -4850,7 +4853,6 @@ function highlightBoardPos(xPct, yPct){
   const marker = document.getElementById('diagramMarker'); if(!marker) return;
   marker.style.left = xPct+'%'; marker.style.top = yPct+'%';
   marker.classList.remove('show'); void marker.offsetWidth; marker.classList.add('show');
-  try{ beep(true); }catch(e){}
 }
 
 /* ================= SURVEY ================= */
@@ -5391,9 +5393,16 @@ function applyCode(){
 }
 
 /* ================= QR ================= */
-function baseUrl(){ return (state.hostUrl||'').trim().split('#')[0]; }
+function baseUrl(){
+  const manual=(state.hostUrl||'').trim().split('#')[0];
+  if(manual) return manual;
+  try{ if(/^https?:$/.test(location.protocol)) return location.origin + location.pathname; }catch(e){}
+  return '';
+}
 function qrGame(gi){ qrPanel(GAMES[gi].icon+' '+GAMES[gi].name, baseUrl()? baseUrl()+'#g='+gi : null, ()=>qrGame(gi)); }
 function qrWish(){ qrPanel('💌 ماذا تريد في الجزء القادم؟', baseUrl()? baseUrl()+'#wish=1' : null, qrWish); }
+function qrSurvey(){ qrPanel('📝 استبانة الدورة لكل المعلمين', baseUrl()? baseUrl()+'#survey=1' : null, qrSurvey); }
+function qrCourse(){ qrPanel(CC().icon+' '+CC().title+' — رابط مباشر (لعرضه على أي جهاز أو سبورة ذكية)', baseUrl()? baseUrl()+'#course='+state.courseKey : null, qrCourse); }
 let _qrRetry = null;
 function qrPanel(title, url, retry){
   _qrRetry = retry;
@@ -5527,6 +5536,17 @@ function renderPhone(){
       </div></div>`;
     return;
   }
+  if(state.phoneSurvey){
+    app.innerHTML = `<div class="phone-wrap fade-in">
+      <div class="phone-logo">📝</div>
+      <div class="phone-course">استبانة الدورة</div>
+      <div class="phone-card">
+        <div class="phone-ic">✍️</div><h2>رأيك يصنع الجزء القادم</h2>
+        <p>دقيقتان بس — إجابتك تصل للمدرب مباشرة.</p>
+        ${surveyForm()}
+      </div></div>`;
+    return;
+  }
   if(state.phoneFollowup){
     app.innerHTML = `<div class="phone-wrap fade-in">
       <div class="phone-logo">🗓️</div>
@@ -5577,9 +5597,14 @@ document.addEventListener('keydown', e=>{
   const h = location.hash||'';
   if(/[#&]wish=1/.test(h)){ state.phoneMode=true; state.phoneWish=true; state.view='phone'; }
   else if(/[#&]followup=1/.test(h)){ state.phoneMode=true; state.phoneFollowup=true; state.view='phone'; }
+  else if(/[#&]survey=1/.test(h)){ state.phoneMode=true; state.phoneSurvey=true; state.view='phone'; }
   else {
     const m=/[#&]g=(\d+)/.exec(h);
     if(m){ const gi=+m[1]; if(gi>=0 && gi<GAMES.length){ state.phoneMode=true; state.phoneGame=gi; state.view='phone'; } }
+    else {
+      const cm=/[#&]course=([a-z0-9]+)/i.exec(h);
+      if(cm && ['p1','p2','ard1'].includes(cm[1])){ state.courseKey=cm[1]; state.mi=0; state.si=0; state.view='home'; }
+    }
   }
   render();
 })();
