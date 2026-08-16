@@ -610,10 +610,14 @@ body.theme-ard .splash-ic{filter:drop-shadow(0 0 30px rgba(0,151,157,.8))}
 .clue-num{background:linear-gradient(145deg,var(--gold),var(--gold-dark));color:var(--navy-900);font-weight:900;
   width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem}
 .lcd-display{display:flex;direction:ltr;gap:14px;justify-content:center;margin:0 auto 26px;background:#04120f;border:3px solid var(--gold);
-  border-radius:16px;padding:20px 26px;width:fit-content;box-shadow:0 0 30px rgba(217,174,75,.35),inset 0 0 20px rgba(0,0,0,.6)}
+  border-radius:16px;padding:20px 26px;width:fit-content;max-width:94vw;box-shadow:0 0 30px rgba(217,174,75,.35),inset 0 0 20px rgba(0,0,0,.6)}
 body.theme-ard .lcd-display{box-shadow:0 0 30px rgba(0,151,157,.5),inset 0 0 20px rgba(0,0,0,.6)}
 .lcd-digit{font-family:ui-monospace,"SF Mono",monospace;font-size:3rem;font-weight:900;color:var(--gold-light);
   width:52px;text-align:center;text-shadow:0 0 12px currentColor}
+@media(max-width:640px){
+  .lcd-display{gap:6px;padding:14px 12px}
+  .lcd-digit{width:34px;font-size:1.8rem}
+}
 .lcd-display.shake{animation:lockShake .4s}
 @keyframes lockShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
 .lcd-display.unlocked{border-color:#3FB08A;animation:lockGlow 1s ease-in-out infinite}
@@ -4635,8 +4639,10 @@ const LOCK_CLUES = [
   'نصف الرقم ١٢؟',
   'أصغر عدد أوّلي (لا يقبل القسمة إلا على نفسه والواحد)؟',
   'عدد أيام الأسبوع؟',
+  'عدد أضلاع المثلث؟',
+  'نصف الرقم ١٠؟',
 ];
-const LOCK_CODE = '4627';
+const LOCK_CODE = '462735';
 let codeInput = '';
 function renderIcebreaker(){
   codeInput = '';
@@ -4647,12 +4653,13 @@ function renderIcebreaker(){
       <div class="icebreaker-hero">
         <div class="kicker">✦ فكّوا الشيفرة قبل أن نبدأ ✦</div>
         <h1>🔐 شيفرة الدخول الرقمية</h1>
-        <p>أربع تلميحات… كل تلميح يمنحكم رقمًا واحدًا من شيفرة الدخول المكوّنة من ٤ أرقام. ناقشوها بصوت عالٍ ثم أدخلوها.</p>
+        <p>ستة تلميحات… كل تلميح يمنحكم رقمًا واحدًا من شيفرة الدخول المكوّنة من ٦ أرقام. ناقشوها بصوت عالٍ ثم أدخلوها.</p>
       </div>
       <div class="clue-grid">${clues}</div>
       <div class="lcd-display" id="lcdDisplay">
         <span class="lcd-digit" id="lcdD0">_</span><span class="lcd-digit" id="lcdD1">_</span>
         <span class="lcd-digit" id="lcdD2">_</span><span class="lcd-digit" id="lcdD3">_</span>
+        <span class="lcd-digit" id="lcdD4">_</span><span class="lcd-digit" id="lcdD5">_</span>
       </div>
       <div class="keypad">
         ${keys}
@@ -4667,17 +4674,17 @@ function renderIcebreaker(){
       </div>
     </div>`;
 }
-function updateLCD(){ for(let i=0;i<4;i++){ const el=document.getElementById('lcdD'+i); if(el) el.textContent = codeInput[i] || '_'; } }
+function updateLCD(){ for(let i=0;i<6;i++){ const el=document.getElementById('lcdD'+i); if(el) el.textContent = codeInput[i] || '_'; } }
 function shakeLock(){ const d=document.getElementById('lcdDisplay'); if(!d) return; d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); }
 function pressKey(k){
   const msg = document.getElementById('lockMsg');
   if(k==='C'){ codeInput=''; msg.textContent=''; msg.className='lock-msg'; }
   else if(k==='OK'){
-    if(codeInput.length<4){ shakeLock(); msg.className='lock-msg no'; msg.textContent='أدخلوا الأرقام الأربعة أولًا'; return; }
+    if(codeInput.length<6){ shakeLock(); msg.className='lock-msg no'; msg.textContent='أدخلوا الأرقام الستة أولًا'; return; }
     if(codeInput===LOCK_CODE){ unlockSuccess(); return; }
     shakeLock(); msg.className='lock-msg no'; msg.textContent='❌ الشيفرة غير صحيحة — راجعوا التلميحات وحاولوا مجددًا';
     codeInput='';
-  } else if(codeInput.length<4){ codeInput+=k; }
+  } else if(codeInput.length<6){ codeInput+=k; }
   updateLCD();
 }
 function unlockSuccess(){
