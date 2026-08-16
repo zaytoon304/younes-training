@@ -315,6 +315,19 @@ body.theme-ard .stage-wrap{border-radius:12px}
   font-size:.95rem;letter-spacing:.5px}
 .rv:not(.veil){animation:pop .35s ease}
 @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+/* Arduino course: terminal-style reveal, distinct from the pedagogy course's lock/dashed pattern */
+body.theme-ard .rv.veil::after{
+  content:"▌ اضغط للتشغيل";
+  font-family:ui-monospace,"SF Mono","Cascadia Code",monospace;
+  color:var(--gold-light);background:rgba(4,26,24,.72);
+  border:1.5px solid var(--gold);border-radius:6px;
+  letter-spacing:1px;animation:ardBlink 1.3s steps(1) infinite;
+}
+@keyframes ardBlink{0%,100%{opacity:1}50%{opacity:.72}}
+body.theme-ard .rv.veil>*{filter:blur(6px);opacity:.22}
+body.theme-ard .cardlist .item{border-radius:6px;border-inline-start:3px solid var(--gold);border-width:1px}
+body.theme-ard .cardlist .item .bnum{border-radius:6px;background:var(--navy-800);border:1.5px solid var(--gold);color:var(--gold-light)}
+body.theme-ard .colcard{border-radius:6px}
 .navmid{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
 .rvcount{font-weight:800;color:var(--muted);font-size:.85rem}
 .minibtn{border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem;padding:9px 16px;border-radius:12px;
