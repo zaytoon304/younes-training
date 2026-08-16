@@ -5888,6 +5888,7 @@ document.addEventListener('keydown', e=>{
 /* ================= BOOT ================= */
 function routeHash(){
   const h = location.hash||'';
+  state.phoneWish=false; state.phoneFollowup=false; state.phoneSurvey=false; state.phoneGame=null; state.phoneIcebreaker=false;
   if(/[#&]wish=1/.test(h)){ state.phoneMode=true; state.phoneWish=true; state.view='phone'; }
   else if(/[#&]followup=1/.test(h)){ state.phoneMode=true; state.phoneFollowup=true; state.view='phone'; }
   else if(/[#&]survey=1/.test(h)){ state.phoneMode=true; state.phoneSurvey=true; state.view='phone'; }
