@@ -4405,7 +4405,7 @@ const store = {
   set(k,v){ try{ localStorage.setItem('ynp_'+k, JSON.stringify(v)); }catch(e){ (store.mem=store.mem||{})[k]=v; } },
 };
 const state = {
-  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false, phoneFollowup:false, phoneSurvey:false,
+  view:'hub', mi:0, si:0, courseIdx:0, courseKey:'p1', gameBoardIdx:0, phoneMode:false, phoneGame:null, phoneWish:false, phoneFollowup:false, phoneSurvey:false, phoneIcebreaker:false,
   groups: store.get('groups', []),
   doneModules: store.get('doneModules', {}),
   hostUrl: store.get('hostUrl',''),
@@ -4421,6 +4421,7 @@ function persist(){
 }
 function go(view,a,b){ if(typeof stopTimers==='function') stopTimers(); stopSpeak();
   if(view!=='gameBoard' && typeof stopGameBoardListener==='function') stopGameBoardListener();
+  if(view!=='icebreaker' && typeof stopIcebreakerListener==='function') stopIcebreakerListener();
   state.view=view; if(view==='module'){state.mi=a; state.si=b||0;} window.scrollTo({top:0}); render(); }
 function CC(){ return state.courseKey==='p2' ? COURSE2 : state.courseKey==='ard1' ? COURSE3 : COURSE; }
 function openCourse(key){ state.courseKey=key; state.mi=0; state.si=0; go('splash'); }
@@ -4650,10 +4651,11 @@ const LOCK_CLUES = [
 ];
 const LOCK_CODE = '681537';
 let codeInput = '';
+function clueGridHTML(){ return LOCK_CLUES.map((c,i)=>`<div class="clue-card"><span class="clue-num">${i+1}</span>${c}</div>`).join(''); }
+function keypadHTML(){ return [1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" onclick="pressKey('${n}')">${n}</button>`).join(''); }
+function lcdHTML(){ return Array.from({length:6},(_,i)=>`<span class="lcd-digit" id="lcdD${i}">_</span>`).join(''); }
 function renderIcebreaker(){
   codeInput = '';
-  const clues = LOCK_CLUES.map((c,i)=>`<div class="clue-card"><span class="clue-num">${i+1}</span>${c}</div>`).join('');
-  const keys = [1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" onclick="pressKey('${n}')">${n}</button>`).join('');
   app.innerHTML = `
     <div class="codelock-wrap">
       <div class="icebreaker-hero">
@@ -4661,14 +4663,10 @@ function renderIcebreaker(){
         <h1>🔐 شيفرة الدخول الرقمية</h1>
         <p>ستة تلميحات… كل تلميح يمنحكم رقمًا واحدًا من شيفرة الدخول المكوّنة من ٦ أرقام. ناقشوها بصوت عالٍ ثم أدخلوها.</p>
       </div>
-      <div class="clue-grid">${clues}</div>
-      <div class="lcd-display" id="lcdDisplay">
-        <span class="lcd-digit" id="lcdD0">_</span><span class="lcd-digit" id="lcdD1">_</span>
-        <span class="lcd-digit" id="lcdD2">_</span><span class="lcd-digit" id="lcdD3">_</span>
-        <span class="lcd-digit" id="lcdD4">_</span><span class="lcd-digit" id="lcdD5">_</span>
-      </div>
+      <div class="clue-grid">${clueGridHTML()}</div>
+      <div class="lcd-display" id="lcdDisplay">${lcdHTML()}</div>
       <div class="keypad">
-        ${keys}
+        ${keypadHTML()}
         <button class="key key-clear" onclick="pressKey('C')">مسح</button>
         <button class="key" onclick="pressKey('0')">0</button>
         <button class="key key-go" onclick="pressKey('OK')">فتح 🔓</button>
@@ -4676,10 +4674,13 @@ function renderIcebreaker(){
       <div class="lock-msg" id="lockMsg"></div>
       <div id="lockAyah"></div>
       <div id="lockStart" style="text-align:center;margin-top:22px"></div>
-      <div style="text-align:center;margin-top:14px">
-        <button class="minibtn ghost" onclick="go('home')">تخطّي ▸</button>
+      <div style="text-align:center;margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="minibtn ghost" onclick="qrIcebreaker()">📱 باركود سباق المجموعات</button>
+        <button class="minibtn ghost" onclick="stopIcebreakerListener();go('home')">تخطّي ▸</button>
       </div>
+      <div id="raceLive" style="text-align:center;margin-top:10px;color:var(--muted);font-size:.95rem"></div>
     </div>`;
+  listenIcebreakerRace(state.courseKey);
 }
 function updateLCD(){ for(let i=0;i<6;i++){ const el=document.getElementById('lcdD'+i); if(el) el.textContent = codeInput[i] || '_'; } }
 function shakeLock(){ const d=document.getElementById('lcdDisplay'); if(!d) return; d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); }
@@ -4697,12 +4698,62 @@ function pressKey(k){
 function unlockSuccess(){
   document.getElementById('lcdDisplay')?.classList.add('unlocked');
   document.querySelectorAll('.key').forEach(b=> b.disabled=true);
-  const msg=document.getElementById('lockMsg'); msg.className='lock-msg ok'; msg.textContent='🔓 تم فك الشيفرة! أحسنتم';
+  const msg=document.getElementById('lockMsg');
+  if(state.phoneIcebreaker){
+    msg.className='lock-msg ok'; msg.textContent='🎉 أُرسلت إجابتكم! انتظروا إعلان الفريق الفائز على الشاشة الكبيرة';
+    fireConfetti(140);
+    pushIcebreakerResult(state.courseKey, state.myGroupName);
+    return;
+  }
+  msg.className='lock-msg ok'; msg.textContent='🔓 تم فك الشيفرة! أحسنتم';
   fireConfetti(160);
   const ayahBox = document.getElementById('lockAyah');
   if(ayahBox) ayahBox.innerHTML = `<div class="ayah-box">﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾<span class="ayah-ref">سورة طه، الآية ١١٤</span></div>`;
   const startBox = document.getElementById('lockStart');
-  if(startBox) startBox.innerHTML = `<button class="gbtn" style="font-size:1.15rem;padding:16px 32px" onclick="go('home')">🚀 ابدأ الدورة الآن</button>`;
+  if(startBox) startBox.innerHTML = `<button class="gbtn" style="font-size:1.15rem;padding:16px 32px" onclick="stopIcebreakerListener();go('home')">🚀 ابدأ الدورة الآن</button>`;
+}
+function raceWinnerArrived(groupName){
+  document.getElementById('lcdDisplay')?.classList.add('unlocked');
+  document.querySelectorAll('.key').forEach(b=> b.disabled=true);
+  const msg=document.getElementById('lockMsg');
+  if(msg){ msg.className='lock-msg ok'; msg.textContent=`🏆 فريق "${groupName}" فتح الدورة أولًا! أحسنتم جميعًا`; }
+  const live=document.getElementById('raceLive'); if(live) live.textContent='';
+  fireConfetti(220);
+  const ayahBox = document.getElementById('lockAyah');
+  if(ayahBox) ayahBox.innerHTML = `<div class="ayah-box">﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾<span class="ayah-ref">سورة طه، الآية ١١٤</span></div>`;
+  const startBox = document.getElementById('lockStart');
+  if(startBox) startBox.innerHTML = `<button class="gbtn" style="font-size:1.15rem;padding:16px 32px" onclick="stopIcebreakerListener();go('home')">🚀 ابدأ الدورة الآن (باسم ${groupName})</button>`;
+}
+/* ---- سباق المجموعات (Firestore) ---- */
+function icebreakerCol(courseKey){ return fdb.collection('courses').doc(courseKey).collection('icebreakerRace'); }
+function pushIcebreakerResult(courseKey, groupName){
+  if(!fbReady || !groupName) return;
+  icebreakerCol(courseKey).add({ groupName, ts: Date.now() }).catch(e=> console.error('icebreaker push failed:', e.message));
+}
+let _icebreakerUnsub=null, _icebreakerWinnerShown=false;
+function stopIcebreakerListener(){ if(_icebreakerUnsub){ try{_icebreakerUnsub();}catch(e){} _icebreakerUnsub=null; } }
+function listenIcebreakerRace(courseKey){
+  stopIcebreakerListener();
+  _icebreakerWinnerShown=false;
+  if(!fbReady) return;
+  _icebreakerUnsub = icebreakerCol(courseKey).onSnapshot(snap=>{
+    if(_icebreakerWinnerShown || state.view!=='icebreaker' || state.phoneMode) return;
+    let earliest=null, count=0;
+    snap.forEach(doc=>{
+      const d=doc.data();
+      if(!d.groupName) return;
+      if(d.ts!=null && d.ts < state.resetAt) return;
+      count++;
+      if(!earliest || d.ts<earliest.ts) earliest=d;
+    });
+    const live=document.getElementById('raceLive');
+    if(earliest){
+      _icebreakerWinnerShown=true;
+      raceWinnerArrived(earliest.groupName);
+    } else if(live){
+      live.textContent = count? `⏱ ${count} مجموعة/مجموعات دخلت السباق حتى الآن…` : '';
+    }
+  }, e=> console.error('icebreaker listen failed:', e.message));
 }
 function openCourseIntro(i){ state.courseIdx=i; go('courseIntro'); }
 function renderCourseIntro(){
@@ -5546,6 +5597,7 @@ function qrGame(gi){ qrPanel(GAMES[gi].icon+' '+GAMES[gi].name, baseUrl()? baseU
 function qrWish(){ qrPanel('💌 ماذا تريد في الجزء القادم؟', baseUrl()? baseUrl()+'#wish=1' : null, qrWish); }
 function qrSurvey(){ qrPanel('📝 استبانة الدورة لكل المعلمين', baseUrl()? baseUrl()+'#survey=1' : null, qrSurvey); }
 function qrCourse(){ qrPanel(CC().icon+' '+CC().title+' — رابط مباشر (لعرضه على أي جهاز أو سبورة ذكية)', baseUrl()? baseUrl()+'#course='+state.courseKey : null, qrCourse); }
+function qrIcebreaker(){ qrPanel('🔐 سباق شيفرة الدخول — كل مجموعة على جوالها', baseUrl()? baseUrl()+'#icebreaker='+state.courseKey : null, qrIcebreaker); }
 let _qrRetry = null;
 function qrPanel(title, url, retry){
   _qrRetry = retry;
@@ -5665,6 +5717,7 @@ function renderTraineeGuide(){
 /* ================= PHONE MODE ================= */
 function renderPhone(){
   if(state.view==='game') return renderGameShell();
+  if(state.phoneIcebreaker) return renderPhoneIcebreaker();
   if(state.phoneWish){
     app.innerHTML = `<div class="phone-wrap fade-in">
       <div class="phone-logo">💌</div>
@@ -5725,6 +5778,47 @@ function phoneStart(){
   state.myGroupName = v; store.set('myGroupName', v);
   startGame(state.phoneGame, undefined, v);
 }
+let phoneIceStage='name';
+function renderPhoneIcebreaker(){
+  if(phoneIceStage!=='race'){
+    app.innerHTML = `<div class="phone-wrap fade-in">
+      <div class="phone-logo">🔐</div>
+      <div class="phone-course">${CC().title}</div>
+      <div class="phone-card">
+        <div class="phone-ic">🔐</div><h2>سباق شيفرة الدخول</h2>
+        <p>أول مجموعة تحل الشيفرة الصحيحة تفتح الدورة باسمها على الشاشة الكبيرة!</p>
+        <label class="phone-lab">اسم مجموعتكم</label>
+        <input class="ginput" id="pxName" placeholder="مثال: فريق الجذور" maxlength="24" value="${state.myGroupName||''}" onkeydown="if(event.key==='Enter')phoneIceStart()">
+        <button class="gbtn" style="width:100%;margin-top:12px;font-size:1.1rem;padding:16px" onclick="phoneIceStart()">🏁 ابدأ السباق</button>
+        <div class="feedback" id="pxMsg"></div>
+      </div></div>`;
+    return;
+  }
+  codeInput='';
+  app.innerHTML = `
+    <div class="phone-wrap fade-in">
+      <div class="phone-logo">🔐</div>
+      <div class="phone-course">فريق: ${state.myGroupName}</div>
+      <div class="codelock-wrap" style="padding:0">
+        <div class="clue-grid">${clueGridHTML()}</div>
+        <div class="lcd-display" id="lcdDisplay">${lcdHTML()}</div>
+        <div class="keypad">
+          ${keypadHTML()}
+          <button class="key key-clear" onclick="pressKey('C')">مسح</button>
+          <button class="key" onclick="pressKey('0')">0</button>
+          <button class="key key-go" onclick="pressKey('OK')">فتح 🔓</button>
+        </div>
+        <div class="lock-msg" id="lockMsg"></div>
+      </div>
+    </div>`;
+}
+function phoneIceStart(){
+  const v=(document.getElementById('pxName').value||'').trim();
+  if(!v){ const m=document.getElementById('pxMsg'); m.className='feedback no'; m.textContent='اكتب اسم المجموعة أولًا'; return; }
+  state.myGroupName=v; store.set('myGroupName', v);
+  phoneIceStage='race';
+  renderPhoneIcebreaker();
+}
 
 /* ================= UTIL ================= */
 function toggleFS(){ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
@@ -5745,9 +5839,13 @@ function routeHash(){
     const m=/[#&]g=(\d+)/.exec(h);
     if(m){ const gi=+m[1]; if(gi>=0 && gi<GAMES.length){ state.phoneMode=true; state.phoneGame=gi; state.view='phone'; } }
     else {
-      const cm=/[#&]course=([a-z0-9]+)/i.exec(h);
-      if(cm && ['p1','p2','ard1'].includes(cm[1])){ state.phoneMode=false; state.courseKey=cm[1]; state.mi=0; state.si=0; state.view='home'; }
-      else return false;
+      const im=/[#&]icebreaker=([a-z0-9]+)/i.exec(h);
+      if(im && ['p1','p2','ard1'].includes(im[1])){ state.phoneMode=true; state.phoneIcebreaker=true; state.courseKey=im[1]; phoneIceStage='name'; state.view='phone'; }
+      else {
+        const cm=/[#&]course=([a-z0-9]+)/i.exec(h);
+        if(cm && ['p1','p2','ard1'].includes(cm[1])){ state.phoneMode=false; state.courseKey=cm[1]; state.mi=0; state.si=0; state.view='home'; }
+        else return false;
+      }
     }
   }
   return true;

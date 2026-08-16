@@ -10,6 +10,15 @@ service cloud.firestore {
                     && request.resource.data.t is number;
       allow update, delete: if false;
     }
+    match /courses/{courseKey}/icebreakerRace/{entryId} {
+      allow read: if true;
+      allow create: if request.resource.data.groupName is string
+                    && request.resource.data.groupName.size() > 0
+                    && request.resource.data.groupName.size() < 40
+                    && request.resource.data.ts is number
+                    && request.resource.data.keys().hasOnly(['groupName','ts']);
+      allow update, delete: if false;
+    }
     match /courses/{courseKey}/selfrate/{entryId} {
       allow read: if true;
       allow create: if request.resource.data.mode in ['pre', 'post', 'followup']
