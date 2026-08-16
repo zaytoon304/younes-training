@@ -577,6 +577,43 @@ textarea.ginput{resize:vertical;font-family:inherit}
 .hub-card.active .hc-ic{background:linear-gradient(145deg,var(--gold),var(--gold-dark));color:var(--navy-900)}
 .hub-card.soon{border-color:rgba(240,204,122,.35)}
 
+/* ===== course opening splash ===== */
+.splash-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;cursor:pointer;position:relative;overflow:hidden;padding:20px}
+.splash-glow{position:absolute;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,174,75,.35) 0%,transparent 70%);
+  animation:splashPulse 2.4s ease-in-out infinite;pointer-events:none}
+body.theme-ard .splash-glow{background:radial-gradient(circle,rgba(0,151,157,.4) 0%,transparent 70%)}
+@keyframes splashPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.35);opacity:1}}
+.splash-ic{font-size:6rem;position:relative;z-index:1;animation:splashBob 2.2s ease-in-out infinite;
+  filter:drop-shadow(0 0 30px rgba(217,174,75,.7))}
+body.theme-ard .splash-ic{filter:drop-shadow(0 0 30px rgba(0,151,157,.8))}
+@keyframes splashBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-14px) scale(1.06)}}
+.splash-title{position:relative;z-index:1;font-size:clamp(2.2rem,6vw,4rem);font-weight:900;color:#fff;margin-top:18px;
+  text-wrap:balance;background:linear-gradient(90deg,#fff,var(--gold-light),#fff);background-size:220% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:hubShine 2.6s linear infinite}
+.splash-part{position:relative;z-index:1;color:var(--gold-light);font-weight:800;font-size:1.3rem;margin-top:10px;letter-spacing:1px}
+.splash-tap{position:relative;z-index:1;color:#C7CFE6;margin-top:40px;font-size:1.05rem;animation:splashTap 1.6s ease-in-out infinite}
+@keyframes splashTap{0%,100%{opacity:.55}50%{opacity:1}}
+
+/* ===== icebreaker (كسر الجليد الذهني) ===== */
+.icebreaker-wrap{max-width:980px;margin:0 auto;padding:40px 20px 60px}
+.icebreaker-hero{text-align:center;color:#fff;margin-bottom:30px}
+.icebreaker-hero .kicker{display:inline-block;background:rgba(217,174,75,.15);border:1px solid rgba(217,174,75,.5);
+  color:var(--gold-light);font-weight:700;padding:8px 22px;border-radius:999px;font-size:.9rem;margin-bottom:16px}
+.icebreaker-hero h1{font-size:clamp(1.6rem,3.6vw,2.4rem);font-weight:900;text-wrap:balance}
+.icebreaker-hero p{color:#C7CFE6;margin-top:10px;font-size:1rem}
+.riddle-grid{display:grid;gap:16px}
+.riddle-card{background:#fff;border-radius:var(--r-sm);padding:20px 22px;position:relative;box-shadow:var(--shadow)}
+.riddle-num{position:absolute;top:-12px;inset-inline-start:18px;background:linear-gradient(145deg,var(--gold),var(--gold-dark));
+  color:var(--navy-900);font-weight:900;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.riddle-q{font-size:1.08rem;font-weight:700;color:var(--navy-800);line-height:1.9;margin-top:6px}
+.riddle-btn{margin-top:14px;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:.92rem;
+  padding:10px 20px;border-radius:12px;background:#F3E9D2;color:var(--gold-dark);transition:.2s}
+.riddle-btn:hover{background:var(--gold);color:#fff}
+.riddle-a{margin-top:14px;background:var(--ok-bg);border:1.5px solid #BFE3D2;border-radius:12px;padding:14px 16px;
+  color:#0B5F44;font-weight:700;line-height:1.8;animation:pop .35s ease}
+
 /* ===== course intro (catalog placeholder) ===== */
 .ci-topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:rgba(255,255,255,.06);border:1px solid rgba(240,204,122,.25);
   backdrop-filter:blur(10px);border-radius:var(--r);padding:12px 18px;margin-bottom:20px}
@@ -4359,7 +4396,7 @@ function go(view,a,b){ if(typeof stopTimers==='function') stopTimers(); stopSpea
   if(view!=='gameBoard' && typeof stopGameBoardListener==='function') stopGameBoardListener();
   state.view=view; if(view==='module'){state.mi=a; state.si=b||0;} window.scrollTo({top:0}); render(); }
 function CC(){ return state.courseKey==='p2' ? COURSE2 : state.courseKey==='ard1' ? COURSE3 : COURSE; }
-function openCourse(key){ state.courseKey=key; state.mi=0; state.si=0; go('home'); }
+function openCourse(key){ state.courseKey=key; state.mi=0; state.si=0; go('splash'); }
 
 /* ================= CONFETTI ================= */
 function fireConfetti(n){
@@ -4490,6 +4527,8 @@ function render(){
   if(state.phoneMode) return renderPhone();
   const v=state.view;
   if(v==='hub') return renderHub();
+  if(v==='splash') return renderSplash();
+  if(v==='icebreaker') return renderIcebreaker();
   if(v==='courseIntro') return renderCourseIntro();
   if(v==='home') return renderHome();
   if(v==='module') return renderModule();
@@ -4560,6 +4599,52 @@ function renderHub(){
       <p>دورات تدريبية تفاعلية للمعلمين والمربين — اختر دورتك وابدأ</p>
     </div>
     <div class="hub-grid">${cards}</div>`;
+}
+/* ================= SPLASH (شاشة افتتاح الدورة) ================= */
+function renderSplash(){
+  const c = CC();
+  app.innerHTML = `
+    <div class="splash-wrap" onclick="go('icebreaker')">
+      <div class="splash-glow"></div>
+      <div class="splash-ic">${c.icon||'🌳'}</div>
+      <h1 class="splash-title">${c.title}</h1>
+      <div class="splash-part">${c.partLabel||''}</div>
+      <p class="splash-tap">✦ اضغطوا في أي مكان للمتابعة ✦</p>
+    </div>`;
+}
+/* ================= ICEBREAKER (كسر الجليد الذهني للمعلمين) ================= */
+const RIDDLES = [
+  { q:'كل يوم يزداد، ولا يُرى أثره إلا في آخر العمر، لا يشتريه أحد ولا يبيعه… لكن الجميع يملكه بلا استثناء. ما هو؟', a:'العمر — يتراكم صامتًا كل يوم، ولا نلتفت لثِقَله إلا في آخره.' },
+  { q:'له أسنان لا يعضّ بها، يمرّ على رأسك كل صباح، ويرتّب ما بعثرته الليلة قبله. ما هو؟', a:'المشط — «أسنانه» ترتّب الشعر لا تؤذيه.' },
+  { q:'شيء يكسره الكلام عنه، وكلما سكتّ عنه طال بقاؤه بين يديك. ما هو؟', a:'السرّ — يبقى سرًّا ما دام مكتومًا، وينكسر بمجرد أن يُقال.' },
+  { q:'يمشي واقفًا طوال حياته، ولا يجلس أو يهدأ إلا حين «يموت». ما هو؟', a:'الساعة — تدقّ واقفة دومًا، وتتوقف («تموت») حين تُهمَل بطاريتها.' },
+  { q:'ثلاثة معلمين اشتروا صندوق أقلام بـ٣٠ ريالًا بالتساوي (١٠ لكل واحد). اكتشف البائع أن سعره الحقيقي ٢٥ ريالًا فقط، فأرسل مع طالب ٥ ريالات ليردّها لهم. الطالب أعطى كل معلم ريالًا واحدًا (٣ ريالات)، واحتفظ لنفسه بريالين. الآن كل معلم دفع ٩ ريالات × ٣ = ٢٧ ريالًا، زائد الريالين مع الطالب = ٢٩ ريالًا فقط… أين ذهب الريال الضائع؟', a:'لا يوجد ريال ضائع أصلًا! الخطأ في طريقة الجمع: الـ٢٧ ريالًا المدفوعة فعليًا تشمل بداخلها الريالين اللي أخذهما الطالب (٢٥ للبائع + ٢ للطالب = ٢٧). إضافة الريالين مرة ثانية هي الخطأ — أفضل معلم رياضيات في القاعة هو أول من يكتشفها!' },
+];
+function renderIcebreaker(){
+  const cards = RIDDLES.map((r,i)=>`
+    <div class="riddle-card">
+      <div class="riddle-num">${i+1}</div>
+      <div class="riddle-q">${r.q}</div>
+      <button class="riddle-btn" id="rbtn-${i}" onclick="revealRiddle(${i})">💡 اكشف الإجابة</button>
+      <div class="riddle-a" id="ra-${i}" hidden>${r.a}</div>
+    </div>`).join('');
+  app.innerHTML = `
+    <div class="icebreaker-wrap">
+      <div class="icebreaker-hero">
+        <div class="kicker">✦ كسر الجليد الذهني — تحدٍّ سريع قبل أن نبدأ ✦</div>
+        <h1>خمس لغزات… لمن اعتاد التفكير 🧠</h1>
+        <p>ناقشوها بصوت عالٍ مع من بجانبكم قبل الكشف — المتعة في التخمين لا في الإجابة وحدها.</p>
+      </div>
+      <div class="riddle-grid">${cards}</div>
+      <div style="text-align:center;margin-top:28px">
+        <button class="gbtn" style="font-size:1.15rem;padding:16px 32px" onclick="go('home')">🚀 ابدأ الدورة الآن</button>
+      </div>
+    </div>`;
+}
+function revealRiddle(i){
+  const a=document.getElementById('ra-'+i), b=document.getElementById('rbtn-'+i);
+  if(a){ a.hidden=false; }
+  if(b){ b.style.display='none'; }
 }
 function openCourseIntro(i){ state.courseIdx=i; go('courseIntro'); }
 function renderCourseIntro(){
