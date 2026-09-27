@@ -2,7 +2,7 @@
 :root{ --teal:#0e7c86; --teal-l:#19a3ad; --code-bg:#0b1026; --mono:"JetBrains Mono","SF Mono",Menlo,monospace }
 
 /* ---------- الكود ---------- */
-.code{background:var(--code-bg);border-radius:0 0 26px 26px;padding:22px 0;font-family:var(--mono);font-size:33px;line-height:1.62;color:#e6e9f5;text-align:left;overflow:hidden}
+.code{font-variant-ligatures:none;background:var(--code-bg);border-radius:0 0 26px 26px;padding:22px 0;font-family:var(--mono);font-size:33px;line-height:1.62;color:#e6e9f5;text-align:left;overflow:hidden}
 .code .ln{display:flex;align-items:baseline;padding:0 28px 0 0;border-left:6px solid transparent;transition:background .3s,opacity .3s}
 .code .cl-num{flex:none;width:70px;text-align:right;padding-right:22px;color:#4b5478;user-select:none}
 .code .cl-src{white-space:pre;unicode-bidi:plaintext}
@@ -207,7 +207,7 @@
 /* ---------- صح أم خطأ في الكود ---------- */
 .cchk{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-content:center}
 .cc{position:relative;background:var(--code-bg);border-radius:24px;padding:22px 28px;cursor:pointer;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;border:4px solid transparent;transition:border-color .3s}
-.cc code{font-family:var(--mono);font-size:38px;color:#e6e9f5;text-align:left}
+.cc code{font-variant-ligatures:none;font-family:var(--mono);font-size:38px;color:#e6e9f5;text-align:left}
 .cc .ccv{display:none;align-items:baseline;gap:16px;font-size:28px;font-weight:700;line-height:1.4}
 .cc .ccv b{font-size:32px;flex:none}
 .cc .ccv.ok{color:#7ee2a8}.cc .ccv.bad{color:#ff9b9b}
@@ -227,3 +227,60 @@
 .bugsvg .bugring{fill:none;stroke:#D64545;stroke-width:7;stroke-dasharray:14 10;opacity:0;transition:opacity .4s}
 .bugsvg.reveal .bugring{opacity:1;animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{50%{stroke-width:11}}
+
+/* ---------- إشارة المرور ---------- */
+.code.tiny{font-size:23px;line-height:1.42;padding:14px 0;border-radius:24px}
+.tlgrid{flex:1;display:grid;grid-template-columns:1.25fr 0.75fr;gap:40px;align-items:center;min-height:0}
+.tlside{display:flex;flex-direction:column;align-items:center;gap:14px}
+.tlsvg{height:450px;filter:drop-shadow(0 20px 40px rgba(16,27,69,.25))}
+.tlsvg .lamp{transition:fill .15s}
+.tlsvg .lamp.on{filter:drop-shadow(0 0 22px currentColor)}
+.tlside .play{font-family:"Cairo";font-size:32px;font-weight:900;color:#fff;background:var(--ok);border:0;border-radius:18px;padding:10px 40px;cursor:pointer}
+.tlside .spd{font-size:26px;font-weight:800;color:var(--navy-700);display:flex;gap:10px;align-items:center}
+.tlside .spd input{width:26px;height:26px;accent-color:var(--gold)}
+.tlstate{font-size:34px;font-weight:900;color:var(--navy-800);min-height:50px}
+
+/* ---------- الشاشة التسلسلية ---------- */
+.sergrid{flex:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;min-height:0}
+.watch{display:flex;align-items:center;gap:26px;margin-top:18px;background:#fff;border:2px solid var(--line);border-radius:22px;padding:14px 24px;font-size:32px;font-weight:800;color:var(--navy-800)}
+.watch .play{font-family:"Cairo";font-size:30px;font-weight:900;color:#fff;background:var(--ok);border:0;border-radius:16px;padding:8px 30px;cursor:pointer;flex:none}
+.watch code{font-family:var(--mono);background:#EEF1FA;border-radius:8px;padding:0 10px}
+.watch .ival{color:var(--gold-dark);font-size:30px}
+.monitor{background:#0b1026;border-radius:26px;overflow:hidden;box-shadow:0 24px 60px rgba(11,16,38,.35);height:560px;display:flex;flex-direction:column}
+.monitor .mbar{background:#141a3a;color:#aab2d6;font-family:var(--mono);font-size:24px;padding:14px 24px}
+.monitor .mout{flex:1;padding:20px 30px;font-family:"Cairo";font-size:38px;font-weight:700;color:#7ee2a8;line-height:1.6;direction:rtl;text-align:right}
+
+/* ---------- بناء الدائرة خطوة بخطوة ---------- */
+.bgrid{flex:1;display:grid;grid-template-columns:0.72fr 1.4fr;gap:40px;align-items:center;min-height:0}
+.bpanel2{display:flex;flex-direction:column;gap:20px}
+.bstep{background:var(--navy-800);color:#fff;border-radius:32px;padding:28px 36px;min-height:270px;animation:enter .4s ease both}
+.bstep .bnum{display:inline-block;font-size:24px;font-weight:800;color:var(--navy-900);background:var(--gold);border-radius:999px;padding:4px 18px}
+.bstep h3{font-size:50px;font-weight:900;color:var(--gold-light);margin:14px 0 8px;line-height:1.25}
+.bstep p{font-size:34px;font-weight:600;line-height:1.5;color:#e3e7f6}
+.blist{list-style:none;counter-reset:b;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.blist li{counter-increment:b;font-size:23px;line-height:1.3;font-weight:700;color:#9aa1b3;display:flex;gap:12px;align-items:center}
+.blist li::before{content:counter(b);width:34px;height:34px;border-radius:50%;background:#E4E7F0;color:#6b7490;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none}
+.blist li.done{color:var(--navy-700)} .blist li.done::before{content:"✓";background:var(--ok);color:#fff}
+.blist li.now{color:var(--navy-800);font-weight:900} .blist li.now::before{background:var(--gold);color:var(--navy-900)}
+.bview{background:#fff;border:2px solid var(--line);border-radius:32px;padding:20px}
+.bsvg{width:100%;height:auto;direction:ltr}
+.bsvg .bs{opacity:0;transition:opacity .45s}
+.bsvg .bs.on{opacity:1}
+.bsvg .w{fill:none;stroke:#1b2340;stroke-width:7;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:1;transition:stroke-dashoffset .9s ease}
+.bsvg .w.on{stroke-dashoffset:0}
+.bsvg .fl{fill:none;stroke:#F0CC7A;stroke-width:7;stroke-linecap:round;stroke-dasharray:10 22;opacity:0;transition:opacity .3s}
+.bsvg .fl.run{opacity:1;animation:flow .8s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.bsvg .lead{stroke:#1b2340;stroke-width:7;stroke-linecap:round}
+.bsvg .plate{stroke:#1b2340;stroke-width:6;stroke-linecap:round}.bsvg .plate.thick{stroke-width:14}
+.bsvg .comp{fill:none;stroke:#1b2340;stroke-width:6;stroke-linejoin:round;stroke-linecap:round}
+.bsvg .ledbody{fill:#7a2323;stroke:#1b2340;stroke-width:4;transition:fill .3s}
+.bsvg .ledbody.lit{fill:#ff3b3b}
+.bsvg .ray{stroke:#B08A2E;stroke-width:4;fill:none;stroke-linecap:round}
+.bsvg .glow{fill:#ff5a5a;opacity:0;filter:blur(18px);transition:opacity .4s}
+.bsvg .glow.lit{opacity:.75}
+.bsvg .lbl{font-family:"Cairo";font-size:24px;font-weight:800;fill:#5E6782;text-anchor:middle}
+.bsvg .sgn{font-family:var(--mono);font-size:30px;font-weight:700;fill:#1b2340}
+.bsvg .brk{opacity:0;transition:opacity .3s}.bsvg .brk.on{opacity:1}
+.bsvg .brk line{stroke:#D64545;stroke-width:9;stroke-linecap:round}
+.c-str bdi{font-family:"Cairo",sans-serif;font-size:.9em}

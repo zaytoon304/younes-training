@@ -16,7 +16,7 @@ function highlight(line) {
   while ((m = re.exec(line))) {
     const [t, com, str, pre, num, id] = m;
     if (com) out += `<span class="c-com">// <bdi>${esc(com.slice(2).trim())}</bdi></span>`;   // التعليق العربي معزول ليبقى // قبله
-    else if (str) out += `<span class="c-str">${esc(str)}</span>`;
+    else if (str) out += `<span class="c-str">"<bdi>${esc(str.slice(1, -1))}</bdi>"</span>`;   // النص العربي داخل التنصيص معزول
     else if (pre) out += `<span class="c-kw">${esc(pre)}</span>`;
     else if (num) out += `<span class="c-num">${num}</span>`;
     else if (id) out += KW.test(id) && id.match(KW)[0] === id ? `<span class="c-kw">${id}</span>`
@@ -271,9 +271,154 @@ function bugSVG(kind) {
     ${ring}
   </svg>`;
 }
+
+/* ---------- محاكي إشارة المرور ---------- */
+const TRAFFIC_CODE = `int red = 11;
+int yellow = 12;
+int green = 13;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(green, HIGH);  delay(3000);
+  digitalWrite(green, LOW);
+  digitalWrite(yellow, HIGH); delay(1000);
+  digitalWrite(yellow, LOW);
+  digitalWrite(red, HIGH);    delay(3000);
+  digitalWrite(red, LOW);
+}`;
+const trafficSVG = () => `<svg viewBox="0 0 260 560" class="tlsvg">
+    <rect x="95" y="440" width="70" height="120" fill="#5e6782"/>
+    <rect x="30" y="20" width="200" height="440" rx="40" fill="#1b2340"/>
+    ${[['r', 110, '#ff3b3b'], ['y', 240, '#ffc83b'], ['g', 370, '#2ee06e']].map(([k, y, c]) =>
+      `<circle cx="130" cy="${y}" r="66" fill="#0b0f1f"/><circle class="lamp" data-k="${k}" data-c="${c}" cx="130" cy="${y}" r="56" fill="#2a3150"/>`).join('')}
+  </svg>`;
+
+/* ---------- محاكي الشاشة التسلسلية مع حلقة for ---------- */
+const SERIAL_CODE = `void setup() {
+  Serial.begin(9600);
+  for (int i = 1; i <= 5; i++) {
+    Serial.print("العدد: ");
+    Serial.println(i);
+  }
+}
+
+void loop() { }`;
+
+/* ---------- بناء الدائرة خطوة بخطوة (بسيطة · توالي · توازي) ----------
+   كل عنصر يظهر في خطوته (data-s)، وعند اكتمال الدائرة يسري التيار وتضيء الليدات،
+   وفي الخطوة الأخيرة نعطّل ليدًا لنرى الفرق بين التوالي والتوازي. */
+const BUILD = (() => {
+  let out = '';
+  const W = (pts, s, g = 'm') =>
+    `<polyline class="bs w" data-s="${s}" pathLength="1" points="${pts}"/><polyline class="fl" data-g="${g}" points="${pts}"/>`;
+  const battV = (x, y, s) => `<g class="bs" data-s="${s}"><line x1="${x}" y1="${y - 60}" x2="${x}" y2="${y - 16}" class="lead"/>
+      <line x1="${x - 44}" y1="${y - 16}" x2="${x + 44}" y2="${y - 16}" class="plate"/><line x1="${x - 26}" y1="${y + 14}" x2="${x + 26}" y2="${y + 14}" class="plate thick"/>
+      <line x1="${x}" y1="${y + 14}" x2="${x}" y2="${y + 60}" class="lead"/>
+      <text x="${x - 62}" y="${y - 22}" class="sgn">+</text><text x="${x - 62}" y="${y + 30}" class="sgn">−</text>
+      <text x="${x}" y="${y + 92}" class="lbl">البطارية</text></g>`;
+  const zig = (a, b, c, horiz) => { const n = 6, pts = []; const L = b - a;
+    pts.push(horiz ? `${a},${c}` : `${c},${a}`);
+    for (let i = 0; i < n; i++) { const t = a + L * (i + .5) / n, o = i % 2 ? 18 : -18; pts.push(horiz ? `${t},${c + o}` : `${c + o},${t}`); }
+    pts.push(horiz ? `${b},${c}` : `${c},${b}`); return pts.join(' '); };
+  const resH = (x1, x2, y, s) => `<g class="bs" data-s="${s}"><polyline class="comp" points="${zig(x1, x2, y, true)}"/><text x="${(x1 + x2) / 2}" y="${y - 32}" class="lbl">المقاومة</text></g>`;
+  const resV = (x, y1, y2, s) => `<g class="bs" data-s="${s}"><polyline class="comp" points="${zig(y1, y2, x, false)}"/></g>`;
+  const glow = (x, y, g) => `<circle class="glow" data-g="${g}" cx="${x}" cy="${y}" r="58"/>`;
+  const ledH = (x, y, s, g, lbl = 'الليد') => `${glow(x + 35, y, g)}<g class="bs" data-s="${s}">
+      <polygon class="ledbody" data-g="${g}" points="${x + 12},${y - 24} ${x + 12},${y + 24} ${x + 54},${y}"/><line x1="${x + 54}" y1="${y - 24}" x2="${x + 54}" y2="${y + 24}" class="comp"/>
+      <line x1="${x}" y1="${y}" x2="${x + 12}" y2="${y}" class="lead"/><line x1="${x + 54}" y1="${y}" x2="${x + 70}" y2="${y}" class="lead"/>
+      <path d="M${x + 40} ${y - 30} l14 -18 M${x + 52} ${y - 26} l14 -18" class="ray"/>
+      <text x="${x + 35}" y="${y + 56}" class="lbl">${lbl}</text></g>
+      <g class="brk" data-g="${g}"><line x1="${x + 10}" y1="${y - 30}" x2="${x + 60}" y2="${y + 30}"/><line x1="${x + 60}" y1="${y - 30}" x2="${x + 10}" y2="${y + 30}"/></g>`;
+  const ledV = (x, y, s, g, lbl = '') => `${glow(x, y + 35, g)}<g class="bs" data-s="${s}">
+      <polygon class="ledbody" data-g="${g}" points="${x - 24},${y + 12} ${x + 24},${y + 12} ${x},${y + 54}"/><line x1="${x - 24}" y1="${y + 54}" x2="${x + 24}" y2="${y + 54}" class="comp"/>
+      <line x1="${x}" y1="${y}" x2="${x}" y2="${y + 12}" class="lead"/><line x1="${x}" y1="${y + 54}" x2="${x}" y2="${y + 70}" class="lead"/>
+      <path d="M${x + 30} ${y + 24} l18 -14 M${x + 34} ${y + 38} l18 -14" class="ray"/>
+      ${lbl ? `<text x="${x - 36}" y="${y + 42}" class="lbl" text-anchor="end">${lbl}</text>` : ''}</g>
+      <g class="brk" data-g="${g}"><line x1="${x - 30}" y1="${y + 8}" x2="${x + 30}" y2="${y + 62}"/><line x1="${x + 30}" y1="${y + 8}" x2="${x - 30}" y2="${y + 62}"/></g>`;
+  const svg = inner => `<svg viewBox="0 0 900 520" class="bsvg">${inner}</svg>`;
+
+  return {
+    simple: {
+      svg: svg(`${W('120,190 120,90 380,90', 2)}${resH(380, 520, 90, 3)}${W('520,90 780,90 780,200', 4)}${ledV(780, 200, 5, 'm', 'الليد')}${W('780,270 780,430 120,430 120,310', 6)}${battV(120, 250, 1)}`),
+      flow: 7, steps: [
+        { h: 'نبدأ بمصدر الطاقة', b: 'البطارية: الخط الطويل موجب (+)، والقصير سالب (−).' },
+        { h: 'سلك من الطرف الموجب', b: 'يخرج التيار من الموجب ويسير في السلك.' },
+        { h: 'نضيف المقاومة', b: 'تحدّ من التيار حتى لا يحترق الليد.' },
+        { h: 'سلك إلى الليد', b: 'يوصل المقاومة بالساق الطويلة لليد.' },
+        { h: 'نضيف الليد', b: 'السهم يشير إلى اتجاه مرور التيار، والخط عند السالب.' },
+        { h: 'سلك العودة إلى السالب', b: 'الآن اكتمل المسار من الموجب إلى السالب.' },
+        { h: '⚡ اكتملت الدائرة!', b: 'يسري التيار في المسار المغلق… والليد يضيء.' },
+      ],
+    },
+    series: {
+      svg: svg(`${W('120,190 120,90 200,90', 2)}${resH(200, 320, 90, 2)}${W('320,90 360,90', 3)}${ledH(360, 90, 3, 'm', 'ليد ١')}${W('430,90 500,90', 4)}${ledH(500, 90, 4, 'm', 'ليد ٢')}${W('570,90 640,90', 5)}${ledH(640, 90, 5, 'm', 'ليد ٣')}${W('710,90 800,90 800,430 120,430 120,310', 6)}${battV(120, 250, 1)}`),
+      flow: 7, brk: 8, mode: 'series', steps: [
+        { h: 'مصدر الطاقة', b: 'نبدأ بالبطارية كما في كل دائرة.' },
+        { h: 'سلك ومقاومة', b: 'مقاومة واحدة تحمي الليدات كلها.' },
+        { h: 'الليد الأول', b: 'يدخل التيار إليه من المقاومة مباشرة.' },
+        { h: 'الليد الثاني… بعد الأول', b: 'التيار الخارج من الأول يدخل الثاني.' },
+        { h: 'الليد الثالث… بعد الثاني', b: 'كل الليدات على مسار واحد متتابع.' },
+        { h: 'سلك العودة إلى السالب', b: 'مسار واحد يمر بالجميع ثم يعود للبطارية.' },
+        { h: '⚡ التيار يسري', b: 'التيار نفسه يمر في الليدات الثلاثة بالترتيب.' },
+        { h: '❌ ماذا لو تعطّل ليد واحد؟', b: 'انقطع المسار الوحيد… فانطفأت كل الليدات.' },
+      ],
+    },
+    parallel: {
+      svg: svg(`${W('120,190 120,70 780,70', 2, 'm')}${W('120,310 120,450 780,450', 3, 'm')}
+        ${W('340,70 340,120', 4, 'a')}${resV(340, 120, 210, 4)}${W('340,210 340,240', 4, 'a')}${ledV(340, 240, 4, 'a', 'فرع ١')}${W('340,310 340,450', 4, 'a')}
+        ${W('560,70 560,120', 5, 'b')}${resV(560, 120, 210, 5)}${W('560,210 560,240', 5, 'b')}${ledV(560, 240, 5, 'b', 'فرع ٢')}${W('560,310 560,450', 5, 'b')}
+        ${W('780,70 780,120', 6, 'c')}${resV(780, 120, 210, 6)}${W('780,210 780,240', 6, 'c')}${ledV(780, 240, 6, 'c', 'فرع ٣')}${W('780,310 780,450', 6, 'c')}
+        ${battV(120, 250, 1)}`),
+      flow: 7, brk: 8, mode: 'parallel', brkGroup: 'b', groups: ['a', 'b', 'c'], steps: [
+        { h: 'مصدر الطاقة', b: 'نبدأ بالبطارية.' },
+        { h: 'خط الموجب العلوي', b: 'سلك طويل تتفرع منه كل الفروع.' },
+        { h: 'خط السالب السفلي', b: 'وسلك طويل تعود إليه كل الفروع.' },
+        { h: 'الفرع الأول', b: 'مقاومة وليد بين الخطين: مسار كامل مستقل.' },
+        { h: 'الفرع الثاني', b: 'مسار ثانٍ مستقل عن الأول.' },
+        { h: 'الفرع الثالث', b: 'ولكل ليد مقاومته ومساره الخاص.' },
+        { h: '⚡ التيار يسري', b: 'ينقسم التيار على الفروع الثلاثة في الوقت نفسه.' },
+        { h: '❌ ماذا لو تعطّل ليد واحد؟', b: 'انقطع فرعه فقط… والفرعان الآخران ما زالا يضيئان.' },
+      ],
+    },
+  };
+})();
 /* ---------- زر يفتح موقعًا خارجيًا ---------- */
 /* ---------- رسم الأنواع ---------- */
 window.DECK_TYPES = {
+  build: s => { const B = BUILD[s.kind]; return `<div class="slide light">
+      <div class="kicker">${s.kicker || '🔧 ابنِ الدائرة خطوة بخطوة'}</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="bgrid">
+        <div class="bpanel2"><div class="bstep"><span class="bnum">اضغط «التالي» لتبدأ</span><h3>${s.intro || 'لنبنِ الدائرة معًا'}</h3><p></p></div>
+          <ol class="blist">${B.steps.map(st => `<li>${st.h}</li>`).join('')}</ol></div>
+        <div class="bview">${B.svg}</div>
+      </div>${B.steps.map(() => '<i class="f"></i>').join('')}</div>`; },
+
+  traffic: s => `<div class="slide light">
+      <div class="kicker">🖱️ محاكي</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="tlgrid">
+        <div>${codeBlock(TRAFFIC_CODE, 'tiny')}</div>
+        <div class="tlside ix">${trafficSVG()}
+          <button class="play">▶ تشغيل</button>
+          <label class="spd"><input type="checkbox"> تسريع ×٣</label>
+          <div class="tlstate">جاهز</div></div>
+      </div></div>`,
+
+  serialsim: s => `<div class="slide light">
+      <div class="kicker">🖱️ محاكي</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="sergrid">
+        <div>${codeBlock(SERIAL_CODE, 'mid')}
+          <div class="watch ix"><button class="play">▶ تشغيل</button><div>قيمة المتغير <code dir="ltr">i</code> الآن: <b class="ival">—</b></div></div></div>
+        <div class="monitor"><div class="mbar" dir="ltr">🔍 Serial Monitor · 9600 baud</div><div class="mout"></div></div>
+      </div></div>`,
+
   codecheck: s => `<div class="slide light">
       <div class="kicker">${s.kicker || '🐞 صح أم خطأ؟'}</div>
       <h2 class="title" style="margin-bottom:22px">${s.title}</h2>
@@ -469,6 +614,47 @@ function bbShow(sl, groups, info, hole) {
   }
 }
 window.DECK_BIND = {
+  traffic(sl) {
+    let run = false, t = null, i = 0;
+    const lines = sl.querySelectorAll('.code .ln'), btn = sl.querySelector('.play'), fast = sl.querySelector('.spd input'), st = sl.querySelector('.tlstate');
+    const lamp = k => sl.querySelector(`.lamp[data-k="${k}"]`);
+    const set = (k, on) => { const l = lamp(k); l.setAttribute('fill', on ? l.dataset.c : '#2a3150'); l.classList.toggle('on', on); };
+    // [السطر، الليد، الحالة، الانتظار، النص]
+    const seq = [[12, 'g', true, 3000, '🟢 أخضر: تفضّل بالمرور'], [13, 'g', false, 150, ''], [14, 'y', true, 1000, '🟡 أصفر: استعد للتوقف'],
+                 [15, 'y', false, 150, ''], [16, 'r', true, 3000, '🔴 أحمر: قف'], [17, 'r', false, 150, '']];
+    const tick = () => {
+      if (!run) return;
+      const [ln, k, on, wait, txt] = seq[i % seq.length];
+      lines.forEach(l => l.classList.toggle('run', +l.dataset.n === ln));
+      set(k, on); if (txt) st.textContent = txt;
+      i++; t = setTimeout(tick, fast.checked ? wait / 3 : wait);
+    };
+    btn.onclick = () => { run = !run; btn.textContent = run ? '⏸ إيقاف' : '▶ تشغيل'; if (run) tick(); else clearTimeout(t); };
+    window.DECK_CLEANUP.push(() => { run = false; clearTimeout(t); });
+  },
+  serialsim(sl) {
+    let t = null;
+    const lines = sl.querySelectorAll('.code .ln'), out = sl.querySelector('.mout'), iv = sl.querySelector('.ival'), btn = sl.querySelector('.play');
+    const hl = n => lines.forEach(l => l.classList.toggle('run', +l.dataset.n === n));
+    btn.onclick = () => {
+      clearTimeout(t); out.innerHTML = ''; iv.textContent = '—';
+      const steps = [[2, null]];
+      for (let i = 1; i <= 5; i++) steps.push([3, i], [4, i], [5, i]);
+      steps.push([3, 6], [9, 'done']);
+      let k = 0, row = null;
+      const go = () => {
+        const [ln, i] = steps[k++]; hl(ln);
+        if (typeof i === 'number') iv.textContent = i;
+        if (ln === 3 && i === 6) iv.textContent = '6 (الشرط لم يعد صحيحًا… انتهت الحلقة)';
+        if (ln === 4) { row = document.createElement('div'); row.textContent = 'العدد: '; out.appendChild(row); }
+        if (ln === 5) row.textContent += i;
+        if (k < steps.length) t = setTimeout(go, 520);
+      };
+      go();
+    };
+    window.DECK_CLEANUP.push(() => clearTimeout(t));
+  },
+
   codecheck(sl) {
     sl.querySelectorAll('.cc').forEach(c => c.addEventListener('click', () => c.classList.add('shown', 'clicked')));
   },
@@ -575,6 +761,21 @@ window.DECK_ONSTEP = (step, s) => {
   }
   if (s.t === 'board' && step > 0) selectPart(sl, TOUR[step - 1]);
   if (s.t === 'ide' && step > 0) selectIde(sl, IDE_TOUR[step - 1]);
+  if (s.t === 'build') {
+    const B = BUILD[s.kind];
+    sl.querySelectorAll('.bs').forEach(e => e.classList.toggle('on', +e.dataset.s <= step));
+    const flowing = step >= B.flow, broken = B.brk && step >= B.brk;
+    const alive = g => flowing && !(broken && (B.mode === 'series' || g === B.brkGroup || (B.mode === 'parallel' && g === 'm' && false)));
+    sl.querySelectorAll('[data-g]').forEach(e => {
+      const g = e.dataset.g, on = alive(g);
+      if (e.classList.contains('fl')) e.classList.toggle('run', on);
+      if (e.classList.contains('glow') || e.classList.contains('ledbody')) e.classList.toggle('lit', on);
+      if (e.classList.contains('brk')) e.classList.toggle('on', !!broken && (B.mode === 'series' ? g === 'm' && e === sl.querySelectorAll('.brk')[1] : g === B.brkGroup));
+    });
+    const st = B.steps[step - 1], box = sl.querySelector('.bstep');
+    if (st) box.innerHTML = `<span class="bnum">الخطوة ${AR(step)} من ${AR(B.steps.length)}</span><h3>${st.h}</h3><p>${st.b}</p>`;
+    sl.querySelectorAll('.blist li').forEach((li, i) => { li.classList.toggle('done', i < step - 1); li.classList.toggle('now', i === step - 1); });
+  }
   if (s.t === 'codecheck') sl.querySelectorAll('.cc').forEach((c, i) => c.classList.toggle('shown', i < step || c.classList.contains('clicked')));
   if (s.t === 'circuitbug') sl.querySelector('.bugsvg').classList.toggle('reveal', step > 0);
   if (s.t === 'breadboard') {
