@@ -1,7 +1,8 @@
 /* =====================================================================
-   بناء ملف البوربوينت من ملفات المحتوى نفسها (content.js + parts/)
-   التشغيل: node build-pptx.js   (يحتاج مكتبتي pptxgenjs و jszip)
-   الناتج: «مواقف صفية.pptx» بجانب هذا الملف
+   بناء ملف البوربوينت لأي دورة في منصة جذور من ملفات محتواها نفسها
+   التشغيل: node shared/build-pptx.js <مجلد الدورة>   (يحتاج pptxgenjs و jszip)
+   للأدوات التفاعلية: شغّل أولًا shared/capture-pptx.js لتصويرها
+   الناتج: «<اسم الدورة>.pptx» داخل مجلد الدورة
 
    - كل النصوص قابلة للتعديل داخل البوربوينت
    - ملاحظات المدرب تحت كل شريحة
@@ -12,8 +13,12 @@ const path = require('path');
 const fs = require('fs');
 const pptxgen = require('pptxgenjs');
 const JSZip = require('jszip');
-const C = require('./content.js');
-C.parts.forEach(p => require(`./parts/${p}.js`));
+const DIR = path.resolve(process.argv[2] || '.');
+const C = require(path.join(DIR, 'content.js'));
+C.parts.forEach(p => require(path.join(DIR, 'parts', p + '.js')));
+const NATIVE = require('./pptx-native.json');
+const CACHE = path.join(DIR, '.pptx-cache');
+const SHOTS = fs.existsSync(path.join(CACHE, 'manifest.json')) ? JSON.parse(fs.readFileSync(path.join(CACHE, 'manifest.json'))) : {};
 
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';            // 13.333 × 7.5 بوصة (16:9)
@@ -29,8 +34,9 @@ const K = {
   chip: 'F6EBCF', whoBg: 'E9EDF9', soft: 'C9CFE6', iconBg: 'F7E6BC',
 };
 const F = { body: 'Cairo', heavy: 'Cairo Black', naskh: 'Amiri' };
-const A = f => path.join(__dirname, f);
-const BG = { dark: A('assets/bg-dark.jpg'), light: A('assets/bg-light.jpg') };
+const A = f => path.join(DIR, f);                          // ملفات الدورة (الصور)
+const SA = f => path.join(__dirname, 'assets', f);         // ملفات مشتركة (الخلفيات)
+const BG = { dark: SA('bg-dark.jpg'), light: SA('bg-light.jpg') };
 const W = 13.333, M = 0.9;                // عرض الشريحة والهامش الجانبي
 const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 const LETTERS = ['أ', 'ب', 'ج', 'د', 'هـ'];
@@ -148,7 +154,7 @@ const R = {
   section(s, d) {
     shape(s, 'OVAL', { x: 1.2, y: 2.3, w: 2.9, h: 2.9, fill: { color: K.gold, transparency: 88 }, line: { color: K.gold, width: 5, transparency: 40 } });
     T(s, d.num, { x: 1.2, y: 2.3, w: 2.9, h: 2.9, align: 'center', fontSize: 120, fontFace: F.heavy, color: K.goldLight });
-    T(s, 'المحطة ' + d.num, { x: 4.6, y: 2.0, w: W - M - 4.6, h: 0.5, fontSize: 20, bold: true, color: K.gold });
+    T(s, (C.sectionLabel || 'المحطة') + ' ' + d.num, { x: 4.6, y: 2.0, w: W - M - 4.6, h: 0.5, fontSize: 20, bold: true, color: K.gold });
     T(s, d.title, { x: 4.6, y: 2.5, w: W - M - 4.6, h: 1.5, fontSize: 56, fontFace: F.heavy, color: K.white });
     T(s, d.sub, { x: 4.6, y: 4.1, w: W - M - 4.6, h: 0.9, fontSize: 22, bold: true, color: K.soft });
   },
@@ -291,20 +297,30 @@ const R = {
   map(s, d) {
     kicker(s, d.kicker, false);
     title(s, d.title, 1.05);
+    const cols = d.stops.length > 9 ? 4 : 3, rh = d.stops.length > 9 ? 1.05 : 1.2, gapY = d.stops.length > 9 ? 0.18 : 0.25;
     d.stops.forEach((p, i) => {
-      const r = Math.floor(i / 3), c = colX(i % 3, 3, 0.3), y = 2.2 + r * 1.45;
-      box(s, { x: c.x, y, w: c.w, h: 1.2, rectRadius: 0.18, fill: { color: K.white }, line: { color: K.line, width: 1 } });
-      box(s, { x: c.x + c.w - 1.05, y: y + 0.2, w: 0.8, h: 0.8, rectRadius: 0.18, fill: { color: K.navy800 } });
-      T(s, p.icon, { x: c.x + c.w - 1.05, y: y + 0.2, w: 0.8, h: 0.8, align: 'center', fontSize: 26 });
-      T(s, 'المحطة ' + AR(i + 1), { x: c.x + 0.2, y: y + 0.12, w: c.w - 1.4, h: 0.35, fontSize: 16, bold: true, color: K.goldDark });
-      T(s, p.name, { x: c.x + 0.2, y: y + 0.45, w: c.w - 1.4, h: 0.65, fontSize: 22, fontFace: F.heavy, color: K.navy800 });
+      const r = Math.floor(i / cols), c = colX(i % cols, cols, 0.25), y = 2.15 + r * (rh + gapY), ic = rh - 0.35;
+      box(s, { x: c.x, y, w: c.w, h: rh, rectRadius: 0.18, fill: { color: K.white }, line: { color: K.line, width: 1 } });
+      box(s, { x: c.x + c.w - ic - 0.18, y: y + 0.175, w: ic, h: ic, rectRadius: 0.16, fill: { color: K.navy800 } });
+      T(s, p.icon, { x: c.x + c.w - ic - 0.18, y: y + 0.175, w: ic, h: ic, align: 'center', fontSize: 24 });
+      T(s, (C.sectionLabel || 'المحطة') + ' ' + AR(i + (C.mapStart ?? 1)), { x: c.x + 0.15, y: y + 0.1, w: c.w - ic - 0.45, h: 0.32, fontSize: 14, bold: true, color: K.goldDark });
+      T(s, p.name, { x: c.x + 0.15, y: y + 0.4, w: c.w - ic - 0.45, h: rh - 0.48, fontSize: cols === 4 ? 18 : 22, fontFace: F.heavy, color: K.navy800 });
     });
+  },
+
+  hero(s, d) {
+    s.addImage({ path: A(d.img), x: 0, y: 0, w: W, h: 7.5, objectName: `kb-${++uid}` });
+    s.addImage({ path: SA('mcover-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
+    const x0 = 5.6;
+    if (d.cat) T(s, d.cat, { x: x0, y: 1.8, w: W - M - x0, h: 0.55, fontSize: 22, bold: true, color: K.gold });
+    T(s, d.title, { x: x0 - 0.6, y: 2.4, w: W - M - x0 + 0.6, h: 1.9, fontSize: d.title.length > 16 ? 48 : 60, fontFace: F.heavy, color: K.white, lineSpacingMultiple: 1.1 });
+    if (d.sub) T(s, d.sub, { x: x0 - 0.6, y: 4.4, w: W - M - x0 + 0.6, h: 1.2, fontSize: 22, bold: true, color: K.soft });
   },
 
   mcover(s, d) {
     if (d.img) {
       s.addImage({ path: A(d.img), x: 0, y: 0, w: W, h: 7.5, objectName: `kb-${++uid}` });
-      s.addImage({ path: A('assets/mcover-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
+      s.addImage({ path: SA('mcover-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
     } else {
       T(s, d.icon, { x: 1.0, y: 1.8, w: 3.4, h: 3.4, align: 'center', fontSize: 170, rotate: -8 });
     }
@@ -325,7 +341,7 @@ const R = {
   story(s, d) {
     if (d.img) {
       s.addImage({ path: A(d.img), x: 0, y: 0, w: W, h: 7.5, objectName: `kb-${++uid}` });
-      s.addImage({ path: A('assets/story-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
+      s.addImage({ path: SA('story-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
       const k = '🎬 القصة · ' + d.title, kw = k.length * 0.16 + 0.8;
       box(s, { x: W - 0.6 - kw, y: 0.4, w: kw, h: 0.55, rectRadius: 0.27, fill: { color: K.navy900, transparency: 20 }, line: { color: K.gold, width: 1, transparency: 40 } });
       T(s, k, { x: W - 0.6 - kw, y: 0.4, w: kw, h: 0.55, align: 'center', fontSize: 18, bold: true, color: K.goldLight });
@@ -482,7 +498,7 @@ const R = {
 };
 
 /* ========== حركات البوربوينت (تُضاف إلى ملف الشريحة بعد البناء) ========== */
-function timingXml(groups, kb) {
+function timingXml(groups, kb, pics = new Set()) {
   let id = 2;
   const nid = () => ++id;
   const entr = (spid, nodeType) => {
@@ -516,7 +532,7 @@ function timingXml(groups, kb) {
       ids.map((spid, k) => entr(spid, k === 0 ? 'clickEffect' : 'withEffect')).join('') +
       `</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par>`;
   });
-  const bld = groups.flat().map(spid => `<p:bldP spid="${spid}" grpId="0" animBg="1"/>`).join('');
+  const bld = groups.flat().filter(spid => !pics.has(spid)).map(spid => `<p:bldP spid="${spid}" grpId="0" animBg="1"/>`).join('');
   return `<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst>` +
     `<p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst>${seq}</p:childTnLst></p:cTn>` +
     `<p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>` +
@@ -531,10 +547,11 @@ async function addAnimations(file) {
     let xml = await zip.file(f).async('string');
     const groups = {}, kb = [];
     for (const m of xml.matchAll(/<p:cNvPr id="(\d+)" name="anim-g(\d+)-\d+"/g)) (groups[m[2]] ||= []).push(m[1]);
+    const pics = new Set([...xml.matchAll(/<p:nvPicPr>\s*<p:cNvPr id="(\d+)"/g)].map(m => m[1]));
     for (const m of xml.matchAll(/<p:cNvPr id="(\d+)" name="kb-\d+"/g)) kb.push(m[1]);
     const order = Object.keys(groups).map(Number).sort((a, b) => a - b).map(k => groups[k]);
     if (!order.length && !kb.length) continue;
-    xml = xml.replace('</p:clrMapOvr>', '</p:clrMapOvr>' + timingXml(order, kb));
+    xml = xml.replace('</p:clrMapOvr>', '</p:clrMapOvr>' + timingXml(order, kb, pics));
     zip.file(f, xml);
     animated++;
   }
@@ -546,18 +563,26 @@ async function addAnimations(file) {
 let n = 0;
 C.modules.forEach((m, mi) => m.slides.forEach(raw => {
   const sl = { ...raw, mi };
-  if (!R[sl.t]) throw new Error('نوع شريحة غير معروف: ' + sl.t);
   n++;
   if (process.env.TYPES && !process.env.TYPES.split(',').includes(sl.t)) return;   // للاختبار فقط
   const dark = DARK.includes(sl.t) || (sl.t === 'story' && sl.img);
   const s = pres.addSlide();
-  s.background = { path: dark ? BG.dark : BG.light };
-  R[sl.t](s, sl);
-  footer(s, sl, n, dark);
-  if (sl.notes) s.addNotes(sl.notes);
+  if (R[sl.t] && NATIVE.includes(sl.t)) {             // شريحة نصية قابلة للتعديل
+    s.background = { path: dark ? BG.dark : BG.light };
+    R[sl.t](s, sl);
+    footer(s, sl, n, dark);
+    if (sl.notes) s.addNotes(sl.notes);
+  } else {                                             // أداة تفاعلية: صورة من المنصة، وخطواتها تظهر بالنقر
+    const shot = SHOTS[n - 1];
+    if (!shot) throw new Error(`الشريحة ${n} (${sl.t}) لم تُصوَّر بعد: شغّل capture-pptx.js أولًا`);
+    s.addImage({ path: path.join(CACHE, shot.base), x: 0, y: 0, w: W, h: 7.5 });
+    shot.layers.forEach((f, k) => s.addImage({ path: path.join(CACHE, f), x: 0, y: 0, w: W, h: 7.5, objectName: `anim-g${k + 1}-${++uid}` }));
+    const tip = shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
+    s.addNotes(((sl.notes || '') + '\n\n' + tip).trim());
+  }
 }));
 
-const out = path.join(__dirname, `${C.title}.pptx`);
+const out = path.join(DIR, `${C.title}.pptx`);
 pres.writeFile({ fileName: out }).then(async f => {
   const a = process.env.NOANIM ? 0 : await addAnimations(f);
   console.log('✓ تم البناء:', f, '— الشرائح:', n, '— شرائح فيها حركات:', a);
