@@ -1,0 +1,95 @@
+/* تصميم أدوات دورة الأردوينو التفاعلية */
+:root{ --teal:#0e7c86; --teal-l:#19a3ad; --code-bg:#0b1026; --mono:"JetBrains Mono","SF Mono",Menlo,monospace }
+
+/* ---------- الكود ---------- */
+.code{background:var(--code-bg);border-radius:0 0 26px 26px;padding:22px 0;font-family:var(--mono);font-size:33px;line-height:1.62;color:#e6e9f5;text-align:left;overflow:hidden}
+.code .ln{display:flex;align-items:baseline;padding:0 28px 0 0;border-left:6px solid transparent;transition:background .3s,opacity .3s}
+.code .cl-num{flex:none;width:70px;text-align:right;padding-right:22px;color:#4b5478;user-select:none}
+.code .cl-src{white-space:pre;unicode-bidi:plaintext}
+.code .ln.hl{background:rgba(217,174,75,.16);border-left-color:var(--gold)}
+.code .ln.dim{opacity:.38}
+.code .ln.run{background:rgba(46,204,113,.2);border-left-color:#2ecc71}
+.c-kw{color:#ff9e64}.c-fn{color:#5fd7e0}.c-num{color:#f0cc7a}.c-str{color:#9ece6a}.c-com{color:#7a86b8;font-family:"Cairo",sans-serif;font-size:.86em;line-height:1}
+.code.small{font-size:25px;border-radius:24px;line-height:1.5;padding:18px 0}
+.codegrid{flex:1;display:grid;grid-template-columns:0.95fr 1.25fr;gap:44px;min-height:0;align-items:start}
+.codewrap{border-radius:26px;box-shadow:0 24px 60px rgba(11,16,38,.35);overflow:hidden}
+.codebar{display:flex;align-items:center;gap:18px;background:#141a3a;padding:14px 22px;direction:ltr}
+.codebar .dots b{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:8px;background:#ff5f56}
+.codebar .dots b:nth-child(2){background:#ffbd2e}.codebar .dots b:nth-child(3){background:#27c93f}
+.codebar .fname{flex:1;color:#aab2d6;font-family:var(--mono);font-size:24px}
+.codebar .copy{font-family:"Cairo";font-size:22px;font-weight:800;color:#0b1026;background:var(--gold);border:0;border-radius:999px;padding:8px 22px;cursor:pointer}
+.explain{display:flex;flex-direction:column;gap:18px}
+.xp{display:flex;gap:20px;align-items:flex-start;background:#fff;border:2px solid var(--line);border-radius:24px;padding:20px 26px;font-size:34px;font-weight:700;line-height:1.5;transition:all .35s}
+.xp i{flex:none;font-style:normal;width:58px;height:58px;border-radius:50%;background:var(--navy-800);color:#fff;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.xp.now{border-color:var(--gold);background:#FFF8E6;box-shadow:0 10px 30px rgba(217,174,75,.25)}
+.xp.now i{background:var(--gold);color:var(--navy-900)}
+.xp code,.xnote code,.tm code,.ts code,.gt p code{font-family:var(--mono);direction:ltr;unicode-bidi:embed;background:#EEF1FA;color:#22346F;padding:0 10px;border-radius:8px;font-size:.9em}
+.xnote{font-size:30px;font-weight:700;color:var(--muted);line-height:1.5}
+
+/* ---------- لوحة Uno ---------- */
+.boardgrid{flex:1;display:grid;grid-template-columns:0.8fr 1.3fr;gap:40px;min-height:0;align-items:center}
+.bwrap{align-self:center}
+.uno{width:100%;height:auto;max-height:720px;display:block;filter:drop-shadow(0 26px 40px rgba(10,40,50,.35))}
+.uno .silk{fill:#e8f6f7;font-family:"Cairo",sans-serif;font-size:17px;font-weight:700}
+.uno .logo{fill:#fff;font-family:"Cairo";font-size:74px;font-weight:900;text-anchor:middle}
+.uno .chip{fill:#8a90a0;font-family:var(--mono);font-size:26px;text-anchor:middle;letter-spacing:2px}
+.uno .part{cursor:pointer;transition:opacity .25s}
+.uno .part:hover{filter:brightness(1.18)}
+.uno:has(.part.sel) .part:not(.sel){opacity:.45}
+.uno .part.sel{filter:drop-shadow(0 0 14px #F0CC7A) drop-shadow(0 0 4px #F0CC7A)}
+.uno .part[data-p="ioref"].sel rect{stroke-width:5}
+.bpanel{display:flex;flex-direction:column;gap:26px}
+.binfo{background:var(--navy-800);color:#fff;border-radius:34px;padding:40px 44px;min-height:380px}
+.binfo.pop{animation:enter .45s ease both}
+.binfo .bicon{font-size:76px;line-height:1;margin-bottom:14px}
+.binfo h3{font-size:56px;font-weight:900;color:var(--gold-light);line-height:1.25}
+.binfo .ben{font-family:var(--mono);font-size:26px;color:#9fb1ff;margin:6px 0 16px;text-align:right}
+.binfo p{font-size:36px;font-weight:600;line-height:1.55;color:#e3e7f6}
+.bhint{font-size:28px;font-weight:700;color:var(--muted);line-height:1.5;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:"Cairo";font-size:22px;font-weight:800;color:var(--navy-700);background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
+
+/* ---------- محاكي الوميض ---------- */
+.simgrid{flex:1;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;min-height:0;align-items:center}
+.simview{display:flex;flex-direction:column;gap:16px}
+.simside{display:flex;flex-direction:column;gap:22px}
+.simctl{display:flex;align-items:center;gap:26px;background:#fff;border:2px solid var(--line);border-radius:24px;padding:18px 26px}
+.simctl .play{font-family:"Cairo";font-size:32px;font-weight:900;color:#fff;background:var(--ok);border:0;border-radius:18px;padding:10px 30px;cursor:pointer;flex:none}
+.simctl label{flex:1;font-size:28px;font-weight:800;color:var(--navy-800);display:flex;flex-direction:column;gap:6px}
+.simctl input{width:100%;accent-color:var(--gold);height:30px}
+.status{font-size:34px;font-weight:800;color:var(--navy-800);text-align:center}
+.status b{font-family:"Cairo";color:#7a2323;background:#F4E4E4;padding:4px 20px;border-radius:14px;direction:ltr;display:inline-block}
+.status b.hi{color:#fff;background:#e74c3c;box-shadow:0 0 30px rgba(231,76,60,.6)}
+.blinksvg{width:100%;height:auto;max-height:470px;filter:drop-shadow(0 20px 40px rgba(16,27,69,.2))}
+.blinksvg .silk{fill:#e8f6f7;font-family:"Cairo";font-size:20px;font-weight:800}
+.blinksvg .silk.dark{fill:#3b4460}
+.blinksvg .chip{fill:#8a90a0;font-family:var(--mono)}
+#bled,#bglow{transition:all .12s}
+
+/* ---------- الخط الزمني ---------- */
+.tline{flex:1;display:grid;gap:26px;align-content:center;position:relative}
+.tline::before{content:"";position:absolute;right:0;left:0;top:calc(50% - 150px);height:6px;border-radius:6px;background:linear-gradient(90deg,var(--gold-light),var(--gold-dark))}
+.tl{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.tl .yr{font-size:58px;font-weight:900;color:var(--gold-dark);font-family:"Cairo";direction:ltr}
+.tl .dot{width:40px;height:40px;border-radius:50%;background:var(--navy-800);border:8px solid var(--gold-light);position:relative;z-index:1}
+.tl h3{font-size:40px;font-weight:900;color:var(--navy-800);line-height:1.3}
+.tl p{font-size:32px;font-weight:600;color:#3b4460;line-height:1.5}
+
+/* ---------- المصطلحات ---------- */
+.gloss{flex:1;display:grid;gap:24px;align-content:center}
+.gt{background:#fff;border:2px solid var(--line);border-radius:28px;padding:26px 30px;border-top:10px solid var(--teal)}
+.gt .en{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--teal);text-align:right}
+.gt h3{font-size:40px;font-weight:900;color:var(--navy-800);margin:4px 0}
+.gt p{font-size:30px;font-weight:600;color:#3b4460;line-height:1.45}
+
+/* ---------- كيف تدرّسها ---------- */
+.teachgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;min-height:0}
+.tcol{border-radius:32px;padding:34px 38px;display:flex;flex-direction:column;gap:16px}
+.tcol h4{font-size:36px;font-weight:900;margin-bottom:6px}
+.tcol.bad{background:var(--bad-bg)} .tcol.bad h4{color:var(--bad)}
+.tm{background:#fff;border-radius:20px;padding:16px 24px;font-size:32px;font-weight:700;line-height:1.45;color:#5a1f1f;border-right:8px solid var(--bad)}
+.tcol.act{background:var(--navy-800);color:#fff} .tcol.act h4{color:var(--gold-light)}
+.tcol.act h3{font-size:44px;font-weight:900;line-height:1.3}
+.ts{display:flex;gap:18px;align-items:flex-start;font-size:32px;font-weight:600;line-height:1.5}
+.ts i{flex:none;font-style:normal;width:50px;height:50px;border-radius:50%;background:var(--gold);color:var(--navy-900);font-weight:900;font-size:26px;display:flex;align-items:center;justify-content:center}
