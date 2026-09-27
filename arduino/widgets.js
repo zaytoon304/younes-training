@@ -342,6 +342,39 @@ const BUILD = (() => {
       <g class="brk" data-g="${g}"><line x1="${x - 30}" y1="${y + 8}" x2="${x + 30}" y2="${y + 62}"/><line x1="${x + 30}" y1="${y + 8}" x2="${x - 30}" y2="${y + 62}"/></g>`;
   const svg = inner => `<svg viewBox="0 0 900 520" class="bsvg">${inner}</svg>`;
 
+  const P = (d, s, g = 'm') => `<path class="bs w" data-s="${s}" pathLength="1" d="${d}"/><path class="fl" data-g="${g}" d="${d}"/>`;
+  const holesBB = () => { let h = '';
+    for (let c = 0; c < 15; c++) { const x = 470 + c * 26;
+      for (let r = 0; r < 5; r++) h += `<circle cx="${x}" cy="${240 + r * 24}" r="4" fill="#cfc8b6"/>`;
+      h += `<circle cx="${x}" cy="${418}" r="4" fill="#cfc8b6"/><circle cx="${x}" cy="${442}" r="4" fill="#cfc8b6"/>`;
+      if (c % 5 === 0) h += `<text x="${x}" y="226" class="lbl" style="font-size:16px">${c + 1}</text>`; }
+    return h; };
+  const blinkwire = `<svg viewBox="0 0 900 520" class="bsvg">
+    <g class="bs" data-s="1">
+      <rect x="40" y="130" width="300" height="300" rx="24" fill="#0e7c86"/>
+      <rect x="130" y="140" width="200" height="30" rx="4" fill="#1b2340"/>
+      ${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${142 + i * 32}" y="149" width="12" height="12" fill="#0b0d12"/>`).join('')}
+      <text x="244" y="196" class="lbl" style="fill:#e8f6f7;font-size:18px">GND</text><text x="276" y="196" class="lbl" style="fill:#e8f6f7;font-size:18px">13</text>
+      <rect x="110" y="300" width="160" height="60" rx="6" fill="#15171e"/><text x="190" y="338" class="lbl" style="fill:#8a90a0">UNO</text>
+      <rect x="440" y="200" width="420" height="270" rx="16" fill="#f6f3ec" stroke="#e2dccd" stroke-width="3"/>
+      <line x1="455" y1="404" x2="845" y2="404" stroke="#e74c3c" stroke-width="3"/><line x1="455" y1="456" x2="845" y2="456" stroke="#3b6fd8" stroke-width="3"/>
+      <text x="452" y="424" class="sgn" style="font-size:22px;fill:#e74c3c" text-anchor="end">+</text><text x="452" y="448" class="sgn" style="font-size:22px;fill:#3b6fd8" text-anchor="end">−</text>
+      ${holesBB()}
+    </g>
+    <circle class="glow" data-g="m" cx="613" cy="250" r="60"/>
+    <g class="bs" data-s="2">
+      <line x1="600" y1="288" x2="600" y2="262" stroke="#9aa1b3" stroke-width="5"/><line x1="626" y1="288" x2="626" y2="266" stroke="#9aa1b3" stroke-width="5"/>
+      <path class="ledbody" data-g="m" d="M593 266 L593 238 A20 20 0 0 1 633 238 L633 266 Z"/>
+      <text x="560" y="250" class="lbl" style="font-size:18px" text-anchor="end">الطويلة (+)</text></g>
+    <g class="bs" data-s="3">
+      <line x1="626" y1="336" x2="626" y2="352" stroke="#9aa1b3" stroke-width="5"/><rect x="616" y="352" width="20" height="50" rx="9" fill="#d9b382"/>
+      <rect x="616" y="362" width="20" height="5" fill="#d62828"/><rect x="616" y="372" width="20" height="5" fill="#d62828"/><rect x="616" y="382" width="20" height="5" fill="#7b4a26"/>
+      <line x1="626" y1="402" x2="626" y2="442" stroke="#9aa1b3" stroke-width="5"/>
+      <text x="650" y="384" class="lbl" style="font-size:18px" text-anchor="start">220Ω</text></g>
+    ${P('M276 150 C 276 60, 600 60, 600 240', 4)}
+    ${P('M244 150 C 244 30, 880 30, 880 300 C 880 420, 860 442, 830 442', 5)}
+    <path class="fl" data-g="m" d="M600 240 L600 288 M626 288 L626 442 L830 442"/>
+  </svg>`;
   return {
     simple: {
       svg: svg(`${W('120,190 120,90 380,90', 2)}${resH(380, 520, 90, 3)}${W('520,90 780,90 780,200', 4)}${ledV(780, 200, 5, 'm', 'الليد')}${W('780,270 780,430 120,430 120,310', 6)}${battV(120, 250, 1)}`),
@@ -368,6 +401,16 @@ const BUILD = (() => {
         { h: '❌ ماذا لو تعطّل ليد واحد؟', b: 'انقطع المسار الوحيد… فانطفأت كل الليدات.' },
       ],
     },
+    blinkwire: {
+      svg: blinkwire, flow: 6, blink: true, steps: [
+        { h: 'اللوحة ولوح التوصيل', b: 'نضعهما جنبًا إلى جنب، ونحدد المنفذ 13 و GND.' },
+        { h: 'نركّب الليد', b: 'الساق الطويلة في العمود ٥، والقصيرة في العمود ٦: عمودان مختلفان.' },
+        { h: 'نضيف المقاومة ٢٢٠ أوم', b: 'من عمود الساق القصيرة إلى القضيب السالب.' },
+        { h: 'سلك أحمر: المنفذ 13 ← الساق الطويلة', b: 'من هنا سيخرج أمر الإشعال.' },
+        { h: 'سلك أسود: GND ← القضيب السالب', b: 'نُكمل المسار عائدين إلى الأرضي.' },
+        { h: '⚡ نرفع الكود ونشغّل', b: 'المنفذ 13 يرسل ٥ فولت ثم صفرًا… والليد يومض.' },
+      ],
+    },
     parallel: {
       svg: svg(`${W('120,190 120,70 780,70', 2, 'm')}${W('120,310 120,450 780,450', 3, 'm')}
         ${W('340,70 340,120', 4, 'a')}${resV(340, 120, 210, 4)}${W('340,210 340,240', 4, 'a')}${ledV(340, 240, 4, 'a', 'فرع ١')}${W('340,310 340,450', 4, 'a')}
@@ -387,9 +430,78 @@ const BUILD = (() => {
     },
   };
 })();
+
+/* ---------- مختبر PWM ---------- */
+function pwmWave(duty) {           // موجة مربعة: 5 دورات، ارتفاعها 5 فولت
+  const W = 800, H = 200, per = W / 5, hi = 30, lo = 170; let d = `M0 ${lo}`;
+  for (let i = 0; i < 5; i++) { const x = i * per, on = per * duty;
+    if (duty > 0) d += ` L${x} ${lo} L${x} ${hi} L${x + on} ${hi} L${x + on} ${lo}`;
+    d += ` L${x + per} ${lo}`; }
+  return d;
+}
+/* ---------- محاكي الزر ---------- */
+const BUTTON_CODE = `void setup() {
+  pinMode(2, INPUT);
+  pinMode(13, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(2);
+  Serial.println(state);
+  if (state == HIGH) {
+    digitalWrite(13, HIGH);
+  } else {
+    digitalWrite(13, LOW);
+  }
+}`;
 /* ---------- زر يفتح موقعًا خارجيًا ---------- */
 /* ---------- رسم الأنواع ---------- */
 window.DECK_TYPES = {
+  pwmlab: s => `<div class="slide light">
+      <div class="kicker">🔬 مختبر تفاعلي</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="pwmgrid">
+        <div class="pwmside ix">
+          <label><span>القيمة: <b id="pv">128</b> من 255</span><input id="pin" type="range" min="0" max="255" value="128"></label>
+          <div class="pwmcode" dir="ltr"><span class="c-fn">analogWrite</span>(9, <span class="c-num" id="pcode">128</span>);</div>
+          <div class="pwmfacts"><div><b id="pduty">50%</b><span>نسبة التشغيل</span></div><div><b id="pvolt">2.5V</b><span>متوسط الجهد</span></div></div>
+        </div>
+        <div class="pwmview">
+          <svg viewBox="0 0 800 200" class="wave"><line x1="0" y1="30" x2="800" y2="30" class="grid"/><line x1="0" y1="170" x2="800" y2="170" class="grid"/>
+            <text x="6" y="24" class="wl">5V</text><text x="6" y="192" class="wl">0V</text><path id="pwave" d=""/></svg>
+          <div class="pled"><div class="pledbulb" id="pbulb"></div><span>الليد على المنفذ ~9</span></div>
+        </div>
+      </div></div>`,
+
+  rgbmix: s => `<div class="slide light">
+      <div class="kicker">🎨 خلّاط تفاعلي</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="rgbgrid ix">
+        <div class="rgbside">
+          ${[['r', 'الأحمر', 9, 255], ['g', 'الأخضر', 10, 0], ['b', 'الأزرق', 11, 255]].map(([k, n, pin, v]) =>
+            `<label class="rs ${k}"><span>${n} (المنفذ ~${pin}): <b id="v${k}">${v}</b></span><input data-k="${k}" type="range" min="0" max="255" value="${v}"></label>`).join('')}
+          <div class="rgbtype"><button class="on" data-t="c">مهبط مشترك (−)</button><button data-t="a">مصعد مشترك (+)</button></div>
+          <div class="rgbpre">${[['أحمر', 255, 0, 0], ['أخضر', 0, 255, 0], ['أزرق', 0, 0, 255], ['أصفر', 255, 255, 0], ['سماوي', 0, 255, 255], ['بنفسجي', 255, 0, 255], ['أبيض', 255, 255, 255], ['أسود', 0, 0, 0]]
+            .map(([n, r, g, b]) => `<button class="rp" data-v="${r},${g},${b}" style="--c:rgb(${r},${g},${b})">${n}</button>`).join('')}</div>
+        </div>
+        <div class="rgbview"><div class="rgbled" id="rgbled"></div>
+          <div class="code small" dir="ltr" id="rgbcode"></div></div>
+      </div></div>`,
+
+  buttonsim: s => `<div class="slide light">
+      <div class="kicker">🖱️ محاكي</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="btngrid">
+        <div>${codeBlock(BUTTON_CODE, 'tiny')}</div>
+        <div class="btnside ix">
+          <div class="btnrow"><button class="pushbtn" id="pushbtn"><i></i></button><div class="btnled" id="btnled"></div></div>
+          <div class="btnhint">اضغط الزر واستمر بالضغط 👆</div>
+          <label class="pd"><input type="checkbox" id="pdres" checked> مقاومة السحب للأسفل (10kΩ)</label>
+          <div class="monitor mini"><div class="mbar" dir="ltr">🔍 Serial Monitor</div><div class="mout" id="bout" dir="ltr"></div></div>
+        </div>
+      </div></div>`,
+
   build: s => { const B = BUILD[s.kind]; return `<div class="slide light">
       <div class="kicker">${s.kicker || '🔧 ابنِ الدائرة خطوة بخطوة'}</div>
       <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
@@ -524,12 +636,12 @@ window.DECK_TYPES = {
       ${s.kicker ? `<div class="kicker">${s.kicker}</div>` : ''}
       <h2 class="title" style="margin-bottom:26px">${s.title}</h2>
       <div class="codegrid">
-        <div class="explain">${(s.steps || []).map((st, i) => `<div class="xp f"><i>${AR(i + 1)}</i><div>${st.text}</div></div>`).join('')}
+        <div class="explain ${s.reveal ? 'solo' : ''}">${s.reveal ? '<div class="xstart">اضغط «التالي» لنكتب أول سطر ✍️</div>' : ''}${(s.steps || []).map((st, i) => `<div class="xp f"><i>${AR(i + 1)}</i><div>${st.text}</div></div>`).join('')}
           ${s.note ? `<div class="xnote">${s.note}</div>` : ''}</div>
         <div class="codewrap">
           <div class="codebar"><span class="dots"><b></b><b></b><b></b></span><span class="fname">${s.file || 'sketch.ino'}</span>
             <button class="copy ix">📋 نسخ الكود</button></div>
-          ${codeBlock(s.code, s.code.split('\n').length > 9 ? 'mid' : '')}   <!-- الكود الطويل بخط أصغر قليلًا -->
+          ${codeBlock(s.code, (n => n > 18 ? 'micro' : n > 13 ? 'tiny' : n > 9 ? 'mid' : '')(s.code.split('\n').length) + (s.reveal ? ' typing' : ''))}   <!-- الكود الطويل بخط أصغر -->
         </div>
       </div></div>`,
 
@@ -614,6 +726,57 @@ function bbShow(sl, groups, info, hole) {
   }
 }
 window.DECK_BIND = {
+  pwmlab(sl) {
+    const inp = sl.querySelector('#pin');
+    const upd = () => {
+      const v = +inp.value, d = v / 255;
+      sl.querySelector('#pv').textContent = v; sl.querySelector('#pcode').textContent = v;
+      sl.querySelector('#pduty').textContent = Math.round(d * 100) + '%';
+      sl.querySelector('#pvolt').textContent = (5 * d).toFixed(1) + 'V';
+      sl.querySelector('#pwave').setAttribute('d', pwmWave(d));
+      const b = sl.querySelector('#pbulb'); b.style.opacity = 0.12 + 0.88 * d; b.style.boxShadow = `0 0 ${20 + 90 * d}px ${10 + 40 * d}px rgba(255,70,70,${0.7 * d})`;
+    };
+    inp.oninput = upd; upd();
+  },
+  rgbmix(sl) {
+    let type = 'c';
+    const get = k => +sl.querySelector(`input[data-k="${k}"]`).value;
+    const upd = () => {
+      const r = get('r'), g = get('g'), b = get('b');
+      ['r', 'g', 'b'].forEach(k => sl.querySelector('#v' + k).textContent = get(k));
+      const led = sl.querySelector('#rgbled');
+      led.style.background = `radial-gradient(circle at 40% 35%, #fff 0%, rgb(${r},${g},${b}) 45%, rgb(${r * .6},${g * .6},${b * .6}) 100%)`;
+      led.style.boxShadow = `0 0 90px 30px rgba(${r},${g},${b},${(r + g + b) / 765 * .8})`;
+      const w = v => type === 'a' ? 255 - v : v;
+      const lines = [`// ${type === 'a' ? 'مصعد مشترك: القيمة معكوسة (255 − اللون)' : 'مهبط مشترك: القيمة كما هي'}`,
+        `analogWrite(9,  ${w(r)});  // أحمر`, `analogWrite(10, ${w(g)});  // أخضر`, `analogWrite(11, ${w(b)});  // أزرق`];
+      sl.querySelector('#rgbcode').innerHTML = lines.map((l, i) => `<div class="ln"><span class="cl-num">${i + 1}</span><span class="cl-src">${highlight(l)}</span></div>`).join('');
+    };
+    sl.querySelectorAll('.rs input').forEach(i => i.oninput = upd);
+    sl.querySelectorAll('.rp').forEach(btn => btn.onclick = () => { btn.dataset.v.split(',').forEach((v, i) => sl.querySelector(`input[data-k="${'rgb'[i]}"]`).value = v); upd(); });
+    sl.querySelectorAll('.rgbtype button').forEach(btn => btn.onclick = () => { type = btn.dataset.t; sl.querySelectorAll('.rgbtype button').forEach(x => x.classList.toggle('on', x === btn)); upd(); });
+    upd();
+  },
+  buttonsim(sl) {
+    let pressed = false, t = null;
+    const btn = sl.querySelector('#pushbtn'), led = sl.querySelector('#btnled'), out = sl.querySelector('#bout'), pd = sl.querySelector('#pdres');
+    const lines = sl.querySelectorAll('.code .ln');
+    const loop = () => {
+      // بدون مقاومة السحب للأسفل، والزر غير مضغوط: المدخل «عائم» فيقرأ قيمًا عشوائية
+      const state = pressed ? 1 : pd.checked ? 0 : (Math.random() < .5 ? 1 : 0);
+      led.classList.toggle('on', state === 1);
+      lines.forEach(l => l.classList.toggle('run', +l.dataset.n === (state ? 11 : 13)));
+      const row = document.createElement('div'); row.textContent = state; out.appendChild(row);
+      while (out.children.length > 9) out.firstChild.remove();
+      t = setTimeout(loop, 280);
+    };
+    const down = e => { e.preventDefault(); pressed = true; btn.classList.add('down'); };
+    const up = () => { pressed = false; btn.classList.remove('down'); };
+    btn.addEventListener('pointerdown', down); addEventListener('pointerup', up);
+    loop();
+    window.DECK_CLEANUP.push(() => { clearTimeout(t); removeEventListener('pointerup', up); });
+  },
+
   traffic(sl) {
     let run = false, t = null, i = 0;
     const lines = sl.querySelectorAll('.code .ln'), btn = sl.querySelector('.play'), fast = sl.querySelector('.spd input'), st = sl.querySelector('.tlstate');
@@ -758,6 +921,12 @@ window.DECK_ONSTEP = (step, s) => {
     sl.querySelectorAll('.code .ln').forEach(l => { const n = +l.dataset.n;
       l.classList.toggle('hl', !!on && on.has(n)); l.classList.toggle('dim', !!on && !on.has(n)); });
     sl.querySelectorAll('.xp').forEach((x, i) => x.classList.toggle('now', i === step - 1));
+    if (s.reveal) {                       // الأسطر تظهر واحدًا بعد الآخر كأنها تُكتب الآن
+      const upto = Math.max(0, ...s.steps.slice(0, step).flatMap(x => x.lines));
+      sl.querySelectorAll('.code .ln').forEach(l => { const n = +l.dataset.n;
+        l.classList.toggle('hid', n > upto); l.classList.toggle('typed', !!on && on.has(n)); });
+      const xs = sl.querySelector('.xstart'); if (xs) xs.style.display = step ? 'none' : '';
+    }
   }
   if (s.t === 'board' && step > 0) selectPart(sl, TOUR[step - 1]);
   if (s.t === 'ide' && step > 0) selectIde(sl, IDE_TOUR[step - 1]);
@@ -765,6 +934,7 @@ window.DECK_ONSTEP = (step, s) => {
     const B = BUILD[s.kind];
     sl.querySelectorAll('.bs').forEach(e => e.classList.toggle('on', +e.dataset.s <= step));
     const flowing = step >= B.flow, broken = B.brk && step >= B.brk;
+    sl.querySelector('.bsvg').classList.toggle('blinky', !!B.blink && flowing);
     const alive = g => flowing && !(broken && (B.mode === 'series' || g === B.brkGroup || (B.mode === 'parallel' && g === 'm' && false)));
     sl.querySelectorAll('[data-g]').forEach(e => {
       const g = e.dataset.g, on = alive(g);
