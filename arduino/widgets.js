@@ -182,9 +182,125 @@ const BB_TOUR = [
   { led: 'ledbad', g: ['top-20'], h: '❌ الساقان في العمود نفسه', b: 'العمود متصل من الداخل، فيلتف التيار حول الليد (قِصَر) ولا يضيء.' },
 ];
 
+
+/* ---------- رموز الدوائر ---------- */
+const SYM = {
+  battery: '<line x1="10" y1="50" x2="42" y2="50"/><line x1="42" y1="25" x2="42" y2="75" stroke-width="6"/><line x1="58" y1="36" x2="58" y2="64" stroke-width="10"/><line x1="58" y1="50" x2="90" y2="50"/><text x="30" y="22" class="sy">+</text>',
+  resistor: '<polyline points="5,50 22,50 28,32 40,68 52,32 64,68 76,32 82,50 95,50" fill="none"/>',
+  led: '<line x1="5" y1="50" x2="35" y2="50"/><polygon points="35,30 35,70 62,50" fill="currentColor"/><line x1="62" y1="30" x2="62" y2="70"/><line x1="62" y1="50" x2="95" y2="50"/><line x1="58" y1="20" x2="74" y2="6"/><line x1="70" y1="26" x2="86" y2="12"/>',
+  switch: '<line x1="5" y1="50" x2="30" y2="50"/><circle cx="32" cy="50" r="4" fill="currentColor"/><line x1="32" y1="50" x2="66" y2="28"/><circle cx="70" cy="50" r="4" fill="currentColor"/><line x1="70" y1="50" x2="95" y2="50"/>',
+  wire: '<line x1="5" y1="50" x2="95" y2="50"/><circle cx="50" cy="50" r="5" fill="currentColor"/><line x1="50" y1="50" x2="50" y2="90"/>',
+  ground: '<line x1="50" y1="10" x2="50" y2="45"/><line x1="22" y1="45" x2="78" y2="45"/><line x1="32" y1="60" x2="68" y2="60"/><line x1="42" y1="75" x2="58" y2="75"/>',
+};
+const symSVG = k => `<svg viewBox="0 0 100 100" class="sym">${SYM[k]}</svg>`;
+
+/* ---------- توالي أو توازي (تفاعلي) ---------- */
+function spSVG(mode) {
+  const bulb = (id, x, y) => `<g class="spled ix" data-id="${id}" transform="translate(${x} ${y})" style="cursor:pointer">
+      <circle r="46" class="halo" fill="url(#sphalo)"/><circle r="26" class="glass" fill="#ffd54a" stroke="#b58b00" stroke-width="4"/>
+      <text y="68" class="splbl" text-anchor="middle">اضغط</text></g>`;
+  const common = `<defs><radialGradient id="sphalo"><stop offset="0" stop-color="#ffe27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffe27a" stop-opacity="0"/></radialGradient></defs>
+    <g stroke="#1b2340" stroke-width="6" fill="none">
+      <rect x="40" y="150" width="46" height="90" rx="8" fill="#1b2340"/></g>
+    <text x="63" y="140" class="splbl" text-anchor="middle">+  −</text>`;
+  if (mode === 'series') return `<svg viewBox="0 0 600 380" class="spsvg">${common}
+    <path d="M63 150 V60 H540 V320 H63 V240" stroke="#1b2340" stroke-width="6" fill="none"/>
+    ${bulb('a', 230, 60)}${bulb('b', 420, 60)}${bulb('c', 540, 200)}</svg>`;
+  return `<svg viewBox="0 0 600 380" class="spsvg">${common}
+    <path d="M63 150 V50 H540 M63 240 V340 H540 M240 50 V340 M390 50 V340 M540 50 V340" stroke="#1b2340" stroke-width="6" fill="none"/>
+    ${bulb('a', 240, 195)}${bulb('b', 390, 195)}${bulb('c', 540, 195)}</svg>`;
+}
+
+/* ---------- حاسبة ألوان المقاومة ---------- */
+const RCOL = [
+  { n: 'أسود', c: '#1a1a1a' }, { n: 'بني', c: '#7b4a26' }, { n: 'أحمر', c: '#d62828' }, { n: 'برتقالي', c: '#f77f00' },
+  { n: 'أصفر', c: '#fcbf49' }, { n: 'أخضر', c: '#2a9d4b' }, { n: 'أزرق', c: '#1d6fd1' }, { n: 'بنفسجي', c: '#7b2cbf' },
+  { n: 'رمادي', c: '#8d99ae' }, { n: 'أبيض', c: '#f1f1f1' },
+];
+const RMUL = [...RCOL.map((x, i) => ({ ...x, m: 10 ** i })).slice(0, 7), { n: 'ذهبي', c: '#d4af37', m: 0.1 }, { n: 'فضي', c: '#c0c0c0', m: 0.01 }];
+const fmtOhm = v => v >= 1e6 ? (v / 1e6).toLocaleString('en', { maximumFractionDigits: 2 }) + ' MΩ'
+                 : v >= 1e3 ? (v / 1e3).toLocaleString('en', { maximumFractionDigits: 2 }) + ' kΩ'
+                 : v.toLocaleString('en', { maximumFractionDigits: 2 }) + ' Ω';
+
+/* ---------- مختبر قانون أوم ---------- */
+function ohmSVG() {
+  return `<svg viewBox="0 0 640 400" class="ohmsvg">
+    <defs><radialGradient id="ohmglow"><stop offset="0" stop-color="#ff4d4d" stop-opacity=".95"/><stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/></radialGradient></defs>
+    <path d="M90 140 V60 H560 V340 H90 V260" stroke="#1b2340" stroke-width="7" fill="none"/>
+    <rect x="60" y="140" width="60" height="120" rx="10" fill="#1b2340"/><text x="90" y="210" class="ohmv" text-anchor="middle" id="ovtxt">5V</text>
+    <g transform="translate(250 60)"><rect x="-50" y="-16" width="100" height="32" rx="16" fill="#d9b382"/><rect x="-26" y="-16" width="8" height="32" fill="#d62828"/><rect x="-8" y="-16" width="8" height="32" fill="#d62828"/><rect x="10" y="-16" width="8" height="32" fill="#7b4a26"/></g>
+    <text x="250" y="112" class="ohml" text-anchor="middle" id="ortxt">220Ω</text>
+    <circle id="oglow" cx="560" cy="200" r="90" fill="url(#ohmglow)" opacity="0"/>
+    <path id="oled" d="M540 222 L540 190 A20 20 0 0 1 580 190 L580 222 Z" fill="#7a2323" stroke="#4a1111" stroke-width="3"/>
+    <g id="osmoke" opacity="0"><circle cx="555" cy="160" r="14" fill="#9aa1b3"/><circle cx="572" cy="138" r="18" fill="#b8bdc9"/><circle cx="560" cy="110" r="22" fill="#d3d6de"/></g>
+    <text x="600" y="250" class="ohml">LED</text>
+  </svg>`;
+}
+function ledAnatSVG() {
+  return `<svg viewBox="100 0 560 530" class="ledanat" direction="ltr">
+    <defs><radialGradient id="lg" cx="45%" cy="35%"><stop offset="0" stop-color="#ff8a8a"/><stop offset="1" stop-color="#d62828"/></radialGradient></defs>
+    <path d="M190 300 V150 A70 70 0 0 1 330 150 V300 Z" fill="url(#lg)" stroke="#8e1b1b" stroke-width="4"/>
+    <rect x="178" y="296" width="164" height="22" rx="4" fill="#c22"/><line x1="342" y1="296" x2="342" y2="318" stroke="#fff" stroke-width="6"/>
+    <line x1="225" y1="318" x2="225" y2="500" stroke="#9aa1b3" stroke-width="10"/>
+    <line x1="295" y1="318" x2="295" y2="440" stroke="#9aa1b3" stroke-width="10"/>
+    <g class="lab"><line x1="342" y1="300" x2="400" y2="262"/><text x="410" y="262">حافة مسطحة</text><text x="410" y="292" class="s">تدل على جهة السالب</text></g>
+    <g class="lab"><line x1="295" y1="410" x2="400" y2="380"/><text x="410" y="380">السالب (−)</text><text x="410" y="410" class="s">الساق الأقصر · Cathode</text></g>
+    <g class="lab"><line x1="225" y1="490" x2="400" y2="480"/><text x="410" y="480">الموجب (+)</text><text x="410" y="510" class="s">الساق الأطول · Anode</text></g>
+  </svg>`;
+}
 /* ---------- زر يفتح موقعًا خارجيًا ---------- */
 /* ---------- رسم الأنواع ---------- */
 window.DECK_TYPES = {
+  symbols: s => `<div class="slide light">
+      <div class="kicker">${s.kicker || 'لغة المهندسين'}</div>
+      <h2 class="title" style="margin-bottom:24px">${s.title}</h2>
+      <div class="syms">${s.items.map(it => `<div class="symc f">${symSVG(it.k)}<h3>${it.ar}</h3><div class="en" dir="ltr">${it.en}</div><p>${it.b}</p></div>`).join('')}</div></div>`,
+
+  seriespar: s => `<div class="slide light">
+      <div class="kicker">🖱️ جرّب بنفسك</div>
+      <h2 class="title" style="margin-bottom:16px">${s.title}</h2>
+      <div class="spgrid">
+        <div class="spcol ix"><h3>🔗 التوالي</h3><p>مسار واحد يمر بكل الليدات</p>${spSVG('series')}<div class="spmsg" data-m="series">اضغط أي ليد لتعطّله</div></div>
+        <div class="spcol ix"><h3>🔀 التوازي</h3><p>لكل ليد مساره الخاص</p>${spSVG('parallel')}<div class="spmsg" data-m="parallel">اضغط أي ليد لتعطّله</div></div>
+      </div></div>`,
+
+  resistor: s => `<div class="slide light">
+      <div class="kicker">🖱️ حاسبة تفاعلية</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="rcalc ix">
+        <svg viewBox="0 0 900 200" class="rsvg"><line x1="0" y1="100" x2="900" y2="100" stroke="#9aa1b3" stroke-width="12"/>
+          <rect x="190" y="40" width="520" height="120" rx="60" fill="#e8c9a0" stroke="#b8905e" stroke-width="4"/>
+          <rect class="band" data-b="0" x="270" y="40" width="42" height="120"/><rect class="band" data-b="1" x="350" y="40" width="42" height="120"/>
+          <rect class="band" data-b="2" x="430" y="40" width="42" height="120"/><rect class="band" data-b="3" x="590" y="40" width="42" height="120"/></svg>
+        <div class="rval"><span id="rv">220 Ω</span><small id="rtol">± 5%</small></div>
+        <div class="rrows">
+          ${['الحلقة الأولى (الرقم الأول)', 'الحلقة الثانية (الرقم الثاني)', 'الحلقة الثالثة (المضاعف)', 'الحلقة الرابعة (نسبة الخطأ)'].map((lbl, b) => `<div class="rrow"><b>${lbl}</b><div class="sw">${
+            (b < 2 ? RCOL : b === 2 ? RMUL : [{ n: 'ذهبي', c: '#d4af37', t: 5 }, { n: 'فضي', c: '#c0c0c0', t: 10 }, { n: 'بني', c: '#7b4a26', t: 1 }])
+              .map((c, i) => `<button class="swc" data-b="${b}" data-i="${i}" title="${c.n}" style="background:${c.c}"></button>`).join('')}</div></div>`).join('')}
+        </div>
+        <div class="rpre">${[['220 Ω', [2, 2, 1, 0]], ['330 Ω', [3, 3, 1, 0]], ['1 kΩ', [1, 0, 2, 0]], ['10 kΩ', [1, 0, 3, 0]]].map(([t, v]) => `<button class="pre" data-v="${v.join(',')}">${t}</button>`).join('')}</div>
+      </div></div>`,
+
+  ohmlab: s => `<div class="slide light">
+      <div class="kicker">🔬 مختبر تفاعلي</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="ohmgrid">
+        <div class="ohmside ix">
+          <label><span>الجهد (V): <b id="vv">5</b> فولت</span><input id="vin" type="range" min="2" max="12" step="0.5" value="5"></label>
+          <label><span>المقاومة (R): <b id="rrv">220</b> أوم</span><input id="rin" type="range" min="10" max="1000" step="10" value="220"></label>
+          <div class="ohmeq" dir="ltr">I = (V − 2) ÷ R = <b id="ieq">13.6 mA</b></div>
+          <div class="ohmmeter"><div class="fill" id="ifill"></div><span class="safe">الحد الآمن ٢٠ مللي أمبير</span></div>
+          <div class="ohmstate" id="ostate">✅ آمن: الليد يضيء بسلام</div>
+        </div>
+        <div class="ohmview">${ohmSVG()}</div>
+      </div></div>`,
+
+  ledanat: s => `<div class="slide light">
+      <div class="kicker">${s.kicker || 'تشريح المكوّن'}</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="lagrid"><div class="lafacts">${s.facts.map(f => `<div class="laf f"><i>${f.icon}</i><div><h3>${f.h}</h3><p>${f.b}</p></div></div>`).join('')}</div>
+        <div>${ledAnatSVG()}</div></div></div>`,
+
   ide: s => `<div class="slide light">
       <div class="kicker">${s.kicker || '🖱️ واجهة تفاعلية'}</div>
       <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
@@ -313,6 +429,51 @@ function bbShow(sl, groups, info, hole) {
   }
 }
 window.DECK_BIND = {
+  seriespar(sl) {
+    const upd = col => {
+      const mode = col.querySelector('.spmsg').dataset.m, leds = [...col.querySelectorAll('.spled')];
+      const broken = leds.filter(l => l.classList.contains('off')).length;
+      leds.forEach(l => { const on = mode === 'series' ? broken === 0 : !l.classList.contains('off'); l.classList.toggle('dark', !on); });
+      col.querySelector('.spmsg').innerHTML = broken === 0 ? 'اضغط أي ليد لتعطّله'
+        : mode === 'series' ? '❌ انقطع المسار الوحيد… فانطفأت <b>كل</b> الليدات' : `✅ تعطّل ${AR(broken)}… والباقي <b>ما زال يضيء</b>`;
+    };
+    sl.querySelectorAll('.spcol').forEach(col => col.querySelectorAll('.spled').forEach(l => l.addEventListener('click', () => { l.classList.toggle('off'); upd(col); })));
+  },
+  resistor(sl) {
+    let v = [2, 2, 1, 0];
+    const TOL = [5, 10, 1], TOLC = ['#d4af37', '#c0c0c0', '#7b4a26'];
+    const draw = () => {
+      const val = (v[0] * 10 + v[1]) * RMUL[v[2]].m;
+      sl.querySelector('#rv').textContent = fmtOhm(val);
+      sl.querySelector('#rtol').textContent = '± ' + TOL[v[3]] + '%';
+      const cols = [RCOL[v[0]].c, RCOL[v[1]].c, RMUL[v[2]].c, TOLC[v[3]]];
+      sl.querySelectorAll('.band').forEach((b, i) => b.setAttribute('fill', cols[i]));
+      sl.querySelectorAll('.swc').forEach(b => b.classList.toggle('on', +b.dataset.i === v[+b.dataset.b]));
+    };
+    sl.querySelectorAll('.swc').forEach(b => b.addEventListener('click', () => { v[+b.dataset.b] = +b.dataset.i; draw(); }));
+    sl.querySelectorAll('.pre').forEach(b => b.addEventListener('click', () => { v = b.dataset.v.split(',').map(Number); draw(); }));
+    draw();
+  },
+  ohmlab(sl) {
+    const vin = sl.querySelector('#vin'), rin = sl.querySelector('#rin');
+    const upd = () => {
+      const V = +vin.value, R = +rin.value, I = Math.max(0, (V - 2) / R) * 1000;   // مللي أمبير (جهد الليد الأحمر تقريبًا ٢ فولت)
+      sl.querySelector('#vv').textContent = V; sl.querySelector('#rrv').textContent = R;
+      sl.querySelector('#ovtxt').textContent = V + 'V'; sl.querySelector('#ortxt').textContent = R + 'Ω';
+      sl.querySelector('#ieq').textContent = I.toFixed(1) + ' mA';
+      const pct = Math.min(100, I / 60 * 100), fill = sl.querySelector('#ifill');
+      fill.style.width = pct + '%'; fill.className = 'fill ' + (I > 40 ? 'burn' : I > 20 ? 'hot' : 'ok');
+      const burnt = I > 40, st = sl.querySelector('#ostate');
+      st.textContent = burnt ? '💥 احترق الليد! التيار أكبر بكثير من طاقته' : I > 20 ? '⚠️ خطر: التيار أعلى من الحد الآمن' : I < 2 ? '🌑 التيار ضعيف جدًا… الليد لا يكاد يضيء' : '✅ آمن: الليد يضيء بسلام';
+      st.className = 'ohmstate ' + (burnt ? 'burn' : I > 20 ? 'hot' : 'ok');
+      const b = burnt ? 0 : Math.min(1, I / 20);
+      sl.querySelector('#oled').setAttribute('fill', burnt ? '#2b2b2b' : b > 0.05 ? `rgb(${120 + 135 * b},${35 + 30 * b},${35 + 30 * b})` : '#7a2323');
+      sl.querySelector('#oglow').setAttribute('opacity', burnt ? 0 : b);
+      sl.querySelector('#osmoke').setAttribute('opacity', burnt ? 1 : 0);
+    };
+    vin.oninput = rin.oninput = upd; upd();
+  },
+
   ide(sl) {
     sl.querySelectorAll('.hs').forEach(h => h.addEventListener('click', e => { e.stopPropagation(); selectIde(sl, h.dataset.h); }));
   },

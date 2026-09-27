@@ -134,3 +134,71 @@
 .ctasub{font-size:40px;font-weight:600;color:#c9cfe6;max-width:1300px;line-height:1.6;margin-top:10px}
 .ctabtn{margin-top:44px;display:inline-block;font-size:44px;font-weight:900;color:var(--navy-900);background:linear-gradient(145deg,var(--gold-light),var(--gold));border-radius:999px;padding:22px 70px;text-decoration:none;box-shadow:0 20px 50px rgba(217,174,75,.35)}
 .ctaurl{margin-top:22px;font-family:var(--mono);font-size:30px;color:var(--gold-light)}
+
+/* ---------- رموز الدوائر ---------- */
+.syms{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-content:center}
+.symc{background:#fff;border:2px solid var(--line);border-radius:28px;padding:20px 26px;display:grid;grid-template-columns:120px 1fr;grid-template-rows:auto auto auto;column-gap:22px;align-items:center}
+.symc .sym{grid-row:1/4;width:120px;height:120px;color:var(--navy-800);stroke:currentColor;stroke-width:5;stroke-linecap:round;fill:none;background:#F3F5FB;border-radius:22px;padding:8px}
+.symc .sym .sy{fill:currentColor;stroke:none;font-size:22px;font-weight:900}
+.symc h3{font-size:38px;font-weight:900;color:var(--navy-800)}
+.symc .en{font-family:var(--mono);font-size:24px;color:var(--teal);text-align:right}
+.symc p{font-size:28px;font-weight:600;color:#3b4460;line-height:1.4}
+
+/* ---------- توالي وتوازي ---------- */
+.spgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;min-height:0}
+.spcol{background:#fff;border:2px solid var(--line);border-radius:32px;padding:24px 30px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.spcol h3{font-size:46px;font-weight:900;color:var(--navy-800)}
+.spcol p{font-size:30px;font-weight:600;color:var(--muted)}
+.spsvg{width:100%;max-height:430px}
+.spsvg .splbl{font-family:"Cairo";font-size:22px;font-weight:800;fill:#8a90a0}
+.spled .halo{transition:opacity .3s}.spled .glass{transition:fill .3s}
+.spled.dark .halo{opacity:0}.spled.dark .glass{fill:#6b6f7a}
+.spled.off .glass{stroke:#d64545;stroke-dasharray:6 6}
+.spmsg{font-size:32px;font-weight:800;color:var(--navy-700);text-align:center;min-height:50px}
+.spmsg b{color:var(--gold-dark)}
+
+/* ---------- حاسبة المقاومة ---------- */
+.rcalc{flex:1;display:flex;flex-direction:column;gap:14px;align-items:center}
+.rsvg{width:880px;max-width:100%}
+.rsvg .band{transition:fill .25s}
+.rval{font-family:var(--mono);font-size:84px;font-weight:700;color:var(--navy-800);direction:ltr;display:flex;align-items:baseline;gap:24px}
+.rval small{font-size:40px;color:var(--gold-dark)}
+.rrows{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;width:100%}
+.rrow{display:flex;flex-direction:column;gap:8px}
+.rrow b{font-size:30px;font-weight:800;color:var(--navy-800)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.swc{width:58px;height:58px;border-radius:12px;border:3px solid #fff;box-shadow:0 0 0 2px var(--line);cursor:pointer}
+.swc.on{box-shadow:0 0 0 4px var(--gold);transform:scale(1.12)}
+.rpre{display:flex;gap:14px}
+.pre{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--navy-800);background:#FBF3DF;border:2px solid #EFDDAF;border-radius:999px;padding:6px 24px;cursor:pointer}
+
+/* ---------- مختبر أوم ---------- */
+.ohmgrid{flex:1;display:grid;grid-template-columns:1fr 1.05fr;gap:44px;align-items:center;min-height:0}
+.ohmside{display:flex;flex-direction:column;gap:14px}
+.ohmside label{font-size:32px;font-weight:800;color:var(--navy-800);display:flex;flex-direction:column;gap:2px;background:#fff;border:2px solid var(--line);border-radius:24px;padding:10px 26px}
+.ohmside input{width:100%;accent-color:var(--gold);height:30px}
+.ohmeq{font-family:var(--mono);font-size:32px;color:var(--navy-800);background:#EEF1FA;border-radius:18px;padding:14px 24px;text-align:center}
+.ohmeq b{color:var(--gold-dark)}
+.ohmmeter{position:relative;height:44px;border-radius:22px;background:#EEF1FA;overflow:hidden}
+.ohmmeter .fill{position:absolute;inset:0 auto 0 0;transition:width .25s,background .25s;direction:ltr}
+.ohmmeter .fill.ok{background:linear-gradient(90deg,#5CC596,#2E9E6B)}.ohmmeter .fill.hot{background:linear-gradient(90deg,#f2b45a,#e67e22)}.ohmmeter .fill.burn{background:linear-gradient(90deg,#e36b6b,#b83232)}
+.ohmmeter .safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#1b2340}
+.ohmmeter::after{content:"";position:absolute;top:0;bottom:0;left:33.3%;width:4px;background:#1b2340;opacity:.5}
+.ohmstate{font-size:32px;font-weight:900;text-align:center;border-radius:20px;padding:10px}
+.ohmstate.ok{background:var(--ok-bg);color:#1d6b47}.ohmstate.hot{background:#FDF1DF;color:#a35a00}.ohmstate.burn{background:var(--bad-bg);color:var(--bad)}
+.ohmsvg{width:100%;filter:drop-shadow(0 20px 40px rgba(16,27,69,.15))}
+.ohmsvg .ohmv{font-family:var(--mono);font-size:26px;font-weight:700;fill:#F0CC7A}
+.ohmsvg .ohml{font-family:var(--mono);font-size:26px;font-weight:700;fill:#3b4460}
+#oled,#oglow,#osmoke{transition:all .25s}
+
+/* ---------- تشريح الليد ---------- */
+.lagrid{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;min-height:0}
+.lafacts{display:flex;flex-direction:column;gap:18px}
+.laf{display:flex;gap:22px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:24px;padding:18px 26px}
+.laf i{font-style:normal;font-size:52px}
+.laf h3{font-size:38px;font-weight:900;color:var(--navy-800)}
+.laf p{font-size:30px;font-weight:600;color:#3b4460;line-height:1.4}
+.ledanat{width:100%;max-height:660px;direction:ltr}
+.ledanat .lab line{stroke:#B08A2E;stroke-width:3}
+.ledanat .lab text{font-family:"Cairo";font-size:26px;font-weight:900;fill:#101B45}
+.ledanat .lab text.s{font-size:22px;font-weight:700;fill:#5E6782}
