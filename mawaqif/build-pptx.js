@@ -67,7 +67,7 @@ function kicker(s, text, dark, y = 0.5, center = false) {
   const x = center ? (W - w) / 2 : W - M - w;
   box(s, { x, y, w, h: 0.5, rectRadius: 0.25, fill: { color: dark ? '3A3A45' : K.chip, transparency: dark ? 40 : 0 },
     line: dark ? { color: K.gold, width: 1, transparency: 40 } : { type: 'none' } });
-  T(s, text, { x, y, w, h: 0.5, align: 'center', fontSize: 16, bold: true, color: dark ? K.goldLight : K.goldDark });
+  T(s, text, { x, y, w, h: 0.5, align: 'center', fontSize: 18, bold: true, color: dark ? K.goldLight : K.goldDark });
 }
 function title(s, text, y = 1.1, o = {}) {
   T(s, text, { x: M, y, w: W - 2 * M, h: 0.95, fontSize: text.length > 32 ? 32 : 38, fontFace: F.heavy, color: K.navy800, ...o });
@@ -93,7 +93,7 @@ function card(s, x, y, w, h, c, g, o = {}) {
   box(s, { x: x + w - ic - 0.3, y: y + 0.28, w: ic, h: ic, rectRadius: 0.2, fill: { color: K.iconBg }, g });
   T(s, c.icon, { x: x + w - ic - 0.3, y: y + 0.28, w: ic, h: ic, align: 'center', fontSize: ic * 36, g });
   T(s, c.h, { x: x + 0.3, y: y + ic + 0.4, w: w - 0.6, h: 0.6, fontSize: o.hs || 23, fontFace: F.heavy, color: K.navy800, g });
-  T(s, c.b, { x: x + 0.3, y: y + ic + 1.02, w: w - 0.6, h: h - ic - 1.2, fontSize: o.bs || 18, bold: true, color: K.body, valign: 'top', lineSpacingMultiple: 1.15, g });
+  T(s, c.b, { x: x + 0.3, y: y + ic + 1.0, w: w - 0.6, h: h - ic - 1.15, fontSize: o.bs || 21, bold: true, color: K.body, valign: 'top', lineSpacingMultiple: 1.15, g });
 }
 
 /* ========== رسم كل نوع ========== */
@@ -138,7 +138,7 @@ const R = {
       const rows = Math.ceil(d.cards.length / d.cols), top = 2.2, gap = 0.25, h = (4.4 - gap * (rows - 1)) / rows;
       d.cards.forEach((c, i) => {
         const p = colX(i % d.cols, d.cols, 0.3), y = top + Math.floor(i / d.cols) * (h + gap);
-        card(s, p.x, y, p.w, h, c, i + 1, { ic: 0.62, hs: 20, bs: 16 });
+        card(s, p.x, y, p.w, h, c, i + 1, { ic: 0.62, hs: 22, bs: 19 });
       });
     } else {
       d.cards.forEach((c, i) => { const p = colX(i, d.cards.length, 0.3); card(s, p.x, 2.35, p.w, 3.9, c, i + 1); });
@@ -186,16 +186,16 @@ const R = {
     d.lines.forEach((l, i) => {
       const y = top + i * rh, h = rh - 0.16, g = i + 1;
       box(s, { x: W - M - 1.75, y: y + 0.08, w: 1.75, h: h - 0.16, rectRadius: 0.15, fill: { color: K.whoBg }, g });
-      T(s, l.who, { x: W - M - 1.7, y: y + 0.08, w: 1.65, h: h - 0.16, align: 'center', fontSize: 14, bold: true, color: K.navy600, g });
+      T(s, l.who, { x: W - M - 1.7, y: y + 0.08, w: 1.65, h: h - 0.16, align: 'center', fontSize: 18, bold: true, color: K.navy600, g });
       box(s, { x: M, y, w: W - 2 * M - 2.0, h, rectRadius: 0.22, fill: { color: K.navy800 }, g });
       T(s, [{ text: '« ', options: { color: K.gold } }, { text: l.say }, { text: ' »', options: { color: K.gold } }],
-        { x: M + 0.3, y, w: W - 2 * M - 2.6, h, fontSize: l.say.length > 70 ? 16 : l.say.length > 50 ? 18 : 21, bold: true, color: K.white, g });
+        { x: M + 0.3, y, w: W - 2 * M - 2.6, h, fontSize: l.say.length > 70 ? 20 : l.say.length > 50 ? 22 : 24, bold: true, color: K.white, g });
     });
     if (d.warn) {
       const g = n + 1;
       box(s, { x: M, y: 6.05, w: W - 2 * M, h: 0.6, rectRadius: 0.12, fill: { color: K.badBg }, g });
       shape(s, 'RECTANGLE', { x: W - M - 0.08, y: 6.05, w: 0.08, h: 0.6, fill: { color: K.bad }, g });
-      T(s, '⚠️ ' + d.warn, { x: M + 0.2, y: 6.05, w: W - 2 * M - 0.5, h: 0.6, fontSize: 16, bold: true, color: K.badInk, g });
+      T(s, '⚠️ ' + d.warn, { x: M + 0.2, y: 6.05, w: W - 2 * M - 0.5, h: 0.6, fontSize: 19, bold: true, color: K.badInk, g });
     }
   },
 
@@ -216,16 +216,16 @@ const R = {
     kicker(s, d.kicker, true);
     title(s, d.title, 1.1, { color: K.white });
     const rx = 6.1;
-    T(s, d.story, { x: rx, y: 2.3, w: W - M - rx, h: 1.6, fontSize: 19, bold: true, color: 'D9DEF0', valign: 'top', lineSpacingMultiple: 1.25 });
+    T(s, d.story, { x: rx, y: 2.3, w: W - M - rx, h: 1.6, fontSize: 21, bold: true, color: 'D9DEF0', valign: 'top', lineSpacingMultiple: 1.25 });
     shape(s, 'RECTANGLE', { x: W - M - 0.06, y: 4.05, w: 0.06, h: 2.0, fill: { color: K.gold }, g: 1 });
     T(s, '«' + d.quote + '»', { x: rx, y: 4.0, w: W - M - rx - 0.3, h: 1.6, fontSize: 24, fontFace: F.naskh, bold: true, color: K.goldLight, valign: 'top', lineSpacingMultiple: 1.2, g: 1 });
-    T(s, d.src, { x: rx, y: 5.65, w: W - M - rx - 0.3, h: 0.4, fontSize: 14, bold: true, color: K.gold, g: 1 });
+    T(s, d.src, { x: rx, y: 5.65, w: W - M - rx - 0.3, h: 0.4, fontSize: 18, bold: true, color: K.gold, g: 1 });
     box(s, { x: M, y: 2.3, w: 4.8, h: 3.9, rectRadius: 0.25, fill: { color: K.white, transparency: 94 }, line: { color: K.gold, width: 1.5, transparency: 50 }, g: 2 });
     T(s, 'كيف تصرّف ﷺ؟', { x: M + 0.3, y: 2.5, w: 4.2, h: 0.55, fontSize: 21, fontFace: F.heavy, color: K.gold, g: 2 });
     d.lessons.forEach((l, i) => {
       const y = 3.2 + i * 0.95;
       circleNum(s, i + 1, M + 4.05, y + 0.08, 0.42, { size: 14, g: 2 });
-      T(s, l, { x: M + 0.25, y, w: 3.7, h: 0.85, fontSize: 18, bold: true, color: K.white, valign: 'top', g: 2 });
+      T(s, l, { x: M + 0.25, y, w: 3.7, h: 0.85, fontSize: 20, bold: true, color: K.white, valign: 'top', g: 2 });
     });
   },
 
@@ -257,17 +257,17 @@ const R = {
       box(s, { x: M, y, w: W - 2 * M, h, rectRadius: 0.16, fill: { color: K.white }, line: { color: K.line, width: 1.5 } });
       box(s, { x: W - M - 0.2 - L, y: y + 0.15, w: L, h: L, rectRadius: 0.12, fill: { color: K.navy800 } });
       T(s, LETTERS[i], { x: W - M - 0.2 - L, y: y + 0.15, w: L, h: L, align: 'center', fontSize: n > 3 ? 20 : 24, fontFace: F.heavy, color: K.white });
-      T(s, o, { ...tx, y, h, fontSize: n > 3 ? 19 : 23, bold: true });
+      T(s, o, { ...tx, y, h, fontSize: n > 3 ? 22 : 25, bold: true });
       // الكشف (نقرة واحدة): الصحيح يتلوّن بالأخضر، والبقية تخفت، ويظهر سبب كل خيار
       // طبقة الكشف تغطي الخيار كاملًا: الصحيح بالأخضر، والبقية باهتة، ومع كل خيار سببه
       box(s, { x: M, y, w: W - 2 * M, h, rectRadius: 0.16, fill: { color: ok ? K.okBg : 'F7F7F9' }, line: { color: ok ? K.ok : K.line, width: ok ? 2.5 : 1.5 }, g: 1 });
       box(s, { x: W - M - 0.2 - L, y: y + 0.15, w: L, h: L, rectRadius: 0.12, fill: { color: ok ? K.ok : 'A3A9BA' }, g: 1 });
       T(s, ok ? '✓' : LETTERS[i], { x: W - M - 0.2 - L, y: y + 0.15, w: L, h: L, align: 'center', fontSize: n > 3 ? 20 : 24, fontFace: F.heavy, color: K.white, g: 1 });
       if (d.why) {
-        T(s, o, { ...tx, y: y + 0.06, h: h * 0.5, fontSize: n > 3 ? 17 : 21, bold: true, color: ok ? K.ink : '8A90A3', g: 1 });
-        T(s, d.why[i], { ...tx, y: y + h * 0.54, h: h * 0.4, fontSize: 13, bold: true, color: ok ? K.okInk : '9A4A4A', g: 1 });
+        T(s, o, { ...tx, y: y + 0.04, h: h * 0.5, fontSize: n > 3 ? 22 : 24, bold: true, color: ok ? K.ink : '8A90A3', g: 1 });
+        T(s, d.why[i], { ...tx, y: y + h * 0.54, h: h * 0.42, fontSize: 18, bold: true, color: ok ? K.okInk : '9A4A4A', g: 1 });
       } else {
-        T(s, o, { ...tx, y, h, fontSize: n > 3 ? 19 : 23, bold: true, color: ok ? K.ink : '8A90A3', g: 1 });
+        T(s, o, { ...tx, y, h, fontSize: n > 3 ? 22 : 25, bold: true, color: ok ? K.ink : '8A90A3', g: 1 });
       }
     });
   },
@@ -282,10 +282,10 @@ const R = {
       const x = left + i * (bw + gap), h = Math.max(0.05, b.v / 100 * maxH);
       shape(s, 'RECTANGLE', { x, y: base - h, w: bw, h, fill: { color: colors[b.tone] } });
       T(s, AR(b.v), { x, y: base - h - 0.6, w: bw, h: 0.55, align: 'center', fontSize: 30, fontFace: F.heavy, color: b.tone === 'base' ? K.muted : colors[b.tone] });
-      T(s, b.label.replace('\n', ' '), { x: x - 0.1, y: base + 0.1, w: bw + 0.2, h: 0.75, align: 'center', fontSize: 15, bold: true, color: K.navy800, valign: 'top' });
+      T(s, b.label.replace('\n', ' '), { x: x - 0.1, y: base + 0.1, w: bw + 0.2, h: 0.75, align: 'center', fontSize: 18, bold: true, color: K.navy800, valign: 'top' });
     });
     s.addShape(pres.shapes.LINE, { x: M, y: base, w: W - 2 * M, h: 0, line: { color: K.navy800, width: 2 } });
-    T(s, `المحور الرأسي: ${d.unit} · المصدر: ${d.src}`, { x: M, y: 6.45, w: W - 2 * M, h: 0.35, fontSize: 13, bold: true, color: K.muted });
+    T(s, `المحور الرأسي: ${d.unit} · المصدر: ${d.src}`, { x: M, y: 6.45, w: W - 2 * M, h: 0.35, fontSize: 16, bold: true, color: K.muted });
   },
 
   map(s, d) {
@@ -296,8 +296,8 @@ const R = {
       box(s, { x: c.x, y, w: c.w, h: 1.2, rectRadius: 0.18, fill: { color: K.white }, line: { color: K.line, width: 1 } });
       box(s, { x: c.x + c.w - 1.05, y: y + 0.2, w: 0.8, h: 0.8, rectRadius: 0.18, fill: { color: K.navy800 } });
       T(s, p.icon, { x: c.x + c.w - 1.05, y: y + 0.2, w: 0.8, h: 0.8, align: 'center', fontSize: 26 });
-      T(s, 'المحطة ' + AR(i + 1), { x: c.x + 0.2, y: y + 0.15, w: c.w - 1.4, h: 0.35, fontSize: 13, bold: true, color: K.goldDark });
-      T(s, p.name, { x: c.x + 0.2, y: y + 0.45, w: c.w - 1.4, h: 0.6, fontSize: 19, fontFace: F.heavy, color: K.navy800 });
+      T(s, 'المحطة ' + AR(i + 1), { x: c.x + 0.2, y: y + 0.12, w: c.w - 1.4, h: 0.35, fontSize: 16, bold: true, color: K.goldDark });
+      T(s, p.name, { x: c.x + 0.2, y: y + 0.45, w: c.w - 1.4, h: 0.65, fontSize: 22, fontFace: F.heavy, color: K.navy800 });
     });
   },
 
@@ -317,26 +317,33 @@ const R = {
     flow.forEach(f => {
       const w = f.length * 0.12 + 0.4;
       box(s, { x: x - w, y: 4.9, w, h: 0.5, rectRadius: 0.25, fill: { color: K.white, transparency: 88 }, line: { color: K.white, width: 1, transparency: 75 } });
-      T(s, f, { x: x - w, y: 4.9, w, h: 0.5, align: 'center', fontSize: 13, bold: true, color: K.white });
+      T(s, f, { x: x - w, y: 4.9, w, h: 0.5, align: 'center', fontSize: 15, bold: true, color: K.white });
       x -= w + 0.1;
     });
   },
 
   story(s, d) {
+    if (d.img) {
+      s.addImage({ path: A(d.img), x: 0, y: 0, w: W, h: 7.5, objectName: `kb-${++uid}` });
+      s.addImage({ path: A('assets/story-overlay.png'), x: 0, y: 0, w: W, h: 7.5 });
+      const k = '🎬 القصة · ' + d.title, kw = k.length * 0.16 + 0.8;
+      box(s, { x: W - 0.6 - kw, y: 0.4, w: kw, h: 0.55, rectRadius: 0.27, fill: { color: K.navy900, transparency: 20 }, line: { color: K.gold, width: 1, transparency: 40 } });
+      T(s, k, { x: W - 0.6 - kw, y: 0.4, w: kw, h: 0.55, align: 'center', fontSize: 18, bold: true, color: K.goldLight });
+      d.paras.forEach((p, i) => {
+        const last = i === d.paras.length - 1, g = i ? i : undefined;
+        box(s, { x: 0.75, y: 4.55, w: W - 1.5, h: 2.05, rectRadius: 0.22, fill: { color: K.navy900 }, line: { color: K.gold, width: 1.2, transparency: 50 }, g });
+        T(s, p, { x: 1.05, y: 4.6, w: W - 2.1, h: 1.95, fontSize: last ? 26 : 24, bold: true, color: last ? K.goldLight : K.white, lineSpacingMultiple: 1.2, g });
+      });
+      return;
+    }
     kicker(s, '🎬 القصة', false);
     title(s, d.title, 1.05);
     const n = d.paras.length, top = 2.1, h = 4.5 / n;
-    const textW = d.img ? 6.9 : W - 2 * M - 0.3, textX = W - M - 0.3 - textW;
     d.paras.forEach((p, i) => {
       const last = i === n - 1, y = top + i * h, g = i + 1;
       shape(s, 'RECTANGLE', { x: W - M - 0.05, y: y + 0.1, w: 0.05, h: h - 0.2, fill: { color: last ? K.bad : K.line }, g });
-      T(s, p, { x: textX, y, w: textW, h, fontSize: d.img ? (last ? 19 : 17) : (last ? 25 : 22), bold: true, color: last ? K.bad : K.ink, lineSpacingMultiple: 1.2, g });
+      T(s, p, { x: M, y, w: W - 2 * M - 0.3, h, fontSize: last ? 25 : 22, bold: true, color: last ? K.bad : K.ink, lineSpacingMultiple: 1.2, g });
     });
-    if (d.img) {
-      const iw = W - 2 * M - textW - 0.7, ih = iw * 9 / 16, iy = top + (4.5 - ih) / 2;
-      box(s, { x: M - 0.06, y: iy - 0.06, w: iw + 0.12, h: ih + 0.12, rectRadius: 0.2, fill: { color: K.white }, shadow: { type: 'outer', color: '101B45', blur: 18, offset: 5, angle: 90, opacity: 0.25 } });
-      s.addImage({ path: A(d.img), x: M, y: iy, w: iw, h: ih });
-    }
   },
 
   why(s, d) {
@@ -349,12 +356,12 @@ const R = {
       box(s, { x: p.x + (p.w - 0.7) / 2, y: 2.4, w: 0.7, h: 0.7, rectRadius: 0.18, fill: { color: K.iconBg }, g });
       T(s, c.icon, { x: p.x + (p.w - 0.7) / 2, y: 2.4, w: 0.7, h: 0.7, align: 'center', fontSize: 26, g });
       T(s, c.h, { x: p.x + 0.15, y: 3.2, w: p.w - 0.3, h: 0.55, align: 'center', fontSize: 22, fontFace: F.heavy, color: K.navy800, g });
-      T(s, c.b, { x: p.x + 0.2, y: 3.8, w: p.w - 0.4, h: 1.05, align: 'center', fontSize: 16, bold: true, color: K.body, valign: 'top', g });
+      T(s, c.b, { x: p.x + 0.15, y: 3.75, w: p.w - 0.3, h: 1.15, align: 'center', fontSize: 19, bold: true, color: K.body, valign: 'top', g });
     });
     const [a, b] = d.key.split('…'), g = n + 1;
     box(s, { x: M, y: 5.2, w: W - 2 * M, h: 1.15, rectRadius: 0.2, fill: { color: K.navy800 }, g });
     T(s, [{ text: '💡 ' + a + '…', options: { breakLine: true } }, { text: b || '', options: { color: K.goldLight } }],
-      { x: M + 0.3, y: 5.2, w: W - 2 * M - 0.6, h: 1.15, align: 'center', fontSize: 20, bold: true, color: K.white, g });
+      { x: M + 0.3, y: 5.2, w: W - 2 * M - 0.6, h: 1.15, align: 'center', fontSize: 22, bold: true, color: K.white, g });
   },
 
   first10(s, d) {
@@ -368,7 +375,7 @@ const R = {
       box(s, { x: p.x, y: 2.35, w: p.w, h: 3.7, fill: { color: K.white }, line: { color: K.line, width: 1 }, g });
       circleNum(s, i + 1, p.x + (p.w - 0.85) / 2, 2.65, 0.85, { size: 28, g });
       T(s, x.h, { x: p.x + 0.15, y: 3.7, w: p.w - 0.3, h: 0.7, align: 'center', fontSize: 25, fontFace: F.heavy, color: K.navy800, g });
-      T(s, x.b, { x: p.x + 0.25, y: 4.45, w: p.w - 0.5, h: 1.3, align: 'center', fontSize: 17, bold: true, color: K.body, valign: 'top', g });
+      T(s, x.b, { x: p.x + 0.2, y: 4.45, w: p.w - 0.4, h: 1.4, align: 'center', fontSize: 20, bold: true, color: K.body, valign: 'top', g });
     });
   },
 
@@ -381,7 +388,7 @@ const R = {
       const y = top + (n - 1 - i) * rh, inset = i * 0.5, g = i + 1;
       box(s, { x: M, y, w: W - 2 * M - inset, h: rh - 0.1, rectRadius: 0.14, fill: { color: cols[i] }, g });
       circleNum(s, i + 1, W - M - inset - 0.62, y + (rh - 0.1 - 0.45) / 2, 0.45, { fill: 'FFFFFF', color: cols[i], size: 15, g });
-      T(s, t, { x: M + 0.2, y, w: W - 2 * M - inset - 1.0, h: rh - 0.1, fontSize: 18, bold: true, color: K.white, g });
+      T(s, t, { x: M + 0.2, y, w: W - 2 * M - inset - 1.0, h: rh - 0.1, fontSize: 21, bold: true, color: K.white, g });
     });
   },
 
@@ -393,13 +400,13 @@ const R = {
     d.rows.forEach((r, i) => {
       const y = 2.4 + i * 1.05, gx = 2 * i + 1, gv = 2 * i + 2;
       box(s, { x: xr, y, w: cw, h: 0.88, rectRadius: 0.14, fill: { color: K.badBg }, g: gx });
-      T(s, r[0], { x: xr + 0.25, y, w: cw - 0.5, h: 0.88, fontSize: 19, bold: true, color: K.badInk, g: gx });
+      T(s, r[0], { x: xr + 0.25, y, w: cw - 0.5, h: 0.88, fontSize: 22, bold: true, color: K.badInk, g: gx });
       // مكان البديل ينتظر النقاش
       box(s, { x: xl, y, w: cw, h: 0.88, rectRadius: 0.14, fill: { color: K.white }, line: { color: 'BFD9CB', width: 1.5, dashType: 'dash' }, g: gx });
-      T(s, '💬 ناقشوا… ما البديل؟', { x: xl, y, w: cw, h: 0.88, align: 'center', fontSize: 16, bold: true, color: '8FB5A2', g: gx });
+      T(s, '💬 ناقشوا… ما البديل؟', { x: xl, y, w: cw, h: 0.88, align: 'center', fontSize: 19, bold: true, color: '8FB5A2', g: gx });
       T(s, '←', { x: xl + cw, y, w: 0.7, h: 0.88, align: 'center', fontSize: 26, bold: true, color: K.goldDark, g: gv });
       box(s, { x: xl, y, w: cw, h: 0.88, rectRadius: 0.14, fill: { color: K.okBg }, g: gv });
-      T(s, r[1], { x: xl + 0.25, y, w: cw - 0.5, h: 0.88, fontSize: 19, bold: true, color: K.okInk, g: gv });
+      T(s, r[1], { x: xl + 0.25, y, w: cw - 0.5, h: 0.88, fontSize: 22, bold: true, color: K.okInk, g: gv });
     });
   },
 
@@ -423,17 +430,17 @@ const R = {
     const total = fr.reduce((a, b) => a + b, 0), gap = 0.12, avail = W - 2 * M - gap * (fr.length - 1);
     const ws = fr.map(f => f / total * avail);
     const xs = []; let x = W - M; ws.forEach(w => { xs.push(x - w); x -= w + gap; });
-    const top = 2.05, hh = 0.55, rows = d.rows.length, rh = Math.min(1.0, (6.6 - top - hh - 0.1 - 0.1 * (rows - 1)) / rows);
+    const top = 2.05, hh = 0.6, rows = d.rows.length, rh = Math.min(1.35, (6.6 - top - hh - 0.1 - 0.12 * (rows - 1)) / rows);
     d.head.forEach((h, j) => {
       box(s, { x: xs[j], y: top, w: ws[j], h: hh, rectRadius: 0.12, fill: { color: K.navy800 } });
-      T(s, h, { x: xs[j], y: top, w: ws[j], h: hh, align: 'center', fontSize: 16, fontFace: F.heavy, color: K.white });
+      T(s, h, { x: xs[j], y: top, w: ws[j], h: hh, align: 'center', fontSize: 19, fontFace: F.heavy, color: K.white });
     });
     d.rows.forEach((r, i) => {
-      const y = top + hh + 0.1 + i * (rh + 0.1), g = i + 1, last = r.length - 1;
+      const y = top + hh + 0.1 + i * (rh + 0.12), g = i + 1, last = r.length - 1;
       r.forEach((c, j) => {
         const fill = j === 0 ? 'FBF3DF' : j === last ? K.okBg : K.white;
         box(s, { x: xs[j], y, w: ws[j], h: rh, rectRadius: 0.12, fill: { color: fill }, line: { color: j === 0 ? 'EFDDAF' : j === last ? 'CDE9D9' : K.line, width: 1 }, g });
-        T(s, c, { x: xs[j] + 0.15, y, w: ws[j] - 0.3, h: rh, fontSize: rows > 4 ? 14 : 15, bold: true, fontFace: j === 0 ? F.heavy : F.body,
+        T(s, c, { x: xs[j] + 0.15, y, w: ws[j] - 0.3, h: rh, fontSize: 21, bold: true, fontFace: j === 0 ? F.heavy : F.body,
           color: j === 0 ? K.navy800 : j === last ? K.okInk : K.ink, g });
       });
     });
@@ -444,16 +451,16 @@ const R = {
     title(s, d.title, 1.05);
     const ax = 0.55, gap = 0.18, top = 2.05, bottom = 6.2, cw = (W - 2 * M - ax - gap * 2) / 2, ch = (bottom - top - gap - 0.35) / 2;
     const xR = W - M - ax - gap - cw, xL = xR - gap - cw;
-    T(s, d.yHigh, { x: W - M - ax, y: top, w: ax, h: ch, align: 'center', fontSize: 15, bold: true, color: K.muted, rotate: 270 });
-    T(s, d.yLow, { x: W - M - ax, y: top + ch + gap, w: ax, h: ch, align: 'center', fontSize: 15, bold: true, color: K.muted, rotate: 270 });
-    T(s, d.xRight, { x: xR, y: bottom - 0.3, w: cw, h: 0.35, align: 'center', fontSize: 15, bold: true, color: K.muted });
-    T(s, d.xLeft, { x: xL, y: bottom - 0.3, w: cw, h: 0.35, align: 'center', fontSize: 15, bold: true, color: K.muted });
+    T(s, d.yHigh, { x: W - M - ax, y: top, w: ax, h: ch, align: 'center', fontSize: 18, bold: true, color: K.muted, rotate: 270 });
+    T(s, d.yLow, { x: W - M - ax, y: top + ch + gap, w: ax, h: ch, align: 'center', fontSize: 18, bold: true, color: K.muted, rotate: 270 });
+    T(s, d.xRight, { x: xR, y: bottom - 0.3, w: cw, h: 0.35, align: 'center', fontSize: 18, bold: true, color: K.muted });
+    T(s, d.xLeft, { x: xL, y: bottom - 0.3, w: cw, h: 0.35, align: 'center', fontSize: 18, bold: true, color: K.muted });
     d.cells.forEach((c, i) => {
       const x = i % 2 === 0 ? xR : xL, y = top + Math.floor(i / 2) * (ch + gap), g = i + 1;
       box(s, { x, y, w: cw, h: ch, rectRadius: 0.2, fill: { color: c.best ? 'FBEBC0' : K.white }, line: { color: c.best ? K.gold : K.line, width: c.best ? 2.5 : 1.5 }, g });
       T(s, c.icon, { x: x + cw - 0.9, y: y + 0.15, w: 0.7, h: 0.6, align: 'center', fontSize: 26, g });
       T(s, c.name + (c.best ? ' ⭐' : ''), { x: x + 0.3, y: y + 0.15, w: cw - 1.2, h: 0.6, fontSize: 24, fontFace: F.heavy, color: K.navy800, g });
-      T(s, c.desc, { x: x + 0.3, y: y + 0.8, w: cw - 0.6, h: ch - 0.95, fontSize: 16, bold: true, color: K.body, valign: 'top', g });
+      T(s, c.desc, { x: x + 0.3, y: y + 0.8, w: cw - 0.6, h: ch - 0.95, fontSize: 20, bold: true, color: K.body, valign: 'top', g });
     });
   },
 
@@ -465,9 +472,9 @@ const R = {
       const y = top + i * (rh + gap), g = i + 1, dd = Math.min(0.62, rh - 0.2);
       box(s, { x: M, y, w: W - 2 * M, h: rh, rectRadius: 0.16, fill: { color: K.white }, line: { color: K.line, width: 1 }, g });
       circleNum(s, i + 1, W - M - 0.25 - dd, y + (rh - dd) / 2, dd, { size: 20, g });
-      const runs = [{ text: it.h, options: { fontFace: F.heavy, color: K.navy800, fontSize: 20 } }];
-      if (it.b) runs.push(n > 4 ? { text: '   — ' + it.b, options: { color: K.body, fontSize: 15 } }
-                                : { text: it.b, options: { breakLine: false, color: K.body, fontSize: 16 } });
+      const runs = [{ text: it.h, options: { fontFace: F.heavy, color: K.navy800, fontSize: n > 4 ? 22 : 24 } }];
+      if (it.b) runs.push(n > 4 ? { text: '   — ' + it.b, options: { color: K.body, fontSize: 18 } }
+                                : { text: it.b, options: { breakLine: false, color: K.body, fontSize: 20 } });
       if (it.b && n <= 4) runs[0].options.breakLine = true;
       T(s, runs, { x: M + 0.3, y, w: W - 2 * M - dd - 0.8, h: rh, bold: true, g });
     });
@@ -542,7 +549,7 @@ C.modules.forEach((m, mi) => m.slides.forEach(raw => {
   if (!R[sl.t]) throw new Error('نوع شريحة غير معروف: ' + sl.t);
   n++;
   if (process.env.TYPES && !process.env.TYPES.split(',').includes(sl.t)) return;   // للاختبار فقط
-  const dark = DARK.includes(sl.t);
+  const dark = DARK.includes(sl.t) || (sl.t === 'story' && sl.img);
   const s = pres.addSlide();
   s.background = { path: dark ? BG.dark : BG.light };
   R[sl.t](s, sl);
