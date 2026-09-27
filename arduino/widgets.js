@@ -248,9 +248,49 @@ function ledAnatSVG() {
     <g class="lab"><line x1="225" y1="490" x2="400" y2="480"/><text x="410" y="480">الموجب (+)</text><text x="410" y="510" class="s">الساق الأطول · Anode</text></g>
   </svg>`;
 }
+
+/* ---------- اكتشف خطأ الدائرة على لوح توصيل صغير ---------- */
+function bugSVG(kind) {
+  let holes = ''; for (let r = 0; r < 5; r++) for (let c = 0; c < 14; c++) holes += `<circle cx="${70 + c * 40}" cy="${120 + r * 32}" r="5" fill="#cfc8b6"/>`;
+  for (let c = 0; c < 14; c++) holes += `<circle cx="${70 + c * 40}" cy="60" r="5" fill="#cfc8b6"/>`;
+  // الليد: الساق الطويلة في العمود 4، والقصيرة في العمود 5 (أو 4 في حالة القِصَر)
+  const aX = 190, kX = kind === 'short' ? 190 : 230, rX1 = kind === 'open' ? 310 : 230, rX2 = 350;
+  const ring = kind === 'open' ? `<circle class="bugring" cx="270" cy="184" r="58"/>` : `<circle class="bugring" cx="190" cy="150" r="58"/>`;
+  return `<svg viewBox="0 0 640 330" class="bugsvg">
+    <rect x="30" y="30" width="580" height="280" rx="18" fill="#f6f3ec" stroke="#e2dccd" stroke-width="3"/>
+    <line x1="50" y1="42" x2="590" y2="42" stroke="#3b6fd8" stroke-width="3"/><text x="40" y="66" class="bbr blue">−</text>
+    ${holes}
+    <path d="M${aX} 120 C ${aX} 0, 60 0, 20 10" stroke="#e74c3c" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <line x1="${aX}" y1="152" x2="${aX}" y2="120" stroke="#9aa1b3" stroke-width="5"/>
+    <line x1="${kX}" y1="152" x2="${kX}" y2="${kind === 'short' ? 184 : 120}" stroke="#9aa1b3" stroke-width="5"/>
+    <path d="M${(aX + kX) / 2 - 20} 150 L${(aX + kX) / 2 - 20} 128 A20 20 0 0 1 ${(aX + kX) / 2 + 20} 128 L${(aX + kX) / 2 + 20} 150 Z" fill="#7a2323" transform="translate(0 20)"/>
+    <line x1="${rX1}" y1="184" x2="${rX2}" y2="184" stroke="#9aa1b3" stroke-width="5"/>
+    <rect x="${rX1 + 8}" y="174" width="${rX2 - rX1 - 16}" height="20" rx="10" fill="#d9b382"/>
+    <path d="M${rX2} 184 C ${rX2 + 60} 184, ${rX2 + 60} 60, ${rX2 + 80} 60" stroke="#2c3e50" stroke-width="6" fill="none"/>
+    <text x="20" y="40" class="bbn" style="text-anchor:start">13</text>
+    ${ring}
+  </svg>`;
+}
 /* ---------- زر يفتح موقعًا خارجيًا ---------- */
 /* ---------- رسم الأنواع ---------- */
 window.DECK_TYPES = {
+  codecheck: s => `<div class="slide light">
+      <div class="kicker">${s.kicker || '🐞 صح أم خطأ؟'}</div>
+      <h2 class="title" style="margin-bottom:22px">${s.title}</h2>
+      <div class="cchk">${s.items.map((it, i) => `<div class="cc ix" data-i="${i}">
+          <code dir="ltr">${highlight(it.code)}</code>
+          <div class="ccv ${it.ok ? 'ok' : 'bad'}"><b>${it.ok ? '✓ صحيح' : '✗ خطأ'}</b><span>${it.why}</span></div>
+          <span class="cchint">اضغط للكشف</span></div>`).join('')}</div>
+      ${s.items.map(() => '<i class="f"></i>').join('')}</div>`,
+
+  circuitbug: s => `<div class="slide light">
+      <div class="kicker">🔍 اكتشف الخطأ</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="buggrid">
+        <div class="bugq"><p>${s.q}</p><div class="buga f"><b>${s.answerTitle}</b><p>${s.answer}</p></div></div>
+        <div class="bugview">${bugSVG(s.kind)}</div>
+      </div></div>`,
+
   symbols: s => `<div class="slide light">
       <div class="kicker">${s.kicker || 'لغة المهندسين'}</div>
       <h2 class="title" style="margin-bottom:24px">${s.title}</h2>
@@ -344,7 +384,7 @@ window.DECK_TYPES = {
         <div class="codewrap">
           <div class="codebar"><span class="dots"><b></b><b></b><b></b></span><span class="fname">${s.file || 'sketch.ino'}</span>
             <button class="copy ix">📋 نسخ الكود</button></div>
-          ${codeBlock(s.code)}
+          ${codeBlock(s.code, s.code.split('\n').length > 9 ? 'mid' : '')}   <!-- الكود الطويل بخط أصغر قليلًا -->
         </div>
       </div></div>`,
 
@@ -429,6 +469,10 @@ function bbShow(sl, groups, info, hole) {
   }
 }
 window.DECK_BIND = {
+  codecheck(sl) {
+    sl.querySelectorAll('.cc').forEach(c => c.addEventListener('click', () => c.classList.add('shown', 'clicked')));
+  },
+
   seriespar(sl) {
     const upd = col => {
       const mode = col.querySelector('.spmsg').dataset.m, leds = [...col.querySelectorAll('.spled')];
@@ -531,6 +575,8 @@ window.DECK_ONSTEP = (step, s) => {
   }
   if (s.t === 'board' && step > 0) selectPart(sl, TOUR[step - 1]);
   if (s.t === 'ide' && step > 0) selectIde(sl, IDE_TOUR[step - 1]);
+  if (s.t === 'codecheck') sl.querySelectorAll('.cc').forEach((c, i) => c.classList.toggle('shown', i < step || c.classList.contains('clicked')));
+  if (s.t === 'circuitbug') sl.querySelector('.bugsvg').classList.toggle('reveal', step > 0);
   if (s.t === 'breadboard') {
     const st = BB_TOUR[step - 1];
     sl.querySelectorAll('.bbled').forEach(l => l.setAttribute('opacity', st && st.led === l.id ? 1 : 0));

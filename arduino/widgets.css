@@ -10,6 +10,7 @@
 .code .ln.dim{opacity:.38}
 .code .ln.run{background:rgba(46,204,113,.2);border-left-color:#2ecc71}
 .c-kw{color:#ff9e64}.c-fn{color:#5fd7e0}.c-num{color:#f0cc7a}.c-str{color:#9ece6a}.c-com{color:#7a86b8;font-family:"Cairo",sans-serif;font-size:.86em;line-height:1}
+.code.mid{font-size:28px;line-height:1.5;padding:16px 0}
 .code.small{font-size:25px;border-radius:24px;line-height:1.5;padding:18px 0}
 .codegrid{flex:1;display:grid;grid-template-columns:0.95fr 1.25fr;gap:44px;min-height:0;align-items:start}
 .codewrap{border-radius:26px;box-shadow:0 24px 60px rgba(11,16,38,.35);overflow:hidden}
@@ -202,3 +203,27 @@
 .ledanat .lab line{stroke:#B08A2E;stroke-width:3}
 .ledanat .lab text{font-family:"Cairo";font-size:26px;font-weight:900;fill:#101B45}
 .ledanat .lab text.s{font-size:22px;font-weight:700;fill:#5E6782}
+
+/* ---------- صح أم خطأ في الكود ---------- */
+.cchk{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-content:center}
+.cc{position:relative;background:var(--code-bg);border-radius:24px;padding:22px 28px;cursor:pointer;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;border:4px solid transparent;transition:border-color .3s}
+.cc code{font-family:var(--mono);font-size:38px;color:#e6e9f5;text-align:left}
+.cc .ccv{display:none;align-items:baseline;gap:16px;font-size:28px;font-weight:700;line-height:1.4}
+.cc .ccv b{font-size:32px;flex:none}
+.cc .ccv.ok{color:#7ee2a8}.cc .ccv.bad{color:#ff9b9b}
+.cc .cchint{position:absolute;left:20px;top:14px;font-size:20px;font-weight:700;color:#6f7aa8}
+.cc.shown .ccv{display:flex}.cc.shown .cchint{display:none}
+.cc.shown:has(.ccv.ok){border-color:#2E9E6B}.cc.shown:has(.ccv.bad){border-color:#D64545}
+
+/* ---------- اكتشف خطأ الدائرة ---------- */
+.buggrid{flex:1;display:grid;grid-template-columns:0.9fr 1.2fr;gap:44px;align-items:center;min-height:0}
+.bugq > p{font-size:44px;font-weight:800;color:var(--navy-800);line-height:1.5;margin-bottom:26px}
+.buga{background:var(--bad-bg);border-right:12px solid var(--bad);border-radius:26px;padding:26px 32px}
+.buga b{font-size:40px;font-weight:900;color:var(--bad)}
+.buga p{font-size:34px;font-weight:700;color:#5a1f1f;line-height:1.5;margin-top:8px}
+.bugsvg{width:100%;filter:drop-shadow(0 20px 40px rgba(16,27,69,.15))}
+.bugsvg .bbn{fill:#9a927f;font-family:var(--mono);font-size:18px}
+.bugsvg .bbr{font-family:var(--mono);font-size:26px;font-weight:700}.bugsvg .bbr.blue{fill:#3b6fd8}
+.bugsvg .bugring{fill:none;stroke:#D64545;stroke-width:7;stroke-dasharray:14 10;opacity:0;transition:opacity .4s}
+.bugsvg.reveal .bugring{opacity:1;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{stroke-width:11}}
