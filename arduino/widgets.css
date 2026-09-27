@@ -348,3 +348,25 @@
 .bsvg.blinky .ledbody.lit{animation:blinkb 1s steps(1) infinite}
 @keyframes blinkg{50%{opacity:0}}
 @keyframes blinkb{50%{fill:#7a2323}}
+/* تشغيل دوائر الإشارة والزر بعد اكتمال التركيب */
+.bsvg.tw.running .glow.lit[data-g="g"]{animation:twg 5s infinite}
+.bsvg.tw.running .glow.lit[data-g="y"]{animation:twy 5s infinite}
+.bsvg.tw.running .glow.lit[data-g="r"]{animation:twr 5s infinite}
+@keyframes twg{0%,40%{opacity:.8}41%,100%{opacity:0}}
+@keyframes twy{0%,40%{opacity:0}41%,58%{opacity:.8}59%,100%{opacity:0}}
+@keyframes twr{0%,58%{opacity:0}59%,99%{opacity:.8}100%{opacity:0}}
+.bsvg.tw .ledbody.lit[data-g="g"]{fill:#2ee06e}.bsvg.tw .ledbody.lit[data-g="y"]{fill:#ffc83b}
+.bsvg.tw.running .ledbody.lit[data-g="g"]{animation:twgb 5s infinite}
+.bsvg.tw.running .ledbody.lit[data-g="y"]{animation:twyb 5s infinite}
+.bsvg.tw.running .ledbody.lit[data-g="r"]{animation:twrb 5s infinite}
+@keyframes twgb{0%,40%{fill:#2ee06e}41%,100%{fill:#1d5e3a}}
+@keyframes twyb{0%,40%{fill:#7a6420}41%,58%{fill:#ffc83b}59%,100%{fill:#7a6420}}
+@keyframes twrb{0%,58%{fill:#7a2323}59%,99%{fill:#ff3b3b}100%{fill:#7a2323}}
+.bsvg.bw.running .glow.lit{animation:bwg 2.4s infinite}
+.bsvg.bw.running .ledbody.lit{animation:bwb 2.4s infinite}
+.bsvg.bw.running .btncap{animation:bwc 2.4s infinite}
+.bsvg.bw.running .fl.run[data-g="k"]{animation:flow .8s linear infinite,bwk 2.4s infinite}
+@keyframes bwg{0%,49%{opacity:0}50%,95%{opacity:.8}96%,100%{opacity:0}}
+@keyframes bwb{0%,49%{fill:#7a2323}50%,95%{fill:#ff3b3b}96%,100%{fill:#7a2323}}
+@keyframes bwc{0%,49%{fill:#c0392b;r:17px}50%,95%{fill:#7d1f16;r:13px}96%,100%{fill:#c0392b;r:17px}}
+@keyframes bwk{0%,49%{opacity:0}50%,95%{opacity:1}96%,100%{opacity:0}}

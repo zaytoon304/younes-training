@@ -375,6 +375,56 @@ const BUILD = (() => {
     ${P('M244 150 C 244 30, 880 30, 880 300 C 880 420, 860 442, 830 442', 5)}
     <path class="fl" data-g="m" d="M600 240 L600 288 M626 288 L626 442 L830 442"/>
   </svg>`;
+  // قاعدة مشتركة: لوحة Uno بأسماء منافذ مختارة + لوح توصيل
+  const pinX = i => 148 + i * 32;
+  const unoBB = (top, bottom = {}) => `<g class="bs" data-s="1">
+      <rect x="40" y="130" width="300" height="320" rx="24" fill="#0e7c86"/>
+      <rect x="130" y="140" width="200" height="30" rx="4" fill="#1b2340"/>
+      ${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${142 + i * 32}" y="149" width="12" height="12" fill="#0b0d12"/>`).join('')}
+      ${Object.entries(top).map(([i, t]) => `<text x="${pinX(+i)}" y="196" class="lbl" style="fill:#e8f6f7;font-size:18px">${t}</text>`).join('')}
+      <rect x="130" y="410" width="140" height="30" rx="4" fill="#1b2340"/>
+      ${[0, 1, 2, 3].map(i => `<rect x="${142 + i * 32}" y="419" width="12" height="12" fill="#0b0d12"/>`).join('')}
+      ${Object.entries(bottom).map(([i, t]) => `<text x="${pinX(+i)}" y="400" class="lbl" style="fill:#e8f6f7;font-size:18px">${t}</text>`).join('')}
+      <rect x="110" y="270" width="160" height="60" rx="6" fill="#15171e"/><text x="190" y="308" class="lbl" style="fill:#8a90a0">UNO</text>
+      <rect x="440" y="200" width="420" height="270" rx="16" fill="#f6f3ec" stroke="#e2dccd" stroke-width="3"/>
+      <line x1="455" y1="404" x2="845" y2="404" stroke="#e74c3c" stroke-width="3"/><line x1="455" y1="456" x2="845" y2="456" stroke="#3b6fd8" stroke-width="3"/>
+      <text x="452" y="424" class="sgn" style="font-size:22px;fill:#e74c3c" text-anchor="end">+</text><text x="452" y="448" class="sgn" style="font-size:22px;fill:#3b6fd8" text-anchor="end">−</text>
+      ${holesBB()}</g>`;
+  const col = c => 470 + c * 26;
+  const realLed = (cA, s, g, color, lbl) => { const xa = col(cA), xk = col(cA + 1), xm = (xa + xk) / 2;
+    return `<circle class="glow" data-g="${g}" cx="${xm}" cy="250" r="54" style="fill:${color}"/><g class="bs" data-s="${s}">
+      <line x1="${xa}" y1="288" x2="${xa}" y2="262" stroke="#9aa1b3" stroke-width="5"/><line x1="${xk}" y1="288" x2="${xk}" y2="266" stroke="#9aa1b3" stroke-width="5"/>
+      <path class="ledbody" data-g="${g}" data-on="${color}" d="M${xm - 20} 266 L${xm - 20} 238 A20 20 0 0 1 ${xm + 20} 238 L${xm + 20} 266 Z"/>
+      ${lbl ? `<text x="${xm}" y="218" class="lbl" style="font-size:17px">${lbl}</text>` : ''}</g>`; };
+  const realRes = (c, s, lbl = '220Ω', bands = ['#d62828', '#d62828', '#7b4a26']) => { const x = col(c);
+    return `<g class="bs" data-s="${s}"><line x1="${x}" y1="336" x2="${x}" y2="352" stroke="#9aa1b3" stroke-width="5"/><rect x="${x - 10}" y="352" width="20" height="50" rx="9" fill="#d9b382"/>
+      ${bands.map((b, i) => `<rect x="${x - 10}" y="${362 + i * 10}" width="20" height="5" fill="${b}"/>`).join('')}
+      <line x1="${x}" y1="402" x2="${x}" y2="442" stroke="#9aa1b3" stroke-width="5"/><text x="${x + 16}" y="384" class="lbl" style="font-size:15px" text-anchor="start">${lbl}</text></g>`; };
+  const gnd = s => P('M' + pinX(2) + ' 150 C ' + pinX(2) + ' 20, 880 20, 880 300 C 880 420, 860 442, 830 442', s);
+
+  const trafficwire = `<svg viewBox="0 0 900 520" class="bsvg tw">
+    ${unoBB({ 2: 'GND', 3: '13', 4: '12', 5: '11' })}
+    ${realLed(1, 2, 'r', '#ff3b3b', 'أحمر')}${realRes(2, 2)}
+    ${realLed(5, 3, 'y', '#ffc83b', 'أصفر')}${realRes(6, 3)}
+    ${realLed(9, 4, 'g', '#2ee06e', 'أخضر')}${realRes(10, 4)}
+    ${P(`M${pinX(5)} 150 C ${pinX(5)} 80, ${col(1)} 80, ${col(1)} 240`, 5)}
+    ${P(`M${pinX(4)} 150 C ${pinX(4)} 60, ${col(5)} 60, ${col(5)} 240`, 6)}
+    ${P(`M${pinX(3)} 150 C ${pinX(3)} 40, ${col(9)} 40, ${col(9)} 240`, 7)}
+    ${gnd(8)}
+  </svg>`;
+
+  const buttonwire = `<svg viewBox="0 0 900 520" class="bsvg bw">
+    ${unoBB({ 2: 'GND', 3: '13', 5: '2' }, { 1: '5V' })}
+    <g class="bs" data-s="2"><rect x="${col(2) - 8}" y="262" width="${col(4) - col(2) + 16}" height="52" rx="8" fill="#2b2f3c"/>
+      <circle class="btncap" cx="${col(3)}" cy="288" r="17" fill="#c0392b"/>
+      <text x="${col(3)}" y="226" class="lbl" style="font-size:17px">الزر</text></g>
+    ${P(`M${pinX(1)} 430 C ${pinX(1)} 500, ${col(2)} 500, ${col(2)} 320 L${col(2)} 312`, 3, 'k')}
+    ${P(`M${col(4)} 262 C ${col(4)} 110, ${pinX(5)} 110, ${pinX(5)} 150`, 4, 'k')}
+    ${realRes(4, 5, '10kΩ', ['#7b4a26', '#1a1a1a', '#f77f00'])}
+    ${realLed(9, 6, 'm', '#ff3b3b', 'ليد')}${realRes(10, 6)}
+    ${P(`M${pinX(3)} 150 C ${pinX(3)} 40, ${col(9)} 40, ${col(9)} 240`, 7)}
+    ${gnd(8)}
+  </svg>`;
   return {
     simple: {
       svg: svg(`${W('120,190 120,90 380,90', 2)}${resH(380, 520, 90, 3)}${W('520,90 780,90 780,200', 4)}${ledV(780, 200, 5, 'm', 'الليد')}${W('780,270 780,430 120,430 120,310', 6)}${battV(120, 250, 1)}`),
@@ -409,6 +459,32 @@ const BUILD = (() => {
         { h: 'سلك أحمر: المنفذ 13 ← الساق الطويلة', b: 'من هنا سيخرج أمر الإشعال.' },
         { h: 'سلك أسود: GND ← القضيب السالب', b: 'نُكمل المسار عائدين إلى الأرضي.' },
         { h: '⚡ نرفع الكود ونشغّل', b: 'المنفذ 13 يرسل ٥ فولت ثم صفرًا… والليد يومض.' },
+      ],
+    },
+    trafficwire: {
+      svg: trafficwire, flow: 9, run: 'tw', steps: [
+        { h: 'اللوحة ولوح التوصيل', b: 'نستخدم المنافذ 11 و12 و13، و GND.' },
+        { h: 'الليد الأحمر ومقاومته', b: 'الساقان في عمودين، والمقاومة من الساق القصيرة إلى السالب.' },
+        { h: 'الليد الأصفر ومقاومته', b: 'لكل ليد مقاومته الخاصة ٢٢٠ أوم.' },
+        { h: 'الليد الأخضر ومقاومته', b: 'ثلاثة ليدات متجاورة كشكل الإشارة.' },
+        { h: 'سلك: المنفذ 11 ← الأحمر', b: 'إلى الساق الطويلة لليد الأحمر.' },
+        { h: 'سلك: المنفذ 12 ← الأصفر', b: 'إلى الساق الطويلة لليد الأصفر.' },
+        { h: 'سلك: المنفذ 13 ← الأخضر', b: 'إلى الساق الطويلة لليد الأخضر.' },
+        { h: 'سلك: GND ← القضيب السالب', b: 'مسار عودة مشترك لليدات الثلاثة.' },
+        { h: '🚦 نرفع الكود ونشغّل', b: 'أخضر… ثم أصفر… ثم أحمر… وتتكرر.' },
+      ],
+    },
+    buttonwire: {
+      svg: buttonwire, flow: 9, run: 'bw', steps: [
+        { h: 'اللوحة ولوح التوصيل', b: 'نحتاج 5V والمنفذ 2 للزر، والمنفذ 13 لليد.' },
+        { h: 'نركّب الزر', b: 'فوق القناة الوسطى، بين العمودين ٣ و٥.' },
+        { h: 'سلك: 5V ← طرف الزر الأول', b: 'حين يُضغط الزر يصل الجهد إلى الطرف الآخر.' },
+        { h: 'سلك: طرف الزر الثاني ← المنفذ 2', b: 'من هنا يقرأ الأردوينو حالة الزر.' },
+        { h: 'مقاومة السحب 10kΩ إلى السالب', b: 'تمنع المدخل العائم: تثبت القراءة على 0 حتى نضغط.' },
+        { h: 'الليد ومقاومته ٢٢٠ أوم', b: 'كما في مشروع الوميض.' },
+        { h: 'سلك: المنفذ 13 ← الليد', b: 'إلى الساق الطويلة.' },
+        { h: 'سلك: GND ← القضيب السالب', b: 'يكمل مسار الليد ومقاومة السحب معًا.' },
+        { h: '🔘 نرفع الكود ونضغط', b: 'كلما ضُغط الزر… يضيء الليد.' },
       ],
     },
     parallel: {
@@ -641,7 +717,7 @@ window.DECK_TYPES = {
         <div class="codewrap">
           <div class="codebar"><span class="dots"><b></b><b></b><b></b></span><span class="fname">${s.file || 'sketch.ino'}</span>
             <button class="copy ix">📋 نسخ الكود</button></div>
-          ${codeBlock(s.code, (n => n > 18 ? 'micro' : n > 13 ? 'tiny' : n > 9 ? 'mid' : '')(s.code.split('\n').length) + (s.reveal ? ' typing' : ''))}   <!-- الكود الطويل بخط أصغر -->
+          ${codeBlock(s.code, (n => n > 15 ? 'micro' : n > 13 ? 'tiny' : n > 9 ? 'mid' : '')(s.code.split('\n').length) + (s.reveal ? ' typing' : ''))}   <!-- الكود الطويل بخط أصغر -->
         </div>
       </div></div>`,
 
@@ -922,7 +998,7 @@ window.DECK_ONSTEP = (step, s) => {
       l.classList.toggle('hl', !!on && on.has(n)); l.classList.toggle('dim', !!on && !on.has(n)); });
     sl.querySelectorAll('.xp').forEach((x, i) => x.classList.toggle('now', i === step - 1));
     if (s.reveal) {                       // الأسطر تظهر واحدًا بعد الآخر كأنها تُكتب الآن
-      const upto = Math.max(0, ...s.steps.slice(0, step).flatMap(x => x.lines));
+      const upto = step >= s.steps.length ? 1e9 : Math.max(0, ...s.steps.slice(0, step).flatMap(x => x.lines));   // آخر نقرة: الكود كاملًا
       sl.querySelectorAll('.code .ln').forEach(l => { const n = +l.dataset.n;
         l.classList.toggle('hid', n > upto); l.classList.toggle('typed', !!on && on.has(n)); });
       const xs = sl.querySelector('.xstart'); if (xs) xs.style.display = step ? 'none' : '';
@@ -935,6 +1011,7 @@ window.DECK_ONSTEP = (step, s) => {
     sl.querySelectorAll('.bs').forEach(e => e.classList.toggle('on', +e.dataset.s <= step));
     const flowing = step >= B.flow, broken = B.brk && step >= B.brk;
     sl.querySelector('.bsvg').classList.toggle('blinky', !!B.blink && flowing);
+    if (B.run) sl.querySelector('.bsvg').classList.toggle('running', flowing);
     const alive = g => flowing && !(broken && (B.mode === 'series' || g === B.brkGroup || (B.mode === 'parallel' && g === 'm' && false)));
     sl.querySelectorAll('[data-g]').forEach(e => {
       const g = e.dataset.g, on = alive(g);
