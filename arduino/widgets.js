@@ -115,8 +115,103 @@ void loop() {
   delay(${d});            // انتظر
 }`;
 
+
+/* ---------- بيئة البرمجة (IDE) مرسومة وتفاعلية ---------- */
+const IDE_PARTS = {
+  verify:  { icon: '✔️', ar: 'زر التحقق', en: 'Verify', b: 'يفحص الكود ويترجمه ليكشف الأخطاء، دون أن يرسله إلى اللوحة.' },
+  upload:  { icon: '➡️', ar: 'زر الرفع', en: 'Upload', b: 'يترجم الكود ثم يرسله إلى اللوحة عبر كابل USB، فتبدأ تنفيذه فورًا.' },
+  board:   { icon: '🔌', ar: 'اللوحة والمنفذ', en: 'Board & Port', b: 'اختر «Arduino Uno» والمنفذ الذي وصلت عليه اللوحة. بدون هذا يفشل الرفع.' },
+  serial:  { icon: '🔍', ar: 'الشاشة التسلسلية', en: 'Serial Monitor', b: 'نافذة تعرض الرسائل القادمة من اللوحة، وسنستخدمها في المحور الثامن.' },
+  editor:  { icon: '✍️', ar: 'منطقة الكود', en: 'Editor', b: 'هنا تكتب برنامجك، داخل الدالتين setup و loop.' },
+  output:  { icon: '📋', ar: 'منطقة الرسائل', en: 'Output', b: 'تُظهر نتيجة التحقق والرفع، ورسائل الأخطاء باللون الأحمر.' },
+  file:    { icon: '📁', ar: 'قائمة ملف', en: 'File', b: 'جديد، وفتح، وحفظ، والأمثلة الجاهزة (Examples): كنز حقيقي للمبتدئ.' },
+  edit:    { icon: '✂️', ar: 'قائمة تحرير', en: 'Edit', b: 'النسخ واللصق والبحث، وتحويل الأسطر إلى تعليقات بضغطة.' },
+  sketch:  { icon: '🧩', ar: 'قائمة Sketch', en: 'Sketch', b: 'التحقق والرفع، وإضافة المكتبات الجاهزة إلى برنامجك.' },
+  tools:   { icon: '🛠️', ar: 'قائمة الأدوات', en: 'Tools', b: 'اختيار نوع اللوحة والمنفذ، وفتح الشاشة التسلسلية.' },
+};
+const IDE_TOUR = ['verify', 'upload', 'board', 'serial', 'editor', 'output', 'file', 'edit', 'sketch', 'tools'];
+function ideHTML() {
+  const hs = (k, inner, cls = '') => `<div class="hs ${cls}" data-h="${k}">${inner}</div>`;
+  return `<div class="ide" dir="ltr">
+    <div class="ide-title"><span class="dots"><b></b><b></b><b></b></span>Blink | Arduino IDE 2</div>
+    <div class="ide-menu">${hs('file', 'File')}${hs('edit', 'Edit')}${hs('sketch', 'Sketch')}${hs('tools', 'Tools')}<span>Help</span></div>
+    <div class="ide-bar">${hs('verify', '✓', 'rb')}${hs('upload', '➜', 'rb')}
+      ${hs('board', '<span>▾</span> Arduino Uno <small>COM3</small>', 'sel')}<span class="sp"></span>${hs('serial', '🔍', 'rb light')}</div>
+    ${hs('editor', `<div class="ide-tab">Blink.ino</div>${codeBlock(BLINK_CODE(1000), 'ide-code')}`, 'ed')}
+    ${hs('output', '<b>Output</b><div>Sketch uses 924 bytes (2%) of program storage space.</div><div class="okmsg">Done uploading.</div>', 'out')}
+  </div>`;
+}
+
+/* ---------- لوح التوصيل (بريدبورد) تفاعلي ---------- */
+const BB = { cols: 30, x0: 88, dx: 29, rowsTop: ['a', 'b', 'c', 'd', 'e'], rowsBot: ['f', 'g', 'h', 'i', 'j'] };
+const bbY = r => ({ a: 170, b: 200, c: 230, d: 260, e: 290, f: 370, g: 400, h: 430, i: 460, j: 490 }[r]);
+const RAILS = { tp: 62, tn: 92, bp: 568, bn: 598 };   // الموجب والسالب أعلى وأسفل
+function bbSVG() {
+  let h = '';
+  // ثقوب القضبان في مجموعات من خمسة
+  Object.entries(RAILS).forEach(([k, y]) => { for (let c = 0; c < BB.cols; c++) {
+    if (c % 6 === 5) continue; const x = BB.x0 + c * BB.dx;
+    h += `<rect class="hole" data-g="rail-${k}" x="${x - 9}" y="${y - 9}" width="18" height="18" rx="4"/>`; } });
+  // الأشرطة الأساسية
+  for (let c = 0; c < BB.cols; c++) { const x = BB.x0 + c * BB.dx;
+    BB.rowsTop.forEach(r => h += `<rect class="hole" data-g="top-${c}" data-c="${c + 1}" x="${x - 9}" y="${bbY(r) - 9}" width="18" height="18" rx="4"/>`);
+    BB.rowsBot.forEach(r => h += `<rect class="hole" data-g="bot-${c}" data-c="${c + 1}" x="${x - 9}" y="${bbY(r) - 9}" width="18" height="18" rx="4"/>`);
+    if (c % 5 === 0) h += `<text x="${x}" y="140" class="bbn">${c + 1}</text><text x="${x}" y="532" class="bbn">${c + 1}</text>`; }
+  const rowLbl = [...BB.rowsTop, ...BB.rowsBot].map(r => `<text x="52" y="${bbY(r) + 7}" class="bbn">${r}</text>`).join('');
+  const led = (id, c1, c2, ok) => { const x1 = BB.x0 + c1 * BB.dx, x2 = BB.x0 + c2 * BB.dx, xm = (x1 + x2) / 2;
+    return `<g id="${id}" class="bbled" opacity="0"><line x1="${x1}" y1="230" x2="${x1}" y2="${ok ? 186 : 186}" stroke="#9aa1b3" stroke-width="5"/><line x1="${x2}" y1="230" x2="${x2}" y2="186" stroke="#9aa1b3" stroke-width="5"/>
+      <path d="M${xm - 22} 186 L${xm - 22} 150 A22 22 0 0 1 ${xm + 22} 150 L${xm + 22} 186 Z" fill="${ok ? '#ff3b3b' : '#7a2323'}" ${ok ? 'filter="url(#bbglow)"' : ''}/>
+      <text x="${xm}" y="120" class="bbtag ${ok ? 'ok' : 'bad'}">${ok ? '✓ صحيح' : '✗ قِصَر'}</text></g>`; };
+  return `<svg viewBox="0 0 1000 640" class="bb" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="bbglow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <rect x="20" y="20" width="960" height="600" rx="26" fill="#f6f3ec" stroke="#e2dccd" stroke-width="4"/>
+    <line x1="60" y1="${RAILS.tp - 20}" x2="940" y2="${RAILS.tp - 20}" stroke="#e74c3c" stroke-width="4"/><text x="40" y="${RAILS.tp + 7}" class="bbr red">+</text>
+    <line x1="60" y1="${RAILS.tn + 20}" x2="940" y2="${RAILS.tn + 20}" stroke="#3b6fd8" stroke-width="4"/><text x="40" y="${RAILS.tn + 7}" class="bbr blue">−</text>
+    <line x1="60" y1="${RAILS.bp - 20}" x2="940" y2="${RAILS.bp - 20}" stroke="#e74c3c" stroke-width="4"/><text x="40" y="${RAILS.bp + 7}" class="bbr red">+</text>
+    <line x1="60" y1="${RAILS.bn + 20}" x2="940" y2="${RAILS.bn + 20}" stroke="#3b6fd8" stroke-width="4"/><text x="40" y="${RAILS.bn + 7}" class="bbr blue">−</text>
+    <rect x="60" y="318" width="880" height="24" rx="8" fill="#e8e2d3"/>
+    ${rowLbl}${h}${led('ledok', 11, 12, true)}${led('ledbad', 20, 20.001, false)}
+  </svg>`;
+}
+const BB_TOUR = [
+  { g: ['rail-tp'], h: 'القضيب الموجب (+)', b: 'صف أفقي كامل متصل من الداخل. نوصله بمنفذ 5V.' },
+  { g: ['rail-tn'], h: 'القضيب السالب (−)', b: 'صف أفقي كامل متصل. نوصله بمنفذ GND.' },
+  { g: ['top-5'], h: 'الأشرطة الأساسية', b: 'كل عمود من خمسة ثقوب (a إلى e) متصل رأسيًا. هنا نركّب المكونات.' },
+  { g: ['top-5', 'bot-5'], split: true, h: 'القناة الوسطى', b: 'النصف العلوي لا يتصل بالسفلي. لذلك يوضع فوقها الشريحة الإلكترونية بساقين في كل جهة.' },
+  { led: 'ledok', g: ['top-11', 'top-12'], h: '✅ ليد في عمودين مختلفين', b: 'كل ساق في عمود مستقل، فيمر التيار عبر الليد ويضيء.' },
+  { led: 'ledbad', g: ['top-20'], h: '❌ الساقان في العمود نفسه', b: 'العمود متصل من الداخل، فيلتف التيار حول الليد (قِصَر) ولا يضيء.' },
+];
+
+/* ---------- زر يفتح موقعًا خارجيًا ---------- */
 /* ---------- رسم الأنواع ---------- */
 window.DECK_TYPES = {
+  ide: s => `<div class="slide light">
+      <div class="kicker">${s.kicker || '🖱️ واجهة تفاعلية'}</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="boardgrid wide">
+        <div class="bpanel"><div class="binfo" id="binfo"><div class="bicon">👆</div><h3>اضغط على أي زر أو قائمة</h3>
+          <p>أو «التالي» لجولة على أجزاء البرنامج</p></div>
+          <div class="bhint">🖱️ اضغط أي جزء · ⬅️ «التالي» للجولة (${AR(IDE_TOUR.length)} أجزاء)</div></div>
+        <div class="bwrap ix">${ideHTML()}</div>
+      </div>${IDE_TOUR.map(() => '<i class="f"></i>').join('')}</div>`,
+
+  breadboard: s => `<div class="slide light">
+      <div class="kicker">${s.kicker || '🖱️ لوح تفاعلي'}</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="boardgrid wide">
+        <div class="bpanel"><div class="binfo" id="binfo"><div class="bicon">🧱</div><h3>مرّر الماوس على أي ثقب</h3>
+          <p>فتضيء كل الثقوب المتصلة به من الداخل</p></div>
+          <div class="bhint">⬅️ «التالي» لجولة من ${AR(BB_TOUR.length)} خطوات</div></div>
+        <div class="bwrap ix">${bbSVG()}</div>
+      </div>${BB_TOUR.map(() => '<i class="f"></i>').join('')}</div>`,
+
+  cta: s => `<div class="slide dark center">
+      ${s.kicker ? `<div class="kicker">${s.kicker}</div>` : ''}
+      <div class="statement" style="font-size:80px">${s.title}</div>
+      ${s.sub ? `<p class="ctasub">${s.sub}</p>` : ''}
+      <a class="ctabtn ix" href="${s.url}" target="_blank" rel="noopener">${s.btn} ↗</a>
+      <div class="ctaurl" dir="ltr">${s.url.replace(/^https?:\/\//, '')}</div></div>`,
+
   hero: s => `<div class="slide dark mcover">
       <div class="bgimg kb"><img src="${s.img}" alt=""></div>
       ${s.cat ? `<div class="cat">${s.cat}</div>` : ''}
@@ -196,7 +291,39 @@ function selectPart(sl, k) {
   box.innerHTML = `<div class="bicon">${p.icon}</div><h3>${p.ar}</h3><div class="ben" dir="ltr">${p.en}</div><p>${p.b}</p>`;
   box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
 }
+
+function selectIde(sl, k) {
+  sl.querySelectorAll('.hs').forEach(h => h.classList.toggle('sel', h.dataset.h === k));
+  const p = IDE_PARTS[k], box = sl.querySelector('#binfo');
+  if (!p) return;
+  box.innerHTML = `<div class="bicon">${p.icon}</div><h3>${p.ar}</h3><div class="ben" dir="ltr">${p.en}</div><p>${p.b}</p>`;
+  box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+}
+function bbShow(sl, groups, info, hole) {
+  sl.querySelectorAll('.hole').forEach(h => h.classList.toggle('lit', groups.includes(h.dataset.g)));
+  const box = sl.querySelector('#binfo');
+  if (!info && hole) {
+    const g = hole.dataset.g;
+    info = g.startsWith('rail') ? { h: g.endsWith('p') ? 'قضيب موجب (+)' : 'قضيب سالب (−)', b: 'كل ثقوب هذا الصف متصلة ببعضها.' }
+         : { h: `العمود ${AR(hole.dataset.c)} · ${g.startsWith('top') ? 'a–e' : 'f–j'}`, b: 'هذه الثقوب الخمسة متصلة من الداخل، وأي ساقين فيها كأنهما مربوطتان بسلك.' };
+    box.innerHTML = `<div class="bicon">🔗</div><h3>${info.h}</h3><p>${info.b}</p>`;
+  } else if (info) {
+    box.innerHTML = `<div class="bicon">${info.led ? '💡' : '🧱'}</div><h3>${info.h}</h3><p>${info.b}</p>`;
+    box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  }
+}
 window.DECK_BIND = {
+  ide(sl) {
+    sl.querySelectorAll('.hs').forEach(h => h.addEventListener('click', e => { e.stopPropagation(); selectIde(sl, h.dataset.h); }));
+  },
+  breadboard(sl) {
+    const holes = [...sl.querySelectorAll('.hole')];
+    holes.forEach(h => {
+      h.addEventListener('mouseenter', () => bbShow(sl, [h.dataset.g], null, h));
+      h.addEventListener('click', () => bbShow(sl, [h.dataset.g], null, h));
+    });
+  },
+
   code(sl, s) {
     sl.querySelector('.copy').onclick = e => {
       navigator.clipboard?.writeText(s.code).then(() => { e.target.textContent = '✓ تم النسخ'; setTimeout(() => e.target.textContent = '📋 نسخ الكود', 1600); });
@@ -242,5 +369,12 @@ window.DECK_ONSTEP = (step, s) => {
     sl.querySelectorAll('.xp').forEach((x, i) => x.classList.toggle('now', i === step - 1));
   }
   if (s.t === 'board' && step > 0) selectPart(sl, TOUR[step - 1]);
+  if (s.t === 'ide' && step > 0) selectIde(sl, IDE_TOUR[step - 1]);
+  if (s.t === 'breadboard') {
+    const st = BB_TOUR[step - 1];
+    sl.querySelectorAll('.bbled').forEach(l => l.setAttribute('opacity', st && st.led === l.id ? 1 : 0));
+    sl.querySelector('.bb').classList.toggle('split', !!(st && st.split));
+    if (st) bbShow(sl, st.g, st);
+  }
 };
 })();

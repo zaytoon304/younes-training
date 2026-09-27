@@ -164,7 +164,7 @@ const R = {
 
   dodont: s => `<div class="slide light">
       <h2 class="title" style="margin-bottom:24px">${s.title}</h2>
-      <div class="dd"><div class="hd"><div class="x">❌ الخطأ الشائع</div><div></div><div class="v">✅ البديل</div></div>
+      <div class="dd"><div class="hd"><div class="x">${(s.heads || [])[0] || '❌ الخطأ الشائع'}</div><div></div><div class="v">${(s.heads || [])[1] || '✅ البديل'}</div></div>
         ${s.rows.map(r => `<div class="r"><div class="c x f">${r[0]}</div><div class="ar">←</div>
           <div class="slot"><span class="q">💬 ناقشوا… ما البديل؟</span><div class="c v f">${r[1]}</div></div></div>`).join('')}</div></div>`,
 };
