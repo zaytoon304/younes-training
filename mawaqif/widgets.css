@@ -1,0 +1,52 @@
+/* تصميم أدوات «مواقف صفية» */
+.srgrid{flex:1;display:grid;grid-template-columns:0.6fr 1.4fr;gap:44px;align-items:center;min-height:0}
+.srqr{background:#fff;border:3px solid var(--gold);border-radius:34px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;cursor:pointer}
+.srqr .qr{width:320px;height:320px}
+.srqr b{font-size:36px;font-weight:900;color:var(--navy-800)}
+.srqr .srn{font-size:30px;font-weight:800;color:var(--gold-dark)}
+.srlist{display:flex;flex-direction:column;gap:14px}
+.sri{background:#fff;border:2px solid var(--line);border-radius:22px;padding:14px 24px}
+.srq{font-size:32px;font-weight:800;color:var(--navy-800);line-height:1.4;margin-bottom:8px}
+.srbars{display:flex;flex-direction:column;gap:6px}
+.srb{position:relative;height:26px;border-radius:13px;background:#EEF1FA;overflow:hidden}
+.srb i{position:absolute;right:0;top:0;bottom:0;transition:width .7s ease;width:0}
+.srb.now i{background:linear-gradient(90deg,var(--gold-light),var(--gold))}
+.srb.pre i{background:#9AA6C8}
+.srb span{position:absolute;left:12px;top:-2px;font-size:22px;font-weight:900;color:var(--navy-800)}
+.srleg{display:flex;gap:26px;align-items:center;font-size:26px;font-weight:800;color:var(--muted)}
+.srleg span::before{content:"";display:inline-block;width:22px;height:22px;border-radius:6px;margin-left:8px;vertical-align:middle}
+.srleg .pre::before{background:#9AA6C8}.srleg .now::before{background:var(--gold)}
+.srleg .srgrow{margin-right:auto;font-size:34px;color:var(--ok)}
+
+.brsit{font-size:36px;font-weight:700;color:#3b4460;line-height:1.5;margin-bottom:20px}
+.brgrid{flex:1;display:grid;gap:26px;align-content:start}
+.bc{position:relative;background:#fff;border:3px solid var(--line);border-radius:30px;padding:26px 28px 70px;cursor:pointer;display:flex;flex-direction:column;gap:12px;transition:all .35s;min-height:420px}
+.bc .bl{width:70px;height:70px;border-radius:20px;background:var(--navy-800);color:#fff;font-size:38px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.bc .bt{font-size:36px;font-weight:800;color:var(--navy-800);line-height:1.45}
+.bc .br{display:none;border-radius:20px;padding:16px 20px;animation:enter .4s ease both}
+.bc .br b{font-size:32px;font-weight:900}
+.bc .br p{font-size:30px;font-weight:700;line-height:1.5;margin-top:6px}
+.bc .bhint2{position:absolute;bottom:20px;right:28px;font-size:24px;font-weight:700;color:#9aa1b3}
+.bc.open .br{display:block}.bc.open .bhint2{display:none}
+.bc.open.good{border-color:var(--ok)}.bc.good .br{background:var(--ok-bg);color:#1d5e40}
+.bc.open.mid{border-color:#e6a23c}.bc.mid .br{background:#FDF1DF;color:#8a5200}
+.bc.open.bad{border-color:var(--bad)}.bc.bad .br{background:var(--bad-bg);color:#8e2a2a}
+
+.rpgrid{flex:1;display:grid;grid-template-columns:1fr 1fr 0.9fr;gap:30px;align-content:center}
+.rpc{background:#fff;border:2px solid var(--line);border-radius:32px;padding:30px;display:flex;flex-direction:column;gap:12px;border-top:12px solid var(--navy-800)}
+.rpc:nth-child(2){border-top-color:var(--gold)}
+.rpc.obs{background:var(--navy-800);color:#fff;border-top-color:var(--gold-light)}
+.rpc .rpi{font-size:70px;line-height:1}
+.rpc h3{font-size:44px;font-weight:900;color:var(--navy-800)}
+.rpc.obs h3{color:var(--gold-light)}
+.rpc p{font-size:32px;font-weight:600;line-height:1.55;color:#3b4460}
+.rpc ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.rpc li{font-size:30px;font-weight:700;line-height:1.45;padding-right:36px;position:relative}
+.rpc li::before{content:"☐";position:absolute;right:0;color:var(--gold-light)}
+
+/* تقييم «بعد»: عمودان لكل عبارة */
+.srlist:has(.srb.pre){gap:10px}
+.srlist:has(.srb.pre) .sri{padding:8px 22px}
+.srlist:has(.srb.pre) .srq{font-size:28px;margin-bottom:4px}
+.srlist:has(.srb.pre) .srb{height:18px}
+.srlist:has(.srb.pre) .srb span{font-size:18px;top:-4px}

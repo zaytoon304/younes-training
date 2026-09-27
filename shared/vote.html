@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>صوّت الآن — جذور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<main class="m">
+  <header><span class="logo">🌳</span><b>جذور</b><span id="course"></span></header>
+  <section id="card" class="card">
+    <div class="kick">🗳️ صوّت قبل أن يُكشف الحل</div>
+    <h1 id="q">جارٍ التحميل…</h1>
+    <div id="opts" class="opts"></div>
+  </section>
+  <section id="done" class="card done" hidden>
+    <div class="big">✓</div><h1>تم تسجيل صوتك</h1>
+    <p>انظر إلى الشاشة الآن… النتيجة تظهر مباشرة</p>
+    <p class="mine" id="mine"></p>
+  </section>
+  <section id="err" class="card" hidden><h1>تعذّر فتح السؤال</h1><p>امسح الباركود مرة أخرى من الشاشة.</p></section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="qrcode.js"></script>
+<script>
+  /* نقرأ بيانات الدورة نفسها، فيطابق السؤال ما على الشاشة تمامًا */
+  var P = new URLSearchParams(location.search), C = (P.get('c') || '').replace(/[^\w-]/g, '');
+  window.DECK_HOOKS = [];
+  document.write('<script src="../' + C + '/content.js"><\/script>');
+</script>
+<script>
+  if (window.DECK) DECK.parts.forEach(function (p) { document.write('<script src="../' + C + '/parts/' + p + '.js"><\/script>'); });
+</script>
+<script src="live.js"></script>
+<script>
+(function () {
+  const LETTERS = ['أ', 'ب', 'ج', 'د', 'هـ'];
+  const sid = P.get('s'), key = P.get('k');
+  const show = id => ['card', 'done', 'err'].forEach(x => document.getElementById(x).hidden = x !== id);
+  try {
+    LIVE.course = C;
+    const [mid, idx] = [key.slice(0, key.lastIndexOf('-')), +key.slice(key.lastIndexOf('-') + 1)];
+    const s = DECK.modules.find(m => m.id === mid).slides[idx];
+    if (!s || s.t !== 'vote' || !sid) throw 0;
+    document.getElementById('course').textContent = DECK.title;
+    document.title = s.title;
+    document.getElementById('q').innerHTML = s.title;
+    const voted = 'voted.' + C + '.' + sid + '.' + key;
+    const prev = localStorage.getItem(voted);
+    if (prev !== null) { document.getElementById('mine').textContent = 'اخترت: ' + s.options[+prev]; show('done'); return; }
+    document.getElementById('opts').innerHTML = s.options.map((o, i) => `<button data-i="${i}"><i>${LETTERS[i]}</i><span>${o}</span></button>`).join('');
+    document.querySelectorAll('#opts button').forEach(b => b.onclick = () => {
+      document.querySelectorAll('#opts button').forEach(x => x.disabled = true);
+      b.classList.add('sel');
+      LIVE.vote(key, +b.dataset.i, sid).then(() => {
+        try { localStorage.setItem(voted, b.dataset.i); } catch (e) {}
+        document.getElementById('mine').textContent = 'اخترت: ' + s.options[+b.dataset.i];
+        show('done');
+      }).catch(() => { b.classList.remove('sel'); document.querySelectorAll('#opts button').forEach(x => x.disabled = false); alert('تعذّر الإرسال، تحقق من الإنترنت وحاول مجددًا'); });
+    });
+  } catch (e) { show('err'); }
+})();
+</script>
+</body>
+</html>

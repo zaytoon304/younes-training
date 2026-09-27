@@ -19,6 +19,16 @@ service cloud.firestore {
                     && request.resource.data.keys().hasOnly(['groupName','ts']);
       allow update, delete: if false;
     }
+    // تصويت المتدربين الحي من جوالاتهم (عروض جذور)
+    match /courses/{courseKey}/votes/{voteId}/answers/{answerId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['v','ts'])
+                    && request.resource.data.v is int
+                    && request.resource.data.v >= 0
+                    && request.resource.data.v < 6
+                    && request.resource.data.ts is number;
+      allow update, delete: if false;
+    }
     match /courses/{courseKey}/selfrate/{entryId} {
       allow read: if true;
       allow create: if request.resource.data.mode in ['pre', 'post', 'followup']

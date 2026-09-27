@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared/deck.css">
+<link rel="stylesheet" href="widgets.css">
 </head>
 <body>
 <div id="progress"></div>
@@ -24,6 +25,12 @@
 
 <script src="content.js"></script>
 <script>DECK.parts.forEach(p => document.write('<script src="parts/' + p + '.js"><\/script>'));</script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="../shared/qrcode.js"></script>
+<script src="../shared/live.js"></script>
+<script>LIVE.course = 'mawaqif';</script>
+<script src="widgets.js"></script>
 <script src="../shared/deck.js"></script>
 </body>
 </html>

@@ -240,6 +240,7 @@ function render() {
   sl.insertAdjacentHTML('beforeend', footer(s));
   step = 0;
   if (BIND[s.t]) BIND[s.t](sl, s);    // ربط الأدوات التفاعلية بعد الرسم
+  (window.DECK_HOOKS || []).forEach(h => h(sl, s));   // إضافات عامة (مثل التصويت الحي)
   if (s.t === 'vote' && s.tap) {        // الاختبار: الضغط على أي خيار يكشف الإجابة
     sl.querySelectorAll('.opt').forEach(o => { o.classList.add('ix'); o.style.cursor = 'pointer';
       o.onclick = () => { o.classList.add('picked'); step = frags().length; applySteps(); }; });
