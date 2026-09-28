@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كراسة المتدرب — مواقف صفية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* كراسة المتدرب: صفحات A4 للطباعة، تُبنى من بيانات الدورة نفسها */
+:root{--navy:#101B45;--navy2:#182658;--navy6:#22346F;--gold:#D9AE4B;--goldd:#B08A2E;--goldl:#F0CC7A;--cream:#FBF7EE;--line:#E4DCC8;--ink:#131B34;--muted:#5E6782;--ok:#2E9E6B;--okbg:#E6F4EC;--bad:#D64545;--badbg:#FBECEC;--chip:#F6EBCF}
+@page{size:A4;margin:14mm 14mm 16mm}
+@page{@bottom-center{content:"جذور · كراسة المتدرب · مواقف صفية  —  " counter(page);font-family:Cairo;font-size:8.5pt;color:#8a90a3}}
+@page :first{@bottom-center{content:none}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Cairo",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.65;background:#e9ebf1}
+.page{background:#fff;width:210mm;min-height:297mm;margin:10mm auto;padding:14mm;box-shadow:0 6px 30px rgba(0,0,0,.12);break-after:page;position:relative}
+@media print{body{background:#fff}.page{margin:0;width:auto;min-height:auto;padding:0;box-shadow:none}.noprint{display:none!important}}
+h1{font-size:30pt;font-weight:900;line-height:1.2}
+h2{font-size:19pt;font-weight:900;color:var(--navy);line-height:1.3;margin-bottom:3mm}
+h3{font-size:12.5pt;font-weight:900;color:var(--navy);margin-bottom:1.5mm}
+p{margin-bottom:2mm}
+.kick{display:inline-block;background:var(--chip);color:var(--goldd);font-weight:800;font-size:9pt;border-radius:99px;padding:.6mm 4mm;margin-bottom:2mm}
+.rule{height:1.2mm;width:22mm;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:2mm;margin:2mm 0 5mm}
+.box{border:.4mm solid var(--line);border-radius:4mm;padding:4mm 5mm;margin-bottom:4mm;break-inside:avoid}
+.box.gold{border-color:var(--gold);background:#FFFBF0}
+.box.navy{background:var(--navy);color:#fff;border:0}.box.navy h3{color:var(--goldl)}
+.box.ok{background:var(--okbg);border-color:#CDE9D9}.box.bad{background:var(--badbg);border-color:#f3cfcf}
+.lines{margin-top:2mm}
+.lines i{display:block;height:8.5mm;border-bottom:.3mm dashed #c9cdd8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm}
+.num{display:inline-flex;width:6.5mm;height:6.5mm;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:900;font-size:9pt;align-items:center;justify-content:center;margin-left:2mm;flex:none}
+ul.clean{list-style:none}ul.clean li{display:flex;gap:1mm;align-items:flex-start;margin-bottom:1.5mm}
+.check li::before{content:"☐";color:var(--goldd);font-size:12pt;margin-left:2mm;line-height:1.3}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:9.5pt;break-inside:avoid;margin-bottom:4mm}
+th{background:var(--navy);color:#fff;font-weight:800;padding:2mm 3mm;text-align:right}
+th:first-child{border-radius:0 3mm 0 0}th:last-child{border-radius:3mm 0 0 0}
+td{border-bottom:.3mm solid var(--line);padding:2mm 3mm;vertical-align:top}
+td.blank{height:9mm}
+.say{background:var(--navy);color:#fff;border-radius:3mm;padding:2mm 4mm;margin-bottom:2mm;font-weight:700}
+.say small{display:block;color:var(--goldl);font-weight:800;font-size:8.5pt}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-bottom:2mm}
+.dd div{border-radius:2.5mm;padding:1.8mm 3mm;font-size:9.5pt;font-weight:700}
+.dd .x{background:var(--badbg);color:#8e2a2a}.dd .v{background:var(--okbg);color:#1d5e40}
+.scale{display:flex;gap:2mm;margin-top:1mm}.scale span{width:9mm;height:9mm;border:.4mm solid var(--line);border-radius:2mm;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
+.opt{display:flex;gap:2mm;align-items:flex-start;margin-bottom:1.5mm}.opt b{flex:none;width:6mm;height:6mm;border:.4mm solid var(--navy);border-radius:1.5mm}
+.story p{border-right:1mm solid var(--line);padding-right:3mm}
+.story p:last-child{border-right-color:var(--bad);color:var(--bad);font-weight:800}
+.hadith{font-family:Amiri,serif;font-size:15pt;font-weight:700;line-height:1.9;text-align:center;color:var(--navy)}
+.src{text-align:center;color:var(--goldd);font-weight:800;font-size:9pt}
+.scene{width:100%;height:58mm;object-fit:cover;border-radius:4mm;margin-bottom:3mm}
+.tagrow{display:flex;gap:2mm;flex-wrap:wrap;margin-bottom:3mm}.tagrow span{background:#EEF1FA;color:var(--navy6);font-size:8.5pt;font-weight:800;border-radius:99px;padding:.5mm 3mm}
+/* الغلاف */
+.cover{background:radial-gradient(120mm 90mm at 85% 10%,rgba(46,66,136,.6),transparent 60%),linear-gradient(160deg,#101B45,#0A1230);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20mm}
+@media print{.cover{min-height:0;height:250mm;overflow:hidden;border-radius:6mm;break-after:page}}
+.cover .logo{width:26mm;height:26mm;border-radius:7mm;background:linear-gradient(145deg,var(--goldl),var(--gold));display:flex;align-items:center;justify-content:center;font-size:15mm;margin-bottom:8mm}
+.cover h1{font-size:46pt;background:linear-gradient(180deg,#fff 30%,var(--goldl));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover .sub{font-size:15pt;font-weight:700;margin-top:3mm}
+.cover .tag{color:var(--goldl);font-weight:800;font-size:12pt;margin-bottom:2mm}
+.cover .name{margin-top:18mm;border:.4mm dashed rgba(240,204,122,.6);border-radius:4mm;padding:4mm 8mm;width:120mm;text-align:right;font-weight:700;color:#c9cfe6}
+.cover .name i{display:block;border-bottom:.3mm solid rgba(255,255,255,.35);height:9mm;margin-bottom:2mm}
+.cover .by{margin-top:14mm;font-weight:700;color:#c9cfe6}.cover .by b{color:var(--gold)}
+.cert{border:2mm solid var(--gold);outline:.6mm solid var(--navy);outline-offset:-5mm;border-radius:4mm;text-align:center;padding:22mm 16mm;min-height:250mm;display:flex;flex-direction:column;justify-content:center}
+.cert h1{color:var(--navy);font-size:34pt}
+.cert .who{font-size:18pt;font-weight:900;border-bottom:.4mm solid var(--line);margin:8mm auto;width:130mm;height:14mm}
+.bar{position:fixed;top:0;left:0;right:0;background:var(--navy);color:#fff;padding:10px 20px;display:flex;gap:14px;align-items:center;z-index:9;font-weight:700}
+.bar button,.bar a{font-family:inherit;font-weight:800;font-size:15px;background:var(--gold);color:var(--navy);border:0;border-radius:99px;padding:8px 18px;cursor:pointer;text-decoration:none}
+.bar a.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+body.screen{padding-top:56px}
+/* بطاقة التدخّل المرجعية: أكثف قليلًا لتتسع لصفحة واحدة */
+.ref{font-size:9pt;line-height:1.5}
+.ref .box{padding:2.5mm 3.5mm;margin-bottom:2.5mm}
+.ref h3{font-size:10.5pt;margin-bottom:1mm}
+.ref .say{padding:1.3mm 3mm;margin-bottom:1.3mm;font-size:9pt}
+.ref .dd{gap:1.5mm;margin-bottom:1.3mm}.ref .dd div{padding:1.2mm 2.5mm;font-size:8.6pt}
+.ref ul.clean li{margin-bottom:.8mm}
+.ref .num{width:5.2mm;height:5.2mm;font-size:8pt}
+.ref p{margin-bottom:1mm}
+.scene{height:50mm}
+</style>
+</head>
+<body class="screen">
+<div class="bar noprint"><span>📘 كراسة المتدرب · مواقف صفية</span><span style="flex:1"></span>
+  <a class="ghost" href="index.html">↩ العرض</a><a class="ghost" href="كراسة المتدرب - مواقف صفية.pdf" download>⬇ PDF</a><button onclick="print()">🖨️ طباعة</button></div>
+<div id="book"></div>
+
+<script src="content.js"></script>
+<script>DECK.parts.forEach(p => document.write('<script src="parts/' + p + '.js"><\/script>'));</script>
+<script>
+(function () {
+const D = DECK, AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const LET = ['أ', 'ب', 'ج', 'د', 'هـ'];
+const lines = n => `<div class="lines">${'<i></i>'.repeat(n)}</div>`;
+const page = (html, cls = '') => `<section class="page ${cls}">${html}</section>`;
+const head = (kick, title) => `<div class="kick">${kick}</div><h2>${title}</h2><div class="rule"></div>`;
+const find = (mid, pred) => (D.modules.find(m => m.id === mid) || { slides: [] }).slides.find(pred);
+const scenarios = D.modules.filter(m => m.slides[0] && m.slides[0].t === 'mcover');
+const stations = D.modules.filter(m => m.slides[0] && m.slides[0].t === 'section');
+const out = [];
+
+/* ١) الغلاف */
+out.push(page(`<div class="logo">🌳</div><div class="tag">${D.tag}</div><h1>${D.title}</h1>
+  <div class="sub">كراسة المتدرب</div><div class="sub" style="font-size:12pt;opacity:.85">${D.subtitle}</div>
+  <div class="name">اسم المتدرب/ـة<i></i>المدرسة<i></i>تاريخ الدورة<i></i></div>
+  <div class="by">إعداد وتقديم: <b>${D.author}</b> · منصة جذور</div>`, 'cover'));
+
+/* ٢) كيف تستخدم الكراسة + المحتويات */
+out.push(page(`${head('قبل أن تبدأ', 'كيف تستخدم هذه الكراسة؟')}
+  <div class="grid2">
+    <div class="box"><h3>✍️ اكتب قبل أن تسمع</h3><p>في كل موقف: سجّل رأيك وتصرفك قبل أن يكشف المدرب الحل. المقارنة بين ما كتبته وما تعلمته هي أعمق تعلم.</p></div>
+    <div class="box"><h3>🗂️ صفحة للنشاط وصفحة للمرجع</h3><p>لكل موقف صفحتان: الأولى تكتب فيها، والثانية «بطاقة التدخّل» تعود إليها في فصلك متى احتجت.</p></div>
+    <div class="box"><h3>💬 احتفظ بالجمل</h3><p>في آخر الكراسة «بنك الجمل الجاهزة»: كل عبارة قالها المعلم في المواقف، مرتبة لتستخدمها غدًا.</p></div>
+    <div class="box"><h3>📅 عد إليها بعد أسبوع</h3><p>صفحات المتابعة ووِرد المعلم تحوّل الدورة من يومين إلى عادة دائمة.</p></div>
+  </div>
+  <h3 style="margin-top:4mm">محتويات الكراسة</h3>
+  <table><tr><th>القسم</th><th>ماذا ستجد فيه؟</th></tr>
+    <tr><td>التقييم الذاتي القبلي</td><td>أين أنت الآن في خمس مهارات أساسية</td></tr>
+    ${stations.map(m => { const s = m.slides[0]; return `<tr><td>${s.label || 'المحطة'} ${s.num}: ${s.title}</td><td>${s.sub}</td></tr>`; }).join('')}
+    <tr><td>المواقف الصفية (${AR(scenarios.length)})</td><td>صفحة نشاط + بطاقة تدخّل لكل موقف</td></tr>
+    <tr><td>المراجع السريعة</td><td>صندوق الأدوات، وبنك الجمل، والدليل السريع للسلوكيات</td></tr>
+    <tr><td>خطتي ومتابعتي</td><td>الالتزامات الثلاثة، ووِرد المعلم، وسجل الأسبوع، والتقييم البعدي، والشهادة</td></tr>
+  </table>`));
+
+/* ٣) التقييم الذاتي القبلي */
+const rateTable = (label) => `<table><tr><th style="width:62%">العبارة</th><th>قيّم نفسك من ١ إلى ٥</th></tr>
+  ${D.selfrate.items.map((q, i) => `<tr><td><span class="num">${AR(i + 1)}</span>${q}</td><td><div class="scale">${[1, 2, 3, 4, 5].map(v => `<span>${AR(v)}</span>`).join('')}</div></td></tr>`).join('')}
+  <tr><td style="font-weight:900">المجموع (من ٢٥)</td><td class="blank"></td></tr></table>`;
+out.push(page(`${head('📊 قبل أن نبدأ', 'تقييمي الذاتي: أين أنا الآن؟')}
+  <p>قيّم نفسك بصدق: ١ = لا أستطيع بعد، ٥ = أتقنه تمامًا. ستعيد التقييم نفسه في نهاية الدورة وبعد أسبوع منها.</p>
+  ${rateTable()}
+  <div class="box gold"><h3>🎯 ماذا أريد أن أخرج به من هذه الدورة؟</h3>${lines(4)}</div>
+  <div class="box"><h3>🧩 أصعب موقف مررت به هذا العام في فصلي</h3>${lines(5)}</div>`));
+
+/* ٤) المحطة الإيمانية + وِرد المعلم */
+const niy = D.modules.find(m => m.id === 'niyyah');
+if (niy) {
+  const h = niy.slides.filter(s => s.t === 'hadith');
+  out.push(page(`${head('المحطة ١', 'قبل أن تدخل الفصل')}
+    ${h.slice(0, 3).map(x => `<div class="box"><div class="hadith">«${x.text}»</div><div class="src">${x.src}</div></div>`).join('')}
+    <div class="box gold"><h3>🤲 نيّاتي الثلاث عند باب الفصل</h3>
+      <ul class="clean check"><li>أعلّم لوجه الله، فيبقى عطائي ثابتًا في كل الظروف</li><li>أربّي قبل أن أعلّم: الطالب المخطئ فرصة تربية</li><li>أصبر محتسبًا على أصعب طالب عندي</li></ul></div>
+    <div class="box"><h3>💬 جملة دعاء سأقولها لطلابي أمامهم</h3>${lines(2)}</div>`));
+  out.push(page(`${head('نشاط «وِرد المعلم»', 'أسبوع من الدعاء لثلاثة طلاب')}
+    <p>اكتب أسماء أصعب ثلاثة طلاب عليك، وادعُ لكل واحد باسمه يوميًا، ثم سجّل بصدق ما لاحظته: من تغيّر أولًا… هم أم أنت؟</p>
+    <table><tr><th>اليوم</th><th>الطالب الأول: ……………</th><th>الطالب الثاني: ……………</th><th>الطالب الثالث: ……………</th><th>ماذا لاحظت اليوم؟</th></tr>
+      ${['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'].map(d => `<tr><td>${d}</td><td>☐</td><td>☐</td><td>☐</td><td class="blank"></td></tr>`).join('')}</table>
+    <div class="box gold"><h3>🪞 بعد أسبوع: ما الذي تغيّر في نظرتي وصبري ونبرة صوتي معهم؟</h3>${lines(5)}</div>`));
+}
+
+/* ٥) تصحيح المفاهيم */
+const myths = (D.modules.find(m => m.id === 'myths') || { slides: [] }).slides.filter(s => s.t === 'myth');
+if (myths.length) out.push(page(`${head('المحطة ٣', 'صح أم خطأ؟ قبل أن يُكشف التصحيح')}
+  <table><tr><th>العبارة</th><th style="width:16mm">صح</th><th style="width:16mm">خطأ</th><th>لماذا؟ (بعد النقاش)</th></tr>
+  ${myths.map((m, i) => `<tr><td><span class="num">${AR(i + 1)}</span>${m.text}</td><td>☐</td><td>☐</td><td class="blank"></td></tr>`).join('')}</table>
+  <div class="box ok"><h3>✅ التصحيحات للمراجعة</h3>${myths.map((m, i) => `<p style="font-size:9.5pt"><b>${AR(i + 1)}.</b> ${m.fix}</p>`).join('')}</div>`));
+
+/* ٦) صندوق الأدوات (مرجع) */
+const tb = D.modules.find(m => m.id === 'toolbox');
+if (tb) {
+  const goals = tb.slides.filter(s => s.t === 'table').flatMap(s => s.rows);
+  const ladder = tb.slides.find(s => s.t === 'ladder');
+  const dd = tb.slides.find(s => s.t === 'dodont');
+  const rq = tb.slides.find(s => s.t === 'numlist');
+  const tp = tb.slides.find(s => s.t === 'first10');
+  out.push(page(`${head('المحطة ٤ · مرجع دائم', 'صندوق أدوات المعلم')}
+    <h3>١. لماذا يسيء الطالب؟ أربعة أهداف خفية</h3>
+    <table><tr>${['ما يريده الطالب', 'ماذا تشعر أنت؟', 'ردّ الفعل الخاطئ', 'التصرف الصحيح'].map(x => `<th>${x}</th>`).join('')}</tr>
+      ${goals.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>
+    <div class="grid2">
+      <div class="box"><h3>٢. ${ladder.title.replace(/^الأداة ٢ · /, '')}</h3><ul class="clean">${ladder.steps.map((x, i) => `<li><span class="num">${AR(i + 1)}</span>${x}</li>`).join('')}</ul></div>
+      <div class="box"><h3>٥. الحوار الخاص في دقيقتين</h3><ul class="clean">${tp.steps.map((x, i) => `<li><span class="num">${AR(i + 1)}</span><b>${x.h}:&nbsp;</b>${x.b}</li>`).join('')}</ul></div>
+    </div>`));
+  out.push(page(`${head('صندوق الأدوات · تتمة', 'قل ماذا تريد… واسأل أسئلة تُصلح')}
+    <h3>٣. قل ماذا تريد، لا ما لا تريد</h3>
+    ${dd.rows.map(r => `<div class="dd"><div class="x">✗ ${r[0]}</div><div class="v">✓ ${r[1]}</div></div>`).join('')}
+    <div class="box" style="margin-top:3mm"><h3>✍️ حوّل ثلاث عبارات تقولها يوميًا إلى عبارات «ماذا تريد»</h3>
+      <table><tr><th>ما أقوله الآن</th><th>ما سأقوله بدلًا منه</th></tr>${'<tr><td class="blank"></td><td class="blank"></td></tr>'.repeat(3)}</table></div>
+    <div class="box navy"><h3>٦. ${rq.title}</h3><ul class="clean">${rq.items.map((x, i) => `<li><span class="num">${AR(i + 1)}</span><b>${x.h}</b>&nbsp;— ${x.b}</li>`).join('')}</ul></div>
+    <div class="box gold"><h3>⚖️ قاعدة ٤ إلى ١</h3><p>أربع ملاحظات إيجابية لكل ملاحظة تصحيحية. تحدٍّ: عُدّ ملاحظاتك في حصة واحدة غدًا:</p>
+      <div class="grid2"><div>إيجابية: ${'☐ '.repeat(10)}</div><div>تصحيحية: ${'☐ '.repeat(5)}</div></div></div>`));
+}
+
+/* ٧) أنماط القيادة */
+const ld = D.modules.find(m => m.id === 'leadership');
+if (ld) { const q = ld.slides.find(s => s.t === 'quad');
+  out.push(page(`${head('المحطة ٥', 'أنماط القيادة الصفية: أين أنا؟')}
+    <div class="grid2">${q.cells.map(c => `<div class="box ${c.best ? 'gold' : ''}"><h3>${c.icon} ${c.name}${c.best ? ' ⭐' : ''}</h3><p>${c.desc}</p></div>`).join('')}</div>
+    <div class="box"><h3>🧭 تذكرت آخر موقف صعب… أي جملة كانت الأقرب لما قلته؟</h3>
+      <ul class="clean check"><li>«لأنني قلت ذلك!» (التسلطي)</li><li>«افعلوا ما شئتم» (المتسيب)</li><li>«أرجوكم… من أجلي» (العاطفي)</li><li>«أنا أهتم بك، ولهذا لن أسمح بهذا» (الحازم الدافئ)</li></ul></div>
+    <div class="box gold"><h3>🪜 خطوة واحدة أقترب بها من «الحازم الدافئ»</h3>${lines(3)}</div>`)); }
+
+/* ٨) المواقف: صفحة نشاط + بطاقة تدخّل */
+scenarios.forEach((m, n) => {
+  const S = t => m.slides.find(s => s.t === t);
+  const cov = S('mcover'), st = S('story'), vt = S('vote'), br = S('branch'), wy = S('why'), f = S('first10'), sc = S('script'), dd = m.slides.filter(s => s.t === 'dodont'), rp = S('roleplay'), sm = m.slides[m.slides.length - 1];
+  const choose = br ? br.choices.map(c => c.label) : vt.options;
+  out.push(page(`<div class="tagrow"><span>${cov.cat}</span><span>الموقف ${cov.num}</span>${br ? '<span>🔀 اختر طريقك</span>' : ''}${rp ? '<span>🎭 لعب أدوار</span>' : ''}</div>
+    <h2>${cov.icon} ${cov.title}</h2><div class="rule"></div>
+    ${cov.img ? `<img class="scene" src="${cov.img}" alt="">` : ''}
+    <div class="story">${st.paras.map(p => `<p>${p}</p>`).join('')}</div>
+    <div class="box gold"><h3>🗳️ ${br ? br.title : vt.title}</h3>${choose.map((o, i) => `<div class="opt"><b></b><span><b style="border:0;width:auto;height:auto">${LET[i]}.</b> ${o}</span></div>`).join('')}
+      <p style="margin-top:2mm;font-weight:700">لماذا اخترت هذا؟</p>${lines(2)}</div>
+    <div class="grid2">
+      <div class="box"><h3>🔍 ما السبب الخفي في رأيي؟</h3>${lines(3)}</div>
+      <div class="box"><h3>💬 الجملة التي سأقولها</h3>${lines(3)}</div>
+    </div>`));
+  out.push(page(`<div class="kick">🗂️ بطاقة التدخّل · مرجع</div><h2>${cov.title}</h2><div class="rule"></div>
+    <div class="grid2">
+      <div class="box"><h3>🔍 ${wy.title}</h3><ul class="clean">${wy.causes.map(c => `<li>${c.icon}&nbsp;<span><b>${c.h}:</b> ${c.b}</span></li>`).join('')}</ul>
+        <p style="font-weight:800;color:var(--goldd)">💡 ${wy.key}</p></div>
+      <div class="box"><h3>⏱️ ${f.title}</h3><ul class="clean">${f.steps.map((x, i) => `<li><span class="num">${AR(i + 1)}</span><span><b>${x.h}:</b> ${x.b}</span></li>`).join('')}</ul></div>
+    </div>
+    <h3>💬 ماذا تقول بالحرف؟</h3>
+    ${sc.lines.map(l => `<div class="say"><small>${l.who}</small>«${l.say}»</div>`).join('')}
+    ${sc.warn ? `<div class="box bad" style="padding:2mm 4mm"><b>⚠️ ${sc.warn}</b></div>` : ''}
+    ${dd.map(d => `<h3>${d.title}</h3>${d.rows.map(r => `<div class="dd"><div class="x">${d.heads ? '🚧 ' : '✗ '}${r[0]}</div><div class="v">${d.heads ? '🔁 ' : '✓ '}${r[1]}</div></div>`).join('')}`).join('')}
+    ${br ? `<h3>🔀 نتائج الاختيارات</h3>${br.choices.map((c, i) => `<p style="font-size:9.5pt"><b>${LET[i]}. ${{ good: '✅', mid: '⚠️', bad: '❌' }[c.outcome]}</b> ${c.result}</p>`).join('')}` : `<p style="font-size:9.5pt"><b>✅ الإجابة الأنسب:</b> ${LET[vt.correct]}. ${vt.options[vt.correct]} — ${vt.why ? vt.why[vt.correct] : ''}</p>`}
+    <div class="box navy" style="margin-top:2mm"><h3>✨ خلاصة الموقف</h3><p style="margin:0">${sm.text}</p></div>`, 'ref'));
+  if (rp) out.push(page(`<div class="kick">🎭 لعب الأدوار</div><h2>${rp.title}</h2><div class="rule"></div>
+    <div class="grid2">${rp.roles.map(r => `<div class="box"><h3>${r.icon} ${r.who}</h3><p>${r.brief}</p></div>`).join('')}</div>
+    <div class="box gold"><h3>👀 بطاقة الملاحظ</h3><table><tr><th>ما نلاحظه</th><th style="width:18mm">نعم</th><th style="width:18mm">جزئيًا</th><th>مثال من التمثيل</th></tr>
+      ${rp.observe.map(o => `<tr><td>${o}</td><td>☐</td><td>☐</td><td class="blank"></td></tr>`).join('')}</table></div>
+    <div class="box"><h3>🪞 ماذا تعلمت من تمثيل الدور؟</h3>${lines(4)}</div>`));
+});
+
+/* ٩) بنك الجمل الجاهزة */
+const bank = scenarios.map(m => ({ t: m.slides[0].title, l: (m.slides.find(s => s.t === 'script') || { lines: [] }).lines }));
+const third = Math.ceil(bank.length / 3);
+[bank.slice(0, third), bank.slice(third, 2 * third), bank.slice(2 * third)].forEach((part, k) => out.push(page(`${head('💬 مرجع سريع' + (k ? ' · تتمة' : ''), 'بنك الجمل الجاهزة')}
+  ${part.map(b => `<div class="box" style="padding:3mm 4mm"><h3>${b.t}</h3>${b.l.map(l => `<p style="font-size:9.5pt;margin-bottom:1mm"><b style="color:var(--goldd)">${l.who}:</b> «${l.say}»</p>`).join('')}</div>`).join('')}`)));
+
+/* ١٠) الدليل السريع */
+const cl = (D.modules.find(m => m.id === 'clinic') || { slides: [] }).slides.filter(s => s.t === 'table');
+if (cl.length) out.push(page(`${head('🩺 عيادة المواقف', 'الدليل السريع: السلوك وسببه وماذا تفعل غدًا')}
+  <table><tr><th>السلوك</th><th>السبب المحتمل</th><th>ماذا تفعل عمليًا؟</th></tr>
+  ${cl.flatMap(s => s.rows).map(r => `<tr>${r.map((c, i) => `<td${i === 0 ? ' style="font-weight:800"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</table>`));
+
+/* ١١) عيادة المواقف: بطاقة تدخل فارغة */
+out.push(page(`${head('نشاط المجموعات', 'عيادة المواقف: بطاقة تدخّل لموقف من فصلي')}
+  <div class="box"><h3>🎬 الموقف كما حدث</h3>${lines(5)}</div>
+  <div class="grid2"><div class="box"><h3>🔍 السبب الخفي</h3>${lines(3)}</div><div class="box"><h3>⏱️ أول خطوة</h3>${lines(3)}</div></div>
+  <div class="box"><h3>💬 الجملة التي سأقولها بالحرف</h3>${lines(2)}</div>
+  <div class="grid2"><div class="box bad"><h3>❌ الخطأ الذي سأتجنبه</h3>${lines(2)}</div><div class="box ok"><h3>🔁 خطتي البديلة إن لم ينجح</h3>${lines(2)}</div></div>`));
+
+/* ١٢) خطتي + متابعة الأسبوع */
+out.push(page(`${head('🎯 خطتي الشخصية', 'ثلاثة التزامات… أبدأ بها غدًا')}
+  <div class="box gold"><h3><span class="num">١</span>جملة جديدة سأقولها</h3>${lines(2)}</div>
+  <div class="box gold"><h3><span class="num">٢</span>إجراء سأعلّمه لطلابي (اشرح، أرِهم، تدرّبوا، عزّز)</h3>${lines(2)}</div>
+  <div class="box gold"><h3><span class="num">٣</span>طالب سأدعو له كل يوم</h3>${lines(1)}</div>
+  <h3 style="margin-top:3mm">📅 سجل أسبوع التطبيق</h3>
+  <table><tr><th>اليوم</th><th>الموقف الذي واجهته</th><th>ماذا فعلت؟</th><th>النتيجة</th></tr>
+    ${['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'].map(d => `<tr><td>${d}</td><td class="blank"></td><td class="blank"></td><td class="blank"></td></tr>`).join('')}</table>`));
+
+/* ١٣) التقييم البعدي والمتابعة */
+out.push(page(`${head('📊 بعد الدورة', 'تقييمي الذاتي: كم تغيّرت؟')}
+  <h3>في نهاية الدورة</h3>${rateTable()}
+  <h3>بعد أسبوع من الدورة</h3>${rateTable()}
+  <div class="box gold"><h3>📈 أكبر تغيير لاحظته في نفسي</h3>${lines(1)}</div>`));
+
+/* ١٤) الشهادة */
+out.push(page(`<div class="cert"><div style="font-size:14mm">🌳</div><div class="kick" style="margin:4mm auto">منصة جذور</div>
+  <h1>شهادة إتمام</h1><p style="font-size:12pt;margin-top:6mm">تشهد منصة جذور بأن المعلم/ـة</p><div class="who"></div>
+  <p style="font-size:12pt">قد أتمّ/ت دورة <b>«${D.title}»</b><br>${D.tag} — عشر ساعات تدريبية</p>
+  <div class="grid2" style="margin-top:18mm"><div><div style="border-top:.4mm solid var(--line);padding-top:2mm;margin:0 10mm">المدرب: ${D.author}</div></div><div><div style="border-top:.4mm solid var(--line);padding-top:2mm;margin:0 10mm">التاريخ: ……/……/……</div></div></div>
+  <p class="hadith" style="margin-top:14mm;font-size:13pt">«إن الله لم يبعثني معنِّتًا ولا متعنِّتًا، ولكن بعثني معلِّمًا ميسِّرًا»</p></div>`));
+
+document.getElementById('book').innerHTML = out.join('');
+})();
+</script>
+</body>
+</html>
