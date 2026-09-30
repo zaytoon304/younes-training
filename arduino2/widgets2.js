@@ -213,6 +213,9 @@ const DIG_CODE = `if (digitalRead(2) == HIGH) {
 const ANA_CODE = `int v = analogRead(A0);
 analogWrite(9, map(v, 0, 1023, 0, 255));`;
 
+/* أدوات مشتركة لملفات المراحل التالية (widgets2b.js …) */
+window.ARD2 = { plotter, plotFeed, B2, col, pinX, botX, base, wire, potSVG, fx };
+
 /* ---------- رسم الأنواع ---------- */
 Object.assign(window.DECK_TYPES, {
   sensehero: s => `<div class="slide dark center shero">

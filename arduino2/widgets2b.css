@@ -1,0 +1,87 @@
+/* تصميم المرحلة الثانية: الحرارة والموجات فوق الصوتية */
+
+/* ---------- محاكي الحرارة ---------- */
+.tgrid{flex:1;display:grid;grid-template-columns:1.02fr 0.5fr 0.9fr;gap:24px;align-items:center;min-height:0}
+.tleft{display:flex;flex-direction:column;gap:10px}
+.roomwrap{border-radius:26px;overflow:hidden;box-shadow:0 18px 40px rgba(11,16,38,.22);--heat:.5;--spin:0s}
+.roomsvg{width:100%;display:block}
+.roomsvg .wall{fill:rgb(calc(220 + 35 * var(--heat)),calc(232 - 60 * var(--heat)),calc(245 - 110 * var(--heat)))}
+.roomsvg .floor{fill:#c9a97a}
+.roomsvg .win{fill:#bfe3ff;stroke:#7a8599;stroke-width:6}.roomsvg .wf{stroke:#7a8599;stroke-width:5}
+.roomsvg .rsun{fill:#FFC93C;transform-origin:92px 98px;transform:scale(calc(.6 + var(--heat)))}
+.roomsvg .fanpole{fill:#6b7385}
+.roomsvg .fancage{fill:rgba(255,255,255,.35);stroke:#6b7385;stroke-width:5}
+.roomsvg .blade{fill:#3b6fd8;opacity:.9}
+.roomsvg .hub{fill:#2b2f3c}
+.roomsvg .blades{transform-origin:0 0}
+.fanon .roomsvg .blades{animation:spin var(--spin) linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.roomsvg .tglass{fill:#fff;stroke:#8b93a7;stroke-width:4}
+.roomsvg .tbulb{fill:#e74c3c;stroke:#8b93a7;stroke-width:4}
+.roomsvg .ttube{fill:#eef0f4}
+.roomsvg .tfill{fill:#e74c3c;transition:y .2s,height .2s}
+.roomsvg .ttk{stroke:#5b6275;stroke-width:3}.roomsvg .ttx{font-size:18px;font-weight:800;fill:#3b4460;font-family:var(--mono)}
+.roomsvg .hw{fill:none;stroke:#e67e22;stroke-width:5;stroke-linecap:round;opacity:calc(var(--heat) * 1.4 - .5);animation:rise 1.4s ease-in-out infinite}
+@keyframes rise{0%{transform:translateY(10px)}100%{transform:translateY(-14px)}}
+.tmid{display:flex;flex-direction:column}
+.tchain{display:flex;flex-direction:column;gap:12px}
+.tchain .ac b{font-size:40px}
+.tchain .ac small{font-family:var(--mono);font-size:16px;color:var(--muted);direction:ltr}
+.fanst{font-family:Cairo!important;font-size:34px!important;color:var(--muted)!important}
+.fanst.on{color:#3b6fd8!important}
+.tright{display:flex;flex-direction:column;gap:12px}
+.tright .code.micro{font-size:16.5px;line-height:1.32}
+
+/* ---------- محاكي الموجات فوق الصوتية ---------- */
+.songrid{flex:1;display:flex;flex-direction:column;gap:14px;min-height:0}
+.sonwrap{border-radius:26px;overflow:hidden;box-shadow:0 16px 36px rgba(11,16,38,.2);cursor:ew-resize;touch-action:none}
+.sonarsvg{width:100%;display:block;direction:ltr}
+.sonarsvg .ssky{fill:#dff1ff}.sonarsvg .sground{fill:#4a4f5c}
+.sonarsvg .car{fill:#d8443a;stroke:#8e2a23;stroke-width:4}
+.sonarsvg .cwin{fill:#bfe3ff}
+.sonarsvg .wheel{fill:#1c1f27}.sonarsvg .rim{fill:#b9bec9}
+.sonarsvg .hcpcb{fill:#1f5fae}.sonarsvg .hceye{fill:#cfd4dc;stroke:#6b7384;stroke-width:3}
+.sonarsvg .wallr{fill:#c0703f;stroke:#7a4526;stroke-width:4}
+.sonarsvg .brick{stroke:#7a4526;stroke-width:3}
+.sonarsvg .wlbl{font-size:22px;font-weight:900;fill:#1b2340;text-anchor:middle;font-family:Cairo}
+.sonarsvg .wv{fill:none;stroke:#2e5fb8;stroke-width:6;stroke-linecap:round}
+.sonarsvg .wv.back{stroke:#e67e22}
+.sonarsvg .dline{stroke:#1b2340;stroke-width:3;stroke-dasharray:8 6}
+.sonarsvg .dtxt{font-size:26px;font-weight:900;fill:#fff;text-anchor:middle;font-family:var(--mono)}
+.sonbot{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start}
+.sonfacts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.sonfacts .ac b{font-size:38px}
+.sonfacts .ac small{font-family:var(--mono);font-size:15px;color:var(--muted);direction:ltr}
+#sB{font-family:Cairo;display:inline-block}
+#sB.bp{animation:bp .12s ease}
+@keyframes bp{50%{transform:scale(1.35)}}
+.pbars{grid-column:1 / -1;display:flex;gap:8px;direction:ltr;height:44px;align-items:flex-end}
+.pbars i{flex:1;height:calc(14px + var(--i) * 4px);border-radius:8px;background:#e4e7f0;transition:background .2s}
+.pbars i.on{background:hsl(calc(120 - var(--i) * 17) 70% 48%)}
+.sndbtn{grid-column:1 / -1;font-family:inherit;font-size:24px;font-weight:800;border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px;cursor:pointer;color:var(--navy-700)}
+.soncode .code.micro{font-size:15px;line-height:1.28;padding:8px 0}
+
+/* ---------- حركة دوائر البناء ---------- */
+.b2 .led2.blue{fill:#1f3f7a}.b2 .glow2.blue{fill:#5aa0ff}
+.tmpw .fingers,.tmpw .hotwaves,.sonw .pings,.sonw .handnear,.sonw .beeps{opacity:0}
+.tmpw.running .fingers{animation:hand 3.4s ease-in-out infinite}
+.tmpw.running .hotwaves{animation:night 3.4s ease-in-out infinite}
+.tmpw .hw2{fill:none;stroke:#e67e22;stroke-width:4;stroke-linecap:round}
+.tmpw.running .glow2{animation:night 3.4s ease-in-out infinite}
+.tmpw.running .led2.blue{animation:blueled 3.4s ease-in-out infinite}
+@keyframes blueled{0%,20%,80%,100%{fill:#1f3f7a}35%,65%{fill:#5aa0ff}}
+.sonw.running .pings{opacity:1}
+.sonw .ping{fill:none;stroke:#2e5fb8;stroke-width:5;stroke-linecap:round;animation:pingout 1s ease-out infinite}
+@keyframes pingout{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.sonw.running .handnear{animation:approach 3.6s ease-in-out infinite}
+@keyframes approach{0%,100%{opacity:1;transform:translateY(-60px)}50%{opacity:1;transform:translateY(10px)}}
+.sonw .beep{fill:none;stroke:#e67e22;stroke-width:5}
+.sonw.running .beeps{animation:beeps .35s linear infinite}
+@keyframes beeps{0%{opacity:1}100%{opacity:0}}
+
+/* تخطيط الموجات: الكود جانبًا والمشهد والأرقام في العمود الآخر */
+.songrid{flex-direction:row;display:grid;grid-template-columns:0.62fr 1.38fr;gap:26px;align-items:center}
+.sonright{display:flex;flex-direction:column;gap:12px}
+.soncode .code.micro{font-size:16px;line-height:1.36;padding:10px 0}
+.sonfacts .ac b{font-size:34px}
+.pbars{height:34px}
