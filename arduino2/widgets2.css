@@ -146,3 +146,33 @@
 .catinfo .cbig{font-size:72px}
 .catinfo h3{font-size:36px}.catinfo p{font-size:27px;line-height:1.35}
 .potsvg .potl{fill:var(--navy-700)}
+
+/* ---------- رقمي أم تماثلي؟ ---------- */
+.dagrid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:34px;min-height:0}
+.dapanel{background:#fff;border:3px solid var(--line);border-radius:30px;padding:16px 26px;display:flex;flex-direction:column;gap:8px}
+.dapanel.dig{border-color:#9ed2b4}.dapanel.ana{border-color:#b9cdf3}
+.dahead{display:flex;align-items:center;gap:16px}
+.dahead h3{font-size:34px;font-weight:900;color:var(--navy-800)}
+.datag{font-size:22px;font-weight:900;border-radius:999px;padding:4px 16px}
+.dig .datag{background:#E6F4EC;color:#207a4f}.ana .datag{background:#E7F0FF;color:#2E5FB8}
+.darow{display:flex;align-items:center;justify-content:space-around;height:230px}
+.daleft{display:flex;flex-direction:column;align-items:center;gap:8px}
+.dahint{font-size:20px;font-weight:800;color:var(--muted)}
+.bigbtn{width:160px;height:160px;border-radius:30px;border:0;background:#2b2f3c;box-shadow:0 12px 0 #151822;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .08s,box-shadow .08s;touch-action:none}
+.bigbtn i{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ff8a7a,#c0392b 60%);box-shadow:inset 0 -8px 0 rgba(0,0,0,.25)}
+.bigbtn.down{transform:translateY(10px);box-shadow:0 2px 0 #151822}
+.potwrap.small{width:190px}
+.bulbsvg{width:175px;--b:0}
+.bulbsvg .bglass{fill:rgb(calc(200 + 55 * var(--b)),calc(200 + 50 * var(--b)),calc(205 - 60 * var(--b)));stroke:#8b93a7;stroke-width:4;transition:fill .15s}
+.bulbsvg .bglow{fill:#FFE27A;opacity:calc(var(--b) * .8);filter:blur(22px);transition:opacity .15s}
+.bulbsvg .bfil{fill:none;stroke:rgb(calc(120 + 135 * var(--b)),calc(110 + 100 * var(--b)),60);stroke-width:4}
+.dafacts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dafacts div{background:#FBF7EE;border-radius:16px;padding:2px;text-align:center;display:flex;flex-direction:column}
+.dafacts b{font-family:var(--mono);font-size:38px;color:var(--navy-800)}.dafacts b.on{color:var(--gold-dark);font-family:Cairo}
+.dafacts span{font-size:17px;font-weight:800;color:var(--muted);direction:ltr}
+.dapanel .code.micro{border-radius:16px;padding:6px 0;font-size:18px}
+.dapanel .psvg{height:80px}
+.danote{font-size:23px;font-weight:800;color:var(--navy-700);text-align:center}
+.danote b{font-family:var(--mono);color:var(--gold-dark)}
+.darow{height:205px}.bulbsvg{width:160px}.bigbtn{width:150px;height:150px}.potwrap.small{width:175px}
+.dafacts b{line-height:1.25}.dapanel .psvg{height:70px}.dapanel{gap:7px;padding:14px 24px}.danote{font-size:21px}

@@ -198,6 +198,21 @@ B2.ldrlamp = { flow: 7, steps: [
   <g class="handcover"><text x="${col(3)}" y="262" style="font-size:80px" text-anchor="middle">✋</text></g>
 </svg>` };
 
+/* ---------- رقمي أم تماثلي؟ تجربة حية: زر يبدّل الإضاءة · منظّم يدرّجها ---------- */
+const bulbSVG = id => `<svg viewBox="0 0 220 260" class="bulbsvg" id="${id}">
+  <line x1="110" y1="0" x2="110" y2="46" stroke="#5b6275" stroke-width="6"/>
+  <rect x="84" y="44" width="52" height="34" rx="8" fill="#8b93a7"/>
+  <circle class="bglow" cx="110" cy="150" r="100"/>
+  <path class="bglass" d="M110 78 C 40 78, 40 190, 88 208 L 132 208 C 180 190, 180 78, 110 78 Z"/>
+  <path d="M96 150 q7 -18 14 0 q7 18 14 0" class="bfil"/>
+  <rect x="90" y="208" width="40" height="26" rx="6" fill="#8b93a7"/></svg>`;
+const DIG_CODE = `if (digitalRead(2) == HIGH) {
+  lampOn = !lampOn;
+  digitalWrite(13, lampOn);
+}`;
+const ANA_CODE = `int v = analogRead(A0);
+analogWrite(9, map(v, 0, 1023, 0, 255));`;
+
 /* ---------- رسم الأنواع ---------- */
 Object.assign(window.DECK_TYPES, {
   sensehero: s => `<div class="slide dark center shero">
@@ -205,6 +220,34 @@ Object.assign(window.DECK_TYPES, {
       <h2>${s.title}</h2>
       ${s.sub ? `<div class="lbl">${s.sub}</div>` : ''}
       ${senseSVG()}</div>`,
+
+  dalab: s => `<div class="slide light">
+      <div class="kicker">🧪 تجربة حية</div>
+      <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
+      <div class="dagrid">
+        <div class="dapanel dig ix">
+          <div class="dahead"><span class="datag">🔘 رقمي · Digital</span><h3>مفتاح النور في بيتك</h3></div>
+          <div class="darow">
+            <div class="daleft"><button class="bigbtn" id="dbtn"><i></i></button><span class="dahint">اضغط: ضغطة تنير… وضغطة تطفئ</span></div>
+            ${bulbSVG('dbulb')}
+          </div>
+          <div class="dafacts"><div><b id="dread">0</b><span>digitalRead(2)</span></div><div><b id="dstate">مطفأ</b><span>المصباح</span></div></div>
+          <div id="dcode">${codeBlock(DIG_CODE, 'micro')}</div>
+          ${plotter('dplot', 'digitalRead', 1)}
+          <p class="danote">حالتان فقط: <b>0</b> أو <b>1</b>… لا يوجد «نصف ضغطة»</p>
+        </div>
+        <div class="dapanel ana ix">
+          <div class="dahead"><span class="datag">🎚️ تماثلي · Analog</span><h3>منظّم الإضاءة (Dimmer)</h3></div>
+          <div class="darow">
+            <div class="daleft"><div class="potwrap small" id="apw">${potSVG()}</div><span class="dahint">أدِر المقبض بالماوس</span></div>
+            ${bulbSVG('abulb')}
+          </div>
+          <div class="dafacts"><div><b id="aread">512</b><span>analogRead(A0)</span></div><div><b id="apct">50%</b><span>شدة الإضاءة</span></div></div>
+          <div>${codeBlock(ANA_CODE, 'micro')}</div>
+          ${plotter('anplot', 'analogRead', 1023)}
+          <p class="danote">١٠٢٤ قيمة متدرجة: من <b>0</b> إلى <b>1023</b></p>
+        </div>
+      </div></div>`,
 
   catalog: s => `<div class="slide light">
       <div class="kicker">${s.kicker || '🧰 حقيبة الجزء الثاني'}</div>
@@ -265,6 +308,38 @@ Object.assign(window.DECK_TYPES, {
 
 /* ---------- ربط التفاعل ---------- */
 Object.assign(window.DECK_BIND, {
+  dalab(sl) {
+    /* الرقمي: الزر يقرأ 1 ما دام الإصبع عليه، وكل ضغطة جديدة تقلب حالة المصباح */
+    let pressed = false, lampOn = false, v = 512;
+    const btn = sl.querySelector('#dbtn'), db = sl.querySelector('#dbulb'), dl = sl.querySelectorAll('#dcode .ln');
+    const setD = () => {
+      sl.querySelector('#dread').textContent = pressed ? 1 : 0;
+      const st = sl.querySelector('#dstate'); st.textContent = lampOn ? 'مضاء' : 'مطفأ'; st.className = lampOn ? 'on' : '';
+      db.style.setProperty('--b', lampOn ? 1 : 0);
+      dl.forEach(l => l.classList.toggle('run', pressed && [1, 2, 3].includes(+l.dataset.n)));
+    };
+    const down = e => { e.preventDefault(); if (pressed) return; pressed = true; lampOn = !lampOn; btn.classList.add('down'); setD(); };
+    const up = () => { if (!pressed) return; pressed = false; btn.classList.remove('down'); setD(); };
+    btn.addEventListener('pointerdown', down); addEventListener('pointerup', up);
+    setD();
+    /* التماثلي: المقبض يغيّر القراءة تدريجيًا، والسطوع يتبعها */
+    const pw = sl.querySelector('#apw'), knob = pw.querySelector('.knob'), ab = sl.querySelector('#abulb');
+    const setA = () => {
+      knob.style.transform = `rotate(${-135 + v / 1023 * 270}deg)`;
+      sl.querySelector('#aread').textContent = v; sl.querySelector('#apct').textContent = Math.round(v / 1023 * 100) + '%';
+      ab.style.setProperty('--b', v / 1023);
+    };
+    const drag = e => { const r = pw.getBoundingClientRect(), x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+      let a = Math.atan2(x, -y) * 180 / Math.PI; a = Math.max(-135, Math.min(135, a)); v = Math.round((a + 135) / 270 * 1023); setA(); };
+    let dn = false;
+    pw.addEventListener('pointerdown', e => { dn = true; pw.setPointerCapture(e.pointerId); drag(e); });
+    pw.addEventListener('pointermove', e => dn && drag(e));
+    pw.addEventListener('pointerup', () => dn = false);
+    setA();
+    const bd = [], ba = [], dp = sl.querySelector('#dplot'), ap = sl.querySelector('#anplot');
+    const t = setInterval(() => { plotFeed(dp, bd, pressed ? 1 : 0, 1); plotFeed(ap, ba, v, 1023); }, 90);
+    window.DECK_CLEANUP.push(() => { clearInterval(t); removeEventListener('pointerup', up); });
+  },
   catalog(sl) {
     const info = sl.querySelector('#catinfo');
     sl.querySelectorAll('.catbar button').forEach(b => b.onclick = () => {
