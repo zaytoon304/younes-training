@@ -67,11 +67,15 @@ document.getElementById('course').textContent = '· ' + DECK.title + ' · قرا
 /* ---------- دخول المدرب ---------- */
 function login(msg) {
   app.innerHTML = `<div class="card login"><h1>🔐 لوحة المدرب</h1>
-    <p>تقارير المتدربين خاصة، لا يفتحها إلا المدرب ببريده وكلمة سره.</p>
-    <input id="em" value="${TRAINER}" dir="ltr"><input id="pw" type="password" placeholder="كلمة السر" dir="ltr">
+    <p>تقارير المتدربين خاصة، لا يفتحها إلا المدرب بحسابه.</p>
+    <button class="btn" id="g" style="width:100%;margin-bottom:14px">الدخول بحساب جوجل (${TRAINER})</button>
     ${msg ? `<div class="msg ${msg[0]}">${msg[1]}</div>` : ''}
-    <button class="btn" id="go" style="width:100%">دخول</button>
-    <button class="link" id="new">أول مرة؟ أنشئ حساب المدرب</button> · <button class="link" id="reset">نسيت كلمة السر</button></div>`;
+    <details><summary style="cursor:pointer;font-weight:800;color:var(--muted);margin-bottom:10px">أو بالبريد وكلمة السر</summary>
+    <input id="em" value="${TRAINER}" dir="ltr"><input id="pw" type="password" placeholder="كلمة السر" dir="ltr">
+    <button class="btn ghost" id="go" style="width:100%">دخول</button>
+    <button class="link" id="new">أول مرة؟ أنشئ حساب المدرب</button> · <button class="link" id="reset">نسيت كلمة السر</button></details></div>`;
+  document.getElementById('g').onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider().setCustomParameters({ login_hint: TRAINER }))
+    .catch(e => login(['e', e.code === 'auth/unauthorized-domain' ? 'هذا الموقع غير مضاف لنطاقات Firebase المسموحة (Authentication ← Settings ← Authorized domains)' : e.code === 'auth/popup-closed-by-user' ? 'أُغلقت نافذة جوجل قبل الدخول' : 'تعذّر الدخول بجوجل: ' + e.code]));
   const em = () => document.getElementById('em').value.trim(), pw = () => document.getElementById('pw').value;
   document.getElementById('go').onclick = () => auth.signInWithEmailAndPassword(em(), pw()).catch(() => login(['e', 'البريد أو كلمة السر غير صحيحة']));
   document.getElementById('new').onclick = () => {
