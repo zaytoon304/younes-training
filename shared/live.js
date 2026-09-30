@@ -87,24 +87,30 @@ const LIVE = window.LIVE = {
 window.DECK_HOOKS = window.DECK_HOOKS || [];
 function voteKey(s) {                 // مفتاح ثابت للسؤال: معرّف المحور + ترتيب الشريحة فيه
   const m = window.DECK.modules[s.mi];
-  return `${m.id}-${m.slides.indexOf(m.slides.find(x => x.title === s.title && x.t === s.t))}`;
+  // شرائح «صح أم خطأ» بلا عنوان، فنطابق بالنص أيضًا حتى لا تشترك في مفتاح واحد
+  return `${m.id}-${m.slides.indexOf(m.slides.find(x => x.t === s.t && x.title === s.title && x.text === s.text))}`;
 }
 LIVE.voteKey = voteKey;
 
+/* التصويت بالجوال على: «صوّت قبل أن نكشف» · «اختر طريقك» · «صح أم خطأ»
+   كل صوت يُسجَّل باسم المتدرب (who.js) ويُضاف أيضًا للعدّاد الجماعي الظاهر على الشاشة */
 window.DECK_HOOKS.push((sl, s) => {
-  if (!LIVE.ok || s.t !== 'vote' || s.tap) return;
+  if (!LIVE.ok || s.tap || !['vote', 'branch', 'myth'].includes(s.t)) return;
   const key = voteKey(s), sid = LIVE.session().id;
-  sl.classList.add('live');
+  sl.classList.add('live', 'live-' + s.t);
   const link = LIVE.url(`../shared/vote.html?c=${encodeURIComponent(LIVE.course)}&s=${sid}&k=${encodeURIComponent(key)}`);
   sl.insertAdjacentHTML('beforeend', `<div class="livebox ix" title="اضغط لتكبير الباركود">${LIVE.qr(link, 190)}
       <div><b>📱 صوّت بجوالك</b><span class="lcount">لا أصوات بعد</span></div></div>`);
-  const opts = [...sl.querySelectorAll('.opt')];
+  const opts = [...sl.querySelectorAll(s.t === 'branch' ? '.bc' : '.opt')];
   opts.forEach(o => o.insertAdjacentHTML('beforeend', '<div class="lbar"><i></i><span></span></div>'));
+  const n = s.t === 'myth' ? 2 : opts.length;
   const box = sl.querySelector('.livebox');
-  box.onclick = () => LIVE.bigQR(link, s.title);
-  const un = LIVE.listenVotes(key, opts.length, c => {
+  box.onclick = () => LIVE.bigQR(link, s.t === 'myth' ? 'صح أم خطأ؟' : s.title);
+  const un = LIVE.listenVotes(key, n, c => {
     const tot = c.reduce((a, b) => a + b, 0);
-    box.querySelector('.lcount').textContent = tot ? COUNT(tot, ['صوت واحد', 'صوتان', 'أصوات', 'صوتًا']) : 'لا أصوات بعد';
+    box.querySelector('.lcount').textContent = !tot ? 'لا أصوات بعد'
+      : s.t === 'myth' ? `✓ صح ${AR(Math.round(c[0] / tot * 100))}٪ · ✗ خطأ ${AR(Math.round(c[1] / tot * 100))}٪`
+      : COUNT(tot, ['صوت واحد', 'صوتان', 'أصوات', 'صوتًا']);
     sl.classList.toggle('hasvotes', tot > 0);
     opts.forEach((o, i) => { const p = tot ? Math.round(c[i] / tot * 100) : 0;
       o.querySelector('.lbar i').style.width = p + '%'; o.querySelector('.lbar span').textContent = tot ? AR(p) + '٪' : ''; });

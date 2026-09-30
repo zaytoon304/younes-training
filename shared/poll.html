@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>قناعاتي — جذور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<main class="m">
+  <header><span class="logo">🌳</span><b>جذور</b><span id="course"></span></header>
+  <section id="who" class="card" hidden></section>
+  <section id="card" class="card" hidden>
+    <div class="kick">💭 قناعاتي</div>
+    <h1>إلى أي حد توافق على كل عبارة؟</h1>
+    <p style="margin-bottom:14px">لا توجد إجابة صحيحة أو خاطئة. أجب بما تؤمن به فعلًا في فصلك، لا بما يُتوقع منك. تُحفظ باسمك ولا يراها إلا المدرب.</p>
+    <div id="qs"></div>
+    <button class="send" id="send" disabled>إرسال</button>
+  </section>
+  <section id="done" class="card done" hidden>
+    <div class="big">✓</div><h1>شكرًا لصدقك</h1><p>سُجّلت إجاباتك. تابع مع المدرب على الشاشة.</p>
+  </section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="qrcode.js"></script>
+<script>
+  var P = new URLSearchParams(location.search), C = (P.get('c') || '').replace(/[^\w-]/g, '');
+  window.DECK_HOOKS = [];
+  document.write('<script src="../' + C + '/content.js"><\/script><script src="../' + C + '/insight-key.js"><\/script>');
+</script>
+<script src="live.js"></script>
+<script src="who.js"></script>
+<script>
+(async function () {
+  LIVE.course = C;
+  const Q = DECK.insight.poll, sid = P.get('s');
+  document.getElementById('course').textContent = DECK.title;
+  await WHO.ensure(C, document.getElementById('who'));
+  if (await WHO.get('poll').catch(() => null)) { document.getElementById('done').hidden = false; return; }
+  document.getElementById('card').hidden = false;
+  const vals = Array(Q.length).fill(0);
+  document.getElementById('qs').innerHTML = Q.map((q, i) => `<div class="q"><h3>${i + 1}. ${q.text}</h3>
+    <div class="scale">${[1, 2, 3, 4, 5].map(v => `<button data-q="${i}" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="ends"><span>لا أوافق إطلاقًا</span><span>أوافق تمامًا</span></div></div>`).join('');
+  document.querySelectorAll('.scale button').forEach(b => b.onclick = () => {
+    const q = +b.dataset.q; vals[q] = +b.dataset.v;
+    document.querySelectorAll(`.scale button[data-q="${q}"]`).forEach(x => x.classList.toggle('on', x === b));
+    document.getElementById('send').disabled = vals.includes(0);
+  });
+  document.getElementById('send').onclick = e => {
+    e.target.disabled = true; e.target.textContent = 'جارٍ الإرسال…';
+    WHO.record('poll', { vals }).then(() => sid ? LIVE.vote('poll', 0, sid).catch(() => {}) : null).then(() => {
+      document.getElementById('card').hidden = true; document.getElementById('done').hidden = false;
+    }).catch(() => { e.target.disabled = false; e.target.textContent = 'إرسال'; alert('تعذّر الإرسال، تحقق من الإنترنت'); });
+  };
+})();
+</script>
+</body>
+</html>

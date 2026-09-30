@@ -1,6 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSelf(uid) { return request.auth != null && request.auth.uid == uid; }
+    function isTrainer() {
+      return request.auth != null && request.auth.token.email == 'zaytoon304@gmail.com'
+             && request.auth.token.email_verified == true;
+    }
     match /courses/{courseKey}/games/{gi}/results/{resultId} {
       allow read: if true;
       allow create: if request.resource.data.groupName is string
@@ -28,6 +33,30 @@ service cloud.firestore {
                     && request.resource.data.v < 6
                     && request.resource.data.ts is number;
       allow update, delete: if false;
+    }
+    // ===== قراءة عقلية المتدرب: هوية بالاسم وكلمة السر (Firebase Auth) =====
+    // المتدرب يكتب ملفه وإجاباته فقط، وكل إجابة تُكتب مرة واحدة ولا تُعدّل (أول قرار هو المعتمد)
+    // ولا يقرأ الإجابات إلا صاحبها والمدرب (بريد مفعّل)
+    match /courses/{courseKey}/trainees/{uid} {
+      allow read: if isTrainer() || isSelf(uid);
+      allow create, update: if isSelf(uid)
+                    && request.resource.data.keys().hasOnly(['name', 'school', 'ts'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 3
+                    && request.resource.data.name.size() < 80
+                    && request.resource.data.school is string
+                    && request.resource.data.school.size() < 81
+                    && request.resource.data.ts is number;
+      allow delete: if false;
+      match /items/{key} {
+        allow read: if isTrainer() || isSelf(uid);
+        allow create: if isSelf(uid)
+                      && request.resource.data.ts is number
+                      && request.resource.data.keys().hasOnly(['v', 'vals', 'ts'])
+                      && (!('v' in request.resource.data) || (request.resource.data.v is int && request.resource.data.v >= 0 && request.resource.data.v < 6))
+                      && (!('vals' in request.resource.data) || (request.resource.data.vals is list && request.resource.data.vals.size() <= 12));
+        allow update, delete: if false;
+      }
     }
     match /courses/{courseKey}/selfrate/{entryId} {
       allow read: if true;

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نمطي — جذور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+<style>
+  .quadbox{position:relative;width:260px;height:260px;margin:8px auto 4px}
+  .quadbox .cell{position:absolute;width:128px;height:128px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--navy);text-align:center}
+  .quadbox .dot{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--gold);border:4px solid var(--navy);transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+  .axes{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--muted);width:260px;margin:0 auto 12px}
+  .bar{margin:8px 0}.bar b{display:flex;justify-content:space-between;font-size:15px}
+  .bar .tr{height:12px;border-radius:999px;background:#EEE6D3;overflow:hidden;margin-top:4px}.bar .tr i{display:block;height:100%;border-radius:999px;background:var(--gold)}
+  .sec{margin-top:18px}.sec h2{font-size:19px;font-weight:900;margin-bottom:8px}
+  .li{background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px;font-size:15px;font-weight:700;line-height:1.6}
+  .li small{display:block;color:var(--muted);font-weight:700}
+  .li .ok{color:var(--ok)}
+</style>
+</head>
+<body>
+<main class="m">
+  <header><span class="logo">🌳</span><b>جذور</b><span id="course"></span></header>
+  <section id="who" class="card" hidden></section>
+  <section id="card" class="card" hidden></section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="qrcode.js"></script>
+<script>
+  var P = new URLSearchParams(location.search), C = (P.get('c') || '').replace(/[^\w-]/g, '');
+  window.DECK_HOOKS = [];
+  document.write('<script src="../' + C + '/content.js"><\/script>');
+</script>
+<script>
+  DECK.parts.forEach(function (p) { document.write('<script src="../' + C + '/parts/' + p + '.js"><\/script>'); });
+  document.write('<script src="../' + C + '/insight-key.js"><\/script>');
+</script>
+<script src="live.js"></script>
+<script src="who.js"></script>
+<script src="insight.js"></script>
+<script>
+(async function () {
+  const K = DECK.insight, card = document.getElementById('card');
+  document.getElementById('course').textContent = DECK.title;
+  await WHO.ensure(C, document.getElementById('who'));
+  card.hidden = false;
+  if (P.get('join')) { card.className = 'card done'; card.innerHTML = `<div class="big">✓</div><h1>أهلًا ${WHO.name.split(' ')[0]}</h1><p>تم تعريفك. من الآن كل تصويت تمسحه يُسجَّل باسمك تلقائيًا.</p>`; return; }
+  card.innerHTML = '<h1>جارٍ تحليل إجاباتك…</h1>';
+  const R = INSIGHT.analyze(DECK, await WHO.items());
+  if (R.n < 3) { card.innerHTML = '<div class="kick">🧭 نمطي</div><h1>لم تكتمل إجاباتك بعد</h1><p>صوّت في مواقف الدورة بجوالك، ثم عد إلى هذه الصفحة لترى نمطك.</p>'; return; }
+  const S = K.styles, dom = R.dominant;
+  const x = 130 - R.warmth * 100, y = 130 - R.control * 100;          // اليسار: دفء مرتفع · الأعلى: حزم مرتفع
+  const cell = (k, l, t, bg) => `<div class="cell" style="right:${l}px;top:${t}px;background:${bg}${k === dom ? ';outline:3px solid var(--gold)' : ''}"><span style="font-size:24px">${S[k].icon}</span>${S[k].name}</div>`;
+  const styled = Object.values(R.styles).reduce((a, b) => a + b, 0) || 1;
+  const miss = R.decisions.filter(d => d.eff < 4 && d.kind === 'act');
+  card.innerHTML = `<div class="kick">🧭 نمطي في إدارة الصف</div>
+    <h1>${WHO.name}، نمطك الغالب: ${S[dom].icon} ${S[dom].name}</h1>
+    <p>بناءً على ${R.n} قرارًا اتخذتها في مواقف الدورة. اخترت الحل الأمثل في ${R.decisions.filter(d => d.eff === 4).length} منها.</p>
+    <div class="quadbox">${cell('auth', 0, 0, '#F3E1DE')}${cell('firm', 132, 0, '#DDF0E6')}${cell('perm', 0, 132, '#E9E6F0')}${cell('emo', 132, 132, '#FBEFD5')}
+      <div class="dot" style="left:${x}px;top:${y}px" title="موقعك"></div></div>
+    <div class="axes"><span>← دفء أقل</span><span>النقطة = موقعك</span><span>دفء أكثر →</span></div>
+    <div class="sec"><h2>توزيع قراراتك</h2>${Object.keys(S).map(k => `<div class="bar"><b><span>${S[k].icon} ${S[k].name}</span><span>${Math.round(R.styles[k] / styled * 100)}٪</span></b><div class="tr"><i style="width:${R.styles[k] / styled * 100}%"></i></div></div>`).join('')}</div>
+    ${R.strongAreas.length ? `<div class="sec"><h2>💪 نقاط قوتك</h2>${R.strongAreas.map(a => `<div class="li">${a}</div>`).join('')}</div>` : ''}
+    ${R.weakAreas.length ? `<div class="sec"><h2>🌱 مجالات تستحق اهتمامك</h2>${R.weakAreas.map(a => `<div class="li">${a}</div>`).join('')}</div>` : ''}
+    <div class="sec"><h2>🎯 خطواتك القادمة</h2>${R.tips.map(t => `<div class="li">${t}</div>`).join('')}</div>
+    ${miss.length ? `<div class="sec"><h2>🔁 راجع هذه المواقف</h2>${miss.map(d => `<div class="li">${d.title}<small>اخترت: ${d.chosen}</small><small class="ok">الأنسب: ${d.best}</small></div>`).join('')}</div>` : ''}
+    <p style="margin-top:14px;font-size:14px">هذه قراءة لقراراتك في مواقف الدورة لتساعدك على النمو، وليست حكمًا عليك. كل معلم قادر على التحسن.</p>`;
+})();
+</script>
+</body>
+</html>

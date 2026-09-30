@@ -10,7 +10,8 @@
 <body>
 <main class="m">
   <header><span class="logo">🌳</span><b>جذور</b><span id="course"></span></header>
-  <section id="card" class="card">
+  <section id="who" class="card" hidden></section>
+  <section id="card" class="card" hidden>
     <div class="kick">🗳️ صوّت قبل أن يُكشف الحل</div>
     <h1 id="q">جارٍ التحميل…</h1>
     <div id="opts" class="opts"></div>
@@ -23,6 +24,7 @@
   <section id="err" class="card" hidden><h1>تعذّر فتح السؤال</h1><p>امسح الباركود مرة أخرى من الشاشة.</p></section>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="qrcode.js"></script>
 <script>
@@ -35,31 +37,40 @@
   if (window.DECK) DECK.parts.forEach(function (p) { document.write('<script src="../' + C + '/parts/' + p + '.js"><\/script>'); });
 </script>
 <script src="live.js"></script>
+<script src="who.js"></script>
 <script>
-(function () {
+(async function () {
   const LETTERS = ['أ', 'ب', 'ج', 'د', 'هـ'];
   const sid = P.get('s'), key = P.get('k');
-  const show = id => ['card', 'done', 'err'].forEach(x => document.getElementById(x).hidden = x !== id);
+  const show = id => ['card', 'done', 'err', 'who'].forEach(x => document.getElementById(x).hidden = x !== id);
   try {
     LIVE.course = C;
     const [mid, idx] = [key.slice(0, key.lastIndexOf('-')), +key.slice(key.lastIndexOf('-') + 1)];
     const s = DECK.modules.find(m => m.id === mid).slides[idx];
-    if (!s || s.t !== 'vote' || !sid) throw 0;
+    /* الأنواع التي يُصوَّت عليها بالجوال: تصويت · اختر طريقك · صح أم خطأ */
+    const options = !s ? null : s.t === 'vote' ? s.options : s.t === 'branch' ? s.choices.map(c => c.label) : s.t === 'myth' ? ['صح', 'خطأ'] : null;
+    if (!options || !sid) throw 0;
     document.getElementById('course').textContent = DECK.title;
-    document.title = s.title;
-    document.getElementById('q').innerHTML = s.title;
-    const voted = 'voted.' + C + '.' + sid + '.' + key;
-    const prev = localStorage.getItem(voted);
-    if (prev !== null) { document.getElementById('mine').textContent = 'اخترت: ' + s.options[+prev]; show('done'); return; }
-    document.getElementById('opts').innerHTML = s.options.map((o, i) => `<button data-i="${i}"><i>${LETTERS[i]}</i><span>${o}</span></button>`).join('');
+    const title = s.t === 'myth' ? 'صح أم خطأ؟ ' + s.text : s.title;
+    document.title = title;
+    document.getElementById('q').innerHTML = title;
+    document.getElementById('card').hidden = true;
+    await WHO.ensure(C, document.getElementById('who'));           // الاسم + كلمة السر (مرة واحدة)
+    const prev = await WHO.get(key).catch(() => null);                // أول إجابة هي المعتمدة
+    if (prev) { document.getElementById('mine').textContent = 'اخترت: ' + options[prev.v]; show('done'); return; }
+    show('card');
+    document.getElementById('opts').innerHTML = options.map((o, i) => `<button data-i="${i}"><i>${s.t === 'myth' ? (i ? '✗' : '✓') : LETTERS[i]}</i><span>${o}</span></button>`).join('');
     document.querySelectorAll('#opts button').forEach(b => b.onclick = () => {
       document.querySelectorAll('#opts button').forEach(x => x.disabled = true);
       b.classList.add('sel');
-      LIVE.vote(key, +b.dataset.i, sid).then(() => {
-        try { localStorage.setItem(voted, b.dataset.i); } catch (e) {}
-        document.getElementById('mine').textContent = 'اخترت: ' + s.options[+b.dataset.i];
+      const v = +b.dataset.i;
+      WHO.record(key, { v }).then(() => LIVE.vote(key, v, sid).catch(() => {})).then(() => {
+        document.getElementById('mine').textContent = 'اخترت: ' + options[v];
         show('done');
-      }).catch(() => { b.classList.remove('sel'); document.querySelectorAll('#opts button').forEach(x => x.disabled = false); alert('تعذّر الإرسال، تحقق من الإنترنت وحاول مجددًا'); });
+      }).catch(() => WHO.get(key).then(p => {
+        if (p) { document.getElementById('mine').textContent = 'اخترت: ' + options[p.v]; show('done'); return; }
+        b.classList.remove('sel'); document.querySelectorAll('#opts button').forEach(x => x.disabled = false); alert('تعذّر الإرسال، تحقق من الإنترنت وحاول مجددًا');
+      }));
     });
   } catch (e) { show('err'); }
 })();
