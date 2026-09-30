@@ -8,8 +8,8 @@ const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /* ---------- تلوين كود الأردوينو ---------- */
-const KW = /\b(void|int|long|byte|float|bool|boolean|char|unsigned|const|for|while|if|else|return|true|false|HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP)\b/;
-const FN = /\b(setup|loop|pinMode|digitalWrite|digitalRead|analogWrite|analogRead|delay|millis|map|Serial|begin|println|print)\b/;
+const KW = /\b(void|int|long|byte|float|bool|boolean|char|unsigned|const|for|while|if|else|return|true|false|HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|DHT11)\b/;
+const FN = /\b(setup|loop|pinMode|digitalWrite|digitalRead|analogWrite|analogRead|delay|delayMicroseconds|millis|map|constrain|random|abs|Serial|begin|println|print|tone|noTone|pulseIn|Servo|attach|write|step|setSpeed|Stepper|DHT|readTemperature|readHumidity)\b/;
 function highlight(line) {
   const re = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|(#\w+)|(\b\d+\b)|([A-Za-z_]\w*)|(\s+)|(.)/g;
   let out = '', m;
@@ -988,6 +988,8 @@ window.DECK_BIND = {
     window.DECK_CLEANUP.push(() => { running = false; clearTimeout(t); });
   },
 };
+/* أدوات مشتركة يستخدمها الجزء الثاني من الدورة (arduino2/widgets2.js) */
+window.ARD = { AR, esc, highlight, codeBlock };
 /* كل نقرة: السطر المشروح في الكود، والجزء التالي في جولة اللوحة */
 window.DECK_ONSTEP = (step, s) => {
   const sl = document.querySelector('#stage .slide');

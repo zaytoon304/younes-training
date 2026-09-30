@@ -1,0 +1,148 @@
+/* تصميم أدوات الجزء الثاني (الحساسات والمحركات) — فوق ../arduino/widgets.css */
+
+/* ---------- الغلاف: يحسّ ← يقرر ← يتحرك ---------- */
+.shero{justify-content:center;align-items:center;text-align:center}
+.shero .cat{font-size:38px;font-weight:800;color:var(--gold)}
+.shero h2{font-size:118px;font-weight:900;line-height:1.1;margin:6px 0 10px;color:#fff}
+.shero .lbl{font-size:44px;font-weight:700;color:#c9cfe6;max-width:1400px;line-height:1.45}
+.sensesvg{width:1500px;margin-top:40px;direction:ltr}
+.sensesvg .ring{fill:rgba(255,255,255,.06);stroke:rgba(240,204,122,.45);stroke-width:5}
+.sensesvg .ring.gold{fill:rgba(217,174,75,.18);stroke:var(--gold);stroke-width:7}
+.sensesvg .big{font-size:110px;text-anchor:middle;dominant-baseline:middle}
+.sensesvg .lab{font-size:52px;font-weight:900;fill:#fff;text-anchor:middle;font-family:Cairo}
+.sensesvg .en{font-size:24px;font-weight:800;fill:var(--gold-light);text-anchor:middle;letter-spacing:4px;font-family:Cairo}
+.sensesvg .arr{stroke:#F0CC7A;stroke-width:8;fill:none;stroke-dasharray:14 12;animation:flow .9s linear infinite}
+
+/* ---------- كتالوج الحساسات ---------- */
+.catbar{display:flex;gap:14px;margin-bottom:18px}
+.catbar button{font-family:inherit;font-size:28px;font-weight:800;border:2px solid var(--line);background:#fff;color:var(--navy-700);border-radius:999px;padding:8px 26px;cursor:pointer}
+.catbar button.on{background:var(--navy-800);color:#fff;border-color:var(--navy-800)}
+.catgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.citem{background:#fff;border:2px solid var(--line);border-radius:24px;padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .3s}
+.citem:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(16,27,69,.12)}
+.citem.sel{border-color:var(--gold);box-shadow:0 0 0 4px rgba(217,174,75,.3)}
+.citem.hide{opacity:.15;pointer-events:none}
+.citem .ci{font-size:58px;line-height:1.1}
+.citem b{font-size:25px;font-weight:900;color:var(--navy-800);line-height:1.25}
+.citem small{font-size:17px;font-weight:700;color:var(--muted)}
+.citem.out{background:#FBF7EE}
+.csig{font-size:18px;font-weight:800;border-radius:999px;padding:2px 12px;margin-top:4px}
+.csig.a{background:#E7F0FF;color:#2E5FB8}.csig.d{background:#E6F4EC;color:#207a4f}.csig.p{background:#FFF2DC;color:#a86b08}
+.catinfo{margin-top:18px;background:var(--navy-800);color:#fff;border-radius:28px;padding:22px 34px;min-height:150px;display:flex;align-items:center;gap:28px}
+.catinfo > span{font-size:32px;font-weight:700;color:#c9cfe6}
+.catinfo .cbig{font-size:92px}
+.catinfo h3{font-size:42px;font-weight:900;color:var(--gold-light)}.catinfo h3 small{font-size:26px;color:#aab2d6;font-weight:700}
+.catinfo p{font-size:31px;font-weight:600;line-height:1.45;color:#e3e7f6}
+.catinfo .cex{color:#7ee2a8;font-weight:800}
+.catinfo.pop{animation:enter .35s ease}
+
+/* ---------- راسم الإشارات ---------- */
+.plot{background:#0b1026;border-radius:22px;overflow:hidden;box-shadow:0 16px 40px rgba(11,16,38,.3)}
+.plot .pbar{background:#141a3a;color:#aab2d6;font-family:var(--mono);font-size:19px;padding:8px 18px;display:flex;justify-content:space-between}
+.plot .pbar span{color:#7ee2a8}
+.psvg{width:100%;height:170px;display:block}
+.psvg .pg{stroke:#1e2750;stroke-width:1.5}
+.psvg .pt{fill:#4b5478;font-size:15px;font-family:var(--mono)}
+.psvg .pl{fill:none;stroke:#7ee2a8;stroke-width:3;stroke-linejoin:round}
+.psvg .pth{stroke:#F0CC7A;stroke-width:2.5;stroke-dasharray:8 6}
+
+/* ---------- مختبر القراءة التماثلية ---------- */
+.adcgrid{flex:1;display:grid;grid-template-columns:0.62fr 1.05fr 0.78fr;gap:30px;align-items:center;min-height:0}
+.adcleft{display:flex;flex-direction:column;align-items:center;gap:14px}
+.potwrap{width:340px;cursor:grab;touch-action:none}
+.potwrap:active{cursor:grabbing}
+.potsvg{width:100%;display:block}
+.potsvg .potbase{fill:#1b2340}
+.potsvg .tick{stroke:#F0CC7A;stroke-width:5;stroke-linecap:round}
+.potsvg .potknob{fill:url(#none);fill:#e8e3d6;stroke:#b8b09c;stroke-width:6}
+.potsvg .potmark{fill:#d62828}
+.potsvg .knob{transform-origin:180px 180px;transition:transform .08s}
+.potsvg .potl{fill:#c9cfe6;font-size:26px;font-weight:800;font-family:Cairo;text-anchor:middle}
+.adcleft input{width:340px;accent-color:var(--gold);height:30px}
+.adcled{display:flex;align-items:center;gap:18px;font-size:26px;font-weight:800;color:var(--navy-700)}
+.aledbulb{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#ff4646 45%,#9b1c1c);transition:opacity .1s,box-shadow .1s}
+.adcmid{display:flex;flex-direction:column;gap:16px}
+.adcchain{display:flex;align-items:stretch;gap:10px;direction:rtl}
+.adcchain i{font-style:normal;font-size:40px;color:var(--gold-dark);align-self:center}
+.ac{flex:1;background:#fff;border:2px solid var(--line);border-radius:22px;padding:12px;text-align:center;display:flex;flex-direction:column}
+.ac span{font-size:22px;font-weight:800;color:var(--muted)}
+.ac b{font-family:var(--mono);font-size:48px;color:var(--navy-800);direction:ltr}
+.ac.gold{border-color:var(--gold);background:#FFF8E6}.ac.gold b{color:var(--gold-dark)}
+.adcbar{background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 16px}
+.adcfill{height:24px;border-radius:12px;background:linear-gradient(90deg,#3b6fd8,#2ecc71,#F0CC7A,#e74c3c);transition:width .08s}
+.adcsc{display:flex;justify-content:space-between;font-family:var(--mono);font-size:18px;color:var(--muted);margin-top:6px;direction:ltr}
+.adceq{font-family:var(--mono);font-size:22px;background:var(--code-bg);color:#e6e9f5;border-radius:16px;padding:10px 18px;text-align:center}
+.adceq b{color:#F0CC7A}
+
+/* ---------- محاكي حساس الضوء ---------- */
+.ldrgrid{flex:1;display:grid;grid-template-columns:1.05fr 0.5fr 0.85fr;gap:26px;align-items:center;min-height:0}
+.ldrleft{display:flex;flex-direction:column;gap:12px}
+.scenewrap{border-radius:26px;overflow:hidden;box-shadow:0 18px 40px rgba(11,16,38,.25);--day:.8}
+.ldrscene{width:100%;display:block}
+.ldrscene .sky{fill:rgb(calc(20 + 120 * var(--day)),calc(26 + 170 * var(--day)),calc(60 + 180 * var(--day)))}
+.ldrscene .sun{fill:#FFD34D;opacity:var(--day);transform:translateY(calc((1 - var(--day)) * 80px))}
+.ldrscene .moon{fill:#f3f0da;opacity:calc(1 - var(--day) * 1.6)}
+.ldrscene .star{fill:#fff;opacity:calc(1 - var(--day) * 2)}
+.ldrscene .road{fill:#3b3f4b}.ldrscene .lane{fill:#e8e3d6;opacity:.7}
+.ldrscene .pole,.ldrscene .arm{fill:#5b6275;stroke:#5b6275;stroke-width:12;stroke-linecap:round}
+.ldrscene .arm{fill:none}
+.ldrscene .head{fill:#2b2f3c}
+.ldrscene .bulb{fill:#555a66;transition:fill .3s}
+.ldrscene .beam{fill:#FFE9A8;opacity:0;transition:opacity .35s}
+.lampon .ldrscene .bulb{fill:#FFF3C0;filter:drop-shadow(0 0 18px #FFE08A)}
+.lampon .ldrscene .beam{opacity:.45}
+.ldrscene .ldrbody{fill:#e8d7b0;stroke:#8a6d3b;stroke-width:3}
+.ldrscene .ldrzig{fill:none;stroke:#b5462f;stroke-width:3}
+.ldrscene .lbl2{fill:#fff;font-size:22px;font-weight:900;text-anchor:middle;font-family:Cairo}
+.lsl{font-size:28px;font-weight:800;color:var(--navy-800);display:flex;flex-direction:column;background:#fff;border:2px solid var(--line);border-radius:20px;padding:8px 22px}
+.lsl input{width:100%;accent-color:var(--gold);height:28px}
+.ldrmid{display:flex;flex-direction:column;align-items:center;gap:12px}
+.divsvg{width:100%;max-width:310px;direction:ltr}
+.divsvg .dw{stroke:#1b2340;stroke-width:6}
+.divsvg .dvr{fill:#d9b382;stroke:#1b2340;stroke-width:4}.divsvg .dvr.ldr{fill:#e8d7b0}
+.divsvg .dnode{fill:#e0b400;stroke:#1b2340;stroke-width:3}
+.divsvg .dvt{font-size:28px;font-weight:900;fill:var(--navy-800);text-anchor:middle;font-family:Cairo}
+.divsvg .dvl{font-size:22px;font-weight:800;fill:var(--muted);font-family:Cairo}
+.divsvg .dvv{font-size:26px;font-weight:900;fill:var(--gold-dark);font-family:var(--mono)}
+.ldrfacts{display:grid;gap:10px;width:100%}
+.ldrfacts div{background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px;text-align:center;display:flex;flex-direction:column}
+.ldrfacts b{font-family:var(--mono);font-size:44px;color:var(--navy-800)}
+.ldrfacts b.on{color:var(--gold-dark);font-family:Cairo}
+.ldrfacts span{font-size:19px;font-weight:800;color:var(--muted);direction:ltr}
+.ldrright{display:flex;flex-direction:column;gap:14px}
+
+/* ---------- البناء خطوة بخطوة (الجزء الثاني) ---------- */
+.b2 .led2{fill:#7a2323;stroke:#1b2340;stroke-width:4;transition:fill .3s}
+.b2 .led2.white{fill:#c9ccd3}
+.b2 .glow2{fill:#ff5a5a;opacity:0;filter:blur(18px);transition:opacity .3s}
+.b2 .glow2.white{fill:#fff4c2}
+.b2 .handcover{opacity:0}
+.potw.running .potspin{animation:potturn 3.2s ease-in-out infinite}
+.potw.running .glow2{animation:bright 3.2s ease-in-out infinite}
+.potw.running .led2{animation:ledfade 3.2s ease-in-out infinite}
+@keyframes potturn{0%,100%{transform:rotate(-130deg)}50%{transform:rotate(130deg)}}
+@keyframes bright{0%,100%{opacity:.05}50%{opacity:.95}}
+@keyframes ledfade{0%,100%{fill:#7a2323}50%{fill:#ff3b3b}}
+.ldrw.running .handcover{animation:hand 3.4s ease-in-out infinite}
+.ldrw.running .glow2{animation:night 3.4s ease-in-out infinite}
+.ldrw.running .led2{animation:nightled 3.4s ease-in-out infinite}
+@keyframes hand{0%,15%,85%,100%{opacity:0;transform:translateY(-30px)}30%,70%{opacity:1;transform:translateY(0)}}
+@keyframes night{0%,20%,80%,100%{opacity:0}35%,65%{opacity:.95}}
+@keyframes nightled{0%,20%,80%,100%{fill:#c9ccd3}35%,65%{fill:#fffbe6}}
+
+/* تصحيحات القياس والاتجاه */
+.slide input[type=range]{direction:ltr}
+.adcbar{direction:ltr}
+.ac b{font-size:42px;white-space:nowrap}
+.adceq{font-size:19px;white-space:nowrap;overflow:hidden}
+.catgrid{gap:12px}
+.citem{padding:10px 8px 10px;gap:2px;border-radius:20px}
+.citem .ci{font-size:46px}
+.citem b{font-size:23px}
+.citem small{font-size:15px}
+.csig{font-size:16px;margin-top:2px}
+.catbar{margin-bottom:12px}.catbar button{font-size:25px;padding:6px 22px}
+.catinfo{margin-top:12px;padding:14px 30px;min-height:118px}
+.catinfo .cbig{font-size:72px}
+.catinfo h3{font-size:36px}.catinfo p{font-size:27px;line-height:1.35}
+.potsvg .potl{fill:var(--navy-700)}
