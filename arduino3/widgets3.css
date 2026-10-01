@@ -106,3 +106,10 @@
 .dctl .clap{font-size:26px;padding:10px 20px}
 .dctl .sndbtn{grid-column:auto;font-size:22px;padding:10px 16px}
 .dtime{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--navy-800);text-align:center}
+
+/* بطاقات كثيرة (٥ فأكثر): تصميم مضغوط تلقائيًا حتى تتسع الشريحة */
+.cards:has(> .card:nth-child(5)){gap:18px!important}
+.cards:has(> .card:nth-child(5)) .card{padding:18px 26px!important;gap:4px!important;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:16px!important}
+.cards:has(> .card:nth-child(5)) .card .ic{width:64px!important;height:64px!important;font-size:36px!important;border-radius:20px}
+.cards:has(> .card:nth-child(5)) .card h3{font-size:32px!important;flex:1}
+.cards:has(> .card:nth-child(5)) .card p{font-size:26px!important;line-height:1.45;flex-basis:100%}

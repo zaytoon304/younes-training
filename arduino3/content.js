@@ -11,7 +11,7 @@ root.DECK = {
   author: 'أ. محمد زيتون',
   sectionLabel: 'المحور',
   mapStart: 0,
-  parts: ['00-open', '01-anatomy', '02-diff'],
+  parts: ['00-open', '01-anatomy', '02-diff', '03-power', '04-assembly'],
   modules: [],
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = root.DECK;

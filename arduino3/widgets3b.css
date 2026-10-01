@@ -1,0 +1,55 @@
+/* أكاديمية سيارة الروبوت — المرحلة الثانية: الطاقة والتركيب */
+
+/* ---------- مختبر البطارية ---------- */
+.bgrid3{flex:1;display:grid;grid-template-columns:minmax(0,0.62fr) minmax(0,1fr) minmax(0,0.78fr);gap:22px;align-items:center;min-height:0}
+.bpick{display:flex;flex-direction:column;gap:9px}
+.bpk{font-family:inherit;font-size:24px;font-weight:800;border:3px solid var(--line);background:#fff;border-radius:18px;padding:9px 14px;cursor:pointer;color:var(--navy-700);display:flex;align-items:center;gap:12px;text-align:right}
+.bpk i{width:22px;height:34px;border-radius:6px;flex:none}
+.bpk.on{border-color:var(--gold);background:#FFF3C0;color:var(--navy-800)}
+.bpick .lsl{font-size:22px;padding:6px 16px}
+.btog{display:grid;gap:8px}.btog .sndbtn{grid-column:auto;font-size:20px;padding:8px}
+.bmid{display:flex;flex-direction:column;gap:14px;min-width:0}
+.bcells{width:100%;background:#fff;border:2px solid var(--line);border-radius:24px;direction:ltr}
+.bcells .bct{font-family:var(--mono);font-size:26px;font-weight:700;fill:#fff;text-anchor:middle}
+.bcells .bplus{font-family:var(--mono);font-size:30px;font-weight:700;fill:#1b2340;text-anchor:middle}
+.bcells .bsum{font-family:Cairo;font-size:26px;font-weight:900;fill:#1b2340;text-anchor:middle;direction:rtl}
+.bfacts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.bfacts .ac b{font-size:32px}
+.btank{background:var(--navy-800);border-radius:22px;padding:14px 20px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;color:#fff}
+.btl{font-size:22px;font-weight:800;color:var(--gold-light)}
+.btbar{height:26px;background:rgba(255,255,255,.12);border-radius:13px;overflow:hidden}
+.btbar i{display:block;height:100%;border-radius:13px;transition:width .4s,background .4s}
+.btank b{font-size:34px;font-weight:900}
+.bverd{background:#fff;border:2px solid var(--line);border-radius:26px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.bverd h3{font-size:30px;font-weight:900;color:var(--navy-800)}
+.bv{display:flex;gap:10px;align-items:flex-start;font-size:22px;font-weight:700;line-height:1.45;border-radius:14px;padding:8px 10px}
+.bv b{flex:none}.bv.ok{background:#e6f4ec;color:#1d5e40}.bv.mid{background:#fff6dc;color:#7a5a12}.bv.bad{background:#fbecec;color:#8e2a2a}
+
+/* ---------- قائمة الفحص ---------- */
+.clgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-content:center}
+.cli{font-family:inherit;display:flex;gap:16px;align-items:center;text-align:right;background:#fff;border:3px solid var(--line);border-radius:22px;padding:14px 20px;cursor:pointer;transition:all .25s}
+.cli b{flex:none;width:50px;height:50px;border-radius:14px;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff}
+.cli span{display:flex;flex-direction:column}.cli strong{font-size:28px;color:var(--navy-800)}.cli small{font-size:20px;color:var(--muted);font-weight:700}
+.cli.on{border-color:var(--ok);background:var(--ok-bg)}.cli.on b{background:var(--ok);border-color:var(--ok)}
+.clbar{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;margin-top:16px}
+.clprog{height:24px;background:#ece7da;border-radius:12px;overflow:hidden}.clprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--ok));transition:width .4s}
+.cldone{font-size:32px;font-weight:900;color:var(--navy-800);min-width:260px;text-align:center}
+.cldone.all{color:var(--ok);animation:enter .5s ease both}
+
+/* ---------- حركة دوائر البناء ---------- */
+.mech .mdrop.on{animation:mdrop .55s cubic-bezier(.3,1.5,.5,1)}
+@keyframes mdrop{0%{opacity:0;transform:translateY(-40px)}100%{opacity:1;transform:none}}
+.mech .mspin{opacity:0}
+.mech.running .mspin{opacity:1;animation:mspin 1s linear infinite;transform-box:fill-box}
+@keyframes mspin{to{stroke-dashoffset:-36}}
+.mech.running .mspin circle{animation:mspin .8s linear infinite}
+.mech.running .mhead{animation:mhead 2.4s ease-in-out infinite}
+@keyframes mhead{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(30deg)}}
+.cw .swk{fill:#7a2323;transition:transform .3s}
+.cw .dled,.cw .aled{fill:#4a2a2a}
+.cw.running .swk{fill:#e74c3c;transform:translateY(-6px)}
+.cw.running .dled{fill:#ff3b3b;filter:drop-shadow(0 0 8px #ff3b3b)}.cw.running .aled{fill:#7ee2a8;filter:drop-shadow(0 0 8px #7ee2a8)}
+.cw .cwspin{transform-box:fill-box;transform-origin:center}
+.cw.running .cwspin{animation:spin 1.4s linear infinite}
+.cw.running .w{stroke-dasharray:.04 .03;animation:wflow 1.2s linear infinite}
+@keyframes wflow{to{stroke-dashoffset:-.07}}
