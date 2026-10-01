@@ -310,7 +310,14 @@ h2.title{font-size:76px;font-weight:900;line-height:1.25;margin-bottom:36px}
 #progress{position:fixed;top:0;right:0;height:5px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width .3s;z-index:5}
 #bar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;background:rgba(10,18,48,.86);
   border:1px solid rgba(217,174,75,.35);padding:10px 14px;border-radius:999px;z-index:5;transition:opacity .4s;backdrop-filter:blur(8px)}
-#bar.hide{opacity:0;pointer-events:none}
+#bar.hide{opacity:0;pointer-events:none;transform:translate(-50%,24px)}
+#bar{transition:opacity .35s,transform .35s}
+/* زر الزاوية: يستدعي الشريط ويثبّته، ويعرض رقم الشريحة بهدوء */
+#barbtn{position:fixed;left:16px;bottom:16px;z-index:6;height:42px;min-width:42px;padding:0 14px;border-radius:999px;border:1px solid rgba(217,174,75,.4);
+  background:rgba(10,18,48,.55);color:#F0CC7A;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;opacity:.4;transition:opacity .3s;backdrop-filter:blur(6px)}
+#barbtn:hover,#barbtn.pinned{opacity:1}
+#barbtn.away:not(.pinned){opacity:0;pointer-events:none}
+#barbtn.pinned{background:rgba(217,174,75,.9);color:#0A1230}
 #bar button{font-family:inherit;font-size:16px;font-weight:700;color:#fff;background:rgba(255,255,255,.08);border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
 #bar button:hover{background:rgba(217,174,75,.3)}
 #bar .cnt{color:var(--gold-light);font-weight:800;font-size:16px;padding:0 8px;min-width:80px;text-align:center}

@@ -84,6 +84,9 @@ const arenaSVG = () => `<svg viewBox="0 0 ${AW} ${AH}" class="darena">
   <g id="dwin" class="dwin"><rect x="${AW / 2 - 260}" y="${AH / 2 - 70}" width="520" height="140" rx="26"/><text x="${AW / 2}" y="${AH / 2 - 6}" class="dwt1">🎉 وصلت!</text><text x="${AW / 2}" y="${AH / 2 + 44}" class="dwt2" id="dwt"></text></g>
 </svg>`;
 
+/* أدوات مشتركة لملفات المراحل التالية (widgets3b.js …) */
+window.ARD3 = { miniCar, wheelV, VMAX, DEAD, WB };
+
 /* ---------- الأنواع ---------- */
 Object.assign(window.DECK_TYPES, {
   carhero: s => `<div class="slide dark carhero">

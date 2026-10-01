@@ -250,6 +250,7 @@ function render() {
   if (s.t === 'chart') setTimeout(() => stage.querySelectorAll('.col').forEach((c, i) =>
     setTimeout(() => c.style.height = c.dataset.h, i * 180)), 250);
   document.getElementById('cnt').textContent = `${AR(cur + 1)} / ${AR(SLIDES.length)}`;
+  const hc = document.getElementById('hcnt'); if (hc) hc.textContent = AR(cur + 1);
   document.getElementById('progress').style.width = ((cur + 1) / SLIDES.length * 100) + '%';
   if (location.hash !== '#' + (cur + 1)) history.replaceState(null, '', '#' + (cur + 1));
 }
@@ -330,10 +331,22 @@ addEventListener('keydown', e => {
 /* النقر على الشريحة = التالي */
 document.getElementById('viewport').addEventListener('click', e => { if (!e.target.closest('#bar') && !e.target.closest('.ix')) next(); });
 
-/* إخفاء شريط التحكم تلقائيًا أثناء العرض */
-let hideT;
-function showBar() { const b = document.getElementById('bar'); b.classList.remove('hide'); clearTimeout(hideT); hideT = setTimeout(() => b.classList.add('hide'), 2500); }
-addEventListener('mousemove', showBar);
+/* شريط التحكم مخفي أثناء العرض حتى لا يغطي الشريحة. يظهر بثلاث طرق:
+   الاقتراب من أسفل الشاشة، أو زر الزاوية الصغير (يثبّته)، أو مفتاح B */
+let hideT, barPinned = false;
+const barEl = document.getElementById('bar');
+const barBtn = document.createElement('button');
+barBtn.id = 'barbtn'; barBtn.title = 'شريط التحكم (B)'; barBtn.innerHTML = '☰ <span id="hcnt"></span>';
+document.body.appendChild(barBtn);
+function hideBar() {
+  if (barPinned || barEl.matches(':hover')) { hideT = setTimeout(hideBar, 1200); return; }
+  barEl.classList.add('hide'); barBtn.classList.remove('away');
+}
+function showBar(ms = 1800) { barEl.classList.remove('hide'); barBtn.classList.add('away'); clearTimeout(hideT); hideT = setTimeout(hideBar, ms); }
+function toggleBar() { barPinned = !barPinned; barBtn.classList.toggle('pinned', barPinned); if (barPinned) showBar(); else { clearTimeout(hideT); hideBar(); } }
+addEventListener('mousemove', e => { if (innerHeight - e.clientY < 90) showBar(); });
+barBtn.addEventListener('click', e => { e.stopPropagation(); toggleBar(); });
+addEventListener('keydown', e => { if ((e.key === 'b' || e.key === 'B' || e.key === 'لا') && !e.target.closest('input,textarea')) toggleBar(); });
 
 /* البداية: من رقم الشريحة في الرابط (مثل ‎#12) أو من الغلاف */
 (function start() {
