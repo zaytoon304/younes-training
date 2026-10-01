@@ -159,6 +159,75 @@ B2.stepwire = { flow: 5, steps: [
   ${wire(`M${botX(1)} 425 C ${botX(1)} 490, ${ULX + 96} 490, ${ULX + 96} ${ULY + 158}`, 4, '#1b2340')}
 </svg>` };
 
+/* ================== مشروع الدرايفر: مقبض للسرعة وزر للاتجاه ================== */
+const DRV_CODE = `int ena = 5;
+int in1 = 6;
+int in2 = 7;
+int knob = A0;
+int btn = 2;
+bool forward = true;
+
+void setup() {
+  pinMode(ena, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(btn, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(btn) == LOW) {
+    forward = !forward;
+    delay(300);
+  }
+  digitalWrite(in1, forward);
+  digitalWrite(in2, !forward);
+  analogWrite(ena, map(analogRead(knob), 0, 1023, 0, 255));
+}`;
+const LX = 660, LY = 222;                                              // لوحة L298N فوق يمين لوح التوصيل
+const potAt = c => `<rect x="${col(c) - 18}" y="252" width="${col(c + 2) - col(c) + 36}" height="46" rx="10" fill="#2b5fa8"/>
+    <circle cx="${col(c + 1)}" cy="248" r="28" fill="#e8e3d6" stroke="#1b2340" stroke-width="4"/>
+    <g class="potspin" style="transform-origin:${col(c + 1)}px 248px"><rect x="${col(c + 1) - 5}" y="224" width="10" height="24" rx="5" fill="#1b2340"/></g>
+    ${[0, 1, 2].map(i => `<line x1="${col(c + i)}" y1="298" x2="${col(c + i)}" y2="312" stroke="#9aa1b3" stroke-width="5"/>`).join('')}
+    <text x="${col(c + 1)}" y="206" class="lbl" style="font-size:15px">السرعة</text>`;
+B2.l298 = { flow: 9, steps: [
+  { h: 'اللوحة ولوح التوصيل', b: 'البداية المعتادة.' },
+  { h: 'لوحة الدرايفر L298N', b: 'أطرافها ثلاث مجموعات: المحرك (OUT1 وOUT2)، والطاقة (12V وGND وـ5V)، والتحكم (ENA وIN1 وIN2).' },
+  { h: 'المحرك إلى OUT1 وOUT2', b: 'سلكا المحرك في المشبك الأزرق. لا يهم الترتيب: لو دار بالعكس بدّلهما أو بدّل المنطق في الكود.' },
+  { h: 'البطارية إلى 12V وGND', b: 'بطارية من ٧ إلى ١٢ فولت تغذي المحرك وحدها، فلا يحمل الأردوينو تيار المحرك.' },
+  { h: 'أرضي مشترك!', b: 'سلك من GND الدرايفر إلى GND الأردوينو. بدونه لا يفهم الدرايفر إشارات الأردوينو. ثم 5V وGND الأردوينو إلى خطَّي اللوح.' },
+  { h: 'ENA ← 5 · IN1 ← 6 · IN2 ← 7', b: 'انزع الغطاء البلاستيكي عن ENA أولًا، وإلا تبقى السرعة قصوى دائمًا.' },
+  { h: 'المقاومة المتغيرة ← A0', b: 'مقبض السرعة: طرفاه إلى 5V وGND، والوسط إلى A0.' },
+  { h: 'زر الاتجاه ← المنفذ 2', b: 'رجل إلى المنفذ 2، والأخرى إلى GND. سنستخدم INPUT_PULLUP فلا نحتاج مقاومة.' },
+  { h: 'أدِر المقبض… واضغط الزر!', b: 'المقبض يغيّر السرعة، والزر يعكس الاتجاه: هذا قلب كل سيارة روبوت.' },
+], svg: `<svg viewBox="0 0 900 520" class="bsvg b2 drw">
+  ${base({ 0: '2', 2: '~5', 3: '~6', 4: '7' }, { 0: '5V', 1: 'GND', 2: 'A0' })}
+  <g class="bs" data-s="2">
+    <rect x="${LX}" y="${LY}" width="190" height="170" rx="10" fill="#c0392b"/>
+    <rect x="${LX + 90}" y="${LY + 40}" width="80" height="90" rx="4" fill="#1c1f27"/>${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${LX + 94 + i * 13}" y="${LY + 44}" width="6" height="82" fill="#3a3f4d"/>`).join('')}
+    <text x="${LX + 130}" y="${LY + 150}" class="lbl" style="font-size:15px;fill:#fff">L298N</text>
+    ${[['OUT1', 40], ['OUT2', 70], ['12V', 130], ['GND', 155], ['5V', 180]].map(([t, dx]) => `<rect x="${LX + dx - 11}" y="${LY - 8}" width="22" height="18" rx="3" fill="#2b6fc0"/><text x="${LX + dx}" y="${LY + 26}" class="lbl" style="font-size:10px;fill:#fff">${t}</text>`).join('')}
+    ${['ENA', 'IN1', 'IN2'].map((t, i) => `<rect x="${LX - 6}" y="${LY + 72 + i * 26}" width="12" height="12" fill="#f0cc7a"/><text x="${LX + 12}" y="${LY + 83 + i * 26}" class="lbl" style="font-size:12px;fill:#fff;text-anchor:start">${t}</text>`).join('')}</g>
+  <g class="bs" data-s="3"><g transform="translate(${LX + 55} 112)"><circle r="46" fill="#c9ccd3" stroke="#6b7180" stroke-width="4"/>
+      <g class="drspin">${[0, 120, 240].map(a => `<path d="M0 0 C -12 -24, -7 -44, 7 -46 C 16 -32, 10 -12, 0 0 Z" transform="rotate(${a})" fill="#2b6fc0"/>`).join('')}</g><circle r="8" fill="#1b2340"/></g>
+    <path d="M${LX + 34} 150 C ${LX + 34} 180, ${LX + 40} 190, ${LX + 40} ${LY - 6}" fill="none" stroke="#d62828" stroke-width="5"/>
+    <path d="M${LX + 76} 150 C ${LX + 76} 180, ${LX + 70} 190, ${LX + 70} ${LY - 6}" fill="none" stroke="#1b2340" stroke-width="5"/></g>
+  <g class="bs" data-s="4"><rect x="${LX + 120}" y="30" width="70" height="118" rx="10" fill="#1c1f27"/><rect x="${LX + 138}" y="22" width="34" height="10" rx="3" fill="#8a909c"/>
+    <text x="${LX + 155}" y="80" class="lbl" style="font-size:14px;fill:#f0cc7a">9–12V</text><text x="${LX + 155}" y="104" class="lbl" style="font-size:12px;fill:#fff">بطارية</text>
+    <path d="M${LX + 138} 148 C ${LX + 138} 180, ${LX + 130} 190, ${LX + 130} ${LY - 6}" fill="none" stroke="#e74c3c" stroke-width="5"/>
+    <path d="M${LX + 172} 148 C ${LX + 172} 180, ${LX + 155} 190, ${LX + 155} ${LY - 6}" fill="none" stroke="#1b2340" stroke-width="5"/></g>
+  ${wire(`M845 456 C 888 440, 888 196, ${LX + 162} 196 L${LX + 155} ${LY - 6}`, 5, '#1b2340')}
+  ${wire(`M${botX(0)} 425 C ${botX(0)} 500, 500 500, 500 404`, 5, '#e74c3c')}${wire(`M${botX(1)} 425 C ${botX(1)} 510, 480 510, 480 456`, 5, '#1b2340')}
+  ${[2, 3, 4].map((p, i) => wire(`M${pinX(p)} 150 C ${pinX(p)} ${100 - i * 10}, ${645 - i * 8} ${100 - i * 10}, ${645 - i * 8} 200 L${645 - i * 8} ${LY + 78 + i * 26} L${LX} ${LY + 78 + i * 26}`, 6, ['#8e44ad', '#2e9e6b', '#e0b400'][i])).join('')}
+  <g class="bs" data-s="7">${potAt(0)}</g>
+  ${wire(`M${col(2)} 312 L${col(2)} 404`, 7, '#e74c3c')}${wire(`M${col(0)} 336 L${col(0)} 456`, 7, '#1b2340')}
+  ${wire(`M${botX(2)} 425 C ${botX(2)} 485, ${col(1)} 485, ${col(1)} 336`, 7, '#f08a24')}
+  <g class="bs" data-s="8"><rect x="${col(4) - 12}" y="256" width="${col(5) - col(4) + 24}" height="40" rx="6" fill="#1b2340"/><circle cx="${(col(4) + col(5)) / 2}" cy="276" r="13" fill="#d62828"/>
+    ${[4, 5].map(c => `<line x1="${col(c)}" y1="296" x2="${col(c)}" y2="312" stroke="#9aa1b3" stroke-width="5"/>`).join('')}
+    <text x="${(col(4) + col(5)) / 2}" y="240" class="lbl" style="font-size:15px">الاتجاه</text></g>
+  ${wire(`M${pinX(0)} 150 C ${pinX(0)} 60, 420 60, 420 250 C 420 360, ${col(4) - 20} 336, ${col(4)} 336`, 8, '#2b6fc0')}
+  ${wire(`M${col(5)} 336 L${col(5)} 456`, 8, '#1b2340')}
+</svg>` };
+
 /* ---------- الأنواع ---------- */
 Object.assign(window.DECK_TYPES, {
   kicklab: s => `<div class="slide light">
@@ -192,6 +261,20 @@ Object.assign(window.DECK_TYPES, {
         <div class="hright">${fanSVG('hwheel')}<div class="htab"><table><tr><th>IN1</th><th>IN2</th><th>المحرك</th></tr>
           <tr data-k="10"><td>HIGH</td><td>LOW</td><td>للأمام ⟳</td></tr><tr data-k="01"><td>LOW</td><td>HIGH</td><td>للخلف ⟲</td></tr>
           <tr data-k="11"><td>HIGH</td><td>HIGH</td><td>فرملة</td></tr><tr data-k="00"><td>LOW</td><td>LOW</td><td>فرملة</td></tr></table></div></div>
+      </div></div>`,
+
+  drvlab: s => `<div class="slide light">
+      <div class="kicker">🚗 محاكي المشروع</div>
+      <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
+      <div class="dvgrid">
+        <div class="dvcode">${codeBlock(DRV_CODE, 'micro')}</div>
+        <div class="dvmid ix">
+          <label class="lsl"><span>🎛️ المقبض analogRead: <b id="dva">800</b></span><input type="range" id="dvk" min="0" max="1023" value="800"></label>
+          <button class="clap" id="dvb">🔘 زر الاتجاه</button>
+          <div class="dvfacts"><div class="ac"><span>forward</span><b id="dvf">true</b></div><div class="ac gold"><span>ENA</span><b id="dve">199</b></div>
+            <div class="ac"><span>IN1</span><b id="dv1">1</b></div><div class="ac"><span>IN2</span><b id="dv2">0</b></div></div>
+        </div>
+        <div class="dvright">${fanSVG('dvfan')}<div class="irdec" id="dvdec">للأمام ⟳</div></div>
       </div></div>`,
 
   steplab: s => `<div class="slide light">
@@ -279,6 +362,30 @@ Object.assign(window.DECK_BIND, {
       const dt = Math.min(50, ts - (last || ts)); last = ts;
       const { i1, i2, e } = state(), dir = e >= START_PWM ? i1 - i2 : 0;
       ang += dir * dt * e / 255 * 0.8; wheel.setAttribute('transform', `rotate(${ang} 100 100)`);
+      raf = requestAnimationFrame(loop);
+    };
+    upd(); raf = requestAnimationFrame(loop);
+    window.DECK_CLEANUP.push(() => cancelAnimationFrame(raf));
+  },
+
+  drvlab(sl) {
+    const k = sl.querySelector('#dvk'), btn = sl.querySelector('#dvb'), fan = sl.querySelector('#dvfan .fblades'), lines = sl.querySelectorAll('.dvcode .ln');
+    let fwd = true, press = 0, ang = 0, last = 0, raf = 0;
+    const ena = () => Math.round(+k.value * 255 / 1023);                // map(analogRead, 0, 1023, 0, 255)
+    const upd = () => {
+      const e = ena();
+      sl.querySelector('#dva').textContent = k.value; sl.querySelector('#dve').textContent = e;
+      sl.querySelector('#dvf').textContent = fwd; sl.querySelector('#dv1').textContent = fwd ? 1 : 0; sl.querySelector('#dv2').textContent = fwd ? 0 : 1;
+      sl.querySelector('#dvdec').textContent = e < START_PWM ? (e === 0 ? 'متوقف' : 'يطنّ… أدِر المقبض أكثر') : fwd ? 'للأمام ⟳' : 'للخلف ⟲';
+    };
+    btn.addEventListener('pointerdown', () => { fwd = !fwd; press = performance.now() + 300; upd(); });
+    k.oninput = upd;
+    const loop = ts => {
+      const dt = Math.min(50, ts - (last || ts)); last = ts;
+      const e = ena(); if (e >= START_PWM) ang += (fwd ? 1 : -1) * dt * e / 255 * 0.9;
+      fan.setAttribute('transform', `rotate(${ang} 100 100)`);
+      const hit = ts < press;
+      lines.forEach(l => { const n = +l.dataset.n; l.classList.toggle('run', hit ? n >= 16 && n <= 18 : n >= 20 && n <= 22); });
       raf = requestAnimationFrame(loop);
     };
     upd(); raf = requestAnimationFrame(loop);
