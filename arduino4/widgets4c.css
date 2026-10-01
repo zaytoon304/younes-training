@@ -1,0 +1,113 @@
+/* «المزرعة الذكية والمنزل الذكي» — المنزل والجراج والإنترنت */
+.lcd2{background:#1f6b3a;border-radius:16px;padding:12px 16px;direction:ltr;box-shadow:0 10px 24px rgba(11,16,38,.2)}
+.lcd2 .lcdglass{gap:3px;padding:6px;border-width:6px}.lcd2 .lcdglass i{font-size:34px}
+
+/* ---------- الإضاءة ---------- */
+.hlgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);gap:22px;align-items:center;min-height:0}
+.hlleft{position:relative;min-width:0}
+.hsvg2{width:100%;display:block;direction:ltr;border-radius:24px;box-shadow:0 14px 34px rgba(11,16,38,.25)}
+.hsvg2 .room{cursor:pointer}
+.hsvg2 .rfloor{fill:#2c3654;stroke:#56618a;stroke-width:4;transition:fill .4s}.hsvg2 .rfloor.lit{fill:#5b5232}
+.hsvg2 .rbulb{fill:#4a4f5c;transition:fill .3s}.hsvg2 .rbulb.on{fill:#ffe082}
+.hsvg2 .rglow{fill:rgba(255,224,130,.0);transition:fill .4s;pointer-events:none}.hsvg2 .rglow.on{fill:rgba(255,224,130,.22)}
+.hsvg2 .pir{fill:#eceff1}.hsvg2 .pirl{fill:#5b6275}.hsvg2 .pirl.on{fill:#ff3b3b}
+.hsvg2 .rname{font-family:Cairo;font-size:22px;font-weight:900;fill:#c9cfe6;pointer-events:none}
+.hsvg2 .rtbar{fill:rgba(255,255,255,.12)}.hsvg2 .rtfill{fill:#f0cc7a}
+.hsvg2 .pbody{fill:rgba(240,204,122,.25);stroke:#f0cc7a;stroke-width:3}.hsvg2 .pface{font-size:30px;text-anchor:middle}
+.hlhint{position:absolute;bottom:10px;left:10px;right:10px;background:rgba(16,27,69,.85);color:#fff;font-size:18px;font-weight:800;border-radius:12px;padding:5px;text-align:center;pointer-events:none}
+.hlright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hlright .lsl{font-size:22px;padding:4px 14px}
+.hlright .code.micro{font-size:16px;line-height:1.45}
+
+/* ---------- الباب ---------- */
+.dlgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,0.6fr) minmax(0,0.9fr);gap:22px;align-items:center;min-height:0}
+.dlcol{display:flex;flex-direction:column;gap:12px;min-width:0}
+.keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#1c1f27;border-radius:18px;padding:12px;direction:ltr}
+.kk{font-family:var(--mono);font-size:30px;font-weight:700;aspect-ratio:1.4;border:0;border-radius:12px;background:#eceff1;color:#1b2340;cursor:pointer;box-shadow:0 5px 0 #9aa1b3;touch-action:none}
+.kk.fn{background:#2b6fc0;color:#fff;box-shadow:0 5px 0 #153a6e}.kk.dn{transform:translateY(4px);box-shadow:0 1px 0 #9aa1b3}
+.dlhint{font-size:20px;font-weight:800;color:var(--muted);text-align:center}
+.dsvg{width:100%;display:block;direction:ltr}
+.dsvg .leafd{fill:#8d5a2b;stroke:#5d3a1a;stroke-width:4}.dsvg .panel{fill:#a06a37;stroke:#6d4521;stroke-width:3}
+.dsvg #dleaf{transition:transform .8s}.dsvg #dleaf.open{transform:scaleX(.18)}
+.dsvg #dbolt{transition:transform .3s}.dsvg #dbolt.open{transform:translateX(-22px)}
+.dsvg .dst{font-family:Cairo;font-size:24px;font-weight:900;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:#1b2340;stroke-width:5}
+.dlwrong{min-height:44px;text-align:center;font-size:30px}.dlwrong.alarm{background:#fde3e0;border-radius:14px;animation:shake .4s infinite}
+.rfid{display:grid;grid-template-columns:1fr;gap:8px}
+.rfreader{background:#1f5fae;color:#fff;border-radius:16px;padding:14px;text-align:center;font-family:var(--mono);font-size:22px;font-weight:700;transition:box-shadow .2s}
+.rfreader.read{box-shadow:0 0 0 6px #7ee2a8,0 0 30px #7ee2a8}
+.rfcard{font-family:inherit;font-size:21px;font-weight:800;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--navy-800)}
+.rfcard small{font-family:var(--mono);font-size:14px;color:var(--muted)}
+.dlcol .code.micro{font-size:13px;line-height:1.4}
+
+/* ---------- الغاز ---------- */
+.gsgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center;min-height:0}
+.ksvg2{width:100%;display:block;direction:ltr;border-radius:24px;box-shadow:0 14px 34px rgba(11,16,38,.2)}
+.ksvg2 .kl{font-family:Cairo;font-size:17px;font-weight:800;fill:#1b2340;text-anchor:middle}.ksvg2 .kl.w{fill:#fff;font-family:var(--mono)}
+.ksvg2 #kwin{transition:transform .6s}
+.ksvg2 .kal{fill:#5b2a2a}.ksvg2 .kal.on{animation:siren .4s steps(2) infinite}
+.gsright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.gsright .lsl{font-size:21px;padding:4px 14px}
+#gss.warn{color:#b8860b}#gss.on{color:#c0392b}
+.gsbtns{display:grid;grid-template-columns:1fr 1fr 0.7fr;gap:8px}.gsbtns .clap{font-size:22px;padding:8px}.gsbtns .sndbtn{grid-column:auto;font-size:19px;padding:8px}
+.gsright .code.micro{font-size:14px;line-height:1.38}
+.gsright .chart4{height:110px}
+
+/* ---------- الطاقة الشمسية ---------- */
+.slgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center;min-height:0}
+.slleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.slsvg{width:100%;display:block;direction:ltr;border-radius:24px}
+.slsvg .kl{font-family:Cairo;font-size:17px;font-weight:800;fill:#1b2340;text-anchor:middle;paint-order:stroke;stroke:#fff;stroke-width:4}
+.slsvg .slflow{stroke:#90a4ae;stroke-width:8;stroke-linecap:round}.slsvg .slflow.on{stroke:#ffb300;stroke-dasharray:12 10;animation:flow .5s linear infinite}
+.slsvg .slload{fill:#eceff1;stroke:#90a4ae;stroke-width:2}.slsvg .slload.on{fill:#fff3c0;stroke:#e0b400}
+.slsvg .sln{font-family:Cairo;font-size:17px;font-weight:800;fill:#1b2340}
+.slsvg .ghclk{font-family:var(--mono);font-size:30px;font-weight:700;fill:#1b2340;paint-order:stroke;stroke:#fff;stroke-width:6}
+.slright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.slright .code.micro{font-size:15px;line-height:1.42}
+
+/* ---------- المنزل الكامل ---------- */
+.hmgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);gap:24px;align-items:center;min-height:0}
+.hmleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hmmodes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.hmm{font-family:inherit;font-size:22px;font-weight:900;border:3px solid var(--line);background:#fff;border-radius:20px;padding:10px 4px;cursor:pointer;color:var(--navy-700);display:flex;flex-direction:column;align-items:center}
+.hmm b{font-size:40px}.hmm.on{border-color:var(--gold);background:linear-gradient(145deg,#FFF3C0,#F7E2A6);color:var(--navy-800)}
+.hmdev{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hmd{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px;display:flex;justify-content:space-between;font-size:21px;font-weight:800;color:var(--navy-800)}
+.hmd b{color:var(--gold-dark)}.hmd.flash{animation:enter .4s ease both;border-color:var(--gold)}
+.hmev{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hmev span{font-size:20px;font-weight:800;color:var(--muted)}.hmev .sndbtn{grid-column:auto;font-size:19px;padding:8px 12px}
+.hmphone{background:#1c1f27;color:#fff;border-radius:22px;padding:12px 16px;font-size:19px;min-height:120px}
+.hmphone b{color:var(--gold-light);display:block;margin-bottom:6px}.hmphone.ping{animation:shake .4s}
+.hmn{background:rgba(255,255,255,.08);border-radius:10px;padding:5px 10px;margin-bottom:5px;font-weight:700}.hmn.bad{background:rgba(231,76,60,.3)}
+.hmright .code.micro{font-size:14px;line-height:1.45}
+
+/* ---------- الجراج ---------- */
+.gggrid{flex:1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,0.7fr);gap:20px;align-items:center;min-height:0}
+.ggleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.gsvg2{width:100%;display:block;direction:ltr;border-radius:22px;box-shadow:0 14px 34px rgba(11,16,38,.25)}
+.gsvg2 .sparea{fill:#454b59;stroke:#f4f1ea;stroke-width:4;stroke-dasharray:14 0}
+.gsvg2 .spn{font-family:var(--mono);font-size:22px;font-weight:700;fill:rgba(255,255,255,.5);text-anchor:middle}
+.gsvg2 .sled{fill:#2e9e6b;filter:drop-shadow(0 0 8px #2e9e6b)}.gsvg2 .sled.busy{fill:#e74c3c;filter:drop-shadow(0 0 8px #e74c3c)}
+.gsvg2 .garm{fill:#fff;stroke:#9aa1b3;stroke-width:2}
+.gsvg2 #gate0,.gsvg2 #gate1{transition:none}
+.gsvg2 .glight{fill:#e74c3c}.gsvg2 .glight.go{fill:#2e9e6b}
+.gsvg2 .gtxt{font-family:Cairo;font-size:22px;font-weight:900;fill:#f0cc7a}
+.ggctl{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:8px}.ggctl .clap{font-size:22px;padding:8px}.ggctl .sndbtn{grid-column:auto;font-size:19px;padding:8px}
+.ggright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ggright .sofacts .ac b{font-size:24px}.ggright #ggfree{font-size:36px}.ggright #ggfree.on{color:#c0392b}
+.ggright .code.micro{font-size:13px;line-height:1.36}
+
+/* ---------- إنترنت الأشياء ---------- */
+.iogrid{flex:1;display:grid;grid-template-columns:minmax(0,0.6fr) minmax(0,0.85fr) minmax(0,0.85fr);gap:20px;align-items:center;min-height:0}
+.iophone .phone2{max-width:330px;margin:auto}
+.iocard{background:rgba(255,255,255,.08);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;color:#fff}
+.iocard b{color:var(--gold-light);font-size:19px}.iocard span{font-size:16px;color:#c9cfe6}.iocard i{font-style:normal;color:#7ee2a8;font-weight:800}
+.iobtn{font-family:inherit;font-size:17px;font-weight:800;border:0;border-radius:12px;padding:8px;background:#2b6fc0;color:#fff;cursor:pointer}.iobtn.done{background:#2e9e6b}
+.iomid{display:flex;flex-direction:column;gap:10px;min-width:0}
+.iosvg{width:100%;display:block;direction:ltr;background:#fff;border:2px solid var(--line);border-radius:24px}
+.iosvg .iopath{fill:none;stroke:#c9cfe6;stroke-width:4;stroke-dasharray:6 8}
+.iosvg .iopkt{opacity:0}.iosvg .iopkt rect{fill:#101B45;stroke:#7ee2a8;stroke-width:3}.iosvg .iopkt text{font-family:var(--mono);font-size:15px;font-weight:700;fill:#7ee2a8;text-anchor:middle}
+.iosvg .kl{font-family:Cairo;font-size:16px;font-weight:800;fill:#1b2340;text-anchor:middle}.iosvg .kl.w{fill:#fff;font-family:var(--mono)}
+.iolog{background:var(--code-bg);color:#7ee2a8;font-family:var(--mono);font-size:15px;border-radius:16px;padding:8px 14px;height:118px;overflow:hidden;line-height:1.55}
+.iocode .code.micro{font-size:13px;line-height:1.38}
+.phone2{width:100%;max-width:300px;background:#1c1f27;border-radius:40px;padding:16px 12px;box-shadow:0 18px 40px rgba(11,16,38,.35)}
+.pscr{background:linear-gradient(170deg,#182658,#0A1230);border-radius:28px;padding:14px 12px;display:flex;flex-direction:column;gap:12px}
+.ptop{color:#7ee2a8;font-weight:800;font-size:17px;text-align:center}
