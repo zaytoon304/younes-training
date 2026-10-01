@@ -1,0 +1,35 @@
+/* تصميم المرحلة السادسة: سيارة الروبوت */
+
+.rbgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.62fr) minmax(0,1.38fr);gap:24px;align-items:center;min-height:0}
+.rbleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rbleft .code.micro{font-size:17px;line-height:1.42}
+.rbfacts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rbfacts .ac b{font-size:30px}
+.rbleft .irdec{font-size:30px}
+.rbright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.arwrap{border-radius:24px;overflow:hidden;box-shadow:0 14px 34px rgba(11,16,38,.2);touch-action:none}
+.arena{width:100%;display:block;direction:ltr}
+.arena .awall{fill:none;stroke:#8a6d47;stroke-width:8}
+.arena .abox{cursor:grab}
+.arena .abox rect{fill:#d9b382;stroke:#8a6d3b;stroke-width:4}
+.arena .abox text{font-size:34px;text-anchor:middle;pointer-events:none}
+.arena .aray{stroke:#2e9e6b;stroke-width:4;stroke-dasharray:8 6}
+.arena .ahit{fill:#2e9e6b}
+.arena.near .aray{stroke:#e74c3c}.arena.near .ahit{fill:#e74c3c}
+.arena .trail{fill:none;stroke:#2b6fc0;stroke-width:3;stroke-dasharray:2 8;stroke-linecap:round;opacity:.6}
+.arena .rbody{fill:#2b6fc0;stroke:#153a6e;stroke-width:4}
+.arena .rwheel{fill:#1c1f27}
+.arena .rwheel.f{fill:#2e9e6b}.arena .rwheel.b{fill:#e74c3c}
+.arena .rcaster{fill:#9aa1b3}
+.arena .rsonar{fill:#1f5fae;stroke:#153a6e;stroke-width:2}.arena .reye{fill:#dfe3ea}
+.rbctl{display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center}
+.rbctl .clap{font-size:28px;padding:8px 22px}
+.rbctl .sndbtn{grid-column:auto;font-size:22px;padding:10px 18px}
+.rbctl .lsl{font-size:22px;padding:4px 16px}
+
+/* حركة دائرة البناء */
+.rcw .rcl,.rcw .rcr{transform-box:fill-box;transform-origin:center}
+.rcw.running .rcl,.rcw.running .rcr{animation:spin 1.2s linear infinite}
+.rcw .rcwave{opacity:0}
+.rcw.running .rcwave{animation:rcw 1.2s ease-out infinite}
+@keyframes rcw{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-30px)}}

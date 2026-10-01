@@ -11,7 +11,7 @@ root.DECK = {
   author: 'أ. محمد زيتون',
   sectionLabel: 'المحور',
   mapStart: 0,
-  parts: ['00-open', '01-analog', '02-ldr', '03-temp', '04-sonar', '05-pir-ir', '06-sound', '07-servo', '08-dc', '09-stepper'],
+  parts: ['00-open', '01-analog', '02-ldr', '03-temp', '04-sonar', '05-pir-ir', '06-sound', '07-servo', '08-dc', '09-stepper', '10-robot', '11-final'],
   modules: [],
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = root.DECK;
