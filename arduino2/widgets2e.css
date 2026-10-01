@@ -1,0 +1,116 @@
+/* تصميم المرحلة الخامسة: المحركات */
+
+/* ---------- مروحة/عجلة مشتركة ---------- */
+.fansvg2{width:100%;display:block}
+.fansvg2 .fring{fill:#eef1f6;stroke:#9aa1b3;stroke-width:5}
+.fansvg2 .fblade{fill:#2b6fc0;stroke:#174a88;stroke-width:3}
+.fansvg2 .fhub{fill:#1b2340}
+
+/* ---------- الترانزستور والدايود ---------- */
+.kgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.85fr) minmax(0,0.9fr);gap:24px;align-items:center;min-height:0}
+.kicksvg{width:100%;display:block;direction:ltr;background:#fff;border:2px solid var(--line);border-radius:26px}
+.kicksvg .kw{stroke:#1b2340;stroke-width:5;fill:none;stroke-linejoin:round}
+.kicksvg .kmot{fill:#dfe3ea;stroke:#1b2340;stroke-width:5}
+.kicksvg .kM{font-family:var(--mono);font-size:44px;font-weight:700;fill:#1b2340;text-anchor:middle}
+.kicksvg .kdtri{fill:#1b2340}.kicksvg .kdbar{stroke:#1b2340;stroke-width:6}
+.kicksvg .ktr{fill:none;stroke:#1b2340;stroke-width:4}
+.kicksvg .kbase{stroke:#1b2340;stroke-width:8}
+.kicksvg .karrow{fill:#1b2340}
+.kicksvg .kgnd{stroke:#1b2340;stroke-width:5}
+.kicksvg .kpin{fill:#0e7c86}.kicksvg .kpint{font-family:var(--mono);font-size:26px;font-weight:700;fill:#fff;text-anchor:middle}
+.kicksvg .kres{fill:#d9b382;stroke:#8a6d3b;stroke-width:3}
+.kicksvg .klab{font-family:var(--mono);font-size:26px;font-weight:700;fill:#c0392b;text-anchor:middle}
+.kicksvg .ksm{font-family:Cairo;font-size:22px;font-weight:800;fill:#1b2340;text-anchor:middle}
+.kicksvg .ksm2{font-family:var(--mono);font-size:18px;fill:#5b6275}
+.kicksvg #kdiode > *{transition:opacity .3s}
+.kicksvg #kdiode.off > *{opacity:.12}
+.kicksvg .kflow,.kicksvg .kloop{fill:none;stroke:#f5b800;stroke-width:6;stroke-dasharray:10 12;opacity:0;stroke-linejoin:round}
+.kicksvg.on .kflow{opacity:1;animation:flow .6s linear infinite}
+.kicksvg.loop .kloop{opacity:1;animation:flow .3s linear infinite}
+.kicksvg.on .kb{stroke:#2e9e6b}
+.kmid{display:flex;flex-direction:column;gap:14px;min-width:0}
+.kbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kbtns .clap{font-size:30px;padding:10px}
+.kbtns .sndbtn{grid-column:auto;font-size:22px}
+.kmid .lsl{font-size:24px}
+.kwarn{min-height:96px;border-radius:18px;padding:12px 16px;font-size:22px;font-weight:800;line-height:1.5;background:#f3f4f8;color:var(--muted)}
+.kwarn.bad{background:#fde3e0;color:#b52a1c;animation:shake .4s}
+.kwarn.ok{background:#e1f5ea;color:#1e7a4c}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.kright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.kfan{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center}
+.kfan .ac b{font-size:30px;white-space:normal}
+.kright .psvg{height:150px}
+
+/* ---------- الجسر H ---------- */
+.hgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.9fr) minmax(0,0.75fr);gap:24px;align-items:center;min-height:0}
+.hsvg{width:100%;display:block;direction:ltr;background:#fff;border:2px solid var(--line);border-radius:26px}
+.hsvg .hw{stroke:#1b2340;stroke-width:5}
+.hsvg .hlab{font-family:Cairo;font-size:20px;font-weight:800;fill:#5b6275;text-anchor:middle}
+.hsvg .hs{font-family:var(--mono);font-size:22px;font-weight:700;fill:#1b2340;text-anchor:middle}
+.hsvg .hs2{font-family:var(--mono);font-size:16px;fill:#8a93a4;text-anchor:middle}
+.hsvg .hdot{fill:#fff;stroke:#1b2340;stroke-width:4}
+.hsvg .hlev{stroke:#8a93a4;stroke-width:7;stroke-linecap:round;transition:transform .25s}
+.hsvg .hsw.closed .hlev{stroke:#2e9e6b}
+.hsvg .hmot{fill:#dfe3ea;stroke:#1b2340;stroke-width:5}
+.hsvg .hM{font-family:var(--mono);font-size:46px;font-weight:700;fill:#1b2340;text-anchor:middle}
+.hsvg .hpath{fill:none;stroke:#f5b800;stroke-width:9;stroke-dasharray:12 12;opacity:.9;animation:flow .6s linear infinite}
+.hmid{display:flex;flex-direction:column;gap:14px;min-width:0}
+.hins{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hin{font-family:var(--mono);font-size:26px;font-weight:700;border:3px solid var(--line);background:#fff;border-radius:20px;padding:10px;cursor:pointer;color:var(--navy-800);display:flex;flex-direction:column;align-items:center}
+.hin b{font-size:34px;color:#8a93a4}
+.hin.hi{border-color:#2e9e6b;background:#e6f6ee}.hin.hi b{color:#1e7a4c}
+.hmid .lsl{font-size:24px}
+.hcode{font-family:var(--mono);font-size:21px;line-height:1.6;background:var(--code-bg);color:#e6e9f5;border-radius:16px;padding:10px 16px}
+.hmid .irdec{font-size:30px}
+.hright{display:flex;flex-direction:column;gap:12px;align-items:center;min-width:0}
+.hright .fansvg2{width:190px}
+.htab table{border-collapse:collapse;font-size:20px;font-weight:800;text-align:center;background:#fff;border-radius:14px;overflow:hidden}
+.htab th{background:var(--navy-800);color:var(--gold-light);padding:6px 12px}
+.htab td{padding:6px 12px;border-top:1px solid var(--line);font-family:var(--mono)}
+.htab td:last-child{font-family:Cairo}
+.htab tr.on td{background:#FFF3C0}
+
+/* ---------- المحرك الخطوي ---------- */
+.stgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,0.8fr) minmax(0,1fr);gap:24px;align-items:center;min-height:0}
+.stcol{display:flex;flex-direction:column;gap:10px;align-items:stretch;min-width:0}
+.stcap{font-size:22px;font-weight:900;color:var(--navy-700);text-align:center}
+.stepsvg,.dialsvg{width:100%;display:block;direction:ltr}
+.stepsvg .stator{fill:#e9ecf2;stroke:#9aa1b3;stroke-width:6}
+.stepsvg .coil{fill:#c98b4a;stroke:#8a5a2b;stroke-width:4;transition:fill .1s}
+.stepsvg .coil.on{fill:#f5b800;filter:drop-shadow(0 0 12px #f5b800)}
+.stepsvg .coilt{font-family:var(--mono);font-size:24px;font-weight:700;fill:#fff;text-anchor:middle}
+.stepsvg .rotorb{fill:#fff;stroke:#1b2340;stroke-width:4}
+.stepsvg .rn{fill:#e74c3c}.stepsvg .rs{fill:#3b6fd8}
+.stepsvg .rnt{font-family:var(--mono);font-size:18px;font-weight:700;fill:#fff;text-anchor:middle}
+.stepsvg #rotor{transition:transform .08s}
+.stepsvg .shaft2{fill:#1b2340}
+.stleds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;direction:ltr}
+.stleds i{display:block;width:26px;height:26px;border-radius:50%;margin:0 auto 4px;background:#6b2a2a}
+.stleds i.on{background:#ff3b3b;box-shadow:0 0 14px #ff3b3b}
+.stleds span{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--muted)}
+.dialsvg .dface{fill:#fff;stroke:#1b2340;stroke-width:6}
+.dialsvg .dtick{stroke:#b9b3a3;stroke-width:2}.dialsvg .dtick.b{stroke:#1b2340;stroke-width:5}
+.dialsvg .dhand{fill:#d62828}.dialsvg .dhub{fill:#1b2340}
+.stfacts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stfacts .ac b{font-size:32px}
+.stctl{display:flex;flex-direction:column;gap:12px;min-width:0}
+.stctl .tonecode{font-size:28px}
+.stbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stbtns .sndbtn{grid-column:auto;display:flex;flex-direction:column;align-items:center;padding:6px;border-radius:18px}
+.stbtns .sndbtn b{font-family:var(--mono);font-size:20px;color:var(--navy-800)}
+.stbtns .sndbtn small{font-size:16px;color:var(--muted)}
+.stbtns .sndbtn:disabled{opacity:.45;cursor:wait}
+.stctl .lsl{font-size:22px;padding:6px 16px}
+.stbusy{font-size:21px;font-weight:800;border-radius:16px;padding:10px;text-align:center;background:#e1f5ea;color:#1e7a4c}
+.stbusy.on{background:#FFF3C0;color:#8a6d1f}
+
+/* ---------- حركة دوائر البناء ---------- */
+.dcw .dcspin{transform-box:fill-box;transform-origin:center}
+.dcw.running .dcspin{animation:spin .5s linear infinite}
+.stw .stled{fill:#6b2a2a}
+.stw.running .stled{animation:stled 1.2s steps(1) infinite}
+.stw.running .l1{animation-delay:-.9s}.stw.running .l2{animation-delay:-.6s}.stw.running .l3{animation-delay:-.3s}
+@keyframes stled{0%,49%{fill:#ff3b3b}50%,100%{fill:#6b2a2a}}
+.stw.running .stspin{animation:spin 12s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
