@@ -1,0 +1,104 @@
+/* «المزرعة الذكية والمنزل الذكي» — أدوات المزرعة */
+
+/* رسم بياني متعدد الخطوط */
+.chart4{width:100%;height:120px;display:block;direction:ltr;background:var(--code-bg);border-radius:0 0 16px 16px}
+.chart4 .cg{stroke:#24305e;stroke-width:1.5}.chart4 .cm{stroke:#f0cc7a;stroke-width:2;stroke-dasharray:8 6}
+.chart4 .cl{fill:none;stroke-width:3;stroke-linejoin:round}
+.plot4{border-radius:16px;overflow:hidden}
+.plh{background:#1b2547;color:#c8cde6;font-size:16px;font-weight:800;padding:5px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.plh i{display:inline-block;width:14px;height:6px;border-radius:3px}
+.sofacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}
+.sofacts .ac b{font-size:28px}.sofacts .ac b.on{color:#1e7a4c}
+.sowarn{min-height:58px;border-radius:16px;padding:10px 14px;font-size:20px;font-weight:800;line-height:1.5;background:#f3f4f8;color:var(--muted)}
+.sowarn.bad{background:#fde3e0;color:#b52a1c}.sowarn.ok{background:#e1f5ea;color:#1e7a4c}
+
+/* ---------- الأصيص الحي ---------- */
+.sogrid{flex:1;display:grid;grid-template-columns:minmax(0,0.78fr) minmax(0,0.72fr) minmax(0,1fr);gap:20px;align-items:center;min-height:0}
+.soleft{display:flex;flex-direction:column;gap:10px;min-width:0}
+.soleft .lsl{font-size:21px;padding:4px 14px}.soleft .lsb{font-size:19px;padding:4px 10px}
+.socode .code.micro{font-size:14px;line-height:1.45}
+.somid{min-width:0}
+.potsvg{width:100%;display:block;direction:ltr;background:linear-gradient(#e8f4fb,#fbf8f0);border-radius:26px}
+.potsvg .psun{fill:#ffd23f;transition:opacity .4s}
+.potsvg .stem{stroke:#2e7d32;stroke-width:7;stroke-linecap:round}
+.potsvg .leaf{fill:#43a047;transition:fill .6s;transform-box:view-box;transform-origin:0 0}
+.potsvg .flower{fill:#ffb300;transition:fill .6s}
+.potsvg .potb{fill:#c0703b}.potsvg .potr{fill:#a35a2a}
+.potsvg .soil{transition:fill .5s}
+.potsvg .sens{fill:#1b2340}.potsvg .senh{fill:#1b2340;stroke:#f0cc7a;stroke-width:2}
+.potsvg .psm{font-family:var(--mono);font-size:16px;font-weight:700;fill:#1b2340;text-anchor:middle}
+.potsvg .wdrop{stroke:#4fc3f7;stroke-width:4;stroke-linecap:round;animation:rain .45s linear infinite}
+.potsvg .hose{fill:none;stroke:#2b6fc0;stroke-width:8;stroke-linecap:round}
+.soright{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+/* ---------- البيت المحمي ---------- */
+.ghgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center;min-height:0}
+.ghleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.ghsvg{width:100%;display:block;direction:ltr;border-radius:24px}
+.ghsvg .ghshell{fill:rgba(200,235,255,.45);stroke:#9fc5d8;stroke-width:5}
+.ghsvg .ghwin{fill:#cfe8f5;stroke:#5b8fd6;stroke-width:3}
+.ghsvg #ghwin{transition:transform .5s}
+.ghsvg .fanb{fill:#dfe6f0;stroke:#5b6275;stroke-width:3}
+.ghsvg .lamp{fill:#ce93d8}.ghsvg .lampglow{fill:rgba(206,147,216,.32)}
+.ghsvg #ghlamp{transition:opacity .4s}
+.ghsvg .ghfruit{transition:fill .8s}
+.ghsvg .ghp{transform-box:fill-box;transform-origin:bottom;transition:transform .6s}
+.ghsvg .ghl{font-family:Cairo;font-size:18px;font-weight:800;fill:#1b2340;text-anchor:middle}
+.ghsvg .ghclk{font-family:var(--mono);font-size:34px;font-weight:700;fill:#1b2340;paint-order:stroke;stroke:#fff;stroke-width:6}
+.ghctl{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.ghctl .clap{font-size:24px;padding:10px 16px}.ghctl .clap.off{background:#e3e6ee;color:var(--muted);box-shadow:0 8px 0 #c3c7d1}
+.ghctl .lsl{font-size:20px;padding:4px 14px}
+.ghright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ghright .code.micro{font-size:14px;line-height:1.4}
+.ghgrow{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;font-size:20px;font-weight:800;color:var(--navy-800)}
+.ghgrow .btbar{height:22px;background:#ece7da;border-radius:11px;overflow:hidden}.ghgrow .btbar i{display:block;height:100%;transition:width .3s}
+
+/* ---------- الخزان ---------- */
+.tkgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:24px;align-items:center;min-height:0}
+.tksvg{width:100%;display:block;direction:ltr;border-radius:24px}
+.tksvg .tkbody{fill:#eceff1;stroke:#78909c;stroke-width:6}
+.tksvg .tkwater{fill:#4fc3f7}.tksvg .tksurf{stroke:#0288d1;stroke-width:4}
+.tksvg .tkping{fill:none;stroke:#2e9e6b;stroke-width:4}
+.tksvg .tkdist{font-family:var(--mono);font-size:22px;font-weight:700;fill:#1b2340;text-anchor:start;paint-order:stroke;stroke:#fff;stroke-width:5}
+.tksvg .tkpct{font-family:var(--mono);font-size:15px;fill:#5b6275;text-anchor:end}
+.tksvg .tkl{font-family:Cairo;font-size:16px;font-weight:800;fill:#1b2340;text-anchor:middle}.tksvg .tkl.w{fill:#fff}
+.tksvg .tkdrop{stroke:#4fc3f7;stroke-width:3;animation:rain .5s linear infinite}
+.tksvg .rains{fill:#c9a14a}.tksvg .rains.wet{fill:#4fc3f7}
+.tksvg .tkpipe{fill:none;stroke:#90a4ae;stroke-width:10;stroke-linecap:round}
+.tksvg .tkpipe.flow{stroke:#4fc3f7;stroke-dasharray:14 10;animation:flow .5s linear infinite}
+.tkright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.tkbtns{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px}
+.tkbtns .clap{font-size:24px;padding:10px}.tkbtns .sndbtn{grid-column:auto;font-size:21px;padding:10px}.tkbtns .sndbtn.on{background:#fde3e0;border-color:#e74c3c}
+.tkright .code.micro{font-size:15px;line-height:1.42}
+
+/* ---------- المزرعة الحية ---------- */
+.fdgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr);gap:20px;align-items:center;min-height:0}
+.fdleft{display:flex;flex-direction:column;gap:10px;min-width:0}
+.fdscene{width:100%;height:410px;background:#1b2850;display:block;direction:ltr;border-radius:24px;box-shadow:0 14px 34px rgba(11,16,38,.2)}
+.fdscene .spray{animation:flow .5s linear infinite}
+.fdscene .tkdrop{stroke:#4fc3f7;stroke-width:3;animation:rain .5s linear infinite}
+.fdscene .fdpipe{fill:none;stroke:#90a4ae;stroke-width:8;stroke-linecap:round}
+.fdscene .fdpipe.flow{stroke:#4fc3f7;stroke-dasharray:14 10;animation:flow .5s linear infinite}
+.fdscene .ghl{font-family:Cairo;font-size:17px;font-weight:800;fill:#1b2340;text-anchor:middle;paint-order:stroke;stroke:#fff;stroke-width:4}
+.fdscene .fdfr{transition:fill .8s}
+.fdlcd{background:#1f6b3a;border-radius:16px;padding:12px 16px;direction:ltr}
+.fdlcd .lcdglass{gap:3px;padding:6px;border-width:6px}
+.fdlcd .lcdglass i{font-size:30px}
+.fdright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.fdtop{display:grid;grid-template-columns:auto auto auto;gap:10px;align-items:center}
+.fdclock{background:var(--navy-800);color:var(--gold-light);border-radius:16px;padding:6px 14px;display:flex;gap:8px;align-items:center}
+.fdclock b{font-family:var(--mono);font-size:34px}.fdclock span{font-size:30px}
+.fdtop .clap{font-size:22px;padding:10px 14px}.fdtop .sndbtn{grid-column:auto;font-size:20px;padding:10px}
+.fdright .lsb{font-size:18px;padding:4px 10px}
+.fdch{border-radius:16px;overflow:hidden}.fdch .chart4{height:150px}
+.fdlog{background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 12px;height:150px;overflow:hidden;font-size:17px;font-weight:700;line-height:1.55;color:var(--navy-700)}
+.fdlog b{font-family:var(--mono);color:var(--gold-dark);margin-left:6px}
+.fdsum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.fdsum .ac b{font-size:24px}
+
+/* ---------- حركة دوائر البناء ---------- */
+.slw .rlled{fill:#4a2a2a}.slw.running .rlled{fill:#ff3b3b}
+.slw .rlpump{transform-box:fill-box;transform-origin:center}.slw.running .rlpump{animation:spin 1s linear infinite}
+.slw .rlwater{opacity:0}.slw.running .rlwater{opacity:1;stroke-dasharray:8 8;animation:flow .5s linear infinite}
+.ghw .ghfan2{transform-box:fill-box;transform-origin:center}.ghw.running .ghfan2{animation:spin .8s linear infinite}
+.ghw.running .ghservo{animation:ghsv 3s ease-in-out infinite}
+@keyframes ghsv{0%,100%{transform:rotate(0)}50%{transform:rotate(-80deg)}}
