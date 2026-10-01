@@ -1,0 +1,108 @@
+/* أكاديمية سيارة الروبوت — المرحلة الأولى */
+
+/* ---------- سيارة صغيرة مشتركة ---------- */
+.mcar .mtire{fill:#1c1f27}.mcar .mbody{fill:#2b6fc0;stroke:#153a6e;stroke-width:3}
+.mcar .mboard{fill:#0e7c86}.mcar .msonar{fill:#1f5fae;stroke:#153a6e;stroke-width:2}.mcar .meye{fill:#dfe3ea}.mcar .mcaster{fill:#9aa1b3}
+.mcar.hero .mbody{fill:#F0CC7A;stroke:#b08a2e}.mcar.hero .mboard{fill:#101B45}
+
+/* ---------- الافتتاح ---------- */
+.carhero{padding-top:70px}
+.carhero .htitle{font-size:96px;font-weight:900;line-height:1.15;background:linear-gradient(180deg,#fff 30%,var(--gold-light));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.hwrap{flex:1;min-height:0;display:flex;align-items:center}
+.herosvg{width:100%;max-height:600px;display:block;direction:ltr}
+.herosvg .htrack{fill:none;stroke:#e8e3d6;stroke-width:26;stroke-linecap:round;opacity:.92}
+.herosvg .htrack2{fill:none;stroke:#0A1230;stroke-width:6;stroke-dasharray:18 22;opacity:.5}
+.herosvg .hbox{fill:#c98b4a;stroke:#f0cc7a;stroke-width:3}
+.herosvg .hring{fill:#1b2340;stroke:#fff;stroke-width:10}.herosvg .hring2{fill:none;stroke:rgba(255,255,255,.12);stroke-width:2}
+.herosvg .hrt{font-family:Cairo;font-size:28px;font-weight:900;fill:rgba(240,204,122,.8);text-anchor:middle}
+.herosvg .hbeam{fill:rgba(126,226,168,.16)}
+.hmodes{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.hm{border:2px solid rgba(240,204,122,.3);border-radius:22px;padding:14px 8px;text-align:center;font-size:26px;font-weight:800;color:#c9cfe6;animation:hmode 15.6s infinite}
+.hm b{display:block;font-size:44px;margin-bottom:4px}
+@keyframes hmode{0%,14%{background:rgba(240,204,122,.18);border-color:var(--gold);color:#fff;transform:translateY(-8px)}18%,100%{background:transparent;border-color:rgba(240,204,122,.3);color:#c9cfe6;transform:none}}
+
+/* ---------- الأشعة السينية ---------- */
+.xgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.95fr) minmax(0,0.85fr) minmax(0,0.5fr);gap:22px;align-items:center;min-height:0}
+.xwrap{position:relative;background:#0b1730;border-radius:28px;box-shadow:0 14px 34px rgba(11,16,38,.25);overflow:hidden}
+.xsvg{width:100%;display:block;direction:ltr;max-height:700px}
+.xsvg .xp{cursor:pointer;transition:transform .7s cubic-bezier(.3,1.4,.5,1),opacity .3s;transform-box:view-box}
+.xsvg.boom .xp{transform:translate(var(--dx),var(--dy))}
+.xsvg.picking .xp:not(.sel){opacity:.35}
+.xsvg .xp.sel{filter:drop-shadow(0 0 14px #7ee2a8)}
+.xsvg .xchassis{fill:rgba(160,200,255,.12);stroke:#7ea8e8;stroke-width:4}.xsvg .xhole{fill:#0b1730;stroke:#7ea8e8;stroke-width:2}
+.xsvg .xtire{fill:#23262e;stroke:#7e8494;stroke-width:3}.xsvg .xtread{stroke:#4a4f5c;stroke-width:5}
+.xsvg .xmotor{fill:#f4d35e;stroke:#8a6d1f;stroke-width:3}.xsvg .xshaft{fill:#c9ccd3}
+.xsvg .xuno{fill:#0e7c86;stroke:#7ee2e8;stroke-width:3}.xsvg .xusb{fill:#c9ccd3}.xsvg .xic{fill:#15171e}
+.xsvg .xdrv{fill:#c0392b;stroke:#ff9d8f;stroke-width:3}.xsvg .xsink{fill:#1c1f27}
+.xsvg .xbat{fill:#1c1f27;stroke:#7e8494;stroke-width:3}.xsvg .xcell{fill:#2e9e6b;stroke:#7ee2a8;stroke-width:2}
+.xsvg .xcaster{fill:#9aa1b3;stroke:#dfe3ea;stroke-width:3}.xsvg .xball{fill:#dfe3ea}
+.xsvg .xbt{fill:#1f5fae;stroke:#8fb8ff;stroke-width:2}
+.xsvg .xsw{fill:#3a3f4d;stroke:#9aa1b3;stroke-width:2}.xsvg .xswk{fill:#e74c3c}
+.xsvg .xir{fill:#1f5fae;stroke:#8fb8ff;stroke-width:2}.xsvg .xirled{fill:#e8e3d6}
+.xsvg .xservo{fill:#2b6fc0;stroke:#8fb8ff;stroke-width:3}.xsvg .xhorn{fill:#fff}
+.xsvg .xsonar{fill:#1f5fae;stroke:#8fb8ff;stroke-width:3}.xsvg .xeye{fill:#dfe3ea;stroke:#8a909c;stroke-width:4}
+.xsvg .xt{font-family:var(--mono);font-size:22px;font-weight:700;fill:#1b2340;text-anchor:middle}.xsvg .xt.w{fill:#fff}
+.xboom{position:absolute;bottom:16px;left:16px;font-size:26px;padding:8px 20px}
+.xinfo{background:#fff;border:2px solid var(--line);border-radius:28px;padding:26px 30px;min-height:520px;display:flex;flex-direction:column;gap:10px}
+.xinfo.pop{animation:enter .45s ease both}
+.xi0{margin:auto;text-align:center;font-size:34px;font-weight:800;color:var(--muted);line-height:1.6}
+.xi1{font-size:84px;line-height:1}
+.xinfo h3{font-size:44px;font-weight:900;color:var(--navy-800)}
+.xen{font-family:var(--mono);font-size:24px;color:var(--gold-dark);font-weight:700;text-align:right}
+.xinfo ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.xinfo li{font-size:27px;font-weight:700;color:var(--navy-700)}.xinfo li::before{content:"◆ ";color:var(--gold)}
+.xjob{background:var(--navy-800);color:#fff;border-radius:18px;padding:12px 16px;font-size:26px;font-weight:700;line-height:1.5}
+.xtop{font-size:22px;font-weight:800;color:var(--muted)}
+.xlist{display:flex;flex-direction:column;gap:7px}
+.xchip{font-family:inherit;font-size:20px;font-weight:800;border:2px solid var(--line);background:#fff;border-radius:14px;padding:6px 10px;cursor:pointer;color:var(--navy-700);text-align:right}
+.xchip.on{border-color:var(--gold);background:#FFF3C0}
+
+/* ---------- مختبر السرعة ---------- */
+.spgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.75fr) minmax(0,1.25fr);gap:26px;align-items:center;min-height:0}
+.spleft{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.whsvg{width:300px;margin:0 auto;display:block;direction:ltr}
+.whsvg .whtire{fill:#23262e}.whsvg .whrim{fill:#f4d35e;stroke:#8a6d1f;stroke-width:4}.whsvg .whspoke{fill:#d4b142}.whsvg .whhub{fill:#1b2340}
+.whsvg .whd{stroke:#e74c3c;stroke-width:5;stroke-dasharray:10 6}
+.whsvg .whdt{font-family:Cairo;font-size:24px;font-weight:900;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:#e74c3c;stroke-width:6}
+.spleft .lsl{font-size:24px}
+.spright{display:flex;flex-direction:column;gap:14px;min-width:0}
+.speq{background:var(--code-bg);color:#e6e9f5;border-radius:20px;padding:14px 22px;font-size:25px;line-height:1.8;font-weight:700}
+.speq b{color:var(--gold-light)}
+.spfacts{display:grid;grid-template-columns:1fr 1.2fr 0.8fr;gap:12px}
+.spfacts .ac b{font-size:34px}
+.sprace{background:#fff;border:2px solid var(--line);border-radius:24px;padding:14px 20px;display:flex;flex-direction:column;gap:8px}
+.sprt{font-size:26px;font-weight:800;color:var(--navy-800)}.sprt b{color:var(--gold-dark)}
+.sprsvg{width:100%;direction:ltr}
+.sprsvg .spline{stroke:#1b2340;stroke-width:4}.sprsvg .sptick{stroke:#1b2340;stroke-width:3}
+.sprsvg .spnum{font-family:Cairo;font-size:16px;font-weight:800;fill:#5b6275;text-anchor:middle}
+.sprace .sndbtn{grid-column:auto;font-size:22px}
+
+/* ---------- الدفع التفاضلي ---------- */
+.dgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.62fr) minmax(0,1.38fr);gap:24px;align-items:center;min-height:0}
+.dleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dleft .tonecode{font-size:30px}
+.dsl{font-size:24px;padding:6px 18px}
+.dpre{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dpre .sndbtn{grid-column:auto;font-size:20px;padding:6px}
+.dmath{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px}
+.dmath div{background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px;text-align:center;display:flex;flex-direction:column}
+.dmath span{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--gold-dark)}
+.dmath b{font-size:32px;color:var(--navy-800);direction:ltr}
+.dmath small{font-size:15px;font-weight:700;color:var(--muted)}
+.dright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dawrap{border-radius:24px;overflow:hidden;box-shadow:0 14px 34px rgba(11,16,38,.2)}
+.darena{width:100%;display:block;direction:ltr}
+.darena .dwall{fill:none;stroke:#8a6d47;stroke-width:8}
+.darena .dtrail{fill:none;stroke:#e74c3c;stroke-width:4;stroke-dasharray:2 9;stroke-linecap:round;opacity:.7}
+.darena .dflag{display:none}.darena .dflag.on{display:block}
+.darena .dzone{fill:rgba(46,158,107,.18);stroke:#2e9e6b;stroke-width:3;stroke-dasharray:8 6;animation:pulse2 1.4s ease-in-out infinite}
+@keyframes pulse2{50%{fill:rgba(46,158,107,.35)}}
+.darena .dpole{stroke:#1b2340;stroke-width:5}.darena .dfl{fill:#e74c3c}
+.darena .dwin{display:none}.darena .dwin.on{display:block;animation:enter .5s ease both}
+.darena .dwin rect{fill:#101B45;stroke:var(--gold);stroke-width:5}
+.darena .dwt1{font-family:Cairo;font-size:56px;font-weight:900;fill:var(--gold-light);text-anchor:middle}
+.darena .dwt2{font-family:Cairo;font-size:32px;font-weight:800;fill:#fff;text-anchor:middle}
+.dctl{display:grid;grid-template-columns:auto auto 1fr;gap:12px;align-items:center}
+.dctl .clap{font-size:26px;padding:10px 20px}
+.dctl .sndbtn{grid-column:auto;font-size:22px;padding:10px 16px}
+.dtime{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--navy-800);text-align:center}
