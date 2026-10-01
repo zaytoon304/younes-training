@@ -1,0 +1,59 @@
+/* تصميم المرحلة الرابعة: محرك السيرفو */
+
+/* ---------- مختبر السيرفو ---------- */
+.svgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.62fr) minmax(0,1fr) minmax(0,0.72fr);gap:24px;align-items:center;min-height:0}
+.svcode .code.micro{font-size:17px;line-height:1.4}
+.svmid{display:flex;flex-direction:column;gap:12px;min-width:0}
+.servosvg{width:100%;display:block;direction:ltr;background:#fff;border:2px solid var(--line);border-radius:26px}
+.servosvg .protr{fill:#fffdf6;stroke:#d8d2c2;stroke-width:3}
+.servosvg .ptick{stroke:#b9b3a3;stroke-width:3}.servosvg .ptick.b{stroke:#1b2340;stroke-width:5}
+.servosvg .pnum{font-family:var(--mono);font-size:22px;font-weight:700;fill:#5b6275;text-anchor:middle}
+.servosvg .sarc{fill:none;stroke:var(--gold);stroke-width:10;stroke-linecap:round;opacity:.8}
+.servosvg .sbody{fill:#2b6fc0;stroke:#174a88;stroke-width:3}
+.servosvg .sname{font-family:var(--mono);font-size:30px;font-weight:700;fill:#dbe8fa;text-anchor:middle}
+.servosvg .sgear{fill:#1f5aa0;stroke:#174a88;stroke-width:3}
+.servosvg .shorn{fill:#fbfbf8;stroke:#9aa1b3;stroke-width:3}
+.servosvg .shole{fill:#c9ccd3}
+.servosvg .shaft{fill:#e8e3d6;stroke:#1b2340;stroke-width:4}
+.svbtns{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.svbtns .sndbtn{grid-column:auto;font-family:var(--mono);font-size:22px}
+.sndbtn.gold{background:linear-gradient(145deg,var(--gold-light),var(--gold));border-color:var(--gold);color:var(--navy-800);font-family:inherit}
+.svmid .lsl{font-size:24px;padding:6px 18px}
+.svright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.svright .ac b{font-size:40px}
+.svright .tonecode{font-size:28px}
+.pulsebox{background:var(--code-bg);border-radius:20px;padding:12px 14px 8px}
+.pulsesvg{width:100%;height:110px;display:block;direction:ltr}
+.pulsesvg .pbase{stroke:#39406a;stroke-width:2}
+.pulsesvg .pwave{fill:none;stroke:#7ee2a8;stroke-width:4;stroke-linejoin:round}
+.pulsesvg .pdiv{stroke:#39406a;stroke-width:2;stroke-dasharray:6 6}
+.pulsesvg .plab{font-family:Cairo;font-size:15px;font-weight:700;fill:#8a93b8;text-anchor:middle}
+.plegend{color:#c8cde6;font-size:18px;font-weight:700;text-align:center;margin-top:4px}
+
+/* ---------- البوابة الذكية ---------- */
+.gtgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.74fr) minmax(0,1.26fr);gap:24px;align-items:center;min-height:0}
+.gtcode .code.micro{font-size:15px;line-height:1.4}
+.gtright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.gtwrap{border-radius:24px;overflow:hidden;box-shadow:0 14px 34px rgba(11,16,38,.2);cursor:ew-resize;touch-action:none}
+.gatesvg{width:100%;display:block;direction:ltr}
+.gatesvg .gsky{fill:#dff0fb}.gatesvg .groad{fill:#5c6272}.gatesvg .glane{fill:#f4f1ea}
+.gatesvg .gstop{stroke:#f4f1ea;stroke-width:8;stroke-dasharray:14 10}
+.gatesvg .gbeam path{fill:rgba(46,158,107,.18)}
+.gatesvg.near .gbeam path{fill:rgba(231,76,60,.25)}
+.gatesvg .carb{fill:#e0584a;stroke:#9e2f24;stroke-width:4}
+.gatesvg .carw{fill:#cfe7f7;stroke:#9e2f24;stroke-width:3}
+.gatesvg .tyre{fill:#1c1f27}.gatesvg .hub{fill:#9aa1b3}.gatesvg .lampc{fill:#ffe79a}
+.gatesvg .gpost{fill:#3b3f4b}.gatesvg .gsonar{fill:#1f5fae}.gatesvg .geye{fill:#dfe6f0;stroke:#1b2340;stroke-width:2}
+.gatesvg .garm{fill:#fff;stroke:#9aa1b3;stroke-width:3}.gatesvg .gstripe{fill:#e74c3c}
+.gatesvg .gpivot{fill:#2b6fc0;stroke:#174a88;stroke-width:4}
+.gatesvg .glbl{font-family:Cairo;font-size:24px;font-weight:900;fill:#1b2340;text-anchor:middle}
+.gtfacts{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px}
+.gtfacts .ac b{font-size:38px}
+.gtnote{background:var(--navy-800);color:#fff;font-size:21px;font-weight:700;border-radius:18px;padding:10px 16px;line-height:1.6}
+.gtnote code{background:rgba(255,255,255,.12);color:var(--gold-light);border-radius:6px;padding:0 6px;font-family:var(--mono)}
+
+/* ---------- حركة دائرة البناء: مؤشر الضوء ---------- */
+.smw .needle{transform:rotate(0deg)}
+.smw.running .handcover{animation:hand 3.4s ease-in-out infinite}
+.smw.running .needle{animation:needle 3.4s ease-in-out infinite}
+@keyframes needle{0%,15%,85%,100%{transform:rotate(70deg)}30%,70%{transform:rotate(-70deg)}}
