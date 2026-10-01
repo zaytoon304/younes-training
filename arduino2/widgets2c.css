@@ -1,0 +1,90 @@
+/* تصميم المرحلة الثالثة: PIR · IR · الصوت */
+
+/* ---------- محاكي PIR ---------- */
+.pirgrid{flex:1;display:grid;grid-template-columns:0.55fr 1.45fr;gap:26px;align-items:center;min-height:0}
+.pircode .code.micro{font-size:17px;line-height:1.4}
+.pirright{display:flex;flex-direction:column;gap:12px}
+.pirwrap{border-radius:24px;overflow:hidden;box-shadow:0 14px 34px rgba(11,16,38,.2);cursor:ew-resize;touch-action:none}
+.pirsvg{width:100%;display:block;direction:ltr}
+.pirsvg .cwall{fill:#e9e4f2}.pirsvg .cfloor{fill:#b89b74}
+.pirsvg .cdoor{fill:#c9a97a;stroke:#8a6d47;stroke-width:4}.pirsvg .cknob{fill:#6b5234}
+.pirsvg .cone{fill:rgba(46,158,107,.12);stroke:rgba(46,158,107,.5);stroke-width:3;stroke-dasharray:10 8;transition:fill .2s}
+.pirsvg .cone.seen{fill:rgba(231,76,60,.22);stroke:#e74c3c}
+.pirsvg .pirbox{fill:#f4f1ea;stroke:#8b93a7;stroke-width:3}.pirsvg .pirdome{fill:#fff;stroke:#c9c3b3;stroke-width:3}
+.pirsvg .plbl{font-size:22px;font-weight:900;fill:#1b2340;text-anchor:middle;font-family:var(--mono)}
+.pirsvg .abase{fill:#3b3f4b}.pirsvg .alamp{fill:#7a2323}
+.pirsvg.alert .alamp{animation:siren .5s steps(2) infinite}
+@keyframes siren{0%{fill:#ff3b3b;filter:drop-shadow(0 0 16px #ff3b3b)}100%{fill:#7a2323}}
+.pirsvg.alert .cwall{animation:redwash .5s steps(2) infinite}
+@keyframes redwash{0%{fill:#f6d9d9}100%{fill:#e9e4f2}}
+.pirsvg .tf{font-size:110px;text-anchor:middle}
+.pirsvg .tlbl{font-size:20px;font-weight:900;fill:#1b2340;text-anchor:middle;font-family:Cairo}
+.pirfacts{display:grid;grid-template-columns:0.6fr 0.7fr 1.5fr;gap:12px;align-items:stretch}
+.pirfacts .ac b{font-size:36px}
+.pirfacts .sndbtn{grid-column:1 / -1}
+.fanst.on{color:#c0392b!important}
+.pirright .psvg{height:80px}
+
+/* ---------- محاكي IR ---------- */
+.irgrid{flex:1;display:grid;grid-template-columns:0.62fr 0.58fr 0.8fr;gap:24px;align-items:center;min-height:0}
+.ircode .code.micro{font-size:17px;line-height:1.4}
+.irmid{display:flex;flex-direction:column;gap:12px}
+.beams{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.beamsvg{width:100%;background:#fff;border:2px solid var(--line);border-radius:18px;transition:opacity .25s}
+.beamsvg.dim{opacity:.35}
+.beamsvg .irpcb{fill:#1f5fae}.beamsvg .irtx{fill:#dfe6f0}.beamsvg .irrx{fill:#3a3f4d}
+.beamsvg .surfw{fill:#f4f4f0;stroke:#d8d4c8;stroke-width:2}.beamsvg .surfb{fill:#111}
+.beamsvg .ray1{stroke:#c0392b;stroke-width:5;stroke-dasharray:8 6;animation:flow .8s linear infinite}
+.beamsvg .ray2{stroke:#e67e22;stroke-width:5;stroke-dasharray:8 6;animation:flow .8s linear infinite}
+.beamsvg .absorb{font-size:26px;font-weight:900;fill:#e74c3c;text-anchor:middle}
+.beamsvg .stxt{font-size:15px;font-weight:800;fill:#8a93a4;text-anchor:middle;font-family:Cairo}
+.irfacts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.irfacts .ac b{font-size:40px}
+.irdec{background:var(--navy-800);color:var(--gold-light);font-size:36px;font-weight:900;border-radius:20px;padding:12px;text-align:center}
+.irtrack{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 14px 34px rgba(11,16,38,.2);cursor:ew-resize;touch-action:none}
+.irsvg{width:100%;display:block;direction:ltr}
+.irsvg .floor2{fill:#f7f5ef}
+.irsvg .iline{fill:none;stroke:#111;stroke-width:34;stroke-linecap:round}
+.irsvg .botbody{fill:#2b5fa8;stroke:#153a6e;stroke-width:4}
+.irsvg .wheel2{fill:#1c1f27}
+.irsvg .irs{fill:#7ee2a8;stroke:#1b2340;stroke-width:3}.irsvg .irs.blk{fill:#e74c3c}
+.irsvg .botarrow{font-size:52px;fill:#fff;text-anchor:middle;dominant-baseline:middle}
+.irhint{position:absolute;bottom:10px;left:10px;right:10px;background:rgba(16,27,69,.85);color:#fff;font-size:19px;font-weight:800;border-radius:12px;padding:6px 10px;text-align:center}
+
+/* ---------- مختبر الصوت ---------- */
+.sgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;min-height:0}
+.spanel{background:#fff;border:2px solid var(--line);border-radius:28px;padding:14px 20px;display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0}
+.spanel h3{font-size:27px;font-weight:900;color:var(--navy-800)}
+.piano{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;direction:ltr}
+.key{height:112px;border:2px solid #cfd2da;border-radius:0 0 14px 14px;background:linear-gradient(#fff,#f1f2f6);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:10px;cursor:pointer;font-family:inherit;box-shadow:0 6px 0 #c3c7d1;transition:transform .06s}
+.key{min-width:0}.key b{font-size:22px;color:var(--navy-800)}.key small{font-size:12px;white-space:nowrap;color:var(--muted);font-family:var(--mono)}
+.key.on,.key:active{transform:translateY(5px);box-shadow:0 1px 0 #c3c7d1;background:linear-gradient(#FFF3C0,#F0CC7A)}
+.tonecode{font-family:var(--mono);font-size:26px;background:var(--code-bg);color:#e6e9f5;border-radius:16px;padding:8px;text-align:center}
+.spanel .code.micro{font-size:16px;line-height:1.35;padding:8px 0;border-radius:16px}
+.clapin{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;min-height:0;align-items:start}
+.clapctl{display:flex;flex-direction:column;gap:10px;min-width:0}
+.claprow{display:flex;align-items:center;justify-content:space-around;gap:8px;height:170px}
+.claprow .bulbsvg{width:100px}
+.clapctl .lsl{font-size:22px;padding:6px 14px}
+.clapin .code.micro{font-size:14.5px;line-height:1.38}
+.clapbtns{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.clap{font-family:inherit;font-size:34px;font-weight:900;border:0;border-radius:22px;padding:10px 20px;background:linear-gradient(145deg,var(--gold-light),var(--gold));color:var(--navy-800);cursor:pointer;box-shadow:0 8px 0 #b08a2e}
+.clap:active{transform:translateY(6px);box-shadow:0 2px 0 #b08a2e}
+.spanel .psvg{height:80px}
+
+/* ---------- حركة دوائر البناء ---------- */
+.pirw .walker,.irw .paper,.clapw .claps{opacity:0}
+.pirw.running .walker{animation:walk 3.6s linear infinite}
+@keyframes walk{0%{opacity:0;transform:translateX(-160px)}15%,85%{opacity:1}100%{opacity:0;transform:translateX(200px)}}
+.pirw.running .glow2{animation:night 3.6s ease-in-out infinite}
+.pirw.running .led2{animation:ledfade 3.6s ease-in-out infinite}
+.irw.running .paper{animation:slide 3.6s ease-in-out infinite}
+@keyframes slide{0%,100%{opacity:1;transform:translateX(-60px)}50%{opacity:1;transform:translateX(0)}}
+.irw.running .glow2{animation:night 3.6s ease-in-out infinite}
+.irw.running .led2{animation:ledfade 3.6s ease-in-out infinite}
+.clapw.running .claps{animation:clapit 3s ease-in-out infinite}
+@keyframes clapit{0%,40%,60%,100%{opacity:0;transform:scale(.8)}45%,55%{opacity:1;transform:scale(1.15)}}
+.clapw.running .glow2{animation:lampt 6s steps(1) infinite}
+.clapw.running .led2{animation:lampl 6s steps(1) infinite}
+@keyframes lampt{0%,48%{opacity:0}50%,100%{opacity:.95}}
+@keyframes lampl{0%,48%{fill:#c9ccd3}50%,100%{fill:#fffbe6}}
