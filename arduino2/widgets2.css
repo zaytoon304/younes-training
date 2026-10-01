@@ -176,3 +176,9 @@
 .danote b{font-family:var(--mono);color:var(--gold-dark)}
 .darow{height:205px}.bulbsvg{width:160px}.bigbtn{width:150px;height:150px}.potwrap.small{width:175px}
 .dafacts b{line-height:1.25}.dapanel .psvg{height:70px}.dapanel{gap:7px;padding:14px 24px}.danote{font-size:21px}
+
+/* «اختبر نفسك» بعد كشف الإجابة: تفسيرات أطول في الجزء الثاني، فنضغط المسافات قليلًا */
+.revealed.opts,.opts.revealed{gap:14px}
+.revealed .opt{padding:14px 30px}
+.revealed .opt .L{width:72px;height:72px;font-size:40px}
+.revealed .opt .w{font-size:28px;margin-top:2px;line-height:1.35}

@@ -11,14 +11,17 @@ const puppeteer = require('puppeteer-core');
 const DIR = path.resolve(process.argv[2] || '.');
 const NATIVE = require('./pptx-native.json');          // الأنواع التي يرسمها البوربوينت نصًا قابلًا للتعديل
 const OUT = path.join(DIR, '.pptx-cache');
-const STEPPED = ['build', 'code', 'codecheck'];          // تُصوَّر كل خطوة، وتظهر بالنقر في البوربوينت
+const STEPPED = ['build', 'build2', 'code', 'codecheck']; // تُصوَّر كل خطوة، وتظهر بالنقر في البوربوينت
 const START = { board: 1, ide: 1, breadboard: 5 };       // خطوة مختارة لأدوات الجولات
+const CHROME = process.env.CHROME || (process.platform === 'win32'
+  ? 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+  : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
 
 (async () => {
   fs.rmSync(OUT, { recursive: true, force: true }); fs.mkdirSync(OUT, { recursive: true });
-  const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
+  const b = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
   const pg = await b.newPage(); await pg.setViewport({ width: 1600, height: 900 });
-  await pg.goto('file://' + path.join(DIR, 'index.html'), { waitUntil: 'networkidle0' });
+  await pg.goto('file:///' + path.join(DIR, 'index.html').replace(/\\/g, '/').replace(/^\//, ''), { waitUntil: 'networkidle0' });
   await new Promise(r => setTimeout(r, 1200));
   const types = await pg.evaluate(() => SLIDES.map(s => s.t));
   const manifest = {};
