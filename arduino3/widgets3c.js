@@ -119,6 +119,8 @@ B2.linewire = { flow: 5, steps: [
   <g class="lpaper"><rect x="${col(0)}" y="40" width="${col(12) - col(0)}" height="70" rx="6" fill="#fff" stroke="#c9c3b3" stroke-width="2"/><rect x="${col(5) + 4}" y="40" width="40" height="70" fill="#111"/></g>
 </svg>` };
 
+Object.assign(window.ARD3, { TRACKS, LCODE, SENS });
+
 /* ---------- الأنواع ---------- */
 Object.assign(window.DECK_TYPES, {
   btlab: s => `<div class="slide light">

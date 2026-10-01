@@ -1,0 +1,84 @@
+/* أكاديمية سيارة الروبوت — المراحل ٤ إلى ٦ */
+
+/* ---------- PID ---------- */
+.pgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.62fr) minmax(0,1.38fr);gap:22px;align-items:center;min-height:0}
+.pleft{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ppre{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.ppre .sndbtn{grid-column:auto;font-size:18px;padding:7px 4px}
+.pleft .lsl{font-size:21px;padding:3px 14px}
+.pleft .code.micro{font-size:13px;line-height:1.34}
+.pright{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pright .psvg{height:86px}
+.larena .ptrail{fill:none;stroke:#e74c3c;stroke-width:3;opacity:.75}
+
+/* ---------- الرادار والمدمج ---------- */
+.rgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.66fr) minmax(0,1.34fr);gap:22px;align-items:center;min-height:0}
+.rleft{display:flex;flex-direction:column;gap:10px;min-width:0}
+.rleft .code.micro{font-size:14px;line-height:1.36}
+.rscreen{width:100%;display:block;direction:ltr;border-radius:18px}
+.rscreen .rring{fill:none;stroke:rgba(126,226,168,.35);stroke-width:2}.rscreen .rspoke{stroke:rgba(126,226,168,.18);stroke-width:1.5}
+.rscreen .rsweep{stroke:#7ee2a8;stroke-width:4;filter:drop-shadow(0 0 6px #7ee2a8)}
+.rscreen .rlab{font-family:Cairo;font-size:13px;font-weight:700;fill:rgba(126,226,168,.7);text-anchor:middle}
+.rright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rarena{width:100%;display:block;direction:ltr}
+.rarena .dwall{fill:none;stroke:#8a6d47;stroke-width:8}
+.rarena .abox,.cmarena .abox{cursor:grab}
+.rarena .abox rect,.cmarena .abox rect{fill:#d9b382;stroke:#8a6d3b;stroke-width:4}
+.rarena .abox text,.cmarena .abox text{font-size:30px;text-anchor:middle;pointer-events:none}
+.rarena .aray,.cmarena .aray,.sarena .aray{stroke:#2e9e6b;stroke-width:4;stroke-dasharray:8 6}
+.rarena .ahit{fill:#2e9e6b}
+.rarena.near .aray,.cmarena.near .aray,.sarena.near .aray{stroke:#e74c3c}.rarena.near .ahit{fill:#e74c3c}
+.rarena .dtrail{fill:none;stroke:#2b6fc0;stroke-width:3;stroke-dasharray:2 8;stroke-linecap:round;opacity:.6}
+.rarena .rhd{fill:#1f5fae;stroke:#dfe3ea;stroke-width:2}
+.rright .irdec{font-size:26px;padding:8px}
+.cmfacts{display:grid;grid-template-columns:1fr 1.3fr;gap:10px}.cmfacts .ac b{font-size:30px}
+
+/* ---------- السومو ---------- */
+.sgrid3{flex:1;display:grid;grid-template-columns:minmax(0,0.66fr) minmax(0,1.34fr);gap:22px;align-items:center;min-height:0}
+.sleft{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sleft .code.micro{font-size:14px;line-height:1.36}
+.sleft .lsb{font-size:18px;padding:4px 10px}
+.sleft .lsl{font-size:21px;padding:3px 14px}
+.sleft .sndbtn{grid-column:auto;font-size:20px;padding:8px}
+.sright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sarena{width:100%;display:block;direction:ltr}
+.sarena .dohyo{fill:#f4f1ea}.sarena .dohyo2{fill:#15171e}
+.sarena .shikiri{stroke:#8a5a2b;stroke-width:6}
+.sarena .sbot rect{stroke-width:4}.sarena .sbot text{font-size:26px;text-anchor:middle}
+.sarena .me rect{fill:#2b6fc0;stroke:#9cc3ff}.sarena .op rect{fill:#c0392b;stroke:#ffb3a8}
+.sarena .blade{fill:#c9ccd3;stroke:#6b7180;stroke-width:2}
+.sarena .edge{fill:#7ee2a8;stroke:#1b2340;stroke-width:2}.sarena .edge.on{fill:#e74c3c}
+.sarena .sover{display:none}.sarena .sover.on{display:block}
+.sarena .sover rect{fill:rgba(16,27,69,.92);stroke:var(--gold);stroke-width:5}
+.sarena .dwt1{font-family:Cairo;font-weight:900;fill:var(--gold-light);text-anchor:middle}.sarena .dwt2{font-family:Cairo;font-weight:800;fill:#fff;text-anchor:middle}
+.sscore{display:flex;gap:16px;justify-content:center;font-size:24px;font-weight:800;color:var(--navy-800)}.sscore b{font-size:34px;color:var(--gold-dark)}
+.sright .irdec{font-size:24px;padding:8px}
+
+/* ---------- المتاهة ---------- */
+.mgrid{flex:1;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:22px;align-items:center;min-height:0}
+.mleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.mleft .code.micro{font-size:14px;line-height:1.45}
+.mleft .lsb{font-size:19px;padding:4px 12px}
+.mfacts{display:grid;grid-template-columns:0.8fr 1.2fr;gap:10px}.mfacts .ac b{font-size:32px}
+.mright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.marena{width:100%;display:block;direction:ltr}
+.marena #mwalls line{stroke:#1b2340;stroke-width:6;stroke-linecap:round}
+.marena .mtrail{fill:none;stroke:#e0b400;stroke-width:6;stroke-linejoin:round;stroke-linecap:round;opacity:.7}
+.marena .mgoal{font-size:34px;text-anchor:middle}
+.marena .dwin{display:none}.marena .dwin.on{display:block;animation:enter .5s ease both}
+.marena .dwin rect{fill:#101B45;stroke:var(--gold);stroke-width:5}
+.marena .dwt1{font-family:Cairo;font-weight:900;fill:var(--gold-light);text-anchor:middle}.marena .dwt2{font-family:Cairo;font-weight:800;fill:#fff;text-anchor:middle}
+.mright .lctl{grid-template-columns:auto auto auto}
+
+/* ---------- دائرة البناء: الرادار ---------- */
+.rdw .rdbeam{opacity:0}
+.rdw.running .rdhead{animation:rdh 3s ease-in-out infinite}
+.rdw.running .rdbeam{opacity:1}
+@keyframes rdh{0%,100%{transform:rotate(-55deg)}50%{transform:rotate(55deg)}}
+
+/* ارتفاع ثابت للساحات حتى تبقى الأزرار داخل الشريحة (العرض يتكيف مع الحفاظ على النسبة) */
+.rright .dawrap,.mright .dawrap{background:#f7f4ec}
+.sright .dawrap{background:#2a2f3d}
+.rright .dawrap svg{height:540px}
+.sright .dawrap svg{height:580px}
+.mright .dawrap svg{height:560px}
+.pright .dawrap{background:#fbfaf6}.pright .dawrap svg{height:450px}
