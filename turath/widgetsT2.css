@@ -84,3 +84,6 @@
 .mslog{background:var(--navy-800);color:#fff;border-radius:18px;padding:12px 16px;min-height:230px;display:flex;flex-direction:column;gap:5px;font-size:18px;font-weight:700}
 .mslog div{animation:enter .35s ease both}.mslog div:not(:first-child){opacity:.6}.mslog b{color:var(--gold-light);font-size:15px;margin-left:8px}
 .missionlab-sm .code.micro{font-size:13.5px}
+
+/* الروبوت الثاني */
+.car4.r2 .body4{fill:#1f5fae;stroke:#13396b}

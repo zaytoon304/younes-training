@@ -45,7 +45,7 @@ const heroSVG = () => `<svg viewBox="0 0 1600 600" class="mhsvg">
   <g id="mhgas" opacity="0">${[0, 1, 2, 3].map(i => `<circle cx="${1060 + i * 30}" cy="${400 - i * 18}" r="${30 + i * 8}" fill="#9ccc65" opacity=".35"/>`).join('')}</g>
   <g id="mhwater" opacity="0"><path d="M0 0 Q 60 -90 120 -60" fill="none" stroke="#4fc3f7" stroke-width="8" stroke-dasharray="10 8" class="spray"/></g>
   <g id="mhwind" opacity="0">${[0, 1, 2].map(i => `<path d="M0 ${-14 + i * 14} q 40 -10 80 0" fill="none" stroke="#e0f2f1" stroke-width="4" stroke-dasharray="8 8" class="spray"/>`).join('')}</g>
-  ${car4('mhcar')}
+  <g id="mhcar2">${car4('mhc2', 'r2')}</g>${car4('mhcar')}<g id="mhwater2" opacity="0"></g><g id="mhwind2" opacity="0"></g>
   <g class="mhcap"><rect x="560" y="20" width="480" height="56" rx="28"/><text x="800" y="57" id="mhcapt"></text></g>
 </svg>`;
 
@@ -56,18 +56,19 @@ const ARCH = [
   { k: 'st', x: 340, y: 185, i: '🧠', n: 'ESP32 المحطة', d: 'داخل نموذج المصمك: يقرأ الحساسين ويقرر ويرسل إلى السيارة.' },
   { k: 'out', x: 340, y: 360, i: '🚨', n: 'الإنذار', d: 'ليد أحمر للهب (18)، وأزرق للغاز (19)، وبازر (23)، وشاشة LCD (21 و22).' },
   { k: 'radio', x: 560, y: 185, i: '📡', n: 'ESP-NOW', d: 'اتصال لاسلكي مباشر بين لوحتي ESP32 بلا راوتر، برسالة قصيرة سريعة جدًا.' },
-  { k: 'car', x: 780, y: 185, i: '🚙', n: 'ESP32 السيارة', d: 'يستقبل الرسالة، ويقرر أي الحدثين أخطر، ويقود السيارة إليه.' },
+  { k: 'car', x: 780, y: 185, i: '🚙', n: 'الروبوت ١', d: 'يستقبل الرسالة ويقرر: يذهب هو إلى الخطر الأعلى نسبة، ويبلغ الروبوت ٢ بـ ESP-NOW ليتجه إلى الأقل خطورة.' },
+  { k: 'car2', x: 890, y: 100, i: '🚙', n: 'الروبوت ٢', d: 'مثل الأول تمامًا: محركات ومضخة ومروحة. ينتظر أمر الروبوت ١، ثم يتجه إلى الخطر الأقل في الوقت نفسه.' },
   { k: 'drive', x: 780, y: 360, i: '⚙️', n: 'L298N وأربعة محركات', d: 'ENA 33 · ENB 32 · IN1/IN2 27/26 · IN3/IN4 25/14 · والجانب الأيمن معكوس في الكود.' },
   { k: 'relay', x: 1000, y: 185, i: '🔌', n: 'ريليه مزدوج', d: 'يعمل على LOW: القناة الأولى (16) للمضخة، والثانية (17) للمروحة.' },
   { k: 'pump', x: 1000, y: 70, i: '💧', n: 'المضخة', d: 'تطفئ اللهب. موجب البطارية على COM، والمضخة على NO.' },
   { k: 'fan', x: 1000, y: 300, i: '🌀', n: 'المروحة', d: 'تبدد الغاز وتطرده من المكان.' },
 ];
-const ARCH_LINKS = [['flame', 'st'], ['mq2', 'st'], ['st', 'out'], ['st', 'radio'], ['radio', 'car'], ['car', 'drive'], ['car', 'relay'], ['relay', 'pump'], ['relay', 'fan']];
+const ARCH_LINKS = [['flame', 'st'], ['mq2', 'st'], ['st', 'out'], ['st', 'radio'], ['radio', 'car'], ['car', 'car2'], ['car', 'drive'], ['car', 'relay'], ['relay', 'pump'], ['relay', 'fan']];
 const FLOW = [['flame', '١. حساس اللهب يرى نارًا'], ['st', '٢. ESP32 المحطة يقرأ: GPIO32 = LOW'], ['out', '٣. الليد الأحمر والبازر والشاشة: «FLAME!»'], ['radio', '٤. رسالة لاسلكية تطير إلى السيارة'], ['car', '٥. السيارة تقرر: اللهب أخطر حدث الآن'], ['drive', '٦. المحركات الأربعة تقود السيارة إلى المكان'], ['relay', '٧. الريليه يكتب LOW على القناة الأولى'], ['pump', '٨. المضخة تطفئ النار… والمحطة تعود «آمنة»']];
 const archSVG = () => { const P = Object.fromEntries(ARCH.map(a => [a.k, a]));
   return `<svg viewBox="0 0 1120 440" class="archsvg">
   <rect x="40" y="40" width="440" height="380" rx="24" class="zone1"/><text x="260" y="30" class="zt">محطة الأمان (داخل المصمك)</text>
-  <rect x="680" y="40" width="420" height="380" rx="24" class="zone2"/><text x="890" y="30" class="zt">سيارة الإطفاء الذكية</text>
+  <rect x="680" y="40" width="420" height="380" rx="24" class="zone2"/><text x="890" y="30" class="zt">روبوتا الإطفاء الذكيان</text>
   ${ARCH_LINKS.map(([a, b]) => `<line x1="${P[a].x}" y1="${P[a].y}" x2="${P[b].x}" y2="${P[b].y}" class="alink" data-l="${a}-${b}"/>`).join('')}
   ${ARCH.map(a => `<g class="anode" data-k="${a.k}" transform="translate(${a.x} ${a.y})"><circle r="44" class="acirc"/><text y="12" class="aico">${a.i}</text><text y="66" class="anm">${a.n}</text></g>`).join('')}
   </svg>`; };
@@ -213,21 +214,20 @@ Object.assign(window.DECK_TYPES, {
 
 Object.assign(window.DECK_BIND, {
   masmakhero(sl) {
-    const $ = id => sl.querySelector('#' + id), car = $('mhcar');
-    const SCRIPT = [[0, 'patrol', '🌙 ليل هادئ… المحطة تراقب والسيارة تحرس'], [5, 'fire', '🔥 لهب عند البرج! الليد الأحمر والبازر يعملان'], [7, 'gofire', '📡 المحطة أرسلت… والسيارة قررت: إلى اللهب!'], [10, 'pump', '💧 المضخة تعمل… أُطفئت النار'], [13, 'patrol', '✅ المصمك آمن من جديد'], [16, 'gas', '💨 تسرب غاز قرب المحطة! الليد الأزرق'], [18, 'gogas', '🚙 السيارة تتجه إلى الغاز'], [21, 'fan', '🌀 المروحة تبدد الغاز'], [24, 'patrol', '🛡️ لمسات تراث: تقنية تحمي التاريخ']];
-    let raf = 0, t0 = 0, cx = 300, cy = 520, th = 0;
+    const $ = id => sl.querySelector('#' + id), car = $('mhcar'), car2 = $('mhcar2');
+    const SCRIPT = [[0, 'patrol', '🌙 ليل هادئ… المحطة تراقب، وروبوتان يحرسان'], [5, 'alarm', '🔥💨 لهب عند البرج وتسرّب غاز معًا!'], [7, 'decide', '🧠 الروبوت ١: اللهب أخطر ← إليه · 📡 ويبلغ الروبوت ٢: إلى الغاز'],
+      [9.5, 'go', '🚙🚙 الروبوتان ينطلقان معًا'], [12, 'act', '💧 المضخة تطفئ النار… 🌀 والمروحة تبدد الغاز'], [17, 'safe', '✅ المصمك آمن: روبوتان أسرع من روبوت واحد'], [21, 'patrol', '🛡️ لمسة تراث: تقنية تحمي التاريخ']];
+    let raf = 0, t0 = 0, c1 = 300, c2 = 1300, th1 = 0, th2 = Math.PI;
     const loop = ts => {
-      t0 = t0 || ts; const t = ((ts - t0) / 1000) % 27; const cur = [...SCRIPT].reverse().find(([s]) => t >= s);
-      const st = cur[1]; $('mhcapt').textContent = cur[2];
-      const fire = ['fire', 'gofire', 'pump'].includes(st) && !(st === 'pump' && t > 12), gas = ['gas', 'gogas', 'fan'].includes(st) && !(st === 'fan' && t > 23);
-      $('mhfire').setAttribute('opacity', fire ? 1 : 0); $('mhgas').setAttribute('opacity', gas ? (st === 'fan' ? Math.max(0, 1 - (t - 21) / 2) : 1) : 0);
-      $('mhr').classList.toggle('on', fire); $('mhb').classList.toggle('on', gas); $('mhlcd').textContent = fire ? 'FLAME!' : gas ? 'GAS!' : 'SAFE';
-      let tx, ty; if (st === 'gofire' || st === 'pump') { tx = 760; ty = 520; } else if (st === 'gogas' || st === 'fan') { tx = 1180; ty = 520; } else { tx = 300 + 500 * (0.5 + 0.5 * Math.sin(t * 0.6)); ty = 525; }
-      const dx = tx - cx; cx += clamp(dx, -6, 6); th = dx > 1 ? 0 : dx < -1 ? Math.PI : th;
-      car.setAttribute('transform', `translate(${cx} ${cy}) rotate(${th * 180 / Math.PI})`);
-      $('mhwater').setAttribute('opacity', st === 'pump' && t < 12.5 ? 1 : 0); $('mhwater').setAttribute('transform', `translate(${cx + 40} ${cy - 10}) scale(-1 1) translate(-${0} 0) rotate(0)`);
-      $('mhwater').setAttribute('transform', `translate(${cx - 30} ${cy - 20}) scale(-1.6 2.6)`);
-      $('mhwind').setAttribute('opacity', st === 'fan' ? 1 : 0); $('mhwind').setAttribute('transform', `translate(${cx + 40} ${cy - 30}) scale(-1 1)`);
+      t0 = t0 || ts; const t = ((ts - t0) / 1000) % 24; const cur = [...SCRIPT].reverse().find(([s]) => t >= s), st = cur[1]; $('mhcapt').textContent = cur[2];
+      const fire = ['alarm', 'decide', 'go'].includes(st) || (st === 'act' && t < 15.5), gas = fire;
+      $('mhfire').setAttribute('opacity', fire ? 1 : 0); $('mhgas').setAttribute('opacity', st === 'act' ? Math.max(0, 1 - (t - 12) / 3.5) : fire ? 1 : 0);
+      $('mhr').classList.toggle('on', fire); $('mhb').classList.toggle('on', gas); $('mhlcd').textContent = fire ? 'FIRE+GAS' : 'SAFE';
+      let t1, t2; if (['go', 'act'].includes(st)) { t1 = 760; t2 = 1180; } else if (st === 'patrol' || st === 'safe') { t1 = 300 + 250 * (0.5 + 0.5 * Math.sin(t * 0.6)); t2 = 1250 + 120 * Math.sin(t * 0.5); } else { t1 = c1; t2 = c2; }
+      const d1 = t1 - c1, d2 = t2 - c2; c1 += clamp(d1, -6, 6); c2 += clamp(d2, -6, 6); th1 = d1 > 1 ? 0 : d1 < -1 ? Math.PI : th1; th2 = d2 > 1 ? 0 : d2 < -1 ? Math.PI : th2;
+      car.setAttribute('transform', `translate(${c1} 520) rotate(${th1 * 180 / Math.PI})`); car2.setAttribute('transform', `translate(${c2} 535) rotate(${th2 * 180 / Math.PI})`);
+      $('mhwater').setAttribute('opacity', st === 'act' && t < 15.5 ? 1 : 0); $('mhwater').setAttribute('transform', `translate(${c1 - 30} 500) scale(-1.6 2.6)`);
+      $('mhwind').setAttribute('opacity', st === 'act' ? 1 : 0); $('mhwind').setAttribute('transform', `translate(${c2 - 120} 505)`);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);

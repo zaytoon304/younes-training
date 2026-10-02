@@ -44,8 +44,10 @@ const NOW_RECV = `void onReceive(const esp_now_recv_info *info,
 const DEC_CODE = `void onAlarm(int fireP, int gasP) {
   bool fire = fireP > 50, gas = gasP > 30;
   if (fire && gas) {
-    if (fireP >= gasP) goTo(FIRE_ZONE);
-    else goTo(GAS_ZONE);
+    int hi = fireP >= gasP ? FIRE_ZONE : GAS_ZONE;
+    int lo = (hi == FIRE_ZONE) ? GAS_ZONE : FIRE_ZONE;
+    tellRobot2(lo);          // الثاني: الأقل خطورة
+    goTo(hi);                // الأول: الأخطر
   }
   else if (fire) goTo(FIRE_ZONE);
   else if (gas) goTo(GAS_ZONE);
@@ -59,7 +61,7 @@ const PATHS = { A: [[500, 500], [500, 330], [180, 330], [180, 150]], B: [[500, 5
 const mapSVG = (id) => `<svg viewBox="0 0 ${MW} ${MH}" class="mapsvg" id="${id}">
   <rect width="${MW}" height="${MH}" fill="#d9b382"/><rect x="20" y="20" width="${MW - 40}" height="${MH - 40}" rx="20" fill="#e8cfa4" stroke="#b5895a" stroke-width="6"/>
   ${[[60, 60], [940, 60], [60, 500], [940, 500]].map(([x, y]) => `<rect x="${x - 30}" y="${y - 30}" width="60" height="60" rx="6" fill="#b5895a" stroke="#8a6239" stroke-width="3"/>`).join('')}
-  <path d="M500 520 L500 330 L180 330 L180 140 M500 330 L820 330 L820 140" class="mline"/>
+  <path d="M500 520 L500 330 L180 330 L180 140 M500 330 L820 330 L820 140 M420 520 L420 330" class="mline"/>
   <rect x="488" y="324" width="24" height="12" fill="#e74c3c" class="jmark"/><text x="530" y="320" class="mtx">تقاطع</text>
   <g transform="translate(180 110)"><rect x="-70" y="-50" width="140" height="70" rx="10" class="mzone" id="zA"/><text y="-8" class="mtx">المنطقة A</text><text y="14" class="mtx2">البرج الغربي</text></g>
   <g transform="translate(820 110)"><rect x="-70" y="-50" width="140" height="70" rx="10" class="mzone" id="zB"/><text y="-8" class="mtx">المنطقة B</text><text y="14" class="mtx2">مخزن الحطب</text></g>
@@ -72,6 +74,9 @@ const mapSVG = (id) => `<svg viewBox="0 0 ${MW} ${MH}" class="mapsvg" id="${id}"
   <g id="${id}pkt" class="mpkt"><rect x="-56" y="-16" width="112" height="32" rx="16"/><text y="6"></text></g>
   <g id="${id}spray" opacity="0"><path d="M0 0 q 30 -40 60 -10" fill="none" stroke="#4fc3f7" stroke-width="7" stroke-dasharray="8 6" class="spray"/></g>
   <g id="${id}wind" opacity="0">${[-12, 0, 12].map(d => `<path d="M0 ${d} q 30 -8 60 0" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="8 6" class="spray"/>`).join('')}</g>
+  <g id="${id}spray2" opacity="0"><path d="M0 0 q 30 -40 60 -10" fill="none" stroke="#4fc3f7" stroke-width="7" stroke-dasharray="8 6" class="spray"/></g>
+  <g id="${id}wind2" opacity="0">${[-12, 0, 12].map(d => `<path d="M0 ${d} q 30 -8 60 0" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="8 6" class="spray"/>`).join('')}</g>
+  <g id="${id}car2">${car4(id + 'c2', 'r2')}</g><text x="420" y="500" class="mtx2" id="${id}r2l">٢</text>
   <g id="${id}car">${car4(id + 'c')}<circle cx="44" cy="-12" r="5" class="irs" id="${id}sl"/><circle cx="44" cy="12" r="5" class="irs" id="${id}sr"/></g>
 </svg>`;
 const PATH_CODE = `void goTo(int zone) {
@@ -87,19 +92,22 @@ const PATH_CODE = `void goTo(int zone) {
   drive(0, 0);
 }`;
 const MISSION_CODE = `void loop() {
-  if (newAlarm) {
-    newAlarm = false;
-    int zone = decide();
-    goTo(zone);
-    if (alarmType[zone] == FLAME) {
-      digitalWrite(PUMP, LOW);  delay(4000);
-      digitalWrite(PUMP, HIGH);
-    } else {
-      digitalWrite(FAN, LOW);   delay(5000);
-      digitalWrite(FAN, HIGH);
-    }
-    goHome();
+  if (!newAlarm) return;
+  newAlarm = false;
+  bool fire = m.fireP > 50, gas = m.gasP > 30;
+  if (fire && gas) {
+    int hi = m.fireP >= m.gasP ? FIRE_ZONE : GAS_ZONE;
+    tellRobot2(hi == FIRE_ZONE ? GAS_ZONE : FIRE_ZONE);
+    mission(hi);
   }
+  else if (fire) mission(FIRE_ZONE);
+  else if (gas) mission(GAS_ZONE);
+}
+
+void mission(int zone) {
+  goTo(zone);
+  if (zone == FIRE_ZONE) pumpFor(4000); else fanFor(5000);
+  goHome();
 }`;
 
 /* ================== دائرة البناء: السيارة ================== */
@@ -188,7 +196,7 @@ void pumpOff() { digitalWrite(PUMP, HIGH); }`, 'micro')}</div>
             <label class="lsl"><span dir="ltr">${v} = <b id="dl${z}v">٠</b>%</span><input type="range" id="dl${z}" min="0" max="100" value="${z === 'A' ? 0 : 0}"></label>
             <div class="dcscore"><span>الحد ${th}٪</span><div class="btbar"><i id="ds${z}" style="background:${c}"></i></div><b id="dn${z}">—</b></div></div>`).join('')}
           <div class="lseg"><span>جرّب</span><button class="lsb" data-p="85,0">حريق فقط</button><button class="lsb" data-p="0,70">غاز فقط</button><button class="lsb" data-p="60,90">الاثنان: الغاز أعلى</button><button class="lsb" data-p="95,45">الاثنان: الحريق أعلى</button></div></div>
-        <div class="dcright"><div class="dcverdict" id="dcv"></div><svg viewBox="0 0 400 140" class="dcarrow"><g id="dcar" transform="translate(200 70)">${car4('dcc')}</g><text x="40" y="128" class="dctx">🔥 A</text><text x="360" y="128" class="dctx">B 💨</text></svg>
+        <div class="dcright"><div class="dcverdict" id="dcv"></div><svg viewBox="0 0 400 140" class="dcarrow"><g id="dcar2" transform="translate(240 70)">${car4('dcc2', 'r2')}</g><g id="dcar" transform="translate(160 70)">${car4('dcc')}</g><text x="200" y="22" class="dctx" style="font-size:15px">🔴 الروبوت ١ · 🔵 الروبوت ٢</text><text x="40" y="128" class="dctx">🔥 A</text><text x="360" y="128" class="dctx">B 💨</text></svg>
           ${codeBlock(DEC_CODE, 'micro')}</div>
       </div></div>`,
 
@@ -204,21 +212,22 @@ void pumpOff() { digitalWrite(PUMP, HIGH); }`, 'micro')}</div>
       <div class="kicker">🚒 المهمة الكاملة</div>
       <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
       <div class="pmgrid">
-        <div class="pmleft ix">${mapSVG('ms')}<div class="mctl"><button class="clap" data-e="1A">🔥 لهب A</button><button class="clap" data-e="2B">💨 غاز B</button><button class="sndbtn" data-e="2A">💨 غاز A</button><button class="sndbtn" data-e="1B">🔥 لهب B</button><button class="sndbtn" data-e="both">🔥💨 معًا</button></div></div>
+        <div class="pmleft ix">${mapSVG('ms')}<div class="mctl"><button class="clap" data-e="1A">🔥 لهب A</button><button class="clap" data-e="2B">💨 غاز B</button><button class="sndbtn" data-e="2A">💨 غاز A</button><button class="sndbtn" data-e="1B">🔥 لهب B</button><button class="sndbtn" data-e="both">🔥💨 معًا: روبوتان</button></div></div>
         <div class="pmright"><div class="mslog" id="mslog"></div>${codeBlock(MISSION_CODE, 'micro')}<div class="sofacts"><div class="ac gold"><span>زمن الاستجابة</span><b id="msrt">—</b></div><div class="ac"><span>مهمات منجزة</span><b id="msn">٠</b></div></div></div>
       </div></div>`,
 });
 
 /* ---------- محرك الحركة على الخريطة (مشترك بين الطريق والمهمة) ---------- */
-function mapMover(sl, id) {
+function mapMover(sl, id, key = 'car', home = [500, 500]) {
   const $ = k => sl.querySelector('#' + id + k);
-  const st = { x: 500, y: 500, th: -Math.PI / 2, path: [], cb: null, junc: 0, speed: 150 };
+  const st = { x: home[0], y: home[1], th: -Math.PI / 2, path: [], cb: null, junc: 0, speed: 150 };
   st.go = (pts, cb) => { st.path = pts.map(p => [...p]); st.cb = cb; st.junc = 0; };
   st.step = dt => {
     if (st.path.length) { const [tx, ty] = st.path[0], dx = tx - st.x, dy = ty - st.y, d = Math.hypot(dx, dy);
       if (d < 3) { const p = st.path.shift(); if (p[0] === 500 && p[1] === 330) st.junc++; if (!st.path.length && st.cb) { const c = st.cb; st.cb = null; c(); } }
       else { const want = Math.atan2(dy, dx); let da = Math.atan2(Math.sin(want - st.th), Math.cos(want - st.th)); if (Math.abs(da) > 0.05) st.th += clamp(da, -5 * dt, 5 * dt); else { st.th = want; const s = Math.min(d, st.speed * dt); st.x += dx / d * s; st.y += dy / d * s; } } }
-    $('car').setAttribute('transform', `translate(${st.x} ${st.y}) rotate(${st.th * 180 / Math.PI})`);
+    $(key).setAttribute('transform', `translate(${st.x} ${st.y}) rotate(${st.th * 180 / Math.PI})`);
+    if (key !== 'car') return;
     const onLine = st.path.length > 0; $('sl').classList.toggle('blk', onLine && Math.sin(performance.now() / 120) > .3); $('sr').classList.toggle('blk', onLine && Math.sin(performance.now() / 120) < -.3);
   };
   return st;
@@ -281,13 +290,15 @@ Object.assign(window.DECK_BIND, {
       const a = +$('dlA').value, b = +$('dlB').value, fire = a > 50, gas = b > 30;
       $('dlAv').textContent = AR(a); $('dlBv').textContent = AR(b);
       $('dsA').style.width = a + '%'; $('dsB').style.width = b + '%'; $('dnA').textContent = fire ? '🔥 نعم' : 'لا'; $('dnB').textContent = gas ? '💨 نعم' : 'لا';
-      let txt, tx = 200, lines;
-      if (fire && gas) { const f = a >= b; txt = f ? `🚙 الخطران معًا: الحريق أعلى (${AR(a)}٪ ≥ ${AR(b)}٪) ← إلى الحريق` : `🚙 الخطران معًا: الغاز أعلى (${AR(b)}٪ > ${AR(a)}٪) ← إلى الغاز`; tx = f ? 70 : 330; lines = [2, 3, f ? 4 : 5]; }
-      else if (fire) { txt = '🚙 حريق وحده ← إلى مصدره فورًا'; tx = 70; lines = [2, 7]; }
-      else if (gas) { txt = '🚙 غاز وحده ← إلى مصدره فورًا'; tx = 330; lines = [2, 8]; }
-      else { txt = '🛡️ لا خطر: السيارة في مكانها تحرس'; lines = [2, 9]; }
-      $('dzA').classList.toggle('win', tx === 70); $('dzB').classList.toggle('win', tx === 330);
-      $('dcv').textContent = txt; $('dcar').setAttribute('transform', `translate(${tx} 70) rotate(${tx < 200 ? 180 : 0})`);
+      let txt, x1 = 160, x2 = 240, lines;
+      if (fire && gas) { const f = a >= b; x1 = f ? 70 : 330; x2 = f ? 330 : 70;
+        txt = f ? `🔴 الروبوت ١ إلى الحريق (${AR(a)}٪ الأخطر) · 📡 ويبلغ 🔵 الروبوت ٢: إلى الغاز` : `🔴 الروبوت ١ إلى الغاز (${AR(b)}٪ الأخطر) · 📡 ويبلغ 🔵 الروبوت ٢: إلى الحريق`; lines = [2, 3, 4, 5, 6, 7]; }
+      else if (fire) { txt = '🔴 حريق وحده: الروبوت ١ إليه، و🔵 الروبوت ٢ يبقى حارسًا'; x1 = 70; lines = [2, 9]; }
+      else if (gas) { txt = '🔴 غاز وحده: الروبوت ١ إليه، و🔵 الروبوت ٢ يبقى حارسًا'; x1 = 330; lines = [2, 10]; }
+      else { txt = '🛡️ لا خطر: الروبوتان في مكانهما يحرسان'; lines = [2, 11]; }
+      $('dzA').classList.toggle('win', x1 === 70); $('dzB').classList.toggle('win', x1 === 330);
+      $('dcv').textContent = txt;
+      $('dcar').setAttribute('transform', `translate(${x1} 70) rotate(${x1 < 200 ? 180 : 0})`); $('dcar2').setAttribute('transform', `translate(${x2} 70) rotate(${x2 < 200 ? 180 : 0})`);
       runLines(sl, '.dcright', lines);
     };
     sl.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { const [a, c] = b.dataset.p.split(','); $('dlA').value = a; $('dlB').value = c; upd(); });
@@ -306,40 +317,45 @@ Object.assign(window.DECK_BIND, {
   },
 
   missionlab(sl) {
-    const $ = id => sl.querySelector('#' + id), M = mapMover(sl, 'ms'), lcd = $('mslcd'), pkt = $('mspkt');
-    let ev = { A: 0, B: 0 }, busy = false, t0 = 0, done = 0, raf = 0, last = 0, logs = [], timers = [];
+    const $ = id => sl.querySelector('#' + id), M1 = mapMover(sl, 'ms'), M2 = mapMover(sl, 'ms', 'car2', [420, 500]), lcd = $('mslcd'), pkt = $('mspkt');
+    const P2 = { A: [[420, 500], [420, 330], [180, 330], [180, 150]], B: [[420, 500], [420, 330], [820, 330], [820, 150]] };
+    let ev = { A: 0, B: 0 }, pc = { A: 0, B: 0 }, busy = 0, t0 = 0, done = 0, raf = 0, last = 0, logs = [], timers = [];
     const say = t => { logs.unshift(`<div><b>${AR(((performance.now() - (t0 || performance.now())) / 1000).toFixed(1)).replace('.', '٫')} ث</b> ${t}</div>`); $('mslog').innerHTML = logs.slice(0, 7).join(''); };
     const station = () => { const fire = ev.A === 1 || ev.B === 1, gas = ev.A === 2 || ev.B === 2; $('msr').classList.toggle('on', fire); $('msb').classList.toggle('on', gas); lcd.textContent = fire && gas ? 'FIRE+GAS' : fire ? 'FLAME!' : gas ? 'GAS!' : 'SAFE';
       ['A', 'B'].forEach(z => { $('msf' + z).setAttribute('opacity', ev[z] === 1 ? 1 : 0); $('msg' + z).setAttribute('opacity', ev[z] === 2 ? 1 : 0); $('z' + z) && $('z' + z).classList.toggle('alarm', !!ev[z]); }); };
-    const danger = z => ev[z] === 1 ? 90 : ev[z] === 2 ? 60 : 0;
-    const pick = () => danger('A') || danger('B') ? (danger('A') >= danger('B') ? 'A' : 'B') : null;
-    const flyPkt = (txt, cb) => { const s = performance.now(); pkt.querySelector('text').textContent = txt; pkt.style.opacity = 1;
-      const f = now => { const k = Math.min(1, (now - s) / 900), x = 500 + (M.x - 500) * k, y = 175 + (M.y - 175) * k - Math.sin(k * Math.PI) * 60; pkt.setAttribute('transform', `translate(${x} ${y})`); if (k < 1) requestAnimationFrame(f); else { pkt.style.opacity = 0; cb(); } }; requestAnimationFrame(f); };
+    const fly = (from, to, txt, cb) => { const s = performance.now(); pkt.querySelector('text').textContent = txt; pkt.style.opacity = 1;
+      const f = now => { const k = Math.min(1, (now - s) / 900), x = from.x + (to.x - from.x) * k, y = from.y + (to.y - from.y) * k - Math.sin(k * Math.PI) * 60; pkt.setAttribute('transform', `translate(${x} ${y})`); if (k < 1) requestAnimationFrame(f); else { pkt.style.opacity = 0; cb(); } }; requestAnimationFrame(f); };
     const secs = () => AR(((performance.now() - t0) / 1000).toFixed(1)).replace('.', '٫') + ' ث';
-    const act = (z, next) => {                                   // وصلت: شغّل المضخة أو المروحة ثم أكمل
-      const type = ev[z]; say(type === 1 ? '💧 وصلت: المضخة تعمل (LOW على 16)' : '🌀 وصلت: المروحة تعمل (LOW على 17)'); runLines(sl, '.pmright', type === 1 ? [6, 7, 8] : [9, 10, 11]);
-      const g = $(type === 1 ? 'msspray' : 'mswind'); g.setAttribute('opacity', 1); g.setAttribute('transform', `translate(${M.x + 10} ${M.y - 40}) rotate(-60)`); beep(type === 1 ? 500 : 300, 300, .02);
-      timers.push(setTimeout(() => { g.setAttribute('opacity', 0); ev[z] = 0; station(); done++; $('msn').textContent = AR(done); say(`✅ المنطقة ${z} آمنة`); $('msrt').textContent = secs(); next(); }, type === 1 ? 3200 : 3800));
-    };
-    const finish = z => { runLines(sl, '.pmright', [13]); say('🏠 كل المصمك آمن: تعود إلى نقطة الانطلاق'); M.go(rev(PATHS[z]), () => { busy = false; runLines(sl, '.pmright', []); }); };
-    const after = z => { const z2 = pick(); if (!z2) return finish(z);
-      say(`🧠 حدث آخر ما زال قائمًا: إلى المنطقة ${z2}`); runLines(sl, '.pmright', [4, 5]);
-      M.go([PATHS[z][2], PATHS[z2][2], PATHS[z2][3]], () => act(z2, () => after(z2))); };
+    const NAME = { 1: '🔴 الروبوت ١', 2: '🔵 الروبوت ٢' };
+    const mission = (r, z) => { const M = r === 1 ? M1 : M2, path = r === 1 ? PATHS[z] : P2[z]; runLines(sl, '.pmright', [14, 15]);
+      M.go(path, () => { const type = ev[z]; say(`${NAME[r]} وصل: ${type === 1 ? '💧 المضخة تعمل' : '🌀 المروحة تعمل'}`); runLines(sl, '.pmright', [16]);
+        const g = $((type === 1 ? 'msspray' : 'mswind') + (r === 1 ? '' : '2')); g.setAttribute('opacity', 1); g.setAttribute('transform', `translate(${M.x + 10} ${M.y - 40}) rotate(-60)`); beep(type === 1 ? 500 : 300, 300, .02);
+        timers.push(setTimeout(() => { g.setAttribute('opacity', 0); ev[z] = 0; station(); done++; $('msn').textContent = AR(done); say(`✅ المنطقة ${z} آمنة (${NAME[r]})`); $('msrt').textContent = secs(); runLines(sl, '.pmright', [17]);
+          M.go(rev(path), () => { busy--; if (!busy) { runLines(sl, '.pmright', []); say('🏠 الروبوتان في نقطة الانطلاق'); } }); }, type === 1 ? 3200 : 3800)); }); };
     const run = () => {
-      const z = pick(); if (!z) { busy = false; return; } const type = ev[z]; runLines(sl, '.pmright', [2, 3]);
-      say(`📡 المحطة ترسل: ${type === 1 ? 'لهب' : 'غاز'} في ${z}`);
-      flyPkt((type === 1 ? 'FLAME ' : 'GAS ') + z, () => {
-        say(`🧠 السيارة تقرر: المنطقة ${z} ${ev.A && ev.B ? '(الأخطر الآن)' : ''}`); runLines(sl, '.pmright', [4, 5]);
-        M.go(PATHS[z], () => act(z, () => after(z)));
-      });
+      const fire = ev.A === 1 ? 'A' : ev.B === 1 ? 'B' : null, gas = ev.A === 2 ? 'A' : ev.B === 2 ? 'B' : null;
+      const st0 = { x: 500, y: 175 };
+      if (fire && gas) {
+        const hi = pc[fire] >= pc[gas] ? fire : gas, lo = hi === fire ? gas : fire;
+        say(`📡 المحطة ترسل: 🔥 ${AR(pc[fire])}٪ · 💨 ${AR(pc[gas])}٪`); runLines(sl, '.pmright', [2, 3, 4, 5]);
+        fly(st0, M1, 'FIRE+GAS', () => {
+          say(`🧠 ${NAME[1]} يقرر: ${hi === fire ? 'الحريق' : 'الغاز'} أخطر ← إليه`); runLines(sl, '.pmright', [6, 7, 8]); busy = 2;
+          fly(M1, M2, 'GO ' + lo, () => { say(`📡 ${NAME[1]} يبلغ ${NAME[2]}: إلى ${lo === fire ? 'الحريق' : 'الغاز'} (الأقل خطورة)`); mission(2, lo); });
+          mission(1, hi);
+        });
+      } else {
+        const z = fire || gas; say(`📡 المحطة ترسل: ${fire ? '🔥 حريق ' + AR(pc[z]) + '٪' : '💨 غاز ' + AR(pc[z]) + '٪'} في ${z}`); runLines(sl, '.pmright', [2, 3, 4]);
+        fly(st0, M1, (fire ? 'FIRE ' : 'GAS ') + z, () => { say(`🧠 ${NAME[1]}: خطر واحد ← إليه، و${NAME[2]} يبقى حارسًا`); runLines(sl, '.pmright', [10, 11]); busy = 1; mission(1, z); });
+      }
     };
     sl.querySelectorAll('[data-e]').forEach(b => b.onclick = () => {
-      if (busy) return; busy = true; const e = b.dataset.e; t0 = performance.now(); logs = [];
-      if (e === 'both') { ev.A = 2; ev.B = 1; say('🔥💨 حدثان معًا: غاز في A ولهب في B'); } else ev[e[1]] = +e[0];
+      if (busy) return; busy = 1; const e = b.dataset.e; t0 = performance.now(); logs = [];
+      if (e === 'both') { ev.A = 2; ev.B = 1; pc.A = 88; pc.B = 72; say('🔥💨 حدثان معًا: غاز ٨٨٪ في A ولهب ٧٢٪ في B'); }
+      else { ev[e[1]] = +e[0]; pc[e[1]] = e[0] === '1' ? 80 : 65; }
       say(`🚨 المحطة: ${e === 'both' ? 'الأحمر والأزرق يضيئان' : e[0] === '1' ? 'الليد الأحمر والبازر' : 'الليد الأزرق والبازر'}`); station(); beep(1500, 150, .04);
       timers.push(setTimeout(run, 700));
     });
-    const loop = ts => { const dt = Math.min(40, ts - (last || ts)) / 1000; last = ts; M.step(dt); raf = requestAnimationFrame(loop); };
+    const loop = ts => { const dt = Math.min(40, ts - (last || ts)) / 1000; last = ts; M1.step(dt); M2.step(dt); raf = requestAnimationFrame(loop); };
     station(); raf = requestAnimationFrame(loop);
     window.DECK_CLEANUP.push(() => { cancelAnimationFrame(raf); timers.forEach(clearTimeout); });
   },
