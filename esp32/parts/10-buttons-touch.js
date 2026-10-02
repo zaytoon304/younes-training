@@ -1,0 +1,121 @@
+/* المحور ١٠: الأزرار واللمس */
+DECK.modules.push({ id: 'buttons', name: 'الأزرار واللمس', slides: [
+  { t: 'section', num: '١٠', title: 'الأزرار… واللمس', sub: 'INPUT_PULLUP بلا مقاومة… وزر بلا زر!',
+    notes: 'الأزرار كما في الأونو تقريبًا، ثم مفاجأة: ESP32 تحس بالإصبع على سلك عادي.' },
+  { t: 'numlist', kicker: '🎯 بنهاية هذا المحور تستطيع أن', title: 'أهداف المحور',
+    items: [
+      { h: 'تقرأ زرًا بـ digitalRead وINPUT_PULLUP' },
+      { h: 'تعرف لماذا 34–39 لا تصلح لهذا' },
+      { h: 'تكتب قرارًا بجملة if' },
+      { h: 'تصنع زر لمس بـ touchRead' },
+    ]},
+  { t: 'code', kicker: 'القراءة', title: 'digitalRead: هل الطرف HIGH أم LOW؟', file: 'Read.ino',
+    code: `void setup() {
+  Serial.begin(115200);
+  pinMode(4, INPUT_PULLUP);
+}
+
+void loop() {
+  Serial.println(digitalRead(4));
+  delay(200);
+}`,
+    note: 'مع INPUT_PULLUP: الزر غير مضغوط = 1 (HIGH)، ومضغوط = 0 (LOW).' },
+  { t: 'cards', kicker: 'الطرف العائم', title: 'حلّان… وتحذير خاص بـ ESP32', cols: 3,
+    cards: [
+      { icon: '🔼', h: 'INPUT_PULLUP', b: 'مقاومة داخلية تثبّت الطرف على HIGH: الأسهل' },
+      { icon: '🔧', h: 'مقاومة خارجية 10k', b: 'من الطرف إلى 3V3: حين لا يوجد سحب داخلي' },
+      { icon: '⚠️', h: '34–39 بلا سحب داخلي', b: 'INPUT_PULLUP لا يفعل شيئًا عليها: مقاومة خارجية أو طرف آخر' },
+    ],
+    notes: 'هذا التحذير صادف فريق «صانع الذكريات» فعلًا: أزرارهم على 35 و36 و39 احتاجت مقاومات خارجية.' },
+  { t: 'ebutton', title: 'اضغط الزر… ثم جرّب GPIO34 أو INPUT',
+    notes: 'اضغط الزر: LOW والليد يضيء. اختر INPUT: الطرف عائم والقراءة ترتجف. أعد INPUT_PULLUP واختر GPIO34: يرتجف أيضًا! لأن 34 لا سحب داخلي فيه. الكود يتغير مع كل اختيار.' },
+  { t: 'build2', kind: 'ebtnw', kicker: '🔧 التركيب', title: 'ركّب دائرة الزر… قطعة قطعة', intro: 'زر على 4 · ليد على 23',
+    notes: 'لاحظوا: لا مقاومة للزر. INPUT_PULLUP يكفي على الطرف 4.' },
+  { t: 'code', reveal: true, kicker: '✍️ القرار', title: 'if: إذا ضُغط الزر… أشعل الليد', file: 'Button.ino',
+    code: `const int BTN = 4, LED = 23;
+
+void setup() {
+  pinMode(BTN, INPUT_PULLUP);
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(BTN) == LOW) {
+    digitalWrite(LED, HIGH);
+  } else {
+    digitalWrite(LED, LOW);
+  }
+}`,
+    steps: [
+      { lines: [4], text: 'الزر مدخل بسحب داخلي' },
+      { lines: [9], text: 'السؤال: هل الطرف LOW؟ (أي مضغوط)' },
+      { lines: [10], text: 'نعم: أشعل الليد' },
+      { lines: [11, 12], text: 'وإلا: أطفئه' },
+    ],
+    notes: 'الخطأ الأشهر: if (digitalRead(BTN) = LOW) بعلامة واحدة. المقارنة == بعلامتين.' },
+  { t: 'codecheck', title: 'صح أم خطأ؟ جملة if',
+    items: [
+      { code: 'if (digitalRead(4) == LOW)', ok: true, why: 'مقارنة صحيحة بعلامتين' },
+      { code: 'if (digitalRead(4) = LOW)', ok: false, why: 'علامة واحدة إسناد لا مقارنة' },
+      { code: 'pinMode(34, INPUT_PULLUP);', ok: false, why: '34 بلا سحب داخلي: الطرف عائم' },
+      { code: 'pinMode(4, INPUT_PULLUP);', ok: true, why: 'الطرف 4 فيه سحب داخلي' },
+    ]},
+  { t: 'statement', kicker: 'مفاجأة ESP32',
+    text: 'عشرة أطراف في ESP32 تحس بإصبعك… دون أي زر',
+    notes: 'الجسم يغيّر «سعة» السلك، والشريحة تقيس هذا التغير. سلك أو رقاقة ألمنيوم أو حتى ثمرة فاكهة تصبح زرًا!' },
+  { t: 'etouch', title: 'زر اللمس: قرّب إصبعك من الرقاقة',
+    notes: 'حرّك المؤشر ليقترب الإصبع: قراءة touchRead تنخفض من نحو ٧٠ إلى أقل من ٢٠. حين تعبر الحد (٣٠) يضيء الليد. راقب الرسم. في الواقع: سلك من الطرف 4 إلى رقاقة ألمنيوم، والمس.' },
+  { t: 'code', reveal: true, kicker: '✍️ اللمس', title: 'زر بلا زر', file: 'Touch.ino',
+    code: `const int LED = 23;
+int limit = 30;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  int v = touchRead(4);       // T0
+  Serial.println(v);
+  digitalWrite(LED, v < limit);
+  delay(100);
+}`,
+    steps: [
+      { lines: [2], text: 'الحد: نختاره بعد مراقبة القراءات بلا لمس ومع لمس' },
+      { lines: [10], text: 'touchRead(4): رقم ينخفض كلما اقترب الإصبع' },
+      { lines: [11], text: 'نطبعه لنختار الحد بأعيننا' },
+      { lines: [12], text: 'أقل من الحد؟ لمس: الليد يضيء' },
+    ],
+    notes: 'كل لوحة وكل سلك يعطي أرقامًا مختلفة قليلًا: لهذا نطبع أولًا ثم نختار الحد. هذا خاص بـ ESP32 الأصلية (DevKit V1)؛ في S2 وS3 القراءة ترتفع مع اللمس بدل أن تنخفض.' },
+  { t: 'vote', tap: true, kicker: '✅ اختبر نفسك', title: 'الشاشة تعرض 0 و1 عشوائيًا والزر على 35 غير مضغوط… لماذا؟', correct: 1,
+    options: ['الزر تالف', '35 بلا سحب داخلي: الطرف عائم', 'الكود بطيء'],
+    why: [
+      'الزر سليم غالبًا',
+      'صحيح: أضف مقاومة 10k إلى 3V3، أو انقل الزر إلى 4',
+      'السرعة لا تسبب ذلك',
+    ]},
+  { t: 'glossary', title: 'مصطلحات المحور العاشر',
+    terms: [
+      { en: 'digitalRead', ar: 'القراءة الرقمية', b: 'HIGH أو LOW' },
+      { en: 'INPUT_PULLUP', ar: 'سحب داخلي', b: 'غير متاح على 34–39' },
+      { en: 'Floating', ar: 'طرف عائم', b: 'قراءات عشوائية' },
+      { en: 'if / else', ar: 'الشرط', b: 'قرار في الكود' },
+      { en: 'touchRead', ar: 'قراءة اللمس', b: 'تنخفض مع الإصبع' },
+      { en: 'Capacitive', ar: 'سعوي', b: 'يحس بالجسم دون ضغط' },
+    ]},
+  { t: 'teach', title: 'تدريس الأزرار واللمس',
+    mistakes: [
+      '= بدل ==',
+      'زر على 34 مع INPUT_PULLUP',
+      'حد لمس ثابت من الإنترنت لا يناسب لوحتهم',
+    ],
+    activity: { title: '«بيانو الفاكهة»', time: '٣٠ دقيقة', steps: [
+      'وصّل ثلاثة أطراف لمس بثلاث حبات فاكهة',
+      'كل لمسة تشعل ليدًا مختلفًا (أو تطبع نغمة)',
+      'تحدٍّ: أي فاكهة أفضل موصل؟',
+    ]},
+    notes: 'نشاط يبهر الطلاب الصغار ويعلّمهم الموصلات والعوازل. أطراف اللمس: 4 و13 و14 و27 و32 و33 وغيرها.' },
+  { t: 'statement', kicker: 'خلاصة المحور',
+    text: 'زر بمقاومة داخلية، وزر بلا زر أصلًا: ESP32 تحس بالعالم بطرق لا يعرفها الأونو',
+    notes: 'المحور الأخير: مشروع التخرج.' },
+]});
