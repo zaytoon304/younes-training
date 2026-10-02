@@ -28,6 +28,18 @@ const ST = [
     q: ['في أي فن شعبي يحضر السيف؟', 'العرضة', 'صيد السمك'], h: ['العرضة رقصة شعبية تُؤدّى:', 'بالسيوف والطبول والشعر', 'بالكرة'] },
 ];
 window.HM = { ST };
+const VOICES = [
+  { f: '0001', n: 'الترحيب', e: '👋', c: '#7a5230', t: 'مرحبًا بك في صانع الذكريات التراثية! اختر عنصرًا تراثيًا، واستمع إلى قصته، ثم أجب…' },
+  { f: '0002', k: 'tent', n: 'الخيمة', c: '#d64545', t: 'أنا الخيمة! بيت أهل البادية… في ظلّي تجتمع الأسرة ويُكرَم الضيف. أنا رمز الضيافة والكرم.' },
+  { f: '0003', k: 'jar', n: 'الفخار', c: '#e0b400', t: 'أنا الفخّار! صنعني الحِرَفيّ من الطين وأدخلني الفرن… حفظتُ الماء باردًا والطعام سليمًا.' },
+  { f: '0004', k: 'cloth', n: 'الملابس', c: '#2b6fc0', t: 'أنا الملابس التقليدية! تتنوّع ألواني من منطقة إلى منطقة… وفي تنوّعي جمال المملكة كلّها.' },
+  { f: '0005', k: 'sword', n: 'السيف', c: '#2e9e6b', t: 'أنا السيف! رمز الفخر والشجاعة… أحضر في العرضة، وأزيّن مع النخلة شعار وطني.' },
+  { f: '0006', n: 'أحسنت', e: '🟢', c: '#2e9e6b', t: 'أحسنت! إجابة صحيحة… خُذ ذكراك!' },
+  { f: '0007', n: 'حاول مرة أخرى', e: '🔴', c: '#d64545', t: 'لا بأس، حاول مرة أخرى… استمع جيدًا.' },
+];
+let PLAYER = null;
+const playAudio = (src, onEnd) => { try { if (PLAYER) { PLAYER.pause(); PLAYER.onended && PLAYER.onended(); } PLAYER = new Audio(src); PLAYER.onended = onEnd; PLAYER.play().catch(() => onEnd && onEnd()); } catch (e) { onEnd && onEnd(); } };
+const stopAudio = () => { if (PLAYER) { PLAYER.pause(); PLAYER = null; } };
 
 /* ================== رسومات العناصر التراثية (من الأمام) ================== */
 const ITEM = {
@@ -419,6 +431,17 @@ Object.assign(window.DECK_TYPES, {
           <div class="tagrow2"><span style="background:#d9b382">رملي</span><span style="background:#efe6d4;color:#3e2a1a">بيج</span><span style="background:#6d4521">بني داكن</span><span style="background:#14120f">أسود</span><span style="background:#8a2c22">لمسات سدو</span></div></div>
       </div></div>`,
 
+  voices: s => { const all = s.set === 'all';
+    const V = all ? VOICES : VOICES.filter(v => v.k);
+    return `<div class="slide light">
+      <div class="kicker">${s.kicker}</div>
+      <h2 class="title" style="margin-bottom:12px">${s.title}</h2>
+      <div class="vogrid ${all ? 'all' : ''}">${V.map(v => `<div class="vocard" data-c="${v.c}" style="--vc:${v.c}">
+          ${v.k ? `<svg viewBox="-80 -70 160 130" class="voart">${ITEM[v.k]}</svg>` : `<div class="voemo">${v.e}</div>`}
+          <div class="votx"><b>${v.n}</b><p>«${v.t}»</p>${all ? `<a class="vofile" href="audio/${v.f}.mp3" download dir="ltr">⬇ ${v.f}.mp3</a>` : ''}</div>
+          <button class="voplay ix" data-audio="audio/${v.f}.mp3">▶</button></div>`).join('')}</div>
+      ${all ? `<div class="sowarn ok vonote">💾 انسخ الملفات السبعة كما هي إلى جذر بطاقة microSD (FAT32) بالترتيب: 0001 أولًا ثم 0002… والمشغّل جاهز</div>` : ''}</div>`; },
+
   pitch: s => `<div class="slide light">
       <div class="kicker">${s.kicker}</div>
       <h2 class="title" style="margin-bottom:14px">${s.title}</h2>
@@ -578,7 +601,7 @@ Object.assign(window.DECK_BIND, {
 
   medialab(sl) {
     const $ = id => sl.querySelector('#' + id); let raf = 0, playT = 0, file = 0, last = 0, t = 0;
-    const play = (f, a, b) => { file = f; playT = 2.6; lcd(sl, 'mdp', a, b); sl.querySelectorAll('#mdlist div').forEach(d => d.classList.toggle('on', +d.dataset.f === f)); $('mdfile').textContent = `▶ ${String(f).padStart(4, '0')}.mp3`; beep(500 + f * 80, 120, .02);
+    const play = (f, a, b) => { file = f; playT = 60; playAudio(`audio/${String(f).padStart(4, '0')}.mp3`, () => { playT = 0; }); lcd(sl, 'mdp', a, b); sl.querySelectorAll('#mdlist div').forEach(d => d.classList.toggle('on', +d.dataset.f === f)); $('mdfile').textContent = `▶ ${String(f).padStart(4, '0')}.mp3`;
       runLines(sl, '.hmR', f === 1 ? [10, 11] : [14, 15, 16]); };
     $('mdwel').onclick = () => play(1, 'Welcome!', 'Time 05:00');
     sl.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { const i = +b.dataset.s; play(i + 2, 'Station: ' + ST[i].en, 'Time 04:3' + i); });
@@ -589,7 +612,7 @@ Object.assign(window.DECK_BIND, {
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
-    window.DECK_CLEANUP.push(() => cancelAnimationFrame(raf));
+    window.DECK_CLEANUP.push(() => { cancelAnimationFrame(raf); stopAudio(); });
   },
 
   coinlab(sl) {
@@ -688,6 +711,15 @@ Object.assign(window.DECK_BIND, {
     };
     raf = requestAnimationFrame(loop);
     window.DECK_CLEANUP.push(() => cancelAnimationFrame(raf));
+  },
+
+  voices(sl) {
+    sl.querySelectorAll('.voplay').forEach(b => b.onclick = () => { const card = b.closest('.vocard'), on = card.classList.contains('on');
+      sl.querySelectorAll('.vocard').forEach(c => { c.classList.remove('on'); c.querySelector('.voplay').textContent = '▶'; });
+      if (on) return stopAudio();
+      card.classList.add('on'); b.textContent = '⏸';
+      playAudio(b.dataset.audio, () => { card.classList.remove('on'); b.textContent = '▶'; }); });
+    window.DECK_CLEANUP.push(stopAudio);
   },
 
   boothlab(sl) {

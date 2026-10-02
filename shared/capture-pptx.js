@@ -43,6 +43,11 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
     } else {
       manifest[i] = { base: await shot(i, START[t] ?? n, `s${i + 1}.jpg`), layers: [] };
     }
+    // أزرار الصوت ([data-audio]): نسجّل مواضعها ليضع البوربوينت فوقها ملفًا صوتيًا يعمل بالنقر
+    const audio = await pg.evaluate(() => { const st = document.getElementById('stage').getBoundingClientRect();
+      return [...document.querySelectorAll('#stage .slide [data-audio]')].map(e => { const r = e.getBoundingClientRect();
+        return { src: e.dataset.audio, x: (r.left - st.left) / st.width, y: (r.top - st.top) / st.height, w: r.width / st.width, h: r.height / st.height }; }); });
+    if (audio.length) manifest[i].audio = audio;
     process.stdout.write(`\r${i + 1}/${types.length}`);
   }
   fs.writeFileSync(path.join(OUT, 'manifest.json'), JSON.stringify(manifest));

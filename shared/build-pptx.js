@@ -42,6 +42,7 @@ const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 const LETTERS = ['أ', 'ب', 'ج', 'د', 'هـ'];
 const DARK = ['cover', 'section', 'hadith', 'ayah', 'statement', 'prophet', 'activity', 'mcover', 'end'];
 // نسخة جديدة في كل مرة: المكتبة تعدّل كائن الظل نفسه، فلو تكرر استخدامه فسد الملف
+const CLEAR = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAADklEQVR4nGNgGAWgEAAAAQgAAaUERR4AAAAASUVORK5CYII=';   // غلاف شفاف لأيقونة الصوت
 const SHADOW = () => ({ type: 'outer', color: '101B45', blur: 12, offset: 3, angle: 90, opacity: 0.08 });
 
 /* ---------- أدوات الرسم ----------
@@ -498,7 +499,7 @@ const R = {
 };
 
 /* ========== حركات البوربوينت (تُضاف إلى ملف الشريحة بعد البناء) ========== */
-function timingXml(groups, kb, pics = new Set()) {
+function timingXml(groups, kb, pics = new Set(), audios = []) {
   let id = 2;
   const nid = () => ++id;
   const entr = (spid, nodeType) => {
@@ -532,12 +533,25 @@ function timingXml(groups, kb, pics = new Set()) {
       ids.map((spid, k) => entr(spid, k === 0 ? 'clickEffect' : 'withEffect')).join('') +
       `</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par>`;
   });
+  // كل صوت: تسلسل تفاعلي يبدأ بالنقر على أيقونته (تشغيل/إيقاف) + عقدة الوسائط
+  const trig = audios.map(spid => { const a = nid(), b = nid(), c = nid(), d = nid(), e = nid();
+    return `<p:seq concurrent="1" nextAc="seek"><p:cTn id="${a}" restart="whenNotActive" fill="hold" evtFilter="cancelBubble" nodeType="interactiveSeq">` +
+      `<p:stCondLst><p:cond evt="onClick" delay="0"><p:tgtEl><p:spTgt spid="${spid}"/></p:tgtEl></p:cond></p:stCondLst>` +
+      `<p:endSync evt="end" delay="0"><p:rtn val="all"/></p:endSync><p:childTnLst>` +
+      `<p:par><p:cTn id="${b}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>` +
+      `<p:par><p:cTn id="${c}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>` +
+      `<p:par><p:cTn id="${d}" presetID="2" presetClass="mediacall" presetSubtype="0" fill="hold" nodeType="clickEffect"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>` +
+      `<p:cmd type="call" cmd="togglePause"><p:cBhvr><p:cTn id="${e}" dur="1" fill="hold"/><p:tgtEl><p:spTgt spid="${spid}"/></p:tgtEl></p:cBhvr></p:cmd>` +
+      `</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn></p:par>` +
+      `</p:childTnLst></p:cTn><p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq>`; }).join('');
+  const media = audios.map(spid => `<p:audio><p:cMediaNode vol="80000"><p:cTn id="${nid()}" fill="hold" display="0"><p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>` +
+    `<p:endCondLst><p:cond evt="onStopAudio" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:endCondLst></p:cTn><p:tgtEl><p:spTgt spid="${spid}"/></p:tgtEl></p:cMediaNode></p:audio>`).join('');
   const bld = groups.flat().filter(spid => !pics.has(spid)).map(spid => `<p:bldP spid="${spid}" grpId="0" animBg="1"/>`).join('');
   return `<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst>` +
-    `<p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst>${seq}</p:childTnLst></p:cTn>` +
+    (seq ? `<p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst>${seq}</p:childTnLst></p:cTn>` +
     `<p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>` +
-    `<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq>` +
-    `</p:childTnLst></p:cTn></p:par></p:tnLst>${bld ? `<p:bldLst>${bld}</p:bldLst>` : ''}</p:timing>`;
+    `<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq>` : '') +
+    trig + media + `</p:childTnLst></p:cTn></p:par></p:tnLst>${bld ? `<p:bldLst>${bld}</p:bldLst>` : ''}</p:timing>`;
 }
 async function addAnimations(file) {
   const zip = await JSZip.loadAsync(fs.readFileSync(file));
@@ -549,9 +563,10 @@ async function addAnimations(file) {
     for (const m of xml.matchAll(/<p:cNvPr id="(\d+)" name="anim-g(\d+)-\d+"/g)) (groups[m[2]] ||= []).push(m[1]);
     const pics = new Set([...xml.matchAll(/<p:nvPicPr>\s*<p:cNvPr id="(\d+)"/g)].map(m => m[1]));
     for (const m of xml.matchAll(/<p:cNvPr id="(\d+)" name="kb-\d+"/g)) kb.push(m[1]);
+    const audios = [];   // مشغّلات الصوت بالنقر يضيفها PowerPoint نفسه: shared/pptx-audio-triggers.ps1
     const order = Object.keys(groups).map(Number).sort((a, b) => a - b).map(k => groups[k]);
-    if (!order.length && !kb.length) continue;
-    xml = xml.replace('</p:clrMapOvr>', '</p:clrMapOvr>' + timingXml(order, kb, pics));
+    if (!order.length && !kb.length && !audios.length) continue;
+    xml = xml.replace('</p:clrMapOvr>', '</p:clrMapOvr>' + timingXml(order, kb, pics, audios));
     zip.file(f, xml);
     animated++;
   }
@@ -577,6 +592,8 @@ C.modules.forEach((m, mi) => m.slides.forEach(raw => {
     if (!shot) throw new Error(`الشريحة ${n} (${sl.t}) لم تُصوَّر بعد: شغّل capture-pptx.js أولًا`);
     s.addImage({ path: path.join(CACHE, shot.base), x: 0, y: 0, w: W, h: 7.5 });
     shot.layers.forEach((f, k) => s.addImage({ path: path.join(CACHE, f), x: 0, y: 0, w: W, h: 7.5, objectName: `anim-g${k + 1}-${++uid}` }));
+    // أصوات: ملف صوتي شفاف فوق زر ▶ في الصورة، يعمل بالنقر عليه أثناء العرض
+    (shot.audio || []).forEach(a => s.addMedia({ type: 'audio', path: path.join(DIR, a.src), x: a.x * W, y: a.y * 7.5, w: a.w * W, h: a.h * 7.5, cover: CLEAR, objectName: `audio-${++uid}` }));
     const tip = shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
     s.addNotes(((sl.notes || '') + '\n\n' + tip).trim());
   }
