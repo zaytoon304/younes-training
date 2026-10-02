@@ -1,0 +1,113 @@
+/* «لمسات تراث» — المرحلتان ١ و٢ */
+
+/* بطاقات كثيرة: تصميم مضغوط تلقائيًا */
+.cards:has(> .card:nth-child(5)){gap:18px!important}
+.cards:has(> .card:nth-child(5)) .card{padding:18px 26px!important;gap:4px!important;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:16px!important}
+.cards:has(> .card:nth-child(5)) .card .ic{width:64px!important;height:64px!important;font-size:36px!important;border-radius:20px}
+.cards:has(> .card:nth-child(5)) .card h3{font-size:32px!important;flex:1}
+.cards:has(> .card:nth-child(5)) .card p{font-size:26px!important;line-height:1.45;flex-basis:100%}
+
+/* شاشة LCD */
+.lcd2{background:#1f6b3a;border-radius:16px;padding:12px 16px;direction:ltr;box-shadow:0 10px 24px rgba(11,16,38,.2)}
+.lcdglass{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;background:#3c5a1e;border:6px solid #0b2a12;border-radius:8px;padding:6px}
+.lcdglass.lit{background:#9fd356}
+.lcdglass i{font-style:normal;aspect-ratio:5/8;background:rgba(0,0,0,.07);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:34px;line-height:1;color:#1a2a0c}
+
+/* المصمك المشترك */
+.masmak .mk{fill:#b5895a;stroke:#8a6239;stroke-width:2}
+.masmak .mkw{fill:#3e2a1a}.masmak .mkt{fill:#a77a4b}
+.masmak .gate{fill:#6d4521;stroke:#3e2a1a;stroke-width:3}.masmak .gatel{stroke:#3e2a1a;stroke-width:3}
+.trunk{fill:none;stroke:#6d4521;stroke-width:10;stroke-linecap:round}.frond{fill:none;stroke:#2e7d32;stroke-width:8;stroke-linecap:round}
+.car4 .tyre4{fill:#1c1f27}.car4 .body4{fill:#c0392b;stroke:#7a2323;stroke-width:3}.car4 .esp4{fill:#1f2a44}.car4 .tank4{fill:#4fc3f7}
+.spray{animation:flow .5s linear infinite}
+
+/* ---------- الافتتاح ---------- */
+.mhero{padding-top:64px}
+.mhero .htitle{font-size:80px;font-weight:900;line-height:1.15;background:linear-gradient(180deg,#fff 30%,var(--gold-light));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px}
+.mhwrap{flex:1;min-height:0;display:flex;align-items:center}
+.mhsvg{width:100%;max-height:560px;display:block;direction:ltr;border-radius:28px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.mhsvg .stbox{fill:#1c1f27;stroke:#f0cc7a;stroke-width:3}.mhsvg .stlcd{fill:#9fd356}
+.mhsvg .stlcdt{font-family:'VT323',monospace;font-size:22px;fill:#1a2a0c;text-anchor:middle}
+.mhsvg .ledr,.stw .ledr2{fill:#5b2a2a}.mhsvg .ledr.on{fill:#ff3b3b;filter:drop-shadow(0 0 10px #ff3b3b)}
+.mhsvg .ledb,.stw .ledb2{fill:#1e2a5b}.mhsvg .ledb.on{fill:#2f80ff;filter:drop-shadow(0 0 10px #2f80ff)}
+.mhsvg .mhl{font-family:Cairo;font-size:18px;font-weight:800;fill:#f0cc7a;text-anchor:middle}
+.mhsvg .mhcap rect{fill:rgba(16,27,69,.88);stroke:var(--gold);stroke-width:3}.mhsvg .mhcap text{font-family:Cairo;font-size:26px;font-weight:800;fill:#fff;text-anchor:middle}
+
+/* ---------- المخطط ---------- */
+.argrid{flex:1;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,0.55fr);gap:22px;align-items:center;min-height:0}
+.arleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.archsvg{width:100%;display:block;direction:ltr;background:#fff;border:2px solid var(--line);border-radius:24px}
+.archsvg .zone1{fill:#fdf1ec;stroke:#c0392b;stroke-width:3;stroke-dasharray:10 8}.archsvg .zone2{fill:#eef6f7;stroke:#0e7c86;stroke-width:3;stroke-dasharray:10 8}
+.archsvg .zt{font-family:Cairo;font-size:22px;font-weight:900;fill:#1b2340;text-anchor:middle}
+.archsvg .alink{stroke:#c9cfe6;stroke-width:6}.archsvg .alink.hot{stroke:#f5b800;stroke-dasharray:14 10;animation:flow .5s linear infinite}
+.archsvg .anode{cursor:pointer}.archsvg .acirc{fill:#fff;stroke:#1b2340;stroke-width:4;transition:all .3s}
+.archsvg .anode.sel .acirc{fill:#FFF3C0;stroke:var(--gold);stroke-width:7;filter:drop-shadow(0 0 12px #f0cc7a)}
+.archsvg .aico{font-size:40px;text-anchor:middle}.archsvg .anm{font-family:Cairo;font-size:17px;font-weight:900;fill:#1b2340;text-anchor:middle}
+.arctl{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}.arctl .clap{font-size:24px;padding:10px 18px}
+.arcap{background:var(--navy-800);color:#fff;border-radius:16px;padding:12px 16px;font-size:24px;font-weight:800}
+.arinfo{background:#fff;border:2px solid var(--line);border-radius:28px;padding:24px;min-height:420px;display:flex;flex-direction:column;gap:12px}
+.arinfo.pop{animation:enter .45s ease both}
+.arinfo h3{font-size:36px;font-weight:900;color:var(--navy-800)}.arinfo p{font-size:25px;font-weight:700;line-height:1.6;color:var(--navy-700)}
+.xi0{margin:auto;text-align:center;font-size:28px;font-weight:800;color:var(--muted);line-height:1.6}.xi1{font-size:70px}
+
+/* ---------- لوحة ESP32 ---------- */
+.e3grid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;min-height:0}
+.e3board{display:grid;grid-template-columns:1fr 0.8fr 1fr;gap:10px;background:#1f2a44;border-radius:26px;padding:20px 14px;box-shadow:0 18px 40px rgba(11,16,38,.3)}
+.e3col{display:flex;flex-direction:column;gap:4px}
+.e3pin{font-family:var(--mono);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:flex-end;gap:8px;background:transparent;border:0;color:#c9cfe6;cursor:pointer;padding:2px 4px;border-radius:8px}
+.e3col.r .e3pin{justify-content:flex-start}
+.e3pin i{width:18px;height:18px;border-radius:50%;background:#f0cc7a33;border:2px solid #f0cc7a;flex:none}
+.e3pin.used{color:#fff;background:rgba(255,255,255,.08)}.e3pin.used i{border-color:#fff}
+.e3chip{display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.e3can{background:#c9ccd3;color:#1b2340;border-radius:10px;width:100%;text-align:center;padding:30px 6px;font-family:var(--mono);font-weight:700;font-size:22px}.e3can small{font-size:14px}
+.e3usb{background:#c9ccd3;color:#1b2340;border-radius:6px;padding:8px 18px;font-family:var(--mono);font-weight:700}
+.e3right{display:flex;flex-direction:column;gap:12px;min-width:0}
+.e3right .lsb{font-size:20px;padding:5px 12px}
+.e3list{display:flex;flex-direction:column;gap:7px}
+.e3r{display:flex;gap:12px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 14px;font-size:22px;font-weight:800;color:var(--navy-800)}
+.e3r i{width:18px;height:18px;border-radius:50%;flex:none}.e3r b{font-family:var(--mono);color:var(--gold-dark);min-width:90px}
+.e3info{background:var(--navy-800);color:#fff;border-radius:16px;padding:14px 18px;font-size:22px;font-weight:700;min-height:70px}.e3info b{color:var(--gold-light);font-family:var(--mono)}
+
+/* ---------- اللهب والغاز ---------- */
+.flgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);gap:24px;align-items:center;min-height:0}
+.flleft{display:flex;flex-direction:column;gap:12px;min-width:0}
+.flsvg{width:100%;display:block;direction:ltr;border-radius:24px;touch-action:none}
+.flsvg .flcone{fill:rgba(126,226,168,.08);stroke:rgba(126,226,168,.4);stroke-width:2;stroke-dasharray:8 8}.flsvg .flcone.hit{fill:rgba(231,76,60,.18);stroke:#e74c3c}
+.flsvg .fld{fill:#5b2a2a}.flsvg .fld.on{fill:#ff3b3b;filter:drop-shadow(0 0 8px #ff3b3b)}
+.flsvg .ledb2{fill:#1e2a5b}.flsvg .ledb2.on{fill:#2f80ff;filter:drop-shadow(0 0 8px #2f80ff)}
+.flsvg .mhl{font-family:Cairo;font-size:18px;font-weight:800;fill:#f0cc7a;text-anchor:middle}
+.flsvg #flcandle{cursor:grab}.flick{animation:flick .2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:bottom}
+@keyframes flick{to{transform:scale(1.06,.94)}}
+.flleft .lsl{font-size:22px;padding:4px 14px}
+.flright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sofacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}.sofacts .ac b{font-size:28px}.sofacts .ac b.on{color:#c0392b}
+.irbar{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;font-size:20px;font-weight:800;color:var(--navy-800)}
+.irbar .btbar{position:relative;height:24px;background:#ece7da;border-radius:12px;overflow:visible}.irbar .btbar i{display:block;height:100%;background:linear-gradient(90deg,#ffb300,#e74c3c);border-radius:12px}
+.irbar em{position:absolute;top:-6px;width:4px;height:36px;background:#1b2340;border-radius:2px}
+.flright .sndbtn{grid-column:auto;font-size:20px;padding:8px}
+.flright .code.micro{font-size:15px;line-height:1.42}
+.chart4{width:100%;height:120px;display:block;direction:ltr;background:var(--code-bg);border-radius:0 0 16px 16px}
+.chart4 .cm{stroke:#f0cc7a;stroke-width:2;stroke-dasharray:8 6}.chart4 .cl{fill:none;stroke-width:3}
+.plot4{border-radius:16px;overflow:hidden}.plh{background:#1b2547;color:#c8cde6;font-size:16px;font-weight:800;padding:5px 12px;display:flex;gap:8px;align-items:center}.plh i{display:inline-block;width:14px;height:6px;border-radius:3px}
+
+/* ---------- المحطة ---------- */
+.stgrid2{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px;align-items:center;min-height:0}
+.stdev{display:flex;flex-direction:column;gap:16px}
+.stcase{background:linear-gradient(160deg,#3e2a1a,#2a1c10);border:4px solid #b5895a;border-radius:28px;padding:26px;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.stleds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center}
+.stleds i{display:block;width:62px;height:62px;border-radius:50%;margin:0 auto 6px;border:4px solid rgba(255,255,255,.15)}
+.stleds .lr{background:#5b2a2a}.stleds .lr.on{background:#ff3b3b;box-shadow:0 0 30px #ff3b3b}
+.stleds .lb{background:#1e2a5b}.stleds .lb.on{background:#2f80ff;box-shadow:0 0 30px #2f80ff}
+.stleds .bz{background:#1c1f27}.stleds .bz.on{background:#8e44ad;box-shadow:0 0 30px #8e44ad}
+.stleds span{color:#f0cc7a;font-size:20px;font-weight:800}
+.stname{text-align:center;color:#f0cc7a;font-size:20px;font-weight:900}
+.stctl{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}.stctl .clap{font-size:26px;padding:10px 16px}.stctl .lsl{font-size:21px;padding:4px 14px}.stctl .sndbtn{grid-column:auto;font-size:20px;padding:10px}
+.stcode2 .code.micro{font-size:16px;line-height:1.45}
+
+/* دائرة البناء */
+.stw .stlcd2{fill:#3c5a1e}.stw .stlcdt2{font-family:'VT323',monospace;font-size:30px;fill:transparent}
+.stw.running .stlcd2{fill:#9fd356}.stw.running .stlcdt2{fill:#1a2a0c}
+.stw.running .ledr2{animation:blinkr 1s steps(1) infinite}.stw.running .ledb2{animation:blinkb 1s steps(1) infinite .5s}
+@keyframes blinkr{50%{fill:#ff3b3b}}@keyframes blinkb{50%{fill:#2f80ff}}
+.stw .bzw{opacity:0}.stw.running .bzw{animation:wv .6s ease-in-out infinite;opacity:1}
+@keyframes wv{50%{opacity:.2}}

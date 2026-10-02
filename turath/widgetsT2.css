@@ -1,0 +1,86 @@
+/* «لمسات تراث» — المرحلتان ٣ و٤ */
+
+/* ---------- السيارة الرباعية ---------- */
+.c4grid{flex:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr);gap:24px;align-items:center;min-height:0}
+.c4left,.c4right{display:flex;flex-direction:column;gap:12px;min-width:0}
+.c4arena{width:100%;display:block;direction:ltr;border-radius:24px;box-shadow:0 14px 30px rgba(11,16,38,.15)}
+.c4trail{fill:none;stroke:#8a6239;stroke-width:4;stroke-dasharray:6 8;opacity:.6}
+.c4pad{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.c4pad .sndbtn{grid-column:auto;font-size:21px;padding:10px 4px}
+.c4wires{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.c4wh{background:var(--navy-800);color:#fff;border-radius:16px;padding:8px 14px;font-size:18px;font-weight:700;display:flex;flex-direction:column}.c4wh b{color:var(--gold-light);font-size:20px}
+.c4wires .clap{font-size:20px;padding:12px 14px;font-family:var(--mono)}
+.clap.off{background:linear-gradient(145deg,#ff8a80,#e74c3c);box-shadow:0 8px 0 #a83224;color:#fff}
+.c4right .lsl{font-size:21px;padding:4px 14px}
+.c4right .code.micro{font-size:15.5px;line-height:1.42}
+.c4w .c4spin{animation:none}.c4w.running .c4spin{animation:spin .6s linear infinite;transform-box:fill-box;transform-origin:center}
+.c4w .c4pump,.c4w .c4water{opacity:.25}.c4w.running .c4pump{opacity:1;animation:spin .5s linear infinite;transform-box:fill-box;transform-origin:center}
+.c4w.running .c4water{opacity:1;stroke-dasharray:10 8;animation:flow .5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- الريليه المزدوج ---------- */
+.drgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);gap:24px;align-items:center;min-height:0}
+.drboard{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.drch{background:#fff;border:3px solid var(--line);border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.drh{display:flex;justify-content:space-between;align-items:center;font-size:26px;color:var(--navy-800)}.drh span{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--gold-dark)}
+.drrel{background:#1f5fae;border-radius:16px;padding:14px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;position:relative}
+.drled{width:18px;height:18px;border-radius:50%;background:#5b2a2a;position:absolute;top:10px;left:10px}.drrel.on .drled{background:#ff3b3b;box-shadow:0 0 14px #ff3b3b}
+.drcoil{width:70px;height:60px;border-radius:8px;background:#2b6fc0;border:3px solid #9ec5f2}
+.drsw{display:flex;align-items:center;justify-content:space-between;color:#fff;font-family:var(--mono);font-weight:700;font-size:16px;position:relative;height:40px}
+.drsw em{position:absolute;left:30%;right:30%;top:50%;height:6px;background:#f0cc7a;border-radius:3px;transform-origin:right center;transform:rotate(-20deg);transition:transform .2s}
+.drrel.on .drsw em{transform:rotate(0)}
+.drcode{background:var(--code-bg);color:#fff;font-family:var(--mono);font-size:17px;border-radius:12px;padding:8px 12px}
+.drbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.drbtns .sndbtn{grid-column:auto;font-family:var(--mono);font-size:22px;padding:8px}
+.drdev{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:#f3f4f8;border-radius:16px;padding:10px 14px;font-size:20px;font-weight:800;color:var(--muted)}
+.drdev.on{background:#e1f5ea;color:#1e7a4c}
+.drvis{font-size:44px;position:relative;width:60px;text-align:center;filter:grayscale(1);opacity:.5}.drdev.on .drvis{filter:none;opacity:1;animation:wob .4s ease-in-out infinite alternate}
+@keyframes wob{to{transform:scale(1.12)}}
+.drvis i{display:none}
+.drnote{display:flex;flex-direction:column;gap:12px;min-width:0}.drnote .code.micro{font-size:16px;line-height:1.45}
+
+/* ---------- ESP-NOW ---------- */
+.engrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 300px minmax(0,1fr);gap:18px;align-items:center;min-height:0}
+.encol{display:flex;flex-direction:column;gap:10px;min-width:0}.encol .code.micro{font-size:14.5px;line-height:1.42}
+.enbox{border-radius:18px;padding:10px 16px;color:#fff;display:flex;flex-direction:column;font-size:24px}.enbox small{font-family:var(--mono);font-size:15px;opacity:.85}
+.enbox.st{background:linear-gradient(135deg,#6d4521,#3e2a1a)}.enbox.car{background:linear-gradient(135deg,#c0392b,#7a2323)}
+.enbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.enbtns .sndbtn{grid-column:auto;font-size:19px;padding:10px 4px}
+.ensvg{width:100%;display:block;direction:ltr}
+.enarc{fill:none;stroke:#c9cfe6;stroke-width:5;stroke-dasharray:10 10;animation:flow 1s linear infinite}
+.enpkt{opacity:0}.enpkt rect{fill:var(--navy-800);stroke:var(--gold);stroke-width:3}.enpkt text{font-family:var(--mono);font-size:13px;font-weight:700;fill:#f0cc7a;text-anchor:middle}
+.entx{font-family:Cairo;font-size:17px;font-weight:800;fill:var(--navy-700);text-anchor:middle}
+.enlog{background:var(--code-bg);color:#7ee2a8;font-family:var(--mono);font-size:14px;border-radius:14px;padding:10px 12px;min-height:150px;display:flex;flex-direction:column;gap:4px}
+.enlog div:first-child{color:#fff}
+
+/* ---------- القرار ---------- */
+.dcgrid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;min-height:0}
+.dczones{display:flex;flex-direction:column;gap:14px}
+.dcz{background:#fff;border:3px solid var(--line);border-radius:24px;padding:14px 18px;display:flex;flex-direction:column;gap:8px;transition:all .3s}
+.dcz.win{border-color:#e74c3c;box-shadow:0 0 0 6px rgba(231,76,60,.15)}
+.dcz h3{font-size:26px;font-weight:900;color:var(--navy-800)}.dcz .lsl{font-size:20px;padding:2px 12px}.dcz .lsb{font-size:20px}
+.dcscore{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;font-size:20px;font-weight:800;color:var(--navy-700)}
+.dcscore .btbar{height:22px;background:#ece7da;border-radius:11px;overflow:hidden}.dcscore .btbar i{display:block;height:100%;width:0;transition:width .3s}
+.dcscore b{font-size:28px;min-width:50px;text-align:center}
+.dcright{display:flex;flex-direction:column;gap:12px;min-width:0}.dcright .code.micro{font-size:15.5px;line-height:1.42}
+.dcverdict{background:var(--navy-800);color:var(--gold-light);font-size:28px;font-weight:900;border-radius:18px;padding:12px 18px;text-align:center}
+.dcarrow{width:100%;height:120px;display:block;direction:ltr;background:#e8cfa4;border-radius:18px}
+.dcarrow #dcar{transition:transform .6s ease}.dctx{font-family:Cairo;font-size:22px;font-weight:900;fill:#6d4521;text-anchor:middle}
+
+/* ---------- الخريطة: الطريق والمهمة ---------- */
+.pmgrid{flex:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,0.8fr);gap:22px;align-items:center;min-height:0}
+.pmleft,.pmright{display:flex;flex-direction:column;gap:12px;min-width:0}
+.mapsvg{width:100%;display:block;direction:ltr;border-radius:24px;box-shadow:0 14px 30px rgba(11,16,38,.18)}
+.mapsvg .mline{fill:none;stroke:#1c1f27;stroke-width:16;stroke-linecap:round;stroke-linejoin:round}
+.mapsvg .mzone{fill:rgba(255,255,255,.45);stroke:#8a6239;stroke-width:3;stroke-dasharray:8 6}.mapsvg .mzone.alarm{fill:rgba(231,76,60,.22);stroke:#e74c3c;animation:pulsez 1s ease-in-out infinite}
+@keyframes pulsez{50%{fill:rgba(231,76,60,.4)}}
+.mapsvg .mtx{font-family:Cairo;font-size:20px;font-weight:900;fill:#3e2a1a;text-anchor:middle}.mapsvg .mtx.w{fill:#fff;font-size:16px}.mapsvg .mtx2{font-family:Cairo;font-size:15px;font-weight:700;fill:#6d4521;text-anchor:middle}
+.mapsvg .mlcd{font-family:'VT323',monospace;font-size:26px;fill:#1a2a0c;text-anchor:middle}
+.mapsvg .ledr{fill:#5b2a2a}.mapsvg .ledr.on{fill:#ff3b3b;filter:drop-shadow(0 0 8px #ff3b3b);animation:blinkf .5s steps(1) infinite}
+.mapsvg .ledb{fill:#1e2a5b}.mapsvg .ledb.on{fill:#2f80ff;filter:drop-shadow(0 0 8px #2f80ff);animation:blinkf .5s steps(1) infinite .25s}
+@keyframes blinkf{50%{opacity:.35}}
+.mapsvg .irs{fill:#7ee2a8;stroke:#1c1f27;stroke-width:2}.mapsvg .irs.blk{fill:#e74c3c}
+.mpkt{opacity:0}.mpkt rect{fill:var(--navy-800);stroke:var(--gold);stroke-width:3}.mpkt text{font-family:var(--mono);font-size:16px;font-weight:700;fill:#f0cc7a;text-anchor:middle}
+.pmleft .lctl .clap{font-size:22px;padding:10px 14px}.pmleft .lctl .sndbtn{font-size:20px}.pmleft .irdec{font-size:22px;padding:10px}
+.pmright .code.micro{font-size:15px;line-height:1.4}
+.mctl{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.mctl .clap{font-size:19px;padding:10px 4px;border-radius:16px}.mctl .sndbtn{grid-column:auto;font-size:18px;padding:10px 4px}
+.mslog{background:var(--navy-800);color:#fff;border-radius:18px;padding:12px 16px;min-height:230px;display:flex;flex-direction:column;gap:5px;font-size:18px;font-weight:700}
+.mslog div{animation:enter .35s ease both}.mslog div:not(:first-child){opacity:.6}.mslog b{color:var(--gold-light);font-size:15px;margin-left:8px}
+.missionlab-sm .code.micro{font-size:13.5px}
