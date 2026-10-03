@@ -89,12 +89,7 @@ window.GZ = { PX, VMAX, DEAD, WB, wv, VB, AW, AH, stepCar, newCar, place, at, ca
 
 /* ================== الأكواد المعروضة في المختبرات ================== */
 const C = {
-  diff: `void motors(int l, int r) {
-  digitalWrite(IN1, l > 0); digitalWrite(IN2, l < 0);
-  ledcWrite(ENA, abs(l));
-  digitalWrite(IN3, r > 0); digitalWrite(IN4, r < 0);
-  ledcWrite(ENB, abs(r));
-}
+  diff: `void motors(int l, int r) { … }   // المحور ٢
 void loop() {
   for (int i = 0; i < 4; i++) {
     forward(1000);
@@ -118,9 +113,8 @@ void loop() {
 }`,
   sonar: `void loop() {
   float cm = readCm();
-  if (cm > 60) {
-    motors(SPEED, SPEED);
-  } else if (cm > 25) {
+  if (cm > 60) motors(SPEED, SPEED);
+  else if (cm > 25) {
     int s = map(cm, 25, 60, 120, SPEED);
     motors(s, s);
   } else {
@@ -129,9 +123,7 @@ void loop() {
     float right = readCm();
     motors(-SPEED, SPEED); delay(TURN45 * 2);
     float left = readCm();
-    if (right > left) {
-      motors(SPEED, -SPEED); delay(TURN45 * 2);
-    }
+    if (right > left) { motors(SPEED, -SPEED); delay(TURN45 * 2); }
   }
 }`,
 };
@@ -142,11 +134,11 @@ const LADDER = [
   ['🚗', 'السيارة العادية', 'محركان + درايفر + بطارية'], ['🦇', 'السيارة التي ترى', '+ ألتراسونك'], ['〰️', 'متتبع الخط', '+ ٣ حساسات خط'],
   ['🔀', 'الروبوت المدمج', 'خط + عوائق'], ['🥋', 'السومو', '+ حافة + زر BOOT'], ['🧠', 'السيارة المتكاملة', 'كل شيء + الجوال'], ['⚽', 'روبوت كرة القدم', '٣ محركات أومني'],
 ];
-const heroSvg = () => `<svg viewBox="0 0 1600 640">
-  <rect width="1600" height="640" fill="#0b1230"/>
-  ${Array.from({ length: 50 }, (_, i) => `<circle cx="${(i * 331) % 1600}" cy="${(i * 97) % 640}" r="${i % 3 ? 1 : 2}" fill="#7fa6ff" opacity=".35"/>`).join('')}
-  ${LADDER.map(([e, n, p], i) => { const x = 40 + i * 222, y = 520 - i * 64; return `<g class="ghst" id="ghs${i}">
-    <rect x="${x}" y="${y}" width="210" height="${640 - y}" rx="14" fill="#18224a" stroke="#2e4288" stroke-width="3"/>
+const heroSvg = () => `<svg viewBox="0 0 1600 600">
+  <rect width="1600" height="600" fill="#0b1230"/>
+  ${Array.from({ length: 50 }, (_, i) => `<circle cx="${(i * 331) % 1600}" cy="${(i * 97) % 600}" r="${i % 3 ? 1 : 2}" fill="#7fa6ff" opacity=".35"/>`).join('')}
+  ${LADDER.map(([e, n, p], i) => { const x = 40 + i * 222, y = 430 - i * 56; return `<g class="ghst" id="ghs${i}">
+    <rect x="${x}" y="${y}" width="210" height="${600 - y}" rx="14" fill="#18224a" stroke="#2e4288" stroke-width="3"/>
     <text x="${x + 105}" y="${y + 52}" text-anchor="middle" font-size="44">${e}</text>
     <text x="${x + 105}" y="${y + 92}" text-anchor="middle" class="fza" style="font-size:22px">${n}</text>
     <text x="${x + 105}" y="${y + 122}" text-anchor="middle" class="fza ghp" style="font-size:17px">${p}</text>
@@ -157,15 +149,15 @@ const heroSvg = () => `<svg viewBox="0 0 1600 640">
 
 /* ================== المكونات واحدًا واحدًا ================== */
 const PARTS = [
-  { k: 'esp', i: '🧠', n: 'ESP32 DevKit', what: 'الدماغ: يقرأ الحساسات ويقرر ويرسل الأوامر… ويصنع شبكة واي فاي للجوال', spec: '٣٫٣ فولت · ٢٤٠ ميغاهرتز · واي فاي + بلوتوث', pins: 'كل الأطراف', from: '🤖١' },
-  { k: 'drv', i: '🟥', n: 'الدرايفر L298N', what: 'العضلات: يأخذ أوامر ESP32 الضعيفة ويشغّل المحركين بقوة البطارية', spec: 'جسرا H · حتى ٢ أمبير لكل محرك · يفقد نحو ٢ فولت', pins: 'ENA 14 · IN1 16 · IN2 17 · ENB 32 · IN3 21 · IN4 22', from: '🤖١' },
-  { k: 'mot', i: '🟡', n: 'محركا TT بالتروس', what: 'يحوّلان الكهرباء إلى دوران قوي بطيء بفضل علبة التروس', spec: '٣–٦ فولت · تروس ١:٤٨ · نحو ٢٠٠ دورة/دقيقة', pins: 'OUT1/OUT2 و OUT3/OUT4 على الدرايفر', from: '🤖١' },
-  { k: 'whl', i: '⚫', n: 'العجلتان + العجلة الحرة', what: 'عجلتان تدفعان وعجلة كروية ثالثة تحفظ التوازن', spec: 'قطر ٦٥ مم · محيط ٢٠٫٤ سم', pins: '—', from: '🤖١' },
-  { k: 'bat', i: '🔋', n: 'بطاريتا 18650 + مفتاح', what: 'خزان الطاقة: بطاريتان على التوالي = ٧٫٤ فولت للمحركات واللوحة', spec: '٣٫٧ فولت لكل خلية (٤٫٢ مشحونة) · ٢٠٠٠–٣٠٠٠ مللي أمبير·ساعة', pins: 'الدرايفر 12V و GND', from: '🤖١' },
-  { k: 'son', i: '🦇', n: 'حساس المسافة HC-SR04', what: 'العين: يرسل صوتًا لا نسمعه ويقيس زمن الصدى', spec: '٢ سم إلى ٤ م · يعمل على ٥ فولت · Echo يحتاج مقسم جهد', pins: 'Trig 26 · Echo 27', from: '🤖٢' },
-  { k: 'ir', i: '〰️', n: '٣ حساسات خط TCRT5000', what: 'تنظر إلى الأرض: الأبيض يعكس الأشعة تحت الحمراء والأسود يمتصها', spec: 'مسافة ٢–١٥ مم عن الأرض · مقاومة زرقاء لضبط الحساسية', pins: '34 · 35 · 39 (مداخل فقط)', from: '🤖٣' },
-  { k: 'boot', i: '🔘', n: 'زر BOOT والليد الأزرق', what: 'موجودان على اللوحة أصلًا: زر لبدء نزال السومو وليد يعدّ الثواني', spec: 'BOOT = GPIO0 · الليد = GPIO2', pins: '0 · 2', from: '🤖٥' },
-  { k: 'kiwi', i: '⚽', n: '٣ محركات + عجلات أومني + درايفر ثانٍ', what: 'قاعدة ثلاثية تتحرك في كل اتجاه دون أن تستدير', spec: 'المحركات على ١٢٠° · اثنان أمام وواحد خلف', pins: 'M3: EN 25 · IN 33 · IN 19', from: '⚽٧' },
+  { k: 'esp', s: 'ESP32', i: '🧠', n: 'ESP32 DevKit', what: 'الدماغ: يقرأ الحساسات ويقرر ويرسل الأوامر… ويصنع شبكة واي فاي للجوال', spec: '٣٫٣ فولت · ٢٤٠ ميغاهرتز · واي فاي + بلوتوث', pins: 'كل الأطراف', from: '🤖١' },
+  { k: 'drv', s: 'الدرايفر', i: '🟥', n: 'الدرايفر L298N', what: 'العضلات: يأخذ أوامر ESP32 الضعيفة ويشغّل المحركين بقوة البطارية', spec: 'جسرا H · حتى ٢ أمبير لكل محرك · يفقد نحو ٢ فولت', pins: 'ENA 14 · IN1 16 · IN2 17 · ENB 32 · IN3 21 · IN4 22', from: '🤖١' },
+  { k: 'mot', s: 'المحركان', i: '🟡', n: 'محركا TT بالتروس', what: 'يحوّلان الكهرباء إلى دوران قوي بطيء بفضل علبة التروس', spec: '٣–٦ فولت · تروس ١:٤٨ · نحو ٢٠٠ دورة/دقيقة', pins: 'OUT1/OUT2 و OUT3/OUT4 على الدرايفر', from: '🤖١' },
+  { k: 'whl', s: 'العجلات', i: '⚫', n: 'العجلتان + العجلة الحرة', what: 'عجلتان تدفعان وعجلة كروية ثالثة تحفظ التوازن', spec: 'قطر ٦٥ مم · محيط ٢٠٫٤ سم', pins: '—', from: '🤖١' },
+  { k: 'bat', s: 'البطاريات', i: '🔋', n: 'بطاريتا 18650 + مفتاح', what: 'خزان الطاقة: بطاريتان على التوالي = ٧٫٤ فولت للمحركات واللوحة', spec: '٣٫٧ فولت لكل خلية (٤٫٢ مشحونة) · ٢٠٠٠–٣٠٠٠ مللي أمبير·ساعة', pins: 'الدرايفر 12V و GND', from: '🤖١' },
+  { k: 'son', s: 'الألتراسونك', i: '🦇', n: 'حساس المسافة HC-SR04', what: 'العين: يرسل صوتًا لا نسمعه ويقيس زمن الصدى', spec: '٢ سم إلى ٤ م · يعمل على ٥ فولت · Echo يحتاج مقسم جهد', pins: 'Trig 26 · Echo 27', from: '🤖٢' },
+  { k: 'ir', s: 'حساسات الخط', i: '〰️', n: '٣ حساسات خط TCRT5000', what: 'تنظر إلى الأرض: الأبيض يعكس الأشعة تحت الحمراء والأسود يمتصها', spec: 'مسافة ٢–١٥ مم عن الأرض · مقاومة زرقاء لضبط الحساسية', pins: '34 · 35 · 39 (مداخل فقط)', from: '🤖٣' },
+  { k: 'boot', s: 'BOOT والليد', i: '🔘', n: 'زر BOOT والليد الأزرق', what: 'موجودان على اللوحة أصلًا: زر لبدء نزال السومو وليد يعدّ الثواني', spec: 'BOOT = GPIO0 · الليد = GPIO2', pins: '0 · 2', from: '🤖٥' },
+  { k: 'kiwi', s: 'روبوت الكرة', i: '⚽', n: '٣ محركات + عجلات أومني + درايفر ثانٍ', what: 'قاعدة ثلاثية تتحرك في كل اتجاه دون أن تستدير', spec: 'المحركات على ١٢٠° · اثنان أمام وواحد خلف', pins: 'M3: EN 25 · IN 33 · IN 19', from: '⚽٧' },
 ];
 const partsSvg = () => `<svg viewBox="0 0 1000 860">
   <rect width="1000" height="860" fill="#0f1733"/>
@@ -193,7 +185,7 @@ Object.assign(window.DECK_TYPES, {
     <div class="fzhw">${heroSvg()}</div></div>`,
 
   gparts: s => frame(s, 'gparts', '0 0 1000 860', partsSvg().replace(/^<svg[^>]*>|<\/svg>$/g, ''),
-    `<div class="gpbtns">${PARTS.map(p => `<button class="fzb" data-p="${p.k}">${p.i} ${p.n.split(' ')[0]}</button>`).join('')}</div>
+    `<div class="gpbtns">${PARTS.map(p => `<button class="fzb" data-p="${p.k}">${p.i} ${p.s}</button>`).join('')}</div>
     <div class="gpcard"><div class="gpi" id="gpi">👆</div><h3 id="gpn">انقر أي قطعة</h3><p id="gpw">في الصورة أو في الأزرار: لكل قطعة وظيفة ومواصفات وأطراف</p>
       <div class="gprow"><b>📐 المواصفات</b><span id="gps">—</span></div><div class="gprow"><b>📍 الأطراف</b><span id="gpp" dir="ltr">—</span></div><div class="gprow"><b>🪜 تدخل في</b><span id="gpf">—</span></div></div>
     <div class="fzcap">ابدأ من «الدماغ» ثم «العضلات» ثم «الحواس»: هكذا نبني كل روبوت في الدورة</div>`),
@@ -259,7 +251,7 @@ Object.assign(window.DECK_BIND, {
     const car = sl.querySelector('#ghcar'), kiwi = sl.querySelector('#ghkiwi'); let t = 0;
     raf(dt => { t += dt; const k = (t / 1.6) % 8.5, i = Math.min(6, Math.floor(k));
       sl.querySelectorAll('.ghst').forEach((g, j) => g.classList.toggle('on', j <= i));
-      const x = 40 + i * 222 + 105, y = 520 - i * 64 - 50, bob = Math.sin(t * 6) * 3;
+      const x = 40 + i * 222 + 105, y = 430 - i * 56 - 50, bob = Math.sin(t * 6) * 3;
       if (i < 6) { car.setAttribute('transform', `translate(${x} ${y + bob}) scale(.8)`); car.setAttribute('opacity', 1); kiwi.setAttribute('opacity', 0); }
       else { car.setAttribute('opacity', 0); kiwi.setAttribute('opacity', 1); kiwi.setAttribute('transform', `translate(${x} ${y - 10}) rotate(${t * 90})`); }
       sl.querySelectorAll('.ghc ir, #ghcir0, #ghcir1, #ghcir2').forEach(e => e.setAttribute('fill', i >= 2 ? '#46d68c' : '#3b4256'));
@@ -321,12 +313,12 @@ Object.assign(window.DECK_BIND, {
     sl.querySelector('[data-a=weak]').onclick = e => { weak = !weak; e.target.classList.toggle('on', weak); };
     const S = 200;
     sl.querySelector('[data-a=sq]').onclick = () => { reset(); mode = 'sq'; const T = +R('dt').value / 1000;
-      for (let i = 0; i < 4; i++) seq.push({ l: S, r: S, t: 1, ln: [9] }, { l: 0, r: 0, t: .2, ln: [10] }, { l: S, r: -S, t: T, ln: [11] }, { l: 0, r: 0, t: .2, ln: [12] });
-      seq.push({ l: 0, r: 0, t: 3, ln: [14] }); };
+      for (let i = 0; i < 4; i++) seq.push({ l: S, r: S, t: 1, ln: [4] }, { l: 0, r: 0, t: .2, ln: [5] }, { l: S, r: -S, t: T, ln: [6] }, { l: 0, r: 0, t: .2, ln: [7] });
+      seq.push({ l: 0, r: 0, t: 3, ln: [9] }); };
     raf(dt => {
       let L = +l.value, Rr = +r.value, ln = [];
       if (mode === 'sq') { const s = seq.step(dt); if (s) { const tl = +R('dtr2').value; L = s.l ? s.l + tl : 0; Rr = s.r; ln = s.ln; } else { mode = 'man'; L = Rr = 0; } }
-      else ln = L || Rr ? [1, 2, 3, 4, 5] : [];
+      else ln = L || Rr ? [1] : [];
       R('dt').previousElementSibling.innerHTML = `TURN90 = ${R('dt').value}`; R('dtr2').previousElementSibling.innerHTML = `trimL = ${R('dtr2').value}`;
       l.previousElementSibling.innerHTML = `l = <b>${l.value}</b>`; r.previousElementSibling.innerHTML = `r = <b>${r.value}</b>`;
       stepCar(c, L, Rr, dt, weak ? 0.92 : 1);
@@ -387,13 +379,13 @@ Object.assign(window.DECK_BIND, {
       if (go) {
         const s = seq.step(dt);
         if (s) { cmd = [s.l, s.r]; ln = s.ln; st = s.tx; }
-        else if (cm > 60) { cmd = [S, S]; ln = [3, 4]; st = '🟢 مفتوح'; }
-        else if (cm > 25 && slow) { const v = Math.round(120 + (cm - 25) / 35 * (S - 120)); cmd = [v, v]; ln = [5, 6, 7]; st = '🟡 حذر'; }
-        else if (cm > 25) { cmd = [S, S]; ln = [3, 4]; st = '🟢 مفتوح'; }
-        else if (look) seq.push({ l: -S, r: -S, t: .25, ln: [9], tx: '⬇ تراجع' }, { l: S, r: -S, t: T45, ln: [10], tx: '👉 انظر يمينًا' },
-            { l: 0, r: 0, t: .1, ln: [11], tx: '📏 قِس اليمين', end: () => right = sonarCm(c, boxes) }, { l: -S, r: S, t: T45 * 2, ln: [12], tx: '👈 انظر يسارًا' },
-            { l: 0, r: 0, t: .1, ln: [13], tx: '📏 قِس اليسار', end: () => { left = sonarCm(c, boxes); if (right > left) seq.push({ l: S, r: -S, t: T45 * 2, ln: [14, 15], tx: '↪ عُد لليمين' }); } });
-        else seq.push({ l: -S, r: -S, t: .25, ln: [9], tx: '⬇ تراجع' }, { l: S, r: -S, t: T45 * 2, ln: [10], tx: '↻ استدر يمينًا' });
+        else if (cm > 60) { cmd = [S, S]; ln = [3]; st = '🟢 مفتوح'; }
+        else if (cm > 25 && slow) { const v = Math.round(120 + (cm - 25) / 35 * (S - 120)); cmd = [v, v]; ln = [4, 5, 6]; st = '🟡 حذر'; }
+        else if (cm > 25) { cmd = [S, S]; ln = [3]; st = '🟢 مفتوح'; }
+        else if (look) seq.push({ l: -S, r: -S, t: .25, ln: [8], tx: '⬇ تراجع' }, { l: S, r: -S, t: T45, ln: [9], tx: '👉 انظر يمينًا' },
+            { l: 0, r: 0, t: .1, ln: [10], tx: '📏 قِس اليمين', end: () => right = sonarCm(c, boxes) }, { l: -S, r: S, t: T45 * 2, ln: [11], tx: '👈 انظر يسارًا' },
+            { l: 0, r: 0, t: .1, ln: [12], tx: '📏 قِس اليسار', end: () => { left = sonarCm(c, boxes); if (right > left) seq.push({ l: S, r: -S, t: T45 * 2, ln: [13], tx: '↪ عُد لليمين' }); } });
+        else seq.push({ l: -S, r: -S, t: .25, ln: [8], tx: '⬇ تراجع' }, { l: S, r: -S, t: T45 * 2, ln: [9], tx: '↻ استدر يمينًا' });
       } else { cmd = [0, 0]; ln = []; }
       const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt);
       if (hitsBox(c, boxes)) { Object.assign(c, prev, { vl: 0, vr: 0 }); bang = 1; } else bang = Math.max(0, bang - dt);
