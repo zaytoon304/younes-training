@@ -78,3 +78,8 @@
 .cards:has(.card:nth-child(6)) .card p{font-size:30px;line-height:1.45}
 .gsumo .fzp .code{font-size:15.5px}
 .cards:has(.card:nth-child(6)){gap:20px}.cards:has(.card:nth-child(6)) .card p{font-size:28px}.cards:has(.card:nth-child(4)) .card{padding-top:26px;padding-bottom:26px}
+.cards:has(.card:nth-child(6)){gap:18px!important}
+.cards:has(.card:nth-child(6)) .card{padding:18px 28px!important;gap:6px!important}
+.cards:has(.card:nth-child(6)) .card .ic{width:68px!important;height:68px!important;font-size:38px!important}
+.cards:has(.card:nth-child(6)) .card h3{font-size:36px!important}.cards:has(.card:nth-child(6)) .card p{font-size:28px!important;line-height:1.4}
+.cards:has(.card:nth-child(4)) .card{padding-top:22px!important;padding-bottom:22px!important}
