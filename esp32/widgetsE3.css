@@ -1,0 +1,42 @@
+/* «ESP32 للمعلمين» — شرائح «الشرح الوافي»: ما هو؟ لماذا؟ متى نستخدمه؟ متى نتجنبه؟ + تجربة حيّة */
+.ezp{padding-top:64px}
+.ezp .ezphd{display:flex;align-items:center;gap:22px;margin-bottom:22px}
+.ezp .ezphd .kicker{margin:0;font-size:28px;padding:8px 24px;flex-shrink:0}
+.ezp .ezphd h2.title{margin:0;font-size:58px;line-height:1.2}
+.ezpg{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:30px}
+.ezpR{display:flex;flex-direction:column;gap:14px;min-height:0}
+.ezpb{flex:1;display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;background:#fff;border:2px solid var(--line);border-right:10px solid var(--bc);border-radius:22px;padding:12px 20px;min-height:0}
+.ezpb .lb{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:21px;font-weight:900;color:var(--bc);line-height:1.25}
+.ezpb .lb i{font-style:normal;font-size:42px;line-height:1.1}
+.ezpb p{font-size:24.5px;font-weight:700;line-height:1.55;color:var(--navy-800)}
+.ezpb p b{color:var(--bc)}
+.ezpb code,.ezpcap code{font-family:var(--mono);font-size:.86em;background:#f1f3f9;border-radius:8px;padding:1px 8px;direction:ltr;unicode-bidi:isolate;display:inline-block;color:#1b2340}
+.ezpL{display:flex;flex-direction:column;gap:12px;min-height:0}
+.ezpsc{background:#0f1733;border-radius:26px;overflow:hidden;box-shadow:0 14px 36px rgba(16,27,69,.25);flex-shrink:0}
+.ezpsc svg{display:block;width:100%;direction:ltr}
+.ezpctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ezpctl button{font-family:inherit;font-size:21px;font-weight:900;border-radius:16px;padding:9px 16px;border:3px solid var(--navy-600);background:#fff;color:var(--navy-800);cursor:pointer;transition:all .15s}
+.ezpctl button:hover{transform:translateY(-2px)}
+.ezpctl button.on{background:var(--navy-700);color:#fff;border-color:var(--navy-700)}
+.ezpctl button.warn{border-color:#c0392b;color:#c0392b}.ezpctl button.warn.on{background:#c0392b;color:#fff}
+.ezpctl input[type=range]{flex:1;min-width:200px;accent-color:var(--gold-dark);height:30px}
+.ezpctl .rl{font-size:20px;font-weight:900;color:var(--navy-700)}
+.ezpcap{flex:1;max-height:150px;min-height:0;background:#F6EBCF;border-radius:18px;padding:10px 18px;font-size:22.5px;font-weight:800;line-height:1.5;color:#5a4410;display:flex;align-items:center;transition:background .3s}
+.ezpcap.ok{background:#dff5e8;color:#16603a}.ezpcap.bad{background:#fde3df;color:#962d22}
+.ezpana{background:var(--navy-800);color:#fff;border-radius:18px;padding:10px 18px;font-size:21.5px;font-weight:700;line-height:1.5}
+.ezpana b{color:var(--gold-light)}
+
+/* عناصر الرسم */
+.ezt{font-family:var(--mono);font-weight:700;fill:#dfe6ff;font-size:20px}
+.ezta{font-family:Cairo,sans-serif;font-weight:800;fill:#dfe6ff;font-size:21px}
+.ezchip{fill:#1f2a44;stroke:#5a6aa0;stroke-width:3}
+.ezw{fill:none;stroke:#8d9bd0;stroke-width:5;stroke-linecap:round}
+.ezw.hot{stroke:#ffcf4a}.ezw.red{stroke:#ff5a5a}.ezw.or{stroke:#ffa53a}.ezw.blk{stroke:#5b6383}.ezw.gr{stroke:#46d68c}
+.ezled .bulb{fill:#4a5170;transition:fill .12s}.ezled .glow{opacity:0;transition:opacity .12s}
+.ezled.on .bulb{fill:var(--c)}.ezled.on .glow{opacity:.55}
+.ezbtn{cursor:pointer}.ezbtn .cap{transition:transform .1s}.ezbtn.down .cap{transform:translateY(6px)}
+.ezok{fill:#46d68c}.ezbad{fill:#ff5a5a}
+.ezfade{transition:opacity .3s}
+.ezhide{opacity:0;pointer-events:none}
+.ezpulse{animation:ezpu 1s ease-in-out infinite}@keyframes ezpu{50%{opacity:.35}}
+.ezmono{font-family:var(--mono);font-size:17px;font-weight:700}
