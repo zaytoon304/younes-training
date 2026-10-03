@@ -28,7 +28,7 @@ const kiwiSvg = (id, r, col, arrows = false, team = '') => `<g id="${id}">
   ${ANG.map((a, i) => { const px = -Math.sin(a) * r * .8, py = -Math.cos(a) * r * .8, deg = -a * 180 / Math.PI;
     return `<g transform="translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${deg.toFixed(1)})"><rect x="${-r * .3}" y="${-r * .13}" width="${r * .6}" height="${r * .26}" rx="${r * .06}" fill="#dfe3ea" stroke="#5b6383" stroke-width="${r / 40}"/>
       ${[-2, -1, 0, 1, 2].map(k => `<rect x="${k * r * .11 - r * .035}" y="${-r * .16}" width="${r * .07}" height="${r * .32}" rx="${r * .03}" fill="#5b6383"/>`).join('')}
-      ${arrows ? `<g id="${id}a${i}"><line x1="0" y1="0" x2="0" y2="0" stroke="#ffcf4a" stroke-width="${r / 14}" stroke-linecap="round"/><path d="" fill="#ffcf4a"/></g><text y="${r * .42}" text-anchor="middle" class="fzt" style="font-size:${r / 6.5}px;fill:#fff">M${i + 1}</text>` : ''}</g>`; }).join('')}
+      ${arrows ? `<g id="${id}a${i}"><line x1="0" y1="0" x2="0" y2="0" stroke="#ffcf4a" stroke-width="${r / 14}" stroke-linecap="round"/><path d="" fill="#ffcf4a"/></g>` : ''}</g>${arrows ? `<text x="${(px * .52).toFixed(1)}" y="${(py * .52 + r * .05).toFixed(1)}" text-anchor="middle" class="fzt" style="font-size:${r / 6.5}px;fill:#fff">M${i + 1}</text>` : ''}`; }).join('')}
   <circle r="${r * .34}" fill="#1f2a44"/><text y="${r * .1}" text-anchor="middle" class="fzt" style="font-size:${r / 4.5}px">${team || 'ESP32'}</text>
 </g>`;
 // سهم دفع العجلة (على محور العجلة، موجب = يدفع الروبوت عكس عقارب الساعة… أي نحو اليسار على الشاشة في إطار العجلة)

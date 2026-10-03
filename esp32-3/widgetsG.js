@@ -388,7 +388,7 @@ Object.assign(window.DECK_BIND, {
         else seq.push({ l: -S, r: -S, t: .25, ln: [8], tx: '⬇ تراجع' }, { l: S, r: -S, t: T45 * 2, ln: [9], tx: '↻ استدر يمينًا' });
       } else { cmd = [0, 0]; ln = []; }
       const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt);
-      if (hitsBox(c, boxes)) { Object.assign(c, prev, { vl: 0, vr: 0 }); bang = 1; } else bang = Math.max(0, bang - dt);
+      if (hitsBox(c, boxes)) { c.x = prev.x; c.y = prev.y; bang = 1; } else bang = Math.max(0, bang - dt);
       place(R('scar'), c); R('str').setAttribute('d', trail(pts, c, 500));
       const [sx, sy] = at(c, 46, 0), L = Math.min(cm, 200) * PX, a1 = c.th - .13, a2 = c.th + .13;
       R('sray').setAttribute('x1', sx); R('sray').setAttribute('y1', sy); R('sray').setAttribute('x2', sx + Math.cos(c.th) * L); R('sray').setAttribute('y2', sy + Math.sin(c.th) * L);

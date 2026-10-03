@@ -40,12 +40,10 @@ void avoid() {
   for (int i = 0; i < 10; i++) { blink(); delay(500); }
 }
 void loop() {
-  bool edgeL = digitalRead(EL) == LOW;
-  bool edgeR = digitalRead(ER) == LOW;
+  bool edgeL = digitalRead(EL) == LOW, edgeR = digitalRead(ER) == LOW;
   if (edgeL || edgeR) {
     motors(-255, -255); delay(300);
-    if (edgeL) motors(255, -255);
-    else       motors(-255, 255);
+    if (edgeL) motors(255, -255); else motors(-255, 255);
     delay(250);
   } else if (readCm() < 40) {
     motors(255, 255);
@@ -78,6 +76,8 @@ function lineBrain(S, FAST, SLOW) {
   if (l && c && r) return { cmd: [FAST, FAST], ln: [9, 10], tx: '➕ تقاطع' };
   return { cmd: null, ln: [11, 12], tx: '❓ ضاع الخط' };
 }
+// حلبة أصغر للدمج والسيارة المتكاملة: مساحة للالتفاف خارج المنحنى
+const smallTrack = () => Array.from({ length: 900 }, (_, i) => { const t = i / 900 * Math.PI * 2; return [500 + 290 * Math.cos(t), 390 + 210 * Math.sin(t)]; });
 const readIR = (c, on) => [-14, 0, 14].map(fy => on(...at(c, 40, fy)));
 const paintIR = (sl, id, S) => S.forEach((v, i) => { const e = sl.querySelector(`#${id}ir${i}`); if (e) e.setAttribute('fill', v ? '#46d68c' : '#3b4256'); });
 const irDots = () => `<div class="glir">${['يسار SL', 'وسط SC', 'يمين SR'].map((t, i) => `<div><i id="gli${i}"></i><small>${t}</small><b id="glv${i}">0</b></div>`).join('')}</div>`;
@@ -103,7 +103,7 @@ Object.assign(window.DECK_TYPES, {
     ${codeBlock(C.line)}<div class="fzcap"></div>`),
 
   gcombo: s => frame(s, 'gcombo', VB, `${floor('gcf')}<path id="cpath" fill="none" stroke="#1b1b1b" stroke-width="22" stroke-linejoin="round"/>
-      ${boxSvg([[440, 100, 110, 90]])}<path id="cbeam" fill="#4fc3f7" opacity=".2"/>
+      ${boxSvg([[450, 556, 100, 90]])}<path id="cbeam" fill="#4fc3f7" opacity=".2"/>
       <path id="ctr" fill="none" stroke="#e67e22" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><g id="ccar">${carSvg({ ir: true, sonar: true, id: 'cc' })}</g>`,
     `<div class="fzrow"><button class="fzb go" data-a="go">▶ انطلق</button><button class="fzb" data-a="rs">↺</button><span class="rl" style="font-size:17px;font-weight:800;color:var(--muted)">اسحب الصندوق إلى أي مكان على الخط</span></div>
     <div class="glrow">${irDots()}<div class="fzstats" style="flex:1">${st('ccm', 'readCm()')}${st('cst', 'الخطوة')}</div></div>
@@ -121,7 +121,7 @@ Object.assign(window.DECK_TYPES, {
     ${codeBlock(C.sumo)}<div class="fzcap"></div>`),
 
   gsmart: s => frame(s, 'gsmart', VB, `${floor('gmf')}<path id="mpath" fill="none" stroke="#1b1b1b" stroke-width="22" stroke-linejoin="round"/>
-      ${boxSvg([[450, 92, 100, 100], [420, 380, 160, 110]])}<path id="mbeam" fill="#4fc3f7" opacity=".2"/>
+      ${boxSvg([[450, 556, 100, 90], [160, 700, 150, 100]])}<path id="mbeam" fill="#4fc3f7" opacity=".2"/>
       <path id="mtr" fill="none" stroke="#e67e22" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/><g id="mcar">${carSvg({ ir: true, sonar: true, id: 'mc', color: '#8e44ad' })}</g>`,
     `<div class="gsph"><div class="gsmodes">${[['m', '🎮 يدوي'], ['a', '🧱 عوائق'], ['l', '〰️ خط'], ['c', '🔀 خط+عوائق'], ['x', '⏹️ قف']].map(([k, t]) => `<button class="fzb${k === 'x' ? ' on' : ''}" data-m="${k}">${t}</button>`).join('')}</div>
       <svg viewBox="0 0 300 300" class="gjpad ix" id="mpad"><circle cx="150" cy="150" r="140" fill="#2e4288" stroke="#8d9bd0" stroke-width="8"/><circle id="mk" cx="150" cy="150" r="52" fill="#f0cc7a"/></svg></div>
@@ -158,10 +158,10 @@ Object.assign(window.DECK_BIND, {
   },
 
   gcombo(sl) {
-    const R = id => sl.querySelector('#' + id), svg = sl.querySelector('.fzsc svg'), boxes = [[440, 100, 110, 90]], P = trackPts(0), on = lineMap(P);
+    const R = id => sl.querySelector('#' + id), svg = sl.querySelector('.fzsc svg'), boxes = [[450, 556, 100, 90]], P = smallTrack(), on = lineMap(P);
     R('cpath').setAttribute('d', pathD(P));
     const seq = Seq(); let c, pts, go = false, side = 0, step = '—', ln = [], cm = 200;
-    const reset = () => { const a = P[450], b = P[458]; c = newCar(a[0], a[1], Math.atan2(b[1] - a[1], b[0] - a[0])); pts = []; seq.clear(); side = 0; };
+    const reset = () => { const a = P[450], b = P[442]; c = newCar(a[0], a[1], Math.atan2(b[1] - a[1], b[0] - a[0])); pts = []; seq.clear(); side = 0; };
     reset(); dragBoxes(svg, boxes);
     sl.querySelector('[data-a=go]').onclick = e => { go = !go; e.target.classList.toggle('on', go); e.target.textContent = go ? '⏸ أوقف' : '▶ انطلق'; };
     sl.querySelector('[data-a=rs]').onclick = reset;
@@ -176,7 +176,7 @@ Object.assign(window.DECK_BIND, {
         if (s) { cmd = [s.l, s.r]; ln = [2, ...s.ln]; step = s.tx; }
         else { const b = lineBrain(S, F, 60); if (b.side) side = b.side; cmd = b.cmd || [150 * side, -150 * side]; ln = [2, 3]; step = '〰️ يتبع الخط'; }
       } else ln = [];
-      const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) Object.assign(c, prev, { vl: 0, vr: 0 });
+      const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) { c.x = prev.x; c.y = prev.y; }
       place(R('ccar'), c); R('ctr').setAttribute('d', trail(pts, c, 420)); paintIR(sl, 'cc', S); showIR(sl, S);
       const [sx, sy] = at(c, 46, 0), L = Math.min(cm, 120) * PX;
       R('cbeam').setAttribute('d', `M${sx} ${sy} L${sx + Math.cos(c.th - .13) * L} ${sy + Math.sin(c.th - .13) * L} L${sx + Math.cos(c.th + .13) * L} ${sy + Math.sin(c.th + .13) * L} Z`);
@@ -232,7 +232,7 @@ Object.assign(window.DECK_BIND, {
       R('sray').setAttribute('stroke', sd < 40 ? '#ff5a5a' : '#4fc3f7');
       E.forEach((v, i) => R('se' + i).setAttribute('fill', v ? '#fff' : '#3b4256'));
       R('sed').textContent = `${E[0] ? 0 : 1} · ${E[1] ? 0 : 1}`; R('scm').textContent = sd < 99 ? sd.toFixed(0) : '99+';
-      const lines = phase === 'idle' || phase === 'end' ? [] : phase === 'count' ? [3] : me.st === 'back' ? [6, 7, 8, 9] : me.st === 'spin' ? [10, 11, 12] : me.st === 'attack' ? [13, 14] : [16];
+      const lines = phase === 'idle' || phase === 'end' ? [] : phase === 'count' ? [3] : me.st === 'back' ? [7, 8] : me.st === 'spin' ? [9, 10] : me.st === 'attack' ? [11, 12] : [14];
       run(sl, phase === 'idle' ? [2] : lines);
       R('sst').textContent = { idle: '⏳ ينتظر BOOT', count: '⏱️ العد', fight: { search: '🔍 يبحث', attack: '⚔️ يهاجم', back: '⚠️ الحافة!', spin: '↻ يبتعد' }[me.st], end: '🏁 انتهت' }[phase];
       cap(sl, phase === 'idle' ? 'الروبوت ينتظر في السطر ٢ حتى تضغط زر BOOT (GPIO0) الموجود على اللوحة أصلًا: لا نحتاج زرًا إضافيًا' :
@@ -244,9 +244,9 @@ Object.assign(window.DECK_BIND, {
   },
 
   gsmart(sl) {
-    const R = id => sl.querySelector('#' + id), svg = sl.querySelector('.fzsc svg'), boxes = [[450, 92, 100, 100], [420, 380, 160, 110]], P = trackPts(0), on = lineMap(P);
+    const R = id => sl.querySelector('#' + id), svg = sl.querySelector('.fzsc svg'), boxes = [[450, 556, 100, 90], [160, 700, 150, 100]], P = smallTrack(), on = lineMap(P);
     R('mpath').setAttribute('d', pathD(P)); dragBoxes(svg, boxes);
-    const seq = Seq(); let c = newCar(260, 700, -0.6), pts = [], mode = 'x', side = 0, jx = 0, jy = 0, drag = false, tx = '', aborted = 0;
+    const seq = Seq(); let c = newCar(P[450][0], P[450][1], Math.atan2(P[442][1] - P[450][1], P[442][0] - P[450][0])), pts = [], mode = 'x', side = 0, jx = 0, jy = 0, drag = false, tx = '', aborted = 0;
     const pad = R('mpad'), knob = R('mk');
     const mv = e => { const r = pad.getBoundingClientRect(); let dx = (e.clientX - r.left) * 300 / r.width - 150, dy = (e.clientY - r.top) * 300 / r.height - 150; const d = Math.hypot(dx, dy); if (d > 100) { dx *= 100 / d; dy *= 100 / d; } knob.setAttribute('cx', 150 + dx); knob.setAttribute('cy', 150 + dy); jx = Math.round(dx); jy = Math.round(-dy); };
     pad.onpointerdown = e => { drag = true; pad.setPointerCapture(e.pointerId); mv(e); if (mode !== 'm') setMode('m'); };
@@ -267,7 +267,7 @@ Object.assign(window.DECK_BIND, {
             { l: 110, r: 210, t: 4, until: () => readIR(c, on).some(Boolean), ln: [10], tx: '↩ عودة للخط' }, { l: 190, r: 190, t: .12, ln: [10], tx: '↩ عودة' }, { l: -140, r: 140, t: 2, until: () => readIR(c, on)[1], ln: [10], tx: '↩ استقامة', end: () => side = -1 }); }
         else { const b = lineBrain(S, 190, 60); if (b.side) side = b.side; cmd = b.cmd || [150 * side, -150 * side]; ln = mode === 'c' ? [10] : [9]; tx = '〰️ ' + b.tx; } }
       else { ln = [11]; tx = '⏹️'; }
-      const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) Object.assign(c, prev, { vl: 0, vr: 0 });
+      const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) { c.x = prev.x; c.y = prev.y; }
       place(R('mcar'), c); R('mtr').setAttribute('d', trail(pts, c, 380)); paintIR(sl, 'mc', S);
       const [sx, sy] = at(c, 46, 0), L = Math.min(cm, 120) * PX;
       R('mbeam').setAttribute('d', `M${sx} ${sy} L${sx + Math.cos(c.th - .13) * L} ${sy + Math.sin(c.th - .13) * L} L${sx + Math.cos(c.th + .13) * L} ${sy + Math.sin(c.th + .13) * L} Z`);
