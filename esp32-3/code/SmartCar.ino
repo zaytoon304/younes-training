@@ -69,7 +69,7 @@ void followLine() {
   else if (l && !r)     { motors(SLOW, FAST); lastSide = -1; }
   else if (r && !l)     { motors(FAST, SLOW); lastSide = 1; }
   else if (l && c && r)   motors(FAST, FAST);
-  else                    motors(-150 * lastSide, 150 * lastSide);
+  else                    motors(150 * lastSide, -150 * lastSide);
 }
 
 void avoidObstacle() {               // من المحور الرابع
@@ -92,6 +92,12 @@ void goAround() {                    // من المحور السادس
   motors(FAST, FAST);  if (!wait(120, 'c')) return;
   while (!digitalRead(SC) && millis() - t0 < 6000) { motors(-140, 140); if (!wait(5, 'c')) return; }
   lastSide = -1;
+}
+
+void manual() {                      // من المحور الرابع… مع حماية من الاصطدام
+  if (millis() - lastCmd > 400) jx = jy = 0;
+  if (jy > 0 && cm < 20) jy = 0;
+  motors((jy + jx) * 255 / 100, (jy - jx) * 255 / 100);
 }
 
 void setup() {
@@ -118,11 +124,7 @@ void loop() {
   last = millis();
   cm = readCm();
   switch (mode) {
-    case 'm':                          // يدوي… مع حماية من الاصطدام
-      if (millis() - lastCmd > 400) jx = jy = 0;
-      if (jy > 0 && cm < 20) jy = 0;
-      motors((jy + jx) * 255 / 100, (jy - jx) * 255 / 100);
-      break;
+    case 'm': manual(); break;
     case 'a': avoidObstacle(); break;
     case 'l': followLine(); break;
     case 'c': if (cm < 15) goAround(); else followLine(); break;

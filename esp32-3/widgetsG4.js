@@ -20,7 +20,7 @@ const C = {
   } else if (l && c && r) {
     motors(FAST, FAST);
   } else {
-    motors(-150 * lastSide, 150 * lastSide);
+    motors(150 * lastSide, -150 * lastSide);
   }
 }`,
   combo: `void loop() {
@@ -59,10 +59,7 @@ void loop() {
   last = millis();
   cm = readCm();
   switch (mode) {
-    case 'm':
-      if (jy > 0 && cm < 20) jy = 0;
-      motors((jy + jx) * 255 / 100, (jy - jx) * 255 / 100);
-      break;
+    case 'm': manual(); break;
     case 'a': avoidObstacle(); break;
     case 'l': followLine(); break;
     case 'c': if (cm < 15) goAround(); else followLine(); break;
@@ -143,7 +140,7 @@ Object.assign(window.DECK_BIND, {
     raf(dt => {
       const S = readIR(c, on), F = +R('lf').value, SL = +R('ls').value, b = lineBrain(S, F, SL);
       if (b.side) side = b.side;
-      let cmd = b.cmd || [-150 * side, 150 * side];
+      let cmd = b.cmd || [150 * side, -150 * side];
       if (!go) cmd = [0, 0];
       stepCar(c, cmd[0], cmd[1], dt);
       lostT = S.some(Boolean) ? 0 : lostT + (go ? dt : 0);
@@ -177,7 +174,7 @@ Object.assign(window.DECK_BIND, {
           { l: F, r: F, t: .12, ln: [10], tx: '٥) اعبر قليلًا' }, { l: -140, r: 140, t: 2, until: () => readIR(c, on)[1], ln: [11], tx: '٦) استقم على الخط', end: () => side = -1 });
         const s = seq.step(dt);
         if (s) { cmd = [s.l, s.r]; ln = [2, ...s.ln]; step = s.tx; }
-        else { const b = lineBrain(S, F, 60); if (b.side) side = b.side; cmd = b.cmd || [-150 * side, 150 * side]; ln = [2, 3]; step = '〰️ يتبع الخط'; }
+        else { const b = lineBrain(S, F, 60); if (b.side) side = b.side; cmd = b.cmd || [150 * side, -150 * side]; ln = [2, 3]; step = '〰️ يتبع الخط'; }
       } else ln = [];
       const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) Object.assign(c, prev, { vl: 0, vr: 0 });
       place(R('ccar'), c); R('ctr').setAttribute('d', trail(pts, c, 420)); paintIR(sl, 'cc', S); showIR(sl, S);
@@ -261,22 +258,22 @@ Object.assign(window.DECK_BIND, {
       aborted = Math.max(0, aborted - dt);
       const s = seq.step(dt);
       if (s) { cmd = [s.l, s.r]; ln = s.ln; tx = s.tx; }
-      else if (mode === 'm') { let y = jy; if (y > 0 && cm < 20) y = 0; cmd = [clamp((y + jx) * 255 / 100, -255, 255) | 0, clamp((y - jx) * 255 / 100, -255, 255) | 0]; ln = [7, 8, 9, 10]; tx = jy > 0 && cm < 20 ? '🛡️ حماية' : '🎮 يدوي'; }
-      else if (mode === 'a') { ln = [11]; tx = '🧱 تجنب';
+      else if (mode === 'm') { let y = jy; if (y > 0 && cm < 20) y = 0; cmd = [clamp((y + jx) * 255 / 100, -255, 255) | 0, clamp((y - jx) * 255 / 100, -255, 255) | 0]; ln = [7]; tx = jy > 0 && cm < 20 ? '🛡️ حماية' : '🎮 يدوي'; }
+      else if (mode === 'a') { ln = [8]; tx = '🧱 تجنب';
         if (cm > 60) cmd = [200, 200]; else if (cm > 25) { const v = Math.round(120 + (cm - 25) / 35 * 80); cmd = [v, v]; }
-        else seq.push({ l: -200, r: -200, t: .25, ln: [11], tx: '⬇ تراجع' }, { l: 200, r: -200, t: .19, ln: [11], tx: '👉 يمين' }, { l: -200, r: 200, t: .38, ln: [11], tx: '👈 يسار' }, { l: 200, r: -200, t: .38, ln: [11], tx: '↪ الأوسع' }); }
+        else seq.push({ l: -200, r: -200, t: .25, ln: [8], tx: '⬇ تراجع' }, { l: 200, r: -200, t: .19, ln: [8], tx: '👉 يمين' }, { l: -200, r: 200, t: .38, ln: [8], tx: '👈 يسار' }, { l: 200, r: -200, t: .38, ln: [8], tx: '↪ الأوسع' }); }
       else if (mode === 'l' || mode === 'c') {
-        if (mode === 'c' && cm < 15) { seq.push({ l: 190, r: -190, t: .19, ln: [13], tx: '↪ التفاف' }, { l: 190, r: 190, t: .5, ln: [13], tx: '↪ التفاف' },
-            { l: 110, r: 210, t: 4, until: () => readIR(c, on).some(Boolean), ln: [13], tx: '↩ عودة للخط' }, { l: 190, r: 190, t: .12, ln: [13], tx: '↩ عودة' }, { l: -140, r: 140, t: 2, until: () => readIR(c, on)[1], ln: [13], tx: '↩ استقامة', end: () => side = -1 }); }
-        else { const b = lineBrain(S, 190, 60); if (b.side) side = b.side; cmd = b.cmd || [-150 * side, 150 * side]; ln = mode === 'c' ? [13] : [12]; tx = '〰️ ' + b.tx; } }
-      else { ln = [14]; tx = '⏹️'; }
+        if (mode === 'c' && cm < 15) { seq.push({ l: 190, r: -190, t: .19, ln: [10], tx: '↪ التفاف' }, { l: 190, r: 190, t: .5, ln: [10], tx: '↪ التفاف' },
+            { l: 110, r: 210, t: 4, until: () => readIR(c, on).some(Boolean), ln: [10], tx: '↩ عودة للخط' }, { l: 190, r: 190, t: .12, ln: [10], tx: '↩ عودة' }, { l: -140, r: 140, t: 2, until: () => readIR(c, on)[1], ln: [10], tx: '↩ استقامة', end: () => side = -1 }); }
+        else { const b = lineBrain(S, 190, 60); if (b.side) side = b.side; cmd = b.cmd || [150 * side, -150 * side]; ln = mode === 'c' ? [10] : [9]; tx = '〰️ ' + b.tx; } }
+      else { ln = [11]; tx = '⏹️'; }
       const prev = { ...c }; stepCar(c, cmd[0], cmd[1], dt); if (hitsBox(c, boxes)) Object.assign(c, prev, { vl: 0, vr: 0 });
       place(R('mcar'), c); R('mtr').setAttribute('d', trail(pts, c, 380)); paintIR(sl, 'mc', S);
       const [sx, sy] = at(c, 46, 0), L = Math.min(cm, 120) * PX;
       R('mbeam').setAttribute('d', `M${sx} ${sy} L${sx + Math.cos(c.th - .13) * L} ${sy + Math.sin(c.th - .13) * L} L${sx + Math.cos(c.th + .13) * L} ${sy + Math.sin(c.th + .13) * L} Z`);
       R('mbeam').setAttribute('fill', cm < 20 ? '#ff5a5a' : '#4fc3f7');
       R('mmo').textContent = `'${mode}'`; R('mcm').textContent = cm >= 200 ? '200+' : cm.toFixed(0); R('mlcr').textContent = S.join(''); R('mmt').textContent = cmd.map(v => v | 0).join(',');
-      run(sl, mode === 'x' && !s ? [1, 14] : [1, 5, 6, ...ln]);
+      run(sl, mode === 'x' && !s ? [1, 11] : [1, 5, 6, ...ln]);
       cap(sl, aborted ? 'غيّرت الوضع في منتصف حركة! دالة <code>wait()</code> لاحظت أن mode تغيّر فخرجت فورًا… لهذا استبدلنا delay بها' :
         mode === 'x' ? 'اختر «العقل» من أزرار الجوال: السيارة نفسها والقطع نفسها… والسلوك يتغير بحرف واحد في mode' :
         mode === 'm' ? (tx.includes('حماية') ? '🛡️ تقود نحو عائق أقرب من ٢٠ سم: الكود يصفّر jy… الحساس يحمي السيارة حتى في الوضع اليدوي' : 'اسحب العصا: هذا كود المحور الرابع بعينه داخل <code>case \'m\'</code>') :

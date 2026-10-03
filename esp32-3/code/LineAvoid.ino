@@ -23,13 +23,13 @@ float readCm() {
 
 bool lineSeen() { return digitalRead(SL) || digitalRead(SC) || digitalRead(SR); }
 
-void followLine() {                 // من المحور الخامس كما هو
+void followLine() {                 // من المحور السادس كما هو
   int l = digitalRead(SL), c = digitalRead(SC), r = digitalRead(SR);
   if (c && !l && !r)      motors(FAST, FAST);
   else if (l && !r)     { motors(SLOW, FAST); lastSide = -1; }
   else if (r && !l)     { motors(FAST, SLOW); lastSide = 1; }
   else if (l && c && r)   motors(FAST, FAST);
-  else                    motors(-150 * lastSide, 150 * lastSide);
+  else                    motors(150 * lastSide, -150 * lastSide);
 }
 
 void avoid() {                      // الالتفاف حول العائق من جهة اليمين

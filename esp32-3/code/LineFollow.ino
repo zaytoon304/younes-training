@@ -32,6 +32,6 @@ void loop() {
   } else if (l && c && r) {
     motors(FAST, FAST);              // تقاطع: اعبره مستقيمًا
   } else {
-    motors(-150 * lastSide, 150 * lastSide);  // ضاع الخط: دُر نحو آخر جهة رأيته فيها
+    motors(150 * lastSide, -150 * lastSide);  // ضاع الخط: دُر نحو آخر جهة رأيته فيها
   }
 }
