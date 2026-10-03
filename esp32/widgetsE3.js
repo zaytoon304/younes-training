@@ -409,6 +409,10 @@ S.pullup = {
   },
 };
 
+/* مشاركة المشاهد وأدوات الرسم مع الدورات اللاحقة (الجزء الثاني يضيف مشاهده هنا) */
+window.EXPLAIN_SCENES = S;
+window.EXPLAIN_KIT = { LED, CHIP, PIN, BTN, svg, clamp, AR };
+
 /* ================== نوع الشريحة ================== */
 Object.assign(window.DECK_TYPES, {
   explain: s => { const sc = S[s.scene];

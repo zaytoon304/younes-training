@@ -1,0 +1,53 @@
+/* «ESP32 للمعلمين ٢» — أنماط المختبرات (البادئة fz لتجنّب تصادم الأسماء مع الدورات الأخرى) */
+.fzlab{padding-top:58px}
+.fzhd{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.fzhd .kicker{margin:0;font-size:27px;padding:8px 22px;flex-shrink:0}
+.fzhd h2.title{margin:0;font-size:54px;line-height:1.2}
+.fzg{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:24px}
+.fzsc{background:#0f1733;border-radius:26px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 36px rgba(16,27,69,.25);min-height:0}
+.fzsc svg{width:100%;height:100%;display:block;direction:ltr}
+.fzp{display:flex;flex-direction:column;gap:11px;min-height:0}
+.fzrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fzrow label{font-size:21px;font-weight:900;color:var(--navy-700);min-width:118px}
+.fzrow input[type=range]{flex:1;min-width:150px;accent-color:var(--gold-dark);height:32px}
+.fzb{font-family:inherit;font-size:20px;font-weight:900;border-radius:15px;padding:8px 15px;border:3px solid var(--navy-600);background:#fff;color:var(--navy-800);cursor:pointer;transition:transform .15s}
+.fzb:hover{transform:translateY(-2px)}.fzb.on{background:var(--navy-700);color:#fff;border-color:var(--navy-700)}
+.fzb.warn{border-color:#c0392b;color:#c0392b}.fzb.warn.on{background:#c0392b;color:#fff}
+.fzb.go{border-color:#1f8a55;color:#1f8a55}.fzb.go.on{background:#1f8a55;color:#fff}
+.fzstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fzstats.s4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.fzst{background:#fff;border:2px solid var(--line);border-radius:16px;padding:6px 8px;text-align:center;min-width:0}
+.fzst small{display:block;font-size:16px;font-weight:800;color:var(--muted);white-space:nowrap}
+.fzst b{font-family:var(--mono);font-size:30px;color:var(--navy-800);direction:ltr;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fzp .code{font-size:17.5px;line-height:1.5;padding:10px 0;border-radius:16px;flex:1;min-height:0;overflow:hidden;margin:0}
+.fzp .code .ln{padding-right:14px}.fzp .code .cl-num{width:34px;font-size:14px}
+.fzcap{background:#F6EBCF;border-radius:16px;padding:9px 16px;font-size:20.5px;font-weight:800;line-height:1.5;color:#5a4410;transition:background .3s;min-height:72px;display:flex;align-items:center}
+.fzcap.ok{background:#dff5e8;color:#16603a}.fzcap.bad{background:#fde3df;color:#962d22}
+.fzcap code{font-family:var(--mono);font-size:.88em;background:rgba(255,255,255,.7);border-radius:6px;padding:0 6px;direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+/* عناصر الرسم */
+.fzt{font-family:var(--mono);font-weight:700;fill:#dfe6ff;font-size:20px}
+.fza{font-family:Cairo,sans-serif;font-weight:800;fill:#dfe6ff;font-size:21px}
+.fzw{fill:none;stroke:#8d9bd0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.fzw.r{stroke:#ff5a5a}.fzw.o{stroke:#ffa53a}.fzw.k{stroke:#5b6383}.fzw.y{stroke:#ffcf4a}.fzw.b{stroke:#4fc3f7}.fzw.g{stroke:#46d68c}
+.fzhide{opacity:0;pointer-events:none}
+.fzspin{transform-box:fill-box;transform-origin:center}
+.fzblink{animation:fzbl .5s steps(1) infinite}@keyframes fzbl{50%{opacity:0}}
+.fzpulse{animation:fzpu 1s ease-in-out infinite}@keyframes fzpu{50%{opacity:.35}}
+
+/* البطل */
+.fzhero{padding-top:50px}
+.fzhero .htitle{font-size:74px;font-weight:900;line-height:1.15;background:linear-gradient(180deg,#fff 30%,#9ec5ff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.fzhero .fzhw{flex:1;min-height:0;display:flex;align-items:center}
+.fzhero svg{width:100%;max-height:640px;display:block;direction:ltr;border-radius:28px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.fzverb{font-family:Cairo,sans-serif;font-weight:900;font-size:30px;fill:#5a6aa0;transition:fill .3s}
+.fzverb.on{fill:#f0cc7a}
+
+/* الجوال */
+.fzph{font-family:Cairo,sans-serif}
+.fzphb{cursor:pointer}.fzphb:hover rect{filter:brightness(1.15)}
+.fzpk{transition:none}
+
+/* الحقيبة: ١٧ ملفًا في شبكة أكثف */
+.cbgrid{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.cbf{padding:10px 8px;border-radius:18px;gap:2px}.cbi{font-size:34px}.cbf b{font-size:19px}.cbf small{font-size:13px}.cbf em{font-size:14px}
