@@ -23,7 +23,7 @@ DECK.modules.push({ id: 'setup', name: 'كود الإعداد', slides: [
 
   { t: 'cards', kicker: '📦 المكتبة الثالثة', title: 'مكتبة ESP32Servo — التحكم في السيرفو',
     cards: [
-      { icon: '❓', h: 'ما دورها؟', b: 'تضيف دالة servo.write() التي تحوّل الزاوية (مثل ١٢٠) إلى إشارة PWM يفهمها سيرفو MG996R.' },
+      { icon: '❓', h: 'ما دورها؟', b: 'تضيف دالة servo.write() التي تحوّل الزاوية (مثل ١٣٠) إلى إشارة PWM يفهمها سيرفو MG996R.' },
       { icon: '⬇️', h: 'كيف تثبّتها؟', b: 'في Arduino IDE:\n١- افتح Sketch → Include Library → Manage Libraries\n٢- ابحث عن: ESP32Servo\n٣- اختر المكتبة باسم "ESP32Servo" by Kevin Harrington\n٤- اضغط Install وانتظر' },
       { icon: '💻', h: 'السطر في الكود', b: '#include <ESP32Servo.h>' },
     ],
@@ -35,26 +35,35 @@ DECK.modules.push({ id: 'setup', name: 'كود الإعداد', slides: [
 #include <WiFi.h>
 #include <ESP32Servo.h>
 
-/* ===== أرجل L9110S (ابدل بأرجل L298N إذا استخدمته) ===== */
-#define IA1 27  #define IB1 26  // محرك ١ أمامي
-#define IA2 25  #define IB2 33  // محرك ٢ يمين-خلف
-#define IA3 32  #define IB3 14  // محرك ٣ يسار-خلف
-#define SERVO_PIN 13
+// === أرجل L298N (من المرجع الدولي) ===
+#define W1_IN1 21  #define W1_IN2 19  #define W1_EN 32  // أمامي
+#define W2_IN1 27  #define W2_IN2 14  #define W2_EN 13  // يمين-خلف
+#define W3_IN1 22  #define W3_IN2 23  #define W3_EN 26  // يسار-خلف
+#define SERVO_PIN 25
 
 Servo servo;
 
+// === بنية البيانات اللاسلكية ===
 typedef struct {
   int vx, vy, rot;
   bool kick;
 } OmniData;
-
 OmniData data;
+
+// === متغيرات Ramping ===
+const float RAMP = 0.12f;
+const uint16_t LOOP_MS = 20;
+float tgt1=0, tgt2=0, tgt3=0;
+float cur1=0, cur2=0, cur3=0;
+unsigned long lastLoop = 0;
 
 void setup() {
   WiFi.mode(WIFI_STA);
   Serial.begin(115200);
   Serial.println(WiFi.macAddress());
-  int pins[] = {IA1,IB1,IA2,IB2,IA3,IB3};
+  int pins[] = {W1_IN1,W1_IN2,W1_EN,
+                W2_IN1,W2_IN2,W2_EN,
+                W3_IN1,W3_IN2,W3_EN};
   for (int p : pins) pinMode(p, OUTPUT);
   servo.attach(SERVO_PIN);
   servo.write(0);
@@ -62,26 +71,18 @@ void setup() {
   esp_now_register_recv_cb(onReceive);
 }`,
     steps: [
-      { lines: [1], text: '📦 #include <esp_now.h> — ندخل مكتبة التواصل اللاسلكي التي شرحناها. بدونها: ESP32 لا يعرف كيف يتكلم مع الجويستيك.' },
-      { lines: [2], text: '📦 #include <WiFi.h> — ندخل مكتبة الواي فاي. لا نتصل بالإنترنت، لكن ESP-NOW تطلبها لأنها تعمل فوقها. مثل تشغيل التلفاز بدون ضبط قناة.' },
+      { lines: [1], text: '📦 #include <esp_now.h> — ندخل مكتبة التواصل اللاسلكي. بدونها: ESP32 لا يعرف كيف يتكلم مع الجويستيك.' },
+      { lines: [2], text: '📦 #include <WiFi.h> — لا نتصل بالإنترنت، لكن ESP-NOW تطلبها لأنها تعمل فوقها. مثل تشغيل التلفاز بدون ضبط قناة.' },
       { lines: [3], text: '📦 #include <ESP32Servo.h> — مكتبة السيرفو التي ثبّتناها من Library Manager. تمنحنا دالة servo.write() بسطر واحد.' },
-      { lines: [6, 7, 8, 9], text: '📌 نعرّف أرقام الأرجل هنا مرة واحدة فقط. إذا غيّرت التوصيل غدًا، تغيّر هذا السطر فقط ولا تبحث في باقي الكود.' },
+      { lines: [6, 7, 8, 9], text: '📌 أرجل L298N من المرجع الدولي — W1(21,19,32), W2(27,14,13), W3(22,23,26). SERVO_PIN=25. هذه الأرقام ثابتة ومجرَّبة. لا تغيّرها إلا لو غيّرت التوصيل الفعلي.' },
       { lines: [11], text: '🦾 نصنع كائن servo. مثل قلم: تُعلن عنه أولًا قبل أن تستخدمه في أي مكان في الكود.' },
-      { lines: [13, 14, 15, 16], text: '📦 هذا الصندوق (struct) هو الرسالة بين الجويستيك والسيارة. vx = يمين/يسار، vy = أمام/خلف، rot = دوران، kick = تسديد.' },
-      { lines: [18], text: '📦 نصنع نسخة من الصندوق اسمها data. هنا ستُخزَّن البيانات القادمة لاسلكيًا من الجويستيك.' },
-      { lines: [21], text: '📡 WIFI_STA = وضع المستخدم (Station). ESP-NOW يحتاج هذا الوضع. لا نريد اتصالًا بالإنترنت، لكن الكتبة تطلب هذا الإعداد.' },
-      { lines: [22, 23], text: '🖥️ Serial.begin يفتح شاشة الـ Serial Monitor. ثم نطبع العنوان MAC — رقم هوية ESP32. نحتاجه لاحقًا لإخبار الجويستيك: «أرسل لهذا العنوان».' },
-      { lines: [24, 25], text: '⚙️ نجمع كل الأرجل في مصفوفة ونجعلها مخرجات بحلقة واحدة. أقصر من كتابة pinMode ست مرات!' },
-      { lines: [26, 27], text: '🦾 servo.attach تقول للمكتبة: «هذا السيرفو على الرجل 13». ثم servo.write(0) تضع الذراع في وضع الاستراحة. لو تركناها بدون هذا السطر ستتحرك عشوائيًا عند التشغيل.' },
-      { lines: [28, 29], text: '📡 esp_now_init() يفتح قناة الاتصال. esp_now_register_recv_cb يقول: «عندما تصل رسالة لاسلكية، نادِ دالة onReceive». مثل تسجيل رقم الطوارئ.' },
+      { lines: [14, 15, 16, 17, 18], text: '📦 OmniData هو الصندوق الذي يُرسله الجويستيك ونستقبله في السيارة. vx = يمين/يسار، vy = أمام/خلف، rot = دوران، kick = تسديد.' },
+      { lines: [21, 22, 23, 24, 25, 26], text: '🎛️ متغيرات الـ Ramping — نُعرّفها هنا مرة واحدة وتُستخدم في كل مكان. RAMP=0.12 (السرعة الموصى بها دوليًا)، LOOP_MS=20 (50 تحديث/ثانية). tgt = هدف، cur = حالي.' },
+      { lines: [28], text: '📡 WIFI_STA = وضع المستخدم (Station). ESP-NOW يحتاج هذا الوضع. لا نريد اتصالًا بالإنترنت، لكن الكتبة تطلب هذا الإعداد.' },
+      { lines: [29, 30], text: '🖥️ Serial.begin يفتح شاشة الـ Serial Monitor. ثم نطبع العنوان MAC — رقم هوية ESP32. نحتاجه لاحقًا لإخبار الجويستيك: «أرسل لهذا العنوان».' },
+      { lines: [31, 32, 33, 34], text: '⚙️ نجمع كل الأرجل التسعة في مصفوفة ونجعلها مخرجات بحلقة واحدة. أقصر من كتابة pinMode تسع مرات!' },
+      { lines: [35, 36], text: '🦾 servo.attach تقول للمكتبة: «هذا السيرفو على الرجل 25». ثم servo.write(0) تضع الذراع في وضع الاستراحة. لو تركناها بدون هذا السطر ستتحرك عشوائيًا عند التشغيل.' },
+      { lines: [37, 38], text: '📡 esp_now_init() يفتح قناة الاتصال. esp_now_register_recv_cb يقول: «عندما تصل رسالة لاسلكية، نادِ دالة onReceive». مثل تسجيل رقم الطوارئ.' },
     ],
     notes: 'اطلب من المتدربين قراءة كل سطر وقول ما يفعله بكلمات عربية بسيطة قبل الانتقال للسطر التالي.' },
-
-  { t: 'cards', kicker: '🔀 نسخة L298N', title: 'تغيير الأرجل لمن يستخدم L298N',
-    cols: 2,
-    cards: [
-      { icon: '🟢', h: 'L9110S (المُوصى به)', b: '#define IA1 27  #define IB1 26\n#define IA2 25  #define IB2 33\n#define IA3 32  #define IB3 14\nالدالة: analogWrite(ia, spd)' },
-      { icon: '🔴', h: 'L298N (البديل)', b: '#define ENA1 27 #define IN1 26 #define IN2 25\n#define ENB1 33 #define IN3 32 #define IN4 14\n#define ENA2 4  #define IN5 16 #define IN6 17\nالدالة: analogWrite(en, spd) + digitalWrite(inA/inB)' },
-    ],
-    notes: 'الكود الرئيسي (moveOmni) يبقى كما هو. التغيير الوحيد في دالة setMotor فقط.' },
 ]});

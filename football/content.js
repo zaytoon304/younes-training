@@ -12,7 +12,8 @@ root.DECK = {
   mapStart: 0,
   parts: [
     '00-open', '01-omni', '02-parts', '03-driver',
-    '04-wiring', '04b-chassis', '05-setup', '06-motor', '07-car',
+    '04-wiring', '04b-chassis', '05-setup', '06-motor', '06b-normalize',
+    '07-car', '07b-ramp',
     '08-espnow', '09-joystick', '10-servo', '11-lab', '12-final'
   ],
   modules: [],

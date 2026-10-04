@@ -7,12 +7,23 @@
 const { AR, highlight, codeBlock } = window.ARD;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-/* حساب سرعات المحركات الثلاثة */
+/* حساب سرعات المحركات — معادلات المرجع الدولي الصحيحة */
 function omniCalc(vx, vy, rot) {
-  const M1 = clamp(vy + rot, -255, 255);
-  const M2 = clamp(-vy / 2 + vx * 87 / 100 + rot, -255, 255);
-  const M3 = clamp(-vy / 2 - vx * 87 / 100 + rot, -255, 255);
-  return [M1, M2, M3];
+  const W1 = clamp(vy - rot, -100, 100);
+  const W2 = clamp((-0.5 * vy - 0.866 * vx) - rot, -100, 100);
+  const W3 = clamp((-0.5 * vy + 0.866 * vx) - rot, -100, 100);
+  return [W1, W2, W3];
+}
+
+/* تطبيع — يحفظ الاتجاه ويُبقي القيم في -100..100 */
+function omniNorm(vx, vy, rot) {
+  let W1 = vy - rot;
+  let W2 = (-0.5 * vy - 0.866 * vx) - rot;
+  let W3 = (-0.5 * vy + 0.866 * vx) - rot;
+  const raw = [W1, W2, W3];
+  const mx = Math.max(Math.abs(W1), Math.abs(W2), Math.abs(W3));
+  if (mx > 100) { W1 = W1 / mx * 100; W2 = W2 / mx * 100; W3 = W3 / mx * 100; }
+  return { raw, norm: [W1, W2, W3] };
 }
 
 /* رسم روبوت أومني من أعلى (مثلث متساوي الأضلاع) */
@@ -42,7 +53,7 @@ function drawOmniBot(ctx, x, y, angle, M1, M2, M3, size) {
   ];
 
   wheels.forEach(({ dx, dy, wAngle, spd }) => {
-    const arrowLen = Math.abs(spd) / 255 * 22;
+    const arrowLen = Math.abs(spd) / 100 * 22;
     const col = spd >= 0 ? '#43a047' : '#e53935';
     const dir = spd >= 0 ? 1 : -1;
     /* عجلة صغيرة */
@@ -190,10 +201,10 @@ Object.assign(window.DECK_TYPES, {
           <div class="fb-motor-val"><span class="lbl">M3</span><div class="fb-motor-bar" id="om_b3" style="width:0"></div><span class="fb-motor-num" id="om_n3">0</span></div>
         </div>
         <div style="font-size:12px;font-family:Cairo,sans-serif;color:#555;line-height:1.8">
-          <b>المعادلة:</b><br>
-          M1 = vy<br>
-          M2 = −vy/2 + vx × 0.87<br>
-          M3 = −vy/2 − vx × 0.87
+          <b>المعادلة الصحيحة:</b><br>
+          W1 = vy − rot<br>
+          W2 = (−0.5·vy − 0.866·vx) − rot<br>
+          W3 = (−0.5·vy + 0.866·vx) − rot
         </div>
       </div>
     </div></div>`,
@@ -214,7 +225,7 @@ Object.assign(window.DECK_BIND, {
       [M1, M2, M3].forEach((v, i) => {
         const b = sl.querySelector('#om_b' + (i + 1));
         const n = sl.querySelector('#om_n' + (i + 1));
-        const pct = Math.abs(v) / 255 * 120;
+        const pct = Math.abs(v) / 100 * 120;
         if (b) { b.style.width = pct + 'px'; b.className = 'fb-motor-bar' + (v < 0 ? ' neg' : ''); }
         if (n) n.textContent = v;
       });
@@ -521,7 +532,7 @@ Object.assign(window.DECK_BIND, {
       [M1, M2, M3].forEach((v, i) => {
         const el = sl.querySelector('#fl_m' + (i + 1));
         if (!el) return;
-        const pct = Math.abs(v) / 255 * 50;
+        const pct = Math.abs(v) / 100 * 50;
         el.style.width = pct + '%';
         el.style.marginLeft = v >= 0 ? '50%' : (50 - pct) + '%';
         el.style.background = v >= 0 ? '#43a047' : '#e53935';
@@ -1131,6 +1142,176 @@ Object.assign(window.DECK_BIND, {
     if (next) next.addEventListener('click', () => { step = Math.min(steps.length - 1, step + 1); updateUI(); });
     updateUI();
     raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  },
+});
+
+
+/* ==================== normlab — مختبر التطبيع ==================== */
+Object.assign(window.DECK_TYPES, {
+  normlab: s => `<div class="slide light">
+    <div class="kicker">🔬 مختبر التطبيع</div>
+    <h2 class="title" style="margin-bottom:8px">${s.title||'قبل وبعد التطبيع'}</h2>
+    <div class="fb-normlab ix">
+      <div class="fb-norm-sliders">
+        <div class="fb-slider-row"><label>vx (يمين): <b id="nm_vxv">0</b></label><input type="range" id="nm_vx" min="-100" max="100" value="0"></div>
+        <div class="fb-slider-row"><label>vy (أمام): <b id="nm_vyv">0</b></label><input type="range" id="nm_vy" min="-100" max="100" value="0"></div>
+        <div class="fb-slider-row"><label>rot (دوران): <b id="nm_rotv">0</b></label><input type="range" id="nm_rot" min="-80" max="80" value="0"></div>
+        <div id="nm_warning" class="fb-norm-warn" style="display:none">⚠️ تجاوز 100 — التطبيع ضروري!</div>
+      </div>
+      <div class="fb-norm-grid">
+        <div class="fb-norm-head">المحرك</div>
+        <div class="fb-norm-head">قبل التطبيع</div>
+        <div class="fb-norm-head">بعد التطبيع</div>
+        <div class="fb-norm-lbl">W1 أمامي</div>
+        <div class="fb-norm-cell" id="nm_r1">0</div>
+        <div class="fb-norm-cell ok" id="nm_n1">0</div>
+        <div class="fb-norm-lbl">W2 يمين-خلف</div>
+        <div class="fb-norm-cell" id="nm_r2">0</div>
+        <div class="fb-norm-cell ok" id="nm_n2">0</div>
+        <div class="fb-norm-lbl">W3 يسار-خلف</div>
+        <div class="fb-norm-cell" id="nm_r3">0</div>
+        <div class="fb-norm-cell ok" id="nm_n3">0</div>
+      </div>
+    </div></div>`,
+});
+
+Object.assign(window.DECK_BIND, {
+  normlab(sl) {
+    const upd = () => {
+      const vx = +sl.querySelector('#nm_vx').value;
+      const vy = +sl.querySelector('#nm_vy').value;
+      const rot = +sl.querySelector('#nm_rot').value;
+      sl.querySelector('#nm_vxv').textContent = vx;
+      sl.querySelector('#nm_vyv').textContent = vy;
+      sl.querySelector('#nm_rotv').textContent = rot;
+      const { raw, norm } = omniNorm(vx, vy, rot);
+      const overLimit = raw.some(v => Math.abs(v) > 100);
+      const warn = sl.querySelector('#nm_warn' + 'ing');
+      if (warn) warn.style.display = overLimit ? '' : 'none';
+      raw.forEach((v, i) => {
+        const el = sl.querySelector('#nm_r' + (i+1));
+        if (!el) return;
+        el.textContent = v.toFixed(1);
+        el.className = 'fb-norm-cell' + (Math.abs(v) > 100 ? ' over' : '');
+      });
+      norm.forEach((v, i) => {
+        const el = sl.querySelector('#nm_n' + (i+1));
+        if (el) { el.textContent = v.toFixed(1); el.className = 'fb-norm-cell ok'; }
+      });
+    };
+    ['nm_vx','nm_vy','nm_rot'].forEach(id => sl.querySelector('#'+id).addEventListener('input', upd));
+    upd();
+  },
+});
+
+/* ==================== ramplab — مختبر التسارع التدريجي ==================== */
+Object.assign(window.DECK_TYPES, {
+  ramplab: s => `<div class="slide light">
+    <div class="kicker">🎮 مختبر الـ Ramping</div>
+    <h2 class="title" style="margin-bottom:8px">${s.title||'مع وبدون Ramping'}</h2>
+    <div class="fb-ramplab ix">
+      <canvas class="fb-ramp-canvas" width="520" height="220"></canvas>
+      <div class="fb-ramp-ctrl">
+        <div class="fb-slider-row" style="max-width:280px">
+          <label>RAMP_RATE: <b id="rl_rv">0.12</b></label>
+          <input type="range" id="rl_rate" min="0.02" max="1.0" step="0.01" value="0.12">
+        </div>
+        <div class="fb-ramp-btns">
+          <button id="rl_fwd">⬆ أمام</button>
+          <button id="rl_stop">⏹ إيقاف</button>
+        </div>
+        <div class="fb-ramp-info">
+          <span>الهدف: <b id="rl_tgt">0</b></span>
+          <span>الحالي: <b id="rl_cur">0</b></span>
+        </div>
+      </div>
+    </div></div>`,
+});
+
+Object.assign(window.DECK_BIND, {
+  ramplab(sl) {
+    const canvas = sl.querySelector('.fb-ramp-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = 520, H = 220;
+    let tgt = 0, cur = 0, ramp = 0.12;
+    const history = Array(W).fill(0);
+    let raf;
+
+    const upd = () => {
+      ramp = +sl.querySelector('#rl_rate').value;
+      sl.querySelector('#rl_rv').textContent = ramp.toFixed(2);
+    };
+    sl.querySelector('#rl_rate').addEventListener('input', upd);
+    sl.querySelector('#rl_fwd').addEventListener('click', () => { tgt = 100; });
+    sl.querySelector('#rl_stop').addEventListener('click', () => { tgt = 0; });
+
+    function frame() {
+      cur += (tgt - cur) * ramp;
+      if (Math.abs(tgt - cur) < 0.5) cur = tgt;
+      history.push(cur);
+      history.shift();
+
+      const tgtEl = sl.querySelector('#rl_tgt');
+      const curEl = sl.querySelector('#rl_cur');
+      if (tgtEl) tgtEl.textContent = tgt.toFixed(0);
+      if (curEl) curEl.textContent = cur.toFixed(1);
+
+      ctx.fillStyle = '#f0f4f8';
+      ctx.fillRect(0, 0, W, H);
+
+      /* Grid */
+      ctx.strokeStyle = '#dde'; ctx.lineWidth = 1;
+      [0, 25, 50, 75, 100].forEach(v => {
+        const y = H - 20 - (v / 100) * (H - 40);
+        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(W - 10, y); ctx.stroke();
+        ctx.fillStyle = '#888'; ctx.font = '11px monospace'; ctx.textAlign = 'right';
+        ctx.fillText(v, 36, y + 4);
+      });
+      /* Axis labels */
+      ctx.fillStyle = '#555'; ctx.font = '12px Cairo,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('السرعة %', 18, H / 2);
+      ctx.fillText('الوقت (فريمات) ←', W / 2, H - 4);
+
+      /* Target line */
+      const ty = H - 20 - (tgt / 100) * (H - 40);
+      ctx.setLineDash([6, 4]); ctx.strokeStyle = '#e53935'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(40, ty); ctx.lineTo(W - 10, ty); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#e53935'; ctx.font = '11px Cairo,sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText('هدف ' + tgt, W - 60, ty - 4);
+
+      /* Speed curve */
+      ctx.strokeStyle = '#2b6fc0'; ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      history.forEach((v, i) => {
+        const x = 40 + (i / history.length) * (W - 50);
+        const y = H - 20 - (v / 100) * (H - 40);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      /* Fill under curve */
+      ctx.fillStyle = 'rgba(43,111,192,.12)';
+      ctx.beginPath();
+      history.forEach((v, i) => {
+        const x = 40 + (i / history.length) * (W - 50);
+        const y = H - 20 - (v / 100) * (H - 40);
+        if (i === 0) ctx.moveTo(x, H - 20); else ctx.lineTo(x, y);
+      });
+      ctx.lineTo(40 + (W-50), H - 20);
+      ctx.closePath(); ctx.fill();
+
+      /* Current speed dot */
+      const cx2 = W - 10 - 15;
+      const cy2 = H - 20 - (cur / 100) * (H - 40);
+      ctx.beginPath(); ctx.arc(cx2, cy2, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#2b6fc0'; ctx.fill();
+
+      raf = requestAnimationFrame(frame);
+    }
+
+    raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
   },
 });

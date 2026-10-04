@@ -72,3 +72,24 @@
 .fb-chassis-nav { display:flex; gap:14px; align-items:center }
 .fb-chassis-nav button { font-family:Cairo,sans-serif; font-weight:800; font-size:16px; padding:8px 22px; border-radius:10px; border:none; background:var(--gold,#c9a227); color:#fff; cursor:pointer }
 .fb-chassis-step { font-family:Cairo,sans-serif; font-size:15px; font-weight:700; color:var(--navy-700,#182658); min-width:220px; text-align:center }
+
+/* ===== normlab — مختبر التطبيع ===== */
+.fb-normlab { display:flex; gap:20px; align-items:flex-start; flex:1; min-height:0; flex-wrap:wrap }
+.fb-norm-sliders { display:flex; flex-direction:column; gap:12px; min-width:200px; flex:1 }
+.fb-norm-warn { font-family:Cairo,sans-serif; font-size:14px; font-weight:700; color:#fff; background:#e53935; border-radius:8px; padding:8px 14px }
+.fb-norm-grid { display:grid; grid-template-columns:auto 1fr 1fr; gap:6px 14px; align-items:center; font-family:Cairo,sans-serif; font-size:15px; flex:1 }
+.fb-norm-head { font-weight:800; color:var(--navy-800,#101B45); font-size:13px; text-align:center }
+.fb-norm-lbl { font-weight:700; font-size:14px; white-space:nowrap }
+.fb-norm-cell { text-align:center; font-weight:700; font-size:16px; padding:7px 14px; border-radius:8px; background:#f0f4f8; transition:.2s }
+.fb-norm-cell.over { background:#ffcdd2; color:#c62828; }
+.fb-norm-cell.ok { background:#e8f5e9; color:#2e7d32; }
+
+/* ===== ramplab — مختبر التسارع ===== */
+.fb-ramplab { display:flex; flex-direction:column; align-items:center; gap:12px; flex:1; min-height:0 }
+.fb-ramp-canvas { display:block; direction:ltr; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,.15); max-width:100%; aspect-ratio:520/220 }
+.fb-ramp-ctrl { display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:center; width:100% }
+.fb-ramp-btns { display:flex; gap:10px }
+.fb-ramp-btns button { font-family:Cairo,sans-serif; font-weight:800; font-size:18px; padding:10px 24px; border-radius:12px; border:2px solid var(--gold,#c9a227); background:transparent; cursor:pointer; color:var(--navy-800,#101B45); transition:.2s }
+.fb-ramp-btns button:hover { background:var(--gold,#c9a227); color:#fff }
+.fb-ramp-info { display:flex; gap:18px; font-family:Cairo,sans-serif; font-size:14px; font-weight:700 }
+.fb-ramp-info b { color:var(--gold-dark,#9a7d1a); font-size:18px }
