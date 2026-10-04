@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سيارة كرة القدم الأومني — جذور</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/deck.css">
+<link rel="stylesheet" href="../arduino/widgets.css">
+<link rel="stylesheet" href="../arduino2/widgets2.css">
+<link rel="stylesheet" href="../arduino2/widgets2b.css">
+<link rel="stylesheet" href="../arduino2/widgets2c.css">
+<link rel="stylesheet" href="../arduino2/widgets2d.css">
+<link rel="stylesheet" href="../arduino2/widgets2e.css">
+<link rel="stylesheet" href="../arduino2/widgets2f.css">
+<link rel="stylesheet" href="../arduino3/widgets3.css">
+<link rel="stylesheet" href="../arduino3/widgets3b.css">
+<link rel="stylesheet" href="widgetsF.css">
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="stage"></div></div>
+<div id="bar">
+  <button onclick="location.href='../index.html'" title="العودة لمنصة جذور">🌳 جذور</button>
+  <button onclick="toggleMenu()" title="المحاور (M)">☰ المحاور</button>
+  <button onclick="window.open('../arduino3/index.html','_blank')" title="دورة سيارة الروبوت">🚗 الدورة الثالثة</button>
+  <button onclick="prev()" title="السابق">→</button>
+  <span class="cnt" id="cnt"></span>
+  <button onclick="next()" title="التالي">←</button>
+  <button onclick="fullscreen()" title="ملء الشاشة (F)">⛶ ملء الشاشة</button>
+</div>
+<div id="menu"><h3>محاور الدورة</h3><div class="mods" id="mods"></div></div>
+
+<script src="content.js"></script>
+<script>DECK.parts.forEach(p => document.write('<script src="parts/' + p + '.js"><\/script>'));</script>
+<script src="../arduino/widgets.js"></script>
+<script src="../arduino2/widgets2.js"></script>
+<script src="../arduino2/widgets2b.js"></script>
+<script src="../arduino2/widgets2c.js"></script>
+<script src="../arduino2/widgets2d.js"></script>
+<script src="../arduino2/widgets2e.js"></script>
+<script src="../arduino2/widgets2f.js"></script>
+<script src="../arduino3/widgets3.js"></script>
+<script src="../arduino3/widgets3b.js"></script>
+<script src="widgetsF.js"></script>
+<script src="../shared/deck.js"></script>
+</body>
+</html>
