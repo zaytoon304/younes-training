@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    سيارة كرة القدم الأومني — أدوات التفاعل
    omnilab · omnimath · nowlab · omnilab2 · wireanm
    فيزياء الأومني: M1=vy, M2=-vy/2+vx*0.87, M3=-vy/2-vx*0.87
@@ -469,190 +469,255 @@ Object.assign(window.DECK_BIND, {
 /* ==================== omnilab2 — ملعب التجربة الكامل ==================== */
 Object.assign(window.DECK_TYPES, {
   omnilab2: s => `<div class="slide light">
-    <div class="kicker">⚽ ملعب التجربة الكامل</div>
-    <h2 class="title" style="margin-bottom:8px">${s.title||'سيارة أومني — جرّب الحركة الكاملة'}</h2>
-    <div class="fb-lab2 ix">
-      <div class="fb-lab2-left">
-        <div class="fb-score"><span>🔵 <b id="fl_s0">٠</b></span><span>🔴 <b id="fl_s1">٠</b></span></div>
-        <div class="fb-wheel-bars">
-          <div class="fb-wb-row"><span>M1</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m1"></div></div></div>
-          <div class="fb-wb-row"><span>M2</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m2"></div></div></div>
-          <div class="fb-wb-row"><span>M3</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m3"></div></div></div>
-        </div>
-        <div id="fl_st" style="font-size:12px;font-family:Cairo,sans-serif;font-weight:700;color:#555">جاهز للعب</div>
-        <div class="fb-lab2-btns">
-          <button id="fl_ul">↖</button><button id="fl_up">⬆</button><button id="fl_ur">↗</button>
-          <button id="fl_lt">⬅</button><button id="fl_kick">⚽</button><button id="fl_rt">➡</button>
-          <button id="fl_dl">↙</button><button id="fl_dn">⬇</button><button id="fl_dr">↘</button>
-          <button id="fl_rotl">↺</button><span></span><button id="fl_rotr">↻</button>
-        </div>
+  <div class="kicker">⚽ ملعب التجربة</div>
+  <h2 class="title" style="margin-bottom:6px">${s.title||'سيارتان أومني — جرّب الحركة الكاملة'}</h2>
+  <div class="fb-lab2 ix">
+    <canvas class="fb-lab2-field" width="720" height="440" style="flex:1;min-width:0;border-radius:14px;box-shadow:0 6px 28px rgba(0,0,0,.3)"></canvas>
+    <div class="fb-lab2-right" style="display:flex;flex-direction:column;gap:10px;min-width:180px">
+      <div class="fb-score" style="font-size:26px">
+        <div>🔵 أنت <b id="fl_s0" style="font-size:36px;color:#2b6fc0">٠</b></div>
+        <div>🔴 خصم <b id="fl_s1" style="font-size:36px;color:#c0392b">٠</b></div>
       </div>
-      <canvas class="fb-lab2-field" width="480" height="300"></canvas>
-    </div></div>`,
+      <div style="font-family:Cairo,sans-serif;font-size:14px;font-weight:700;color:#555" id="fl_st">جاهز!</div>
+      <div style="font-family:Cairo,sans-serif;font-size:13px;font-weight:700;color:#777">سرعة عجلاتك:</div>
+      <div class="fb-wheel-bars" style="direction:ltr">
+        <div class="fb-wb-row"><span style="font-size:15px;font-weight:800;min-width:28px">M1</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m1"></div></div><span class="fb-wb-num" id="fl_n1">0</span></div>
+        <div class="fb-wb-row"><span style="font-size:15px;font-weight:800;min-width:28px">M2</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m2"></div></div><span class="fb-wb-num" id="fl_n2">0</span></div>
+        <div class="fb-wb-row"><span style="font-size:15px;font-weight:800;min-width:28px">M3</span><div class="fb-wb-track"><div class="fb-wb-fill" id="fl_m3"></div></div><span class="fb-wb-num" id="fl_n3">0</span></div>
+      </div>
+      <div class="fb-lab2-btns" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;direction:ltr;margin-top:8px">
+        <button id="fl_ul" style="font-size:20px;padding:9px">↖</button>
+        <button id="fl_up" style="font-size:20px;padding:9px">⬆</button>
+        <button id="fl_ur" style="font-size:20px;padding:9px">↗</button>
+        <button id="fl_lt" style="font-size:20px;padding:9px">⬅</button>
+        <button id="fl_kick" style="font-size:18px;padding:9px;background:#e53935;color:#fff;border-radius:10px;font-family:Cairo,sans-serif;font-weight:800">⚽ سدّد</button>
+        <button id="fl_rt" style="font-size:20px;padding:9px">➡</button>
+        <button id="fl_dl" style="font-size:20px;padding:9px">↙</button>
+        <button id="fl_dn" style="font-size:20px;padding:9px">⬇</button>
+        <button id="fl_dr" style="font-size:20px;padding:9px">↘</button>
+        <button id="fl_rotl" style="font-size:18px;padding:9px">↺</button>
+        <span></span>
+        <button id="fl_rotr" style="font-size:18px;padding:9px">↻</button>
+      </div>
+    </div>
+  </div></div>`,
 });
 
 Object.assign(window.DECK_BIND, {
   omnilab2(sl) {
     const canvas = sl.querySelector('.fb-lab2-field');
     const ctx = canvas.getContext('2d');
-    const FW = 480, FH = 300;
-    const BALL_R = 9, GOAL_Y0 = 100, GOAL_Y1 = 200;
-    const score = [0, 0];
-    let goalFlash = 0, flashSide = 0;
+    const FW = 720, FH = 440;
+    const BALL_R = 11;
+    const GOAL_W = 20, GOAL_H = 110;
+    const GOAL_Y0 = (FH - GOAL_H) / 2, GOAL_Y1 = GOAL_Y0 + GOAL_H;
+    const ROBOT_SIZE = 36;
+
+    const robot = { x: FW * 0.3, y: FH / 2, angle: 0, vx: 0, vy: 0, rot: 0,
+                    cur1: 0, cur2: 0, cur3: 0, tgt1: 0, tgt2: 0, tgt3: 0 };
+    const opp = { x: FW * 0.7, y: FH / 2, angle: Math.PI };
+    const ball = { x: FW / 2, y: FH / 2, vx: 0, vy: 0 };
+
+    let score = [0, 0];
+    let goalFlash = 0;
+    let kickAnim = 0;
+    const servo = { angle: 0 };
     let last = 0, raf;
 
-    const robot = { x: FW / 2, y: FH / 2, angle: 0 };
-    const ball = { x: FW / 2 + 40, y: FH / 2, vx: 0, vy: 0, free: false };
-    const servo = { angle: 0, active: false, timer: 0 };
-
-    let vx = 0, vy = 0, rot = 0, kickReq = false;
+    function omniCalcPlayer(vx, vy, rot) {
+      let M1 =  vy - rot;
+      let M2 = (-0.5 * vy - 0.866 * vx) - rot;
+      let M3 = (-0.5 * vy + 0.866 * vx) - rot;
+      const mx = Math.max(Math.abs(M1), Math.abs(M2), Math.abs(M3));
+      if (mx > 100) { M1 = M1/mx*100; M2 = M2/mx*100; M3 = M3/mx*100; }
+      return [M1, M2, M3];
+    }
 
     const CMD = {
-      fl_up: [0, -100, 0], fl_dn: [0, 100, 0], fl_lt: [-100, 0, 0], fl_rt: [100, 0, 0],
-      fl_ul: [-80, -80, 0], fl_ur: [80, -80, 0], fl_dl: [-80, 80, 0], fl_dr: [80, 80, 0],
-      fl_rotl: [0, 0, -80], fl_rotr: [0, 0, 80],
+      fl_up: [0,-100,0], fl_dn: [0,100,0], fl_lt: [-100,0,0], fl_rt: [100,0,0],
+      fl_ul: [-80,-80,0], fl_ur: [80,-80,0], fl_dl: [-80,80,0], fl_dr: [80,80,0],
+      fl_rotl: [0,0,-80], fl_rotr: [0,0,80],
     };
     const held = {};
     const updateCmd = () => {
-      let _vx = 0, _vy = 0, _rot = 0;
-      Object.keys(held).forEach(k => { if (held[k] && CMD[k]) { _vx += CMD[k][0]; _vy += CMD[k][1]; _rot += CMD[k][2]; } });
-      vx = clamp(_vx, -100, 100); vy = clamp(_vy, -100, 100); rot = clamp(_rot, -80, 80);
+      let vx=0,vy=0,rot=0;
+      Object.keys(held).forEach(k => { if(held[k]&&CMD[k]){vx=CMD[k][0];vy=CMD[k][1];rot=CMD[k][2];} });
+      robot.vx=vx; robot.vy=vy; robot.rot=rot;
     };
     Object.keys(CMD).forEach(id => {
-      const btn = sl.querySelector('#' + id);
-      if (!btn) return;
-      btn.addEventListener('pointerdown', e => { e.preventDefault(); held[id] = true; updateCmd(); });
-      btn.addEventListener('pointerup', () => { held[id] = false; updateCmd(); });
-      btn.addEventListener('pointerleave', () => { held[id] = false; updateCmd(); });
+      const btn = sl.querySelector('#'+id);
+      if(!btn) return;
+      btn.addEventListener('pointerdown', e => { e.preventDefault(); held[id]=true; updateCmd(); });
+      ['pointerup','pointerleave'].forEach(e => btn.addEventListener(e, ()=>{ held[id]=false; updateCmd(); }));
     });
     const kickBtn = sl.querySelector('#fl_kick');
-    if (kickBtn) kickBtn.addEventListener('pointerdown', e => { e.preventDefault(); kickReq = true; });
+    if (kickBtn) kickBtn.addEventListener('pointerdown', e => { e.preventDefault(); kickAnim = 18; });
 
-    function updateWheelBars(M1, M2, M3) {
-      [M1, M2, M3].forEach((v, i) => {
-        const el = sl.querySelector('#fl_m' + (i + 1));
-        if (!el) return;
-        const pct = Math.abs(v) / 100 * 50;
-        el.style.width = pct + '%';
-        el.style.marginLeft = v >= 0 ? '50%' : (50 - pct) + '%';
-        el.style.background = v >= 0 ? '#43a047' : '#e53935';
+    function resetPositions() {
+      robot.x = FW*0.28; robot.y = FH/2; robot.angle = 0;
+      opp.x = FW*0.72; opp.y = FH/2; opp.angle = Math.PI;
+      ball.x = FW/2; ball.y = FH/2; ball.vx = 0; ball.vy = 0;
+      robot.cur1 = robot.cur2 = robot.cur3 = 0;
+      robot.tgt1 = robot.tgt2 = robot.tgt3 = 0;
+    }
+
+    function drawTriBot(cx, cy, angle, color, border, sz) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, -sz);
+      ctx.lineTo(-sz * 0.87, sz * 0.5);
+      ctx.lineTo(sz * 0.87, sz * 0.5);
+      ctx.closePath();
+      ctx.fillStyle = color; ctx.fill();
+      ctx.strokeStyle = border; ctx.lineWidth = 3; ctx.stroke();
+      [[0,-sz,0],[-sz*0.87,sz*0.5,2*Math.PI/3],[sz*0.87,sz*0.5,-2*Math.PI/3]].forEach(([dx,dy,wa]) => {
+        ctx.save(); ctx.translate(dx,dy); ctx.rotate(wa);
+        ctx.fillStyle='#1c1f27'; ctx.fillRect(-7,-3,14,6);
+        ctx.restore();
       });
+      ctx.beginPath(); ctx.arc(0,0,5,0,Math.PI*2);
+      ctx.fillStyle=border; ctx.fill();
+      ctx.restore();
+    }
+
+    function drawServoArm(cx, cy, angle, armAngle, sz) {
+      ctx.save();
+      ctx.translate(cx, cy); ctx.rotate(angle);
+      ctx.translate(0, -sz*0.7);
+      ctx.rotate((armAngle - 90)*Math.PI/180);
+      ctx.fillStyle='#f4d35e'; ctx.strokeStyle='#8a6d1f'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.roundRect(-4,-sz*0.55,8,sz*0.55,3);
+      ctx.fill(); ctx.stroke();
+      ctx.restore();
     }
 
     function frame(ts) {
-      const dt = Math.min(ts - last, 50);
+      const dt = Math.min(ts - last, 50) / 16;
       last = ts;
-      const [M1, M2, M3] = omniCalc(vx, vy, rot);
-      updateWheelBars(M1, M2, M3);
+      const RAMP = 0.14;
 
-      /* حركة الروبوت */
-      const spd = 0.28;
-      const cosA = Math.cos(robot.angle), sinA = Math.sin(robot.angle);
-      const worldVx = (cosA * vx - sinA * vy) * spd * dt / 40;
-      const worldVy = (sinA * vx + cosA * vy) * spd * dt / 40;
-      robot.x = clamp(robot.x + worldVx, 40, FW - 40);
-      robot.y = clamp(robot.y + worldVy, 40, FH - 40);
-      robot.angle += rot * 0.003 * dt / 16;
+      const [M1,M2,M3] = omniCalcPlayer(robot.vx, robot.vy, robot.rot);
+      robot.tgt1=M1; robot.tgt2=M2; robot.tgt3=M3;
+      robot.cur1 += (robot.tgt1-robot.cur1)*RAMP;
+      robot.cur2 += (robot.tgt2-robot.cur2)*RAMP;
+      robot.cur3 += (robot.tgt3-robot.cur3)*RAMP;
+      robot.angle += robot.rot * 0.025 * dt;
+      const wx = robot.vx*Math.cos(robot.angle) - robot.vy*Math.sin(robot.angle);
+      const wy = robot.vx*Math.sin(robot.angle) + robot.vy*Math.cos(robot.angle);
+      robot.x = clamp(robot.x + wx*dt*0.03, ROBOT_SIZE, FW-ROBOT_SIZE);
+      robot.y = clamp(robot.y + wy*dt*0.03, ROBOT_SIZE, FH-ROBOT_SIZE);
 
-      /* السيرفو */
-      if (kickReq && !servo.active) {
-        servo.active = true; servo.timer = 350; kickReq = false;
-        /* دفع الكرة */
-        const kickDirX = Math.cos(robot.angle - Math.PI / 2);
-        const kickDirY = Math.sin(robot.angle - Math.PI / 2);
-        ball.vx = kickDirX * 7; ball.vy = kickDirY * 7; ball.free = true;
-        const st = sl.querySelector('#fl_st'); if (st) st.textContent = '⚽ تسديدة!';
+      // Opponent AI: chase ball
+      const odx = ball.x-opp.x, ody = ball.y-opp.y;
+      const odist = Math.sqrt(odx*odx+ody*ody);
+      if (odist > 5) {
+        const spd = Math.min(1.4, odist*0.015);
+        opp.x += (odx/odist)*spd*dt; opp.y += (ody/odist)*spd*dt;
+        opp.angle = Math.atan2(ody,odx) - Math.PI/2;
       }
-      if (servo.active) {
-        servo.timer -= dt;
-        servo.angle = servo.timer > 0 ? 120 : 0;
-        if (servo.timer <= 0) { servo.active = false; servo.angle = 0; }
+      opp.x = clamp(opp.x, ROBOT_SIZE, FW-ROBOT_SIZE);
+      opp.y = clamp(opp.y, ROBOT_SIZE, FH-ROBOT_SIZE);
+
+      // Ball physics
+      ball.x += ball.vx*dt; ball.y += ball.vy*dt;
+      ball.vx *= 0.985; ball.vy *= 0.985;
+      if (ball.x-BALL_R < GOAL_W && (ball.y<GOAL_Y0||ball.y>GOAL_Y1)) { ball.x=GOAL_W+BALL_R; ball.vx=Math.abs(ball.vx); }
+      if (ball.x+BALL_R > FW-GOAL_W && (ball.y<GOAL_Y0||ball.y>GOAL_Y1)) { ball.x=FW-GOAL_W-BALL_R; ball.vx=-Math.abs(ball.vx); }
+      if (ball.y-BALL_R < 0) { ball.y=BALL_R; ball.vy=Math.abs(ball.vy); }
+      if (ball.y+BALL_R > FH) { ball.y=FH-BALL_R; ball.vy=-Math.abs(ball.vy); }
+
+      // Player-ball collision
+      const pdx=ball.x-robot.x, pdy=ball.y-robot.y, pd=Math.sqrt(pdx*pdx+pdy*pdy);
+      if (pd < ROBOT_SIZE*0.8+BALL_R) {
+        const nx=pdx/pd, ny=pdy/pd;
+        ball.x=robot.x+nx*(ROBOT_SIZE*0.8+BALL_R+1);
+        ball.y=robot.y+ny*(ROBOT_SIZE*0.8+BALL_R+1);
+        ball.vx=nx*3.5; ball.vy=ny*3.5;
+      }
+      // Opponent-ball collision
+      const qdx=ball.x-opp.x, qdy=ball.y-opp.y, qd=Math.sqrt(qdx*qdx+qdy*qdy);
+      if (qd < ROBOT_SIZE*0.8+BALL_R) {
+        const nx=qdx/qd, ny=qdy/qd;
+        ball.x=opp.x+nx*(ROBOT_SIZE*0.8+BALL_R+1);
+        ball.y=opp.y+ny*(ROBOT_SIZE*0.8+BALL_R+1);
+        ball.vx=nx*3; ball.vy=ny*3;
       }
 
-      /* الكرة */
-      if (!ball.free) {
-        const fwd = 36;
-        ball.x = robot.x + Math.cos(robot.angle - Math.PI / 2) * fwd;
-        ball.y = robot.y + Math.sin(robot.angle - Math.PI / 2) * fwd;
-      } else {
-        ball.x += ball.vx; ball.y += ball.vy;
-        ball.vx *= 0.96; ball.vy *= 0.96;
-        if (ball.x < BALL_R || ball.x > FW - BALL_R) ball.vx *= -0.7;
-        if (ball.y < BALL_R) ball.vy *= -0.7;
-        if (ball.y > FH - BALL_R) { ball.vy *= -0.7; ball.y = FH - BALL_R; }
-        if (Math.abs(ball.vx) + Math.abs(ball.vy) < 0.3) { ball.free = false; }
-
-        /* هدف يسار */
-        if (ball.x < 16 && ball.y > GOAL_Y0 && ball.y < GOAL_Y1) {
-          score[0]++; goalFlash = 60; flashSide = 0;
-          const el = sl.querySelector('#fl_s0');
-          if (el) { el.textContent = AR(score[0]); el.classList.add('gol'); setTimeout(() => el.classList.remove('gol'), 600); }
-          ball.x = FW / 2; ball.y = FH / 2; ball.vx = 0; ball.vy = 0; ball.free = false;
-          robot.x = FW / 2; robot.y = FH / 2 + 60; robot.angle = 0;
-          const st = sl.querySelector('#fl_st'); if (st) st.textContent = '🎉 هدف!';
+      // Kick
+      if (kickAnim > 0) {
+        kickAnim--;
+        servo.angle = kickAnim > 9 ? 120 : 0;
+        if (kickAnim === 9) {
+          const kx=ball.x-robot.x, ky=ball.y-robot.y, kd=Math.sqrt(kx*kx+ky*ky);
+          if (kd < ROBOT_SIZE*1.5) {
+            const kang = robot.angle - Math.PI/2;
+            ball.vx += Math.cos(kang)*9; ball.vy += Math.sin(kang)*9;
+          }
         }
-        /* هدف يمين */
-        if (ball.x > FW - 16 && ball.y > GOAL_Y0 && ball.y < GOAL_Y1) {
-          score[1]++; goalFlash = 60; flashSide = 1;
-          const el = sl.querySelector('#fl_s1');
-          if (el) { el.textContent = AR(score[1]); el.classList.add('gol'); setTimeout(() => el.classList.remove('gol'), 600); }
-          ball.x = FW / 2; ball.y = FH / 2; ball.vx = 0; ball.vy = 0; ball.free = false;
-          robot.x = FW / 2; robot.y = FH / 2 + 60; robot.angle = 0;
-          const st = sl.querySelector('#fl_st'); if (st) st.textContent = '🎉 هدف!';
+      } else { servo.angle = 0; }
+
+      // Goals
+      if (ball.x < 0) { score[1]++; goalFlash=50; const el=sl.querySelector('#fl_s1'); if(el)el.textContent=AR(score[1]); resetPositions(); }
+      if (ball.x > FW) { score[0]++; goalFlash=50; const el=sl.querySelector('#fl_s0'); if(el)el.textContent=AR(score[0]); resetPositions(); }
+
+      // Draw field
+      ctx.fillStyle='#1a7a40'; ctx.fillRect(0,0,FW,FH);
+      for (let i=0;i<8;i++){
+        ctx.fillStyle=i%2===0?'rgba(255,255,255,.03)':'rgba(0,0,0,.03)';
+        ctx.fillRect(i*FW/8,0,FW/8,FH);
+      }
+      ctx.strokeStyle='rgba(255,255,255,.45)'; ctx.lineWidth=2;
+      ctx.strokeRect(30,30,FW-60,FH-60);
+      ctx.beginPath(); ctx.moveTo(FW/2,30); ctx.lineTo(FW/2,FH-30); ctx.stroke();
+      ctx.beginPath(); ctx.arc(FW/2,FH/2,55,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(FW/2,FH/2,5,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=2;
+      ctx.strokeRect(30,GOAL_Y0-20,50,GOAL_H+40);
+      ctx.strokeRect(FW-80,GOAL_Y0-20,50,GOAL_H+40);
+      ctx.strokeStyle='#fff'; ctx.lineWidth=3;
+      ctx.strokeRect(0,GOAL_Y0,GOAL_W,GOAL_H);
+      ctx.strokeRect(FW-GOAL_W,GOAL_Y0,GOAL_W,GOAL_H);
+
+      if (goalFlash>0){
+        ctx.fillStyle=`rgba(255,215,0,${goalFlash/50*0.25})`;
+        ctx.fillRect(0,0,FW,FH); goalFlash--;
+      }
+
+      drawTriBot(opp.x,opp.y,opp.angle,'#c0392b','#fff',ROBOT_SIZE);
+      drawTriBot(robot.x,robot.y,robot.angle,'#2b6fc0','#4dc8c6',ROBOT_SIZE);
+      drawServoArm(robot.x,robot.y,robot.angle,servo.angle,ROBOT_SIZE);
+
+      // Ball
+      ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2);
+      ctx.fillStyle='#f5f5f5'; ctx.fill();
+      ctx.strokeStyle='#333'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R*0.45,0,Math.PI*2);
+      ctx.strokeStyle='#666'; ctx.lineWidth=1; ctx.stroke();
+
+      // Score overlay
+      ctx.fillStyle='rgba(0,0,0,.55)';
+      ctx.beginPath(); ctx.roundRect(FW/2-70,8,140,38,8); ctx.fill();
+      ctx.font='bold 22px Cairo,sans-serif'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+      ctx.fillText(score[0]+' - '+score[1],FW/2,32);
+
+      // Wheel bars
+      [robot.cur1,robot.cur2,robot.cur3].forEach((v,i) => {
+        const fill=sl.querySelector('#fl_m'+(i+1));
+        const num=sl.querySelector('#fl_n'+(i+1));
+        if(fill){
+          const pct=Math.abs(v)/100*50;
+          fill.style.width=pct+'%';
+          fill.style.left=v>=0?'50%':(50-pct)+'%';
+          fill.style.background=v>=0?'#43a047':'#e53935';
         }
-      }
-      if (goalFlash > 0) goalFlash--;
-
-      /* رسم الملعب */
-      ctx.fillStyle = '#2d8a4e'; ctx.fillRect(0, 0, FW, FH);
-      /* خطوط */
-      ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.lineWidth = 2;
-      ctx.strokeRect(12, 12, FW - 24, FH - 24);
-      ctx.beginPath(); ctx.moveTo(FW / 2, 12); ctx.lineTo(FW / 2, FH - 12); ctx.stroke();
-      ctx.beginPath(); ctx.arc(FW / 2, FH / 2, 40, 0, Math.PI * 2); ctx.stroke();
-      /* مرميان */
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
-      ctx.strokeRect(0, GOAL_Y0, 16, GOAL_Y1 - GOAL_Y0); /* يسار */
-      ctx.strokeRect(FW - 16, GOAL_Y0, 16, GOAL_Y1 - GOAL_Y0); /* يمين */
-
-      /* تأثير هدف */
-      if (goalFlash > 0) {
-        ctx.fillStyle = `rgba(255,215,0,${goalFlash / 60 * 0.3})`;
-        ctx.fillRect(0, 0, FW, FH);
-      }
-
-      /* رسم الروبوت مع السيرفو */
-      ctx.save();
-      ctx.translate(robot.x, robot.y);
-      ctx.rotate(robot.angle);
-      /* جسم مثلث */
-      ctx.beginPath(); ctx.moveTo(0, -28); ctx.lineTo(-24, 18); ctx.lineTo(24, 18); ctx.closePath();
-      ctx.fillStyle = '#2b6fc0'; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-      /* رأس */
-      ctx.beginPath(); ctx.arc(0, -28, 5, 0, Math.PI * 2);
-      ctx.fillStyle = '#4dc8c6'; ctx.fill();
-      /* ذراع السيرفو */
-      const sa = (servo.angle - 90) * Math.PI / 180;
-      ctx.save();
-      ctx.translate(0, -18);
-      ctx.rotate(sa);
-      ctx.fillStyle = '#f4d35e';
-      ctx.fillRect(-3, -18, 6, 18);
-      ctx.restore();
-      ctx.restore();
-
-      /* الكرة */
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff'; ctx.fill();
-      ctx.strokeStyle = '#333'; ctx.lineWidth = 1.5; ctx.stroke();
-      /* تفاصيل كرة */
-      ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R * 0.5, 0, Math.PI * 2);
-      ctx.strokeStyle = '#888'; ctx.lineWidth = 1; ctx.stroke();
+        if(num) num.textContent=Math.round(v);
+      });
 
       raf = requestAnimationFrame(frame);
     }
-    raf = requestAnimationFrame(ts => { last = ts; frame(ts); });
+    raf = requestAnimationFrame(ts => { last=ts; frame(ts); });
     return () => cancelAnimationFrame(raf);
   },
 });
@@ -660,7 +725,7 @@ Object.assign(window.DECK_BIND, {
 
 /* ==================== partpic — رسم مكوّن متحرك ==================== */
 const PART_SVGS = {
-  esp32: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+  esp32: () => `<svg viewBox="0 0 260 180" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes antPulse{0%,100%{opacity:.4}50%{opacity:1}}
       @keyframes pinBlink{0%,100%{opacity:.6}50%{opacity:1}}
@@ -712,7 +777,7 @@ const PART_SVGS = {
     <text x="130" y="6" text-anchor="middle" fill="#ccc" font-size="9" font-family="Cairo,sans-serif">USB</text>
   </svg>`,
 
-  l9110s: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+  l9110s: () => `<svg viewBox="0 0 260 180" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes flowRight{0%{stroke-dashoffset:30}100%{stroke-dashoffset:0}}
       .flow{stroke-dasharray:8 4;animation:flowRight 1s linear infinite}
@@ -748,7 +813,7 @@ const PART_SVGS = {
     <text x="130" y="155" text-anchor="middle" fill="#fff" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">L9110S × واحد لكل محرك</text>
   </svg>`,
 
-  omni: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+  omni: () => `<svg viewBox="0 0 260 180" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes spinWheel{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
       @keyframes slideX{0%,100%{transform:translateX(0)}50%{transform:translateX(18px)}}
@@ -791,7 +856,7 @@ const PART_SVGS = {
     <text x="130" y="195" text-anchor="middle" fill="#555" font-size="10" font-family="Cairo,sans-serif">أسطوانات تسمح بالانزلاق الجانبي</text>
   </svg>`,
 
-  servo: () => `<svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+  servo: () => `<svg viewBox="0 0 260 200" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes kickArm{0%,40%,100%{transform:rotate(-10deg)}60%,80%{transform:rotate(110deg)}}
       .arm{transform-origin:130px 85px;animation:kickArm 2.5s ease-in-out infinite}
@@ -826,7 +891,7 @@ const PART_SVGS = {
     <text x="130" y="120" text-anchor="middle" fill="#fff" font-size="11" font-family="monospace" font-weight="bold">MG996R</text>
   </svg>`,
 
-  joystick: () => `<svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+  joystick: () => `<svg viewBox="0 0 260 200" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes tiltStick{
         0%,100%{transform:translate(0,0) rotate(0deg)}
@@ -872,7 +937,7 @@ const PART_SVGS = {
     <text x="130" y="48" text-anchor="middle" fill="#aaa" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">KY-023</text>
   </svg>`,
 
-  motor: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+  motor: () => `<svg viewBox="0 0 260 180" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
     <style>
       @keyframes spinOmni{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
       .omniSpin{transform-origin:185px 90px;animation:spinOmni 1.5s linear infinite}
@@ -936,7 +1001,7 @@ Object.assign(window.DECK_TYPES, {
     <div class="kicker">${s.kicker || '🔧 خطوة بخطوة'}</div>
     <h2 class="title" style="margin-bottom:6px">${s.title || 'شاهد الروبوت يُبنى أمامك'}</h2>
     <div class="fb-chassis-wrap ix">
-      <canvas class="fb-chassis-canvas" width="580" height="310"></canvas>
+      <canvas class="fb-chassis-canvas" width="820" height="420"></canvas>
       <div class="fb-chassis-nav">
         <button id="cb_prev">→ السابق</button>
         <span class="fb-chassis-step" id="cb_step">الخطوة ١ من ٧</span>
@@ -950,9 +1015,9 @@ Object.assign(window.DECK_BIND, {
   chassisbuild(sl) {
     const canvas = sl.querySelector('.fb-chassis-canvas');
     const ctx = canvas.getContext('2d');
-    const W = 580, H = 310;
-    const CX = W / 2, CY = H / 2 + 10;
-    const R = 110; // triangle circumradius
+    const W = 820, H = 420;
+    const CX = W / 2, CY = H / 2 + 20;
+    const R = 150; // triangle circumradius
     let step = 0;
     let raf;
     let t = 0; // animation time
@@ -1011,7 +1076,7 @@ Object.assign(window.DECK_BIND, {
       // Wheel
       drawOmniWheel(v.x, v.y - 22, 13, wheelSpin);
       // Label
-      ctx.fillStyle = motorColors[vi]; ctx.font = 'bold 11px Cairo,sans-serif';
+      ctx.fillStyle = motorColors[vi]; ctx.font = 'bold 15px Cairo,sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillText(motorLabels[vi], v.x, v.y + 14);
       ctx.restore();
@@ -1034,14 +1099,14 @@ Object.assign(window.DECK_BIND, {
       ctx.fillStyle = step === 0 ? 'rgba(77,200,198,.08)' : 'rgba(77,200,198,.04)';
       ctx.fill();
       if (step === 0) {
-        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 14px Cairo,sans-serif';
+        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 20px Cairo,sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('الهيكل', CX, CY);
         // Angle labels
         [0,1,2].map((i,_) => {
           const a = (i * 120 - 90) * Math.PI / 180;
-          const lx = CX + (R + 24) * Math.cos(a), ly = CY + (R + 24) * Math.sin(a);
-          ctx.fillStyle = '#aaa'; ctx.font = '11px Cairo,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+          const lx = CX + (R + 32) * Math.cos(a), ly = CY + (R + 32) * Math.sin(a);
+          ctx.fillStyle = '#aaa'; ctx.font = '15px Cairo,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
           ctx.fillText('١٢٠°', lx, ly);
         });
       }
@@ -1059,11 +1124,11 @@ Object.assign(window.DECK_BIND, {
         ctx.fillStyle = '#0e7c86';
         ctx.beginPath(); ctx.roundRect(CX - 28, CY - 18, 56, 36, 5); ctx.fill();
         ctx.strokeStyle = `rgba(77,200,198,${pulse})`; ctx.lineWidth = 2; ctx.stroke();
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px monospace';
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 15px monospace';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('ESP32', CX, CY - 3);
-        ctx.fillStyle = '#4dc8c6'; ctx.font = '9px Cairo,sans-serif';
-        ctx.fillText('الدماغ', CX, CY + 9);
+        ctx.fillStyle = '#4dc8c6'; ctx.font = '13px Cairo,sans-serif';
+        ctx.fillText('الدماغ', CX, CY + 12);
         ctx.restore();
       }
 
@@ -1076,7 +1141,7 @@ Object.assign(window.DECK_BIND, {
           ctx.fillStyle = '#1a3a8f';
           ctx.beginPath(); ctx.roundRect(cx2 - 12, cy2 - 9, 24, 18, 3); ctx.fill();
           ctx.strokeStyle = '#4a7dff'; ctx.lineWidth = 1.5; ctx.stroke();
-          ctx.fillStyle = '#7af'; ctx.font = 'bold 8px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillStyle = '#7af'; ctx.font = 'bold 11px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
           ctx.fillText('L9110S', cx2, cy2);
           // Wire from esp32 to driver
           ctx.strokeStyle = 'rgba(100,180,255,.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
@@ -1085,8 +1150,8 @@ Object.assign(window.DECK_BIND, {
           ctx.restore();
         }
         ctx.save(); ctx.globalAlpha = 0.7;
-        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 11px Cairo,sans-serif';
-        ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('دريفر L9110S', CX, CY + 28);
+        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 15px Cairo,sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('دريفر L9110S', CX, CY + 36);
         ctx.restore();
       }
 
@@ -1104,7 +1169,7 @@ Object.assign(window.DECK_BIND, {
         ctx.fillStyle = '#f4d35e';
         ctx.fillRect(-3, -16, 6, 16);
         ctx.restore();
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Cairo,sans-serif';
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 13px Cairo,sans-serif';
         ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText('سيرفو', sv.x, sv.y - 44);
         ctx.restore();
@@ -1116,7 +1181,7 @@ Object.assign(window.DECK_BIND, {
         const glow = 0.6 + 0.4 * Math.sin(t * 0.07);
         ctx.fillStyle = `rgba(77,200,198,${glow * 0.15})`;
         ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#43a047'; ctx.font = 'bold 28px Cairo,sans-serif';
+        ctx.fillStyle = '#43a047'; ctx.font = 'bold 39px Cairo,sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.shadowColor = '#43a047'; ctx.shadowBlur = 18;
         ctx.fillText('✅ الروبوت جاهز!', CX, 38);
