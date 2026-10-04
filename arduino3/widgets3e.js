@@ -41,12 +41,12 @@ Object.assign(window.DECK_TYPES, {
         <div class="fcscore"><span>🔵 <b id="fsc0">٠</b></span><span>🔴 <b id="fsc1">٠</b></span></div>
         <canvas class="ffield" width="480" height="300"></canvas>
         <div class="fbtns">
-          <button class="clap" id="fleft">↰ يسار</button>
-          <button class="clap" id="ffwd">↑ أمام</button>
-          <button class="clap" id="fright">↱ يمين</button>
-          <button class="sndbtn" id="fdribble">🔄 دريبل</button>
-          <button class="clap" id="fback">↓ خلف</button>
+          <button class="clap" id="ffwd">⬆ أمام</button>
+          <button class="clap" id="fleft">⬅ يسار</button>
           <button class="sndbtn" id="fkick">⚽ سدّد</button>
+          <button class="clap" id="fback">⬇ خلف</button>
+          <button class="clap" id="fright">➡ يمين</button>
+          <button class="sndbtn" id="fdribble">🔄 دريبل</button>
         </div>
       </div>
     </div></div>`,
@@ -171,18 +171,29 @@ Object.assign(window.DECK_BIND, {
       ctx.fillStyle = 'white';
       ctx.beginPath(); ctx.moveTo(23, 0); ctx.lineTo(14, -5); ctx.lineTo(14, 5); ctx.closePath(); ctx.fill();
       ctx.restore();
-      /* ذراع السيرفو (حركة التسديد) */
-      if (kickActive && kickAngle > 0) {
-        ctx.save();
-        ctx.translate(robot.x, robot.y);
-        ctx.rotate(robot.th);
-        ctx.rotate(-kickAngle * Math.PI / 1.5);
-        ctx.fillStyle = '#ff6f00';
-        ctx.fillRect(12, -4, 28, 8);
-        ctx.beginPath(); ctx.arc(42, 0, 6, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffa726'; ctx.fill();
-        ctx.restore();
-      }
+      /* ذراع السيرفو — دائماً مرئي */
+      ctx.save();
+      ctx.translate(robot.x, robot.y);
+      ctx.rotate(robot.th);
+      /* ذراع السيرفو يتحرك من 0 (راحة) إلى -90° (تسديد) */
+      ctx.rotate(-kickAngle * Math.PI / 1.5);
+      /* جسم السيرفو */
+      ctx.fillStyle = '#546e7a';
+      ctx.fillRect(14, -5, 8, 10);
+      /* الذراع */
+      ctx.fillStyle = '#ff6f00';
+      ctx.fillRect(22, -4, 30, 8);
+      /* الكرة المصغّرة على طرف الذراع */
+      ctx.beginPath(); ctx.arc(54, 0, 7, 0, Math.PI * 2);
+      ctx.fillStyle = kickActive ? '#ffd740' : '#ffa726'; ctx.fill();
+      ctx.strokeStyle = '#e65100'; ctx.lineWidth = 1.5; ctx.stroke();
+      /* تسمية السيرفو */
+      ctx.rotate(kickAngle * Math.PI / 1.5);
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.font = 'bold 9px Cairo,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('سيرفو', 30, -12);
+      ctx.restore();
     };
 
     /* ===== رسم الكرة ===== */
