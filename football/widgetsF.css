@@ -56,3 +56,19 @@
 
 @keyframes fb-goal { 0%{transform:scale(1)}30%{transform:scale(1.15)}100%{transform:scale(1)} }
 .fb-score b.gol { animation:fb-goal .5s ease }
+
+/* ===== partpic — رسم مكوّن متحرك ===== */
+.fb-partpic { display:flex; gap:32px; align-items:center; flex:1; min-height:0; direction:rtl }
+.fb-pic-svg { min-width:270px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.04); border-radius:16px; padding:12px }
+.fb-pic-info { flex:1; display:flex; flex-direction:column; gap:10px }
+.fb-pic-desc { font-family:Cairo,sans-serif; font-size:18px; color:#2c3e50; line-height:1.65; margin:0 }
+.fb-pic-facts { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px }
+.fb-pic-facts li { font-family:Cairo,sans-serif; font-size:15px; background:#f0f4ff; border-radius:10px; padding:9px 14px; line-height:1.5 }
+.fb-pic-facts b { color:#1b2340; font-weight:800 }
+
+/* ===== chassisbuild — تجميع الهيكل ===== */
+.fb-chassis-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:10px; min-height:0 }
+.fb-chassis-canvas { display:block; direction:ltr; border-radius:14px; box-shadow:0 4px 22px rgba(0,0,0,.3); max-width:100%; aspect-ratio:580/310 }
+.fb-chassis-nav { display:flex; gap:14px; align-items:center }
+.fb-chassis-nav button { font-family:Cairo,sans-serif; font-weight:800; font-size:16px; padding:8px 22px; border-radius:10px; border:none; background:var(--gold,#c9a227); color:#fff; cursor:pointer }
+.fb-chassis-step { font-family:Cairo,sans-serif; font-size:15px; font-weight:700; color:var(--navy-700,#182658); min-width:220px; text-align:center }

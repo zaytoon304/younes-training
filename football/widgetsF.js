@@ -646,4 +646,493 @@ Object.assign(window.DECK_BIND, {
   },
 });
 
+
+/* ==================== partpic — رسم مكوّن متحرك ==================== */
+const PART_SVGS = {
+  esp32: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes antPulse{0%,100%{opacity:.4}50%{opacity:1}}
+      @keyframes pinBlink{0%,100%{opacity:.6}50%{opacity:1}}
+      .ant{animation:antPulse 1.6s ease-in-out infinite}
+      .prow{animation:pinBlink 2s ease-in-out infinite}
+    </style>
+    <!-- PCB -->
+    <rect x="30" y="20" width="200" height="140" rx="8" fill="#0e7c86"/>
+    <rect x="30" y="20" width="200" height="140" rx="8" fill="none" stroke="#4dc8c6" stroke-width="2"/>
+    <!-- USB connector -->
+    <rect x="100" y="8" width="60" height="18" rx="3" fill="#c9ccd3"/>
+    <rect x="108" y="12" width="44" height="10" rx="2" fill="#888"/>
+    <!-- Chip module -->
+    <rect x="80" y="55" width="100" height="70" rx="4" fill="#1c1f27"/>
+    <rect x="85" y="60" width="90" height="60" rx="3" fill="#2a2e3a"/>
+    <text x="130" y="94" text-anchor="middle" fill="#4dc8c6" font-size="11" font-family="monospace" font-weight="bold">ESP32</text>
+    <text x="130" y="108" text-anchor="middle" fill="#4dc8c6" font-size="8" font-family="monospace">WROOM-32</text>
+    <!-- Antenna -->
+    <rect x="198" y="28" width="22" height="8" rx="2" fill="#f0cc7a" class="ant"/>
+    <line x1="220" y1="32" x2="240" y2="32" stroke="#f0cc7a" stroke-width="2.5" stroke-linecap="round" class="ant"/>
+    <line x1="240" y1="32" x2="240" y2="52" stroke="#f0cc7a" stroke-width="2" stroke-linecap="round" class="ant"/>
+    <!-- Left pins -->
+    <g class="prow">
+      <line x1="14" y1="38" x2="30" y2="38" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="52" x2="30" y2="52" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="66" x2="30" y2="66" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="80" x2="30" y2="80" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="94" x2="30" y2="94" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="108" x2="30" y2="108" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="122" x2="30" y2="122" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="136" x2="30" y2="136" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="14" y1="150" x2="30" y2="150" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <!-- Right pins -->
+    <g class="prow" style="animation-delay:.4s">
+      <line x1="230" y1="38" x2="246" y2="38" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="52" x2="246" y2="52" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="66" x2="246" y2="66" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="80" x2="246" y2="80" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="94" x2="246" y2="94" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="108" x2="246" y2="108" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="122" x2="246" y2="122" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+      <line x1="230" y1="136" x2="246" y2="136" stroke="#b0b8c8" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <!-- Labels -->
+    <text x="130" y="172" text-anchor="middle" fill="#fff" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">أرجل GPIO</text>
+    <text x="248" y="35" fill="#f0cc7a" font-size="9" font-family="Cairo,sans-serif" class="ant">أنتينا</text>
+    <text x="6" y="78" text-anchor="middle" fill="#aaa" font-size="8" font-family="monospace" writing-mode="tb">GPIO</text>
+    <text x="130" y="6" text-anchor="middle" fill="#ccc" font-size="9" font-family="Cairo,sans-serif">USB</text>
+  </svg>`,
+
+  l9110s: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes flowRight{0%{stroke-dashoffset:30}100%{stroke-dashoffset:0}}
+      .flow{stroke-dasharray:8 4;animation:flowRight 1s linear infinite}
+    </style>
+    <!-- PCB -->
+    <rect x="60" y="40" width="140" height="100" rx="6" fill="#1a3a8f"/>
+    <rect x="60" y="40" width="140" height="100" rx="6" fill="none" stroke="#4a7dff" stroke-width="2"/>
+    <!-- IC Chip -->
+    <rect x="100" y="65" width="60" height="50" rx="3" fill="#1c1f27"/>
+    <rect x="103" y="68" width="54" height="44" rx="2" fill="#2a2e3a"/>
+    <text x="130" y="95" text-anchor="middle" fill="#7af" font-size="9" font-family="monospace">L9110S</text>
+    <!-- Left pins: VCC GND IA IB -->
+    <line x1="40" y1="58" x2="60" y2="58" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/>
+    <line x1="40" y1="72" x2="60" y2="72" stroke="#1b2340" stroke-width="3" stroke-linecap="round"/>
+    <line x1="40" y1="108" x2="60" y2="108" stroke="#2ecc71" stroke-width="3" stroke-linecap="round"/>
+    <line x1="40" y1="122" x2="60" y2="122" stroke="#9b59b6" stroke-width="3" stroke-linecap="round"/>
+    <text x="36" y="62" text-anchor="end" fill="#e74c3c" font-size="10" font-family="monospace">VCC</text>
+    <text x="36" y="76" text-anchor="end" fill="#888" font-size="10" font-family="monospace">GND</text>
+    <text x="36" y="112" text-anchor="end" fill="#2ecc71" font-size="10" font-family="monospace">IA</text>
+    <text x="36" y="126" text-anchor="end" fill="#9b59b6" font-size="10" font-family="monospace">IB</text>
+    <!-- Right pins: OUT+ OUT- -->
+    <line x1="200" y1="72" x2="224" y2="72" stroke="#f39c12" stroke-width="4" stroke-linecap="round"/>
+    <line x1="200" y1="108" x2="224" y2="108" stroke="#555" stroke-width="4" stroke-linecap="round"/>
+    <text x="228" y="76" fill="#f39c12" font-size="10" font-family="monospace">OUT+</text>
+    <text x="228" y="112" fill="#888" font-size="10" font-family="monospace">OUT-</text>
+    <!-- Motor symbol -->
+    <circle cx="242" cy="90" r="16" fill="none" stroke="#ccc" stroke-width="2"/>
+    <text x="242" y="94" text-anchor="middle" fill="#ccc" font-size="11" font-family="monospace" font-weight="bold">M</text>
+    <!-- Animated current flow -->
+    <line x1="60" y1="58" x2="103" y2="80" stroke="#e74c3c" stroke-width="2" class="flow"/>
+    <line x1="103" y1="80" x2="200" y2="72" stroke="#f39c12" stroke-width="2" class="flow" style="animation-delay:.3s"/>
+    <!-- PCB label -->
+    <text x="130" y="155" text-anchor="middle" fill="#fff" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">L9110S × واحد لكل محرك</text>
+  </svg>`,
+
+  omni: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes spinWheel{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+      @keyframes slideX{0%,100%{transform:translateX(0)}50%{transform:translateX(18px)}}
+      .hub{transform-origin:130px 90px;animation:spinWheel 2s linear infinite}
+      .slid{animation:slideX 2s ease-in-out infinite}
+    </style>
+    <!-- Hub center -->
+    <g class="hub">
+      <circle cx="130" cy="90" r="28" fill="#444" stroke="#666" stroke-width="2"/>
+      <circle cx="130" cy="90" r="10" fill="#888"/>
+      <!-- Rollers on rim (8 rollers at 45° intervals) -->
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(0,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(45,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(90,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(135,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(180,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(225,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(270,130,90)"/>
+      <rect x="124" y="56" width="12" height="20" rx="6" fill="#c9a227" transform="rotate(315,130,90)"/>
+    </g>
+    <!-- Forward arrow -->
+    <line x1="130" y1="28" x2="130" y2="8" stroke="#43a047" stroke-width="3" marker-end="url(#arr)"/>
+    <line x1="130" y1="152" x2="130" y2="172" stroke="#e53935" stroke-width="3" marker-end="url(#arr2)"/>
+    <!-- Sideways arrow (animated) -->
+    <g class="slid">
+      <line x1="172" y1="90" x2="196" y2="90" stroke="#2196f3" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="196,84 208,90 196,96" fill="#2196f3"/>
+    </g>
+    <defs>
+      <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <polygon points="0,0 8,4 0,8" fill="#43a047"/>
+      </marker>
+      <marker id="arr2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <polygon points="0,0 8,4 0,8" fill="#e53935"/>
+      </marker>
+    </defs>
+    <text x="130" y="14" text-anchor="middle" fill="#43a047" font-size="10" font-family="Cairo,sans-serif">أمام</text>
+    <text x="130" y="176" text-anchor="middle" fill="#e53935" font-size="10" font-family="Cairo,sans-serif">خلف</text>
+    <text x="214" y="94" fill="#2196f3" font-size="10" font-family="Cairo,sans-serif">جانب</text>
+    <text x="130" y="195" text-anchor="middle" fill="#555" font-size="10" font-family="Cairo,sans-serif">أسطوانات تسمح بالانزلاق الجانبي</text>
+  </svg>`,
+
+  servo: () => `<svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes kickArm{0%,40%,100%{transform:rotate(-10deg)}60%,80%{transform:rotate(110deg)}}
+      .arm{transform-origin:130px 85px;animation:kickArm 2.5s ease-in-out infinite}
+    </style>
+    <!-- Body -->
+    <rect x="65" y="60" width="130" height="90" rx="6" fill="#7f8c8d"/>
+    <rect x="65" y="60" width="130" height="90" rx="6" fill="none" stroke="#95a5a6" stroke-width="2"/>
+    <!-- Mounting tabs -->
+    <rect x="40" y="68" width="28" height="20" rx="3" fill="#606c70"/>
+    <circle cx="52" cy="78" r="5" fill="#888" stroke="#555" stroke-width="1.5"/>
+    <rect x="192" y="68" width="28" height="20" rx="3" fill="#606c70"/>
+    <circle cx="208" cy="78" r="5" fill="#888" stroke="#555" stroke-width="1.5"/>
+    <!-- Output shaft -->
+    <circle cx="130" cy="85" r="14" fill="#bdc3c7" stroke="#95a5a6" stroke-width="2"/>
+    <circle cx="130" cy="85" r="6" fill="#7f8c8d"/>
+    <!-- Arm (animated) -->
+    <g class="arm">
+      <rect x="127" y="56" width="6" height="32" rx="3" fill="#fff"/>
+      <circle cx="130" cy="55" r="5" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1.5"/>
+    </g>
+    <!-- Wires -->
+    <line x1="85" y1="150" x2="85" y2="185" stroke="#f39c12" stroke-width="4" stroke-linecap="round"/>
+    <line x1="130" y1="150" x2="130" y2="185" stroke="#e74c3c" stroke-width="4" stroke-linecap="round"/>
+    <line x1="175" y1="150" x2="175" y2="185" stroke="#7f5c3e" stroke-width="4" stroke-linecap="round"/>
+    <text x="85" y="196" text-anchor="middle" fill="#f39c12" font-size="10" font-family="monospace">إشارة</text>
+    <text x="130" y="196" text-anchor="middle" fill="#e74c3c" font-size="10" font-family="monospace">5V</text>
+    <text x="175" y="196" text-anchor="middle" fill="#888" font-size="10" font-family="monospace">GND</text>
+    <!-- Angle labels -->
+    <text x="148" y="50" fill="#43a047" font-size="10" font-family="Cairo,sans-serif">١٢٠° ضربة</text>
+    <text x="148" y="38" fill="#2196f3" font-size="10" font-family="Cairo,sans-serif">٠° استراحة</text>
+    <!-- MG996R label -->
+    <text x="130" y="120" text-anchor="middle" fill="#fff" font-size="11" font-family="monospace" font-weight="bold">MG996R</text>
+  </svg>`,
+
+  joystick: () => `<svg viewBox="0 0 260 200" width="260" height="200" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes tiltStick{
+        0%,100%{transform:translate(0,0) rotate(0deg)}
+        20%{transform:translate(0,-12px) rotate(-8deg)}
+        40%{transform:translate(12px,0) rotate(8deg)}
+        60%{transform:translate(0,12px) rotate(8deg)}
+        80%{transform:translate(-12px,0) rotate(-8deg)}
+      }
+      .stick{animation:tiltStick 4s ease-in-out infinite;transform-origin:130px 100px}
+    </style>
+    <!-- PCB -->
+    <rect x="55" y="55" width="150" height="120" rx="6" fill="#2c3e50"/>
+    <rect x="55" y="55" width="150" height="120" rx="6" fill="none" stroke="#34495e" stroke-width="2"/>
+    <!-- Base of joystick -->
+    <circle cx="130" cy="100" r="26" fill="#34495e" stroke="#555" stroke-width="2"/>
+    <!-- Joystick stick (animated) -->
+    <g class="stick">
+      <line x1="130" y1="100" x2="130" y2="72" stroke="#888" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="130" cy="70" r="12" fill="#666" stroke="#888" stroke-width="2"/>
+      <circle cx="130" cy="70" r="7" fill="#c0392b"/>
+    </g>
+    <!-- Axes arrows -->
+    <line x1="96" y1="100" x2="72" y2="100" stroke="#2196f3" stroke-width="2" stroke-dasharray="4 2"/>
+    <line x1="164" y1="100" x2="188" y2="100" stroke="#2196f3" stroke-width="2" stroke-dasharray="4 2"/>
+    <text x="66" y="98" text-anchor="middle" fill="#2196f3" font-size="9" font-family="monospace">X−</text>
+    <text x="196" y="98" text-anchor="middle" fill="#2196f3" font-size="9" font-family="monospace">X+</text>
+    <line x1="130" y1="74" x2="130" y2="56" stroke="#4caf50" stroke-width="2" stroke-dasharray="4 2"/>
+    <line x1="130" y1="126" x2="130" y2="144" stroke="#4caf50" stroke-width="2" stroke-dasharray="4 2"/>
+    <text x="130" y="52" text-anchor="middle" fill="#4caf50" font-size="9" font-family="monospace">Y−</text>
+    <text x="130" y="152" text-anchor="middle" fill="#4caf50" font-size="9" font-family="monospace">Y+</text>
+    <!-- Pins at bottom -->
+    <line x1="75"  y1="175" x2="75"  y2="190" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/>
+    <line x1="100" y1="175" x2="100" y2="190" stroke="#1b2340" stroke-width="3" stroke-linecap="round"/>
+    <line x1="125" y1="175" x2="125" y2="190" stroke="#2196f3" stroke-width="3" stroke-linecap="round"/>
+    <line x1="150" y1="175" x2="150" y2="190" stroke="#4caf50" stroke-width="3" stroke-linecap="round"/>
+    <line x1="175" y1="175" x2="175" y2="190" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>
+    <text x="75"  y="198" text-anchor="middle" fill="#e74c3c" font-size="8" font-family="monospace">VCC</text>
+    <text x="100" y="198" text-anchor="middle" fill="#888"    font-size="8" font-family="monospace">GND</text>
+    <text x="125" y="198" text-anchor="middle" fill="#2196f3" font-size="8" font-family="monospace">VRX</text>
+    <text x="150" y="198" text-anchor="middle" fill="#4caf50" font-size="8" font-family="monospace">VRY</text>
+    <text x="175" y="198" text-anchor="middle" fill="#aaa"    font-size="8" font-family="monospace">SW</text>
+    <!-- Label -->
+    <text x="130" y="48" text-anchor="middle" fill="#aaa" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">KY-023</text>
+  </svg>`,
+
+  motor: () => `<svg viewBox="0 0 260 180" width="260" height="180" xmlns="http://www.w3.org/2000/svg">
+    <style>
+      @keyframes spinOmni{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+      .omniSpin{transform-origin:185px 90px;animation:spinOmni 1.5s linear infinite}
+    </style>
+    <!-- Motor body (cylinder side view) -->
+    <rect x="40" y="60" width="110" height="60" rx="6" fill="#7f8c8d"/>
+    <rect x="40" y="60" width="110" height="60" rx="6" fill="none" stroke="#95a5a6" stroke-width="2"/>
+    <!-- Motor end cap -->
+    <ellipse cx="40" cy="90" rx="12" ry="30" fill="#606c70" stroke="#7f8c8d" stroke-width="1.5"/>
+    <!-- Ventilation slots -->
+    <line x1="70" y1="66" x2="70" y2="114" stroke="#606c70" stroke-width="1.5"/>
+    <line x1="90" y1="66" x2="90" y2="114" stroke="#606c70" stroke-width="1.5"/>
+    <line x1="110" y1="66" x2="110" y2="114" stroke="#606c70" stroke-width="1.5"/>
+    <line x1="130" y1="66" x2="130" y2="114" stroke="#606c70" stroke-width="1.5"/>
+    <!-- Shaft -->
+    <rect x="148" y="85" width="22" height="10" rx="3" fill="#bdc3c7"/>
+    <!-- Omni wheel (spinning) -->
+    <g class="omniSpin">
+      <circle cx="185" cy="90" r="28" fill="#444" stroke="#666" stroke-width="2"/>
+      <circle cx="185" cy="90" r="9" fill="#888"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(0,185,90)"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(60,185,90)"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(120,185,90)"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(180,185,90)"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(240,185,90)"/>
+      <rect x="179" y="58" width="12" height="18" rx="6" fill="#c9a227" transform="rotate(300,185,90)"/>
+    </g>
+    <!-- Labels -->
+    <text x="90" y="144" text-anchor="middle" fill="#ccc" font-size="11" font-family="Cairo,sans-serif" font-weight="bold">موتور DC TT</text>
+    <text x="185" y="144" text-anchor="middle" fill="#c9a227" font-size="10" font-family="Cairo,sans-serif" font-weight="bold">عجلة أومني</text>
+    <!-- Speed arrow -->
+    <line x1="220" y1="90" x2="248" y2="90" stroke="#43a047" stroke-width="3" stroke-linecap="round"/>
+    <polygon points="248,84 260,90 248,96" fill="#43a047"/>
+    <text x="252" y="82" fill="#43a047" font-size="9" font-family="Cairo,sans-serif">أمام</text>
+  </svg>`,
+};
+
+let _ppid = 0;
+Object.assign(window.DECK_TYPES, {
+  partpic(s) {
+    const id = 'pp' + (_ppid++);
+    const svg = PART_SVGS[s.pic] ? PART_SVGS[s.pic]() : `<svg width="200" height="160"><text x="100" y="80" text-anchor="middle" fill="#999" font-size="14">${s.pic}</text></svg>`;
+    const facts = (s.facts || []).map(f => `<li><b>${f.k}</b> ${f.v}</li>`).join('');
+    return `<div class="slide light">
+      <div class="kicker">${s.kicker || ''}</div>
+      <h2 class="title" style="margin-bottom:8px">${s.title || ''}</h2>
+      <div class="fb-partpic">
+        <div class="fb-pic-svg" id="${id}">${svg}</div>
+        <div class="fb-pic-info">
+          <p class="fb-pic-desc">${s.desc || ''}</p>
+          <ul class="fb-pic-facts">${facts}</ul>
+        </div>
+      </div>
+    </div>`;
+  },
+});
+
+/* ==================== chassisbuild — تجميع الهيكل خطوة بخطوة ==================== */
+Object.assign(window.DECK_TYPES, {
+  chassisbuild: s => `<div class="slide light">
+    <div class="kicker">${s.kicker || '🔧 خطوة بخطوة'}</div>
+    <h2 class="title" style="margin-bottom:6px">${s.title || 'شاهد الروبوت يُبنى أمامك'}</h2>
+    <div class="fb-chassis-wrap ix">
+      <canvas class="fb-chassis-canvas" width="580" height="310"></canvas>
+      <div class="fb-chassis-nav">
+        <button id="cb_prev">→ السابق</button>
+        <span class="fb-chassis-step" id="cb_step">الخطوة ١ من ٧</span>
+        <button id="cb_next">التالي ←</button>
+      </div>
+    </div>
+  </div>`,
+});
+
+Object.assign(window.DECK_BIND, {
+  chassisbuild(sl) {
+    const canvas = sl.querySelector('.fb-chassis-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = 580, H = 310;
+    const CX = W / 2, CY = H / 2 + 10;
+    const R = 110; // triangle circumradius
+    let step = 0;
+    let raf;
+    let t = 0; // animation time
+
+    // Triangle vertices (120° apart, top = 270°)
+    const verts = [0, 1, 2].map(i => {
+      const a = (i * 120 - 90) * Math.PI / 180;
+      return { x: CX + R * Math.cos(a), y: CY + R * Math.sin(a) };
+    });
+    // Motor positions: V0=top(M1), V1=right(M2), V2=left(M3)
+    const motorLabels = ['M1 أمامي', 'M2 يمين-خلف', 'M3 يسار-خلف'];
+    const motorColors = ['#4dc8c6', '#f4d35e', '#f4a235'];
+
+    const steps = [
+      { label: 'الخطوة ١ من ٧: الهيكل المثلث — القاعدة' },
+      { label: 'الخطوة ٢ من ٧: المحرك الأمامي M1' },
+      { label: 'الخطوة ٣ من ٧: المحرك اليمين-خلف M2' },
+      { label: 'الخطوة ٤ من ٧: المحرك اليسار-خلف M3' },
+      { label: 'الخطوة ٥ من ٧: ESP32 في المركز' },
+      { label: 'الخطوة ٦ من ٧: دريفرات L9110S' },
+      { label: 'الخطوة ٧ من ٧: السيرفو — الضربة القاتلة' },
+      { label: '✅ الروبوت جاهز للمسابقة!' },
+    ];
+
+    // Easing
+    const easeOut = p => 1 - Math.pow(1 - p, 3);
+
+    // Draw omni wheel symbol
+    function drawOmniWheel(x, y, r, angle) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle || 0);
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = '#333'; ctx.fill();
+      ctx.strokeStyle = '#666'; ctx.lineWidth = 1.5; ctx.stroke();
+      for (let i = 0; i < 6; i++) {
+        const a = i * Math.PI / 3;
+        ctx.save(); ctx.rotate(a);
+        ctx.fillStyle = '#c9a227';
+        ctx.fillRect(-3, r - 8, 6, 7);
+        ctx.restore();
+      }
+      ctx.beginPath(); ctx.arc(0, 0, r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = '#777'; ctx.fill();
+      ctx.restore();
+    }
+
+    // Draw motor + wheel at vertex
+    function drawMotor(vi, alpha, wheelSpin) {
+      const v = verts[vi];
+      ctx.save(); ctx.globalAlpha = clamp(alpha, 0, 1);
+      // Motor body
+      ctx.fillStyle = '#7f8c8d';
+      ctx.beginPath(); ctx.roundRect(v.x - 14, v.y - 10, 28, 20, 4); ctx.fill();
+      ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5; ctx.stroke();
+      // Wheel
+      drawOmniWheel(v.x, v.y - 22, 13, wheelSpin);
+      // Label
+      ctx.fillStyle = motorColors[vi]; ctx.font = 'bold 11px Cairo,sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(motorLabels[vi], v.x, v.y + 14);
+      ctx.restore();
+    }
+
+    function drawScene() {
+      ctx.clearRect(0, 0, W, H);
+      // Background
+      ctx.fillStyle = '#1e2535';
+      ctx.fillRect(0, 0, W, H);
+
+      // Triangle chassis
+      ctx.beginPath();
+      ctx.moveTo(verts[0].x, verts[0].y);
+      ctx.lineTo(verts[1].x, verts[1].y);
+      ctx.lineTo(verts[2].x, verts[2].y);
+      ctx.closePath();
+      ctx.strokeStyle = step === 0 ? '#4dc8c6' : 'rgba(77,200,198,.5)';
+      ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = step === 0 ? 'rgba(77,200,198,.08)' : 'rgba(77,200,198,.04)';
+      ctx.fill();
+      if (step === 0) {
+        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 14px Cairo,sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('الهيكل', CX, CY);
+        // Angle labels
+        [0,1,2].map((i,_) => {
+          const a = (i * 120 - 90) * Math.PI / 180;
+          const lx = CX + (R + 24) * Math.cos(a), ly = CY + (R + 24) * Math.sin(a);
+          ctx.fillStyle = '#aaa'; ctx.font = '11px Cairo,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText('١٢٠°', lx, ly);
+        });
+      }
+
+      // Motors 1 appear at step>=1, 2 at step>=2, 3 at step>=3
+      for (let mi = 0; mi < 3; mi++) {
+        if (step >= mi + 1) drawMotor(mi, 1, t * 0.03);
+      }
+
+      // ESP32 in center (step>=4)
+      if (step >= 4) {
+        const alpha = clamp((step - 3) * 2, 0, 1);
+        const pulse = 0.85 + 0.15 * Math.sin(t * 0.08);
+        ctx.save(); ctx.globalAlpha = clamp(alpha, 0, 1);
+        ctx.fillStyle = '#0e7c86';
+        ctx.beginPath(); ctx.roundRect(CX - 28, CY - 18, 56, 36, 5); ctx.fill();
+        ctx.strokeStyle = `rgba(77,200,198,${pulse})`; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('ESP32', CX, CY - 3);
+        ctx.fillStyle = '#4dc8c6'; ctx.font = '9px Cairo,sans-serif';
+        ctx.fillText('الدماغ', CX, CY + 9);
+        ctx.restore();
+      }
+
+      // L9110S near each motor (step>=5)
+      if (step >= 5) {
+        for (let mi = 0; mi < 3; mi++) {
+          const v = verts[mi];
+          const cx2 = (v.x + CX) / 2, cy2 = (v.y + CY) / 2;
+          ctx.save(); ctx.globalAlpha = 0.9;
+          ctx.fillStyle = '#1a3a8f';
+          ctx.beginPath(); ctx.roundRect(cx2 - 12, cy2 - 9, 24, 18, 3); ctx.fill();
+          ctx.strokeStyle = '#4a7dff'; ctx.lineWidth = 1.5; ctx.stroke();
+          ctx.fillStyle = '#7af'; ctx.font = 'bold 8px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText('L9110S', cx2, cy2);
+          // Wire from esp32 to driver
+          ctx.strokeStyle = 'rgba(100,180,255,.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+          ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(cx2, cy2); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.restore();
+        }
+        ctx.save(); ctx.globalAlpha = 0.7;
+        ctx.fillStyle = '#4dc8c6'; ctx.font = 'bold 11px Cairo,sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('دريفر L9110S', CX, CY + 28);
+        ctx.restore();
+      }
+
+      // Servo at front (step>=6)
+      if (step >= 6) {
+        const sv = verts[0];
+        const sa = Math.sin(t * 0.05) * 0.8 + 0.8; // servo arm angle animation
+        ctx.save(); ctx.globalAlpha = 0.95;
+        ctx.fillStyle = '#2b6fc0';
+        ctx.beginPath(); ctx.roundRect(sv.x - 16, sv.y - 55, 32, 22, 4); ctx.fill();
+        ctx.strokeStyle = '#4dc8c6'; ctx.lineWidth = 1.5; ctx.stroke();
+        // Servo arm
+        ctx.save(); ctx.translate(sv.x, sv.y - 45);
+        ctx.rotate(sa);
+        ctx.fillStyle = '#f4d35e';
+        ctx.fillRect(-3, -16, 6, 16);
+        ctx.restore();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Cairo,sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('سيرفو', sv.x, sv.y - 44);
+        ctx.restore();
+      }
+
+      // Final: DONE text + glow
+      if (step >= 7) {
+        ctx.save();
+        const glow = 0.6 + 0.4 * Math.sin(t * 0.07);
+        ctx.fillStyle = `rgba(77,200,198,${glow * 0.15})`;
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#43a047'; ctx.font = 'bold 28px Cairo,sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#43a047'; ctx.shadowBlur = 18;
+        ctx.fillText('✅ الروبوت جاهز!', CX, 38);
+        ctx.shadowBlur = 0;
+        ctx.restore();
+      }
+    }
+
+    function animate() {
+      t++;
+      drawScene();
+      raf = requestAnimationFrame(animate);
+    }
+
+    function updateUI() {
+      const lbl = sl.querySelector('#cb_step');
+      if (lbl) lbl.textContent = steps[Math.min(step, steps.length - 1)].label;
+    }
+
+    const prev = sl.querySelector('#cb_prev');
+    const next = sl.querySelector('#cb_next');
+    if (prev) prev.addEventListener('click', () => { step = Math.max(0, step - 1); updateUI(); });
+    if (next) next.addEventListener('click', () => { step = Math.min(steps.length - 1, step + 1); updateUI(); });
+    updateUI();
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  },
+});
+
 })();
