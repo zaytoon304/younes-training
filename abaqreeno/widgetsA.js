@@ -46,26 +46,26 @@ Object.assign(window.DECK_TYPES || (window.DECK_TYPES = {}), {
   /* --- gridLab: شبكة تفاعلية كاملة --- */
   gridLab(sl) {
     return `
-<div class="slide light">
-  <div class="kicker">${sl.kicker||'🎮 مختبر عبقرينو'}</div>
-  <h2>${sl.title||'جرّب بنفسك'}</h2>
-  <div class="ab-gridlab">
-    <div class="ab-grid-wrap">
-      <div class="ab-grid-board" id="ab_board"></div>
-      <div class="ab-picker" id="ab_picker"></div>
+<div class="slide light ab-gridlab-slide">
+  <div class="ab-gl-header">
+    <div class="ab-gl-title">
+      <div class="kicker" style="font-size:20px">${sl.kicker||'🎮 مختبر عبقرينو'}</div>
+      <h2 style="margin:0;font-size:48px">${sl.title||'جرّب بنفسك!'}</h2>
     </div>
-    <div class="ab-grid-panel">
-      <div class="ab-grid-msg" id="ab_msg">اختر رقمًا من الأسفل ثم انقر على خلية فارغة.</div>
-      <div class="ab-diff-btns">
-        <button class="ab-diff-btn active" data-d="4">سهل</button>
-        <button class="ab-diff-btn" data-d="2">متوسط</button>
-        <button class="ab-diff-btn" data-d="1">صعب</button>
-      </div>
-      <div class="ab-grid-btns">
-        <button id="ab_new">🔄 لغز جديد</button>
-        <button id="ab_check">✅ تحقق</button>
-        <button id="ab_solve">💡 الحل</button>
-      </div>
+    <div class="ab-diff-btns" style="gap:12px">
+      <button class="ab-diff-btn active" data-d="4">🟢 سهل</button>
+      <button class="ab-diff-btn" data-d="2">🟡 متوسط</button>
+      <button class="ab-diff-btn" data-d="1">🔴 صعب</button>
+    </div>
+  </div>
+  <div class="ab-gl-main">
+    <div class="ab-grid-msg" id="ab_msg">اختر رقمًا ثم انقر على خلية فارغة</div>
+    <div class="ab-grid-board" id="ab_board"></div>
+    <div class="ab-picker" id="ab_picker"></div>
+    <div class="ab-grid-btns">
+      <button id="ab_new">🔄 لغز جديد</button>
+      <button id="ab_check">✅ تحقق</button>
+      <button id="ab_solve">💡 الحل</button>
     </div>
   </div>
 </div>`;
