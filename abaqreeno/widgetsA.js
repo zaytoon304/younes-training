@@ -175,7 +175,7 @@ Object.assign(window.DECK_TYPES || (window.DECK_TYPES = {}), {
   <div class="kicker">${sl.kicker||'☁️ Firebase'}</div>
   <h2>${sl.title||'لوحة الصدارة العالمية'}</h2>
   <div class="ab-fb-diagram">
-    <canvas id="ab_fb" width="760" height="380" style="width:100%;max-width:760px;height:auto"></canvas>
+    <canvas id="ab_fb" width="920" height="460" style="width:100%;max-width:920px;height:auto"></canvas>
   </div>
 </div>`;
   },
@@ -187,7 +187,7 @@ Object.assign(window.DECK_TYPES || (window.DECK_TYPES = {}), {
   <div class="kicker">${sl.kicker||'🤏 القرصة'}</div>
   <h2>${sl.title||'كيف تمسك الرقم بيدك؟'}</h2>
   <div class="ab-pinch-anim">
-    <canvas id="ab_pinch" width="360" height="360"></canvas>
+    <canvas id="ab_pinch" width="460" height="460" style="width:460px;height:460px"></canvas>
     <div class="ab-pinch-steps">
       <div class="ab-pinch-step active" id="abps_0"><span class="snum">١</span><span class="stxt">افتح يدك أمام الكاميرا</span></div>
       <div class="ab-pinch-step" id="abps_1"><span class="snum">٢</span><span class="stxt">اقرّب الإبهام والسبابة — نسبة القرصة &lt; 0.3</span></div>
@@ -426,36 +426,36 @@ Object.assign(window.DECK_BIND || (window.DECK_BIND = {}), {
     let raf, t = 0;
 
     const nodes = [
-      { x:100, y:190, w:140, h:60, lbl:'اللاعب', icon:'👤', clr:'#1b2340' },
-      { x:320, y:190, w:140, h:60, lbl:'المتصفح', icon:'🌐', clr:'#1a3a8f' },
-      { x:540, y:190, w:140, h:60, lbl:'Firebase', icon:'🔥', clr:'#b84a00' },
-      { x:320, y:60,  w:140, h:60, lbl:'localStorage', icon:'💾', clr:'#2e7d32' },
+      { x:110, y:230, w:170, h:72, lbl:'اللاعب', icon:'👤', clr:'#1b2340' },
+      { x:375, y:230, w:170, h:72, lbl:'المتصفح', icon:'🌐', clr:'#1a3a8f' },
+      { x:640, y:230, w:170, h:72, lbl:'Firebase', icon:'🔥', clr:'#b84a00' },
+      { x:375, y:70,  w:170, h:72, lbl:'localStorage', icon:'💾', clr:'#2e7d32' },
     ];
 
     function drawNode(n) {
       ctx.fillStyle = n.clr;
-      ctx.beginPath(); ctx.roundRect(n.x, n.y, n.w, n.h, 10); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(n.x, n.y, n.w, n.h, 12); ctx.fill();
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 16px Cairo,sans-serif';
+      ctx.font = 'bold 20px Cairo,sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(n.icon + ' ' + n.lbl, n.x + n.w/2, n.y + n.h/2 + 6);
+      ctx.fillText(n.icon + ' ' + n.lbl, n.x + n.w/2, n.y + n.h/2 + 7);
     }
 
     function arrow(x1,y1,x2,y2, clr, lbl, offset) {
       ctx.beginPath();
       ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
-      ctx.strokeStyle = clr; ctx.lineWidth = 2.5;
-      ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = clr; ctx.lineWidth = 3;
+      ctx.setLineDash([7,5]); ctx.stroke(); ctx.setLineDash([]);
       // arrowhead
       const ang = Math.atan2(y2-y1, x2-x1);
       ctx.beginPath();
       ctx.moveTo(x2, y2);
-      ctx.lineTo(x2 - 12*Math.cos(ang-0.4), y2 - 12*Math.sin(ang-0.4));
-      ctx.lineTo(x2 - 12*Math.cos(ang+0.4), y2 - 12*Math.sin(ang+0.4));
+      ctx.lineTo(x2 - 15*Math.cos(ang-0.4), y2 - 15*Math.sin(ang-0.4));
+      ctx.lineTo(x2 - 15*Math.cos(ang+0.4), y2 - 15*Math.sin(ang+0.4));
       ctx.closePath(); ctx.fillStyle = clr; ctx.fill();
       // label
-      ctx.fillStyle = clr; ctx.font = '13px Cairo,sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(lbl, (x1+x2)/2, (y1+y2)/2 - 8 + (offset||0));
+      ctx.fillStyle = clr; ctx.font = '16px Cairo,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(lbl, (x1+x2)/2, (y1+y2)/2 - 10 + (offset||0));
     }
 
     // animated packet position
@@ -467,25 +467,25 @@ Object.assign(window.DECK_BIND || (window.DECK_BIND = {}), {
       nodes.forEach(drawNode);
 
       // arrows
-      arrow(240,220, 320,220, '#f9a825','يحفظ النتيجة');
-      arrow(460,220, 540,220, '#43a047','يرفع للسحابة',0);
-      arrow(390,190, 390,120, '#1a7fd4','نسخة احتياطية',0);
-      arrow(540,260, 460,270, '#e53935','يسترجع الصدارة', 18);
+      arrow(280,266, 375,266, '#f9a825','يحفظ النتيجة');
+      arrow(545,266, 640,266, '#43a047','يرفع للسحابة',0);
+      arrow(460,230, 460,142, '#1a7fd4','نسخة احتياطية',0);
+      arrow(640,310, 545,322, '#e53935','يسترجع الصدارة', 20);
 
       // animated packet
       const phase = (t % 180) / 180;
       let px, py, clr2;
       if (phase < 0.33) {
-        px = 240 + (320-240)*(phase/0.33);
-        py = 220;
+        px = 280 + (375-280)*(phase/0.33);
+        py = 266;
         clr2 = '#f9a825';
       } else if (phase < 0.66) {
-        px = 460 + (540-460)*((phase-0.33)/0.33);
-        py = 220;
+        px = 545 + (640-545)*((phase-0.33)/0.33);
+        py = 266;
         clr2 = '#43a047';
       } else {
-        px = 540 - (540-460)*((phase-0.66)/0.34);
-        py = 265;
+        px = 640 - (640-545)*((phase-0.66)/0.34);
+        py = 318;
         clr2 = '#e53935';
       }
       ctx.beginPath();
@@ -518,64 +518,64 @@ Object.assign(window.DECK_BIND || (window.DECK_BIND = {}), {
       ctx.fillStyle = '#0a0e1a';
       ctx.fillRect(0, 0, cv.width, cv.height);
 
-      const cx = 180, cy = 200;
+      const cx = 230, cy = 250;
       // palm
       ctx.beginPath();
-      ctx.ellipse(cx, cy+20, 55, 65, 0, 0, Math.PI*2);
+      ctx.ellipse(cx, cy+25, 70, 82, 0, 0, Math.PI*2);
       ctx.fillStyle = '#f0c080';
       ctx.fill();
 
       // thumb (finger 0)
-      const tx = cx - 60 + pinchRatio*40;
-      const ty = cy - 30 + pinchRatio*30;
+      const tx = cx - 78 + pinchRatio*52;
+      const ty = cy - 38 + pinchRatio*38;
       ctx.beginPath();
-      ctx.moveTo(cx-40, cy+10);
-      ctx.quadraticCurveTo(cx-70, cy-20, tx, ty);
-      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 24; ctx.lineCap = 'round';
+      ctx.moveTo(cx-52, cy+12);
+      ctx.quadraticCurveTo(cx-90, cy-25, tx, ty);
+      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 30; ctx.lineCap = 'round';
       ctx.stroke();
 
       // index finger (points toward thumb)
-      const ix = cx - 30 + pinchRatio*30;
-      const iy = cy - 80 + pinchRatio*60;
+      const ix = cx - 38 + pinchRatio*38;
+      const iy = cy - 100 + pinchRatio*75;
       ctx.beginPath();
-      ctx.moveTo(cx-20, cy-20);
-      ctx.quadraticCurveTo(cx-30, cy-60, ix, iy);
-      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 18; ctx.lineCap = 'round';
+      ctx.moveTo(cx-26, cy-25);
+      ctx.quadraticCurveTo(cx-38, cy-76, ix, iy);
+      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 23; ctx.lineCap = 'round';
       ctx.stroke();
 
       // middle finger
       ctx.beginPath();
-      ctx.moveTo(cx+5, cy-28);
-      ctx.lineTo(cx+5, cy - 85*openRatio);
-      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 18; ctx.stroke();
+      ctx.moveTo(cx+6, cy-35);
+      ctx.lineTo(cx+6, cy - 108*openRatio);
+      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 22; ctx.stroke();
 
       // ring
       ctx.beginPath();
-      ctx.moveTo(cx+28, cy-22);
-      ctx.lineTo(cx+30, cy - 80*openRatio);
-      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 16; ctx.stroke();
+      ctx.moveTo(cx+35, cy-28);
+      ctx.lineTo(cx+38, cy - 100*openRatio);
+      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 20; ctx.stroke();
 
       // pinky
       ctx.beginPath();
-      ctx.moveTo(cx+48, cy-10);
-      ctx.lineTo(cx+52, cy - 65*openRatio);
-      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 14; ctx.stroke();
+      ctx.moveTo(cx+60, cy-13);
+      ctx.lineTo(cx+65, cy - 82*openRatio);
+      ctx.strokeStyle = '#f0c080'; ctx.lineWidth = 18; ctx.stroke();
 
       // pinch ratio indicator
       const clr = pinchRatio < 0.3 ? '#43a047' : '#f9a825';
       ctx.fillStyle = clr;
-      ctx.font = 'bold 20px monospace';
+      ctx.font = 'bold 26px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('نسبة: ' + pinchRatio.toFixed(2), cx, 340);
+      ctx.fillText('نسبة: ' + pinchRatio.toFixed(2), cx, 428);
 
       // dot at fingertips
       [[tx,ty,'#ff4444'],[ix,iy,'#4499ff']].forEach(([x,y,c]) => {
-        ctx.beginPath(); ctx.arc(x,y,9,0,Math.PI*2);
+        ctx.beginPath(); ctx.arc(x,y,12,0,Math.PI*2);
         ctx.fillStyle=c; ctx.fill();
       });
       // line between fingertips
       ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(ix,iy);
-      ctx.strokeStyle='rgba(255,255,0,.6)'; ctx.lineWidth=2.5; ctx.setLineDash([4,4]);
+      ctx.strokeStyle='rgba(255,255,0,.6)'; ctx.lineWidth=3; ctx.setLineDash([5,5]);
       ctx.stroke(); ctx.setLineDash([]);
     }
 
