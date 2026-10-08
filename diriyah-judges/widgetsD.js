@@ -21,7 +21,7 @@ const BTN = [
   { n: 'المشاركة', c: '#2f6fd0', pin: 27, trk: 6, r: 'كل زائر شريك في حمايتها' },
   { n: 'الابتكار', c: '#d64545', pin: 25, trk: 7, r: 'التقنية تحرس التراث' },
 ];
-const TRACKS = ['الترحيب (تلقائي بعد ١٠ ث)', 'محطة قصر سلوى', 'محطة المسجد', 'محطة وادي حنيفة', 'نتيجة التوعية', 'نتيجة المشاركة', 'نتيجة الابتكار', 'الخاتمة', 'شرح إضافي: قصر سلوى', 'شرح إضافي: المسجد', 'شرح إضافي: وادي حنيفة'];
+const TRACKS = ['الترحيب (بعد صوت الباب)', 'محطة قصر سلوى', 'محطة المسجد', 'محطة وادي حنيفة', 'نتيجة التوعية', 'نتيجة المشاركة', 'نتيجة الابتكار', 'الخاتمة', 'شرح إضافي: قصر سلوى', 'شرح إضافي: المسجد', 'شرح إضافي: وادي حنيفة', 'صوت الباب القديم (الافتتاح)'];
 const HOLD = 12;
 const SND = n => `audio/${String(n).padStart(4, '0')}.mp3`;
 let dyAudio = null;
@@ -119,46 +119,50 @@ function irMod(x, y, hit, k = 1) {
     <circle cx="-12" cy="0" r="7" fill="#dfe6ef"/><circle cx="12" cy="0" r="7" fill="#222"/>
     <circle cx="24" cy="-8" r="3.5" fill="${hit ? '#ff4d4d' : '#4a2020'}"/></g>`;
 }
-/* الستارة: frac 0 مغلقة … 1 مفتوحة بالكامل */
+/* الستارة تُرفع لأعلى: frac 0 مغلقة … 1 مرفوعة بالكامل (بكرة أعلى الصندوق يلتف عليها خيط) */
 function curtain(x0, x1, y0, y1, frac) {
-  const half = (x1 - x0) / 2, w = Math.max(28, half * (1 - frac));
-  const panel = (x, w2, flip) => `<rect x="${x}" y="${y0}" width="${w2}" height="${y1 - y0}" fill="url(#dyFold)"/>
-    ${Array.from({ length: Math.max(2, Math.floor(w2 / 46)) }, (_, i) => `<line x1="${x + (i + .5) * w2 / Math.max(2, Math.floor(w2 / 46))}" y1="${y0}" x2="${x + (i + .5) * w2 / Math.max(2, Math.floor(w2 / 46))}" y2="${y1}" stroke="#1d050a" stroke-width="5" opacity=".55"/>`).join('')}
-    <rect x="${flip ? x : x + w2 - 8}" y="${y0}" width="8" height="${y1 - y0}" fill="#d9ae4b" opacity=".75"/>`;
-  return panel(x0, w, false) + panel(x1 - w, w, true) + `<rect x="${x0 - 10}" y="${y0 - 16}" width="${x1 - x0 + 20}" height="22" rx="6" fill="#2a1a0c"/>`;
+  const H = y1 - y0, hb = Math.max(26, H * (1 - frac)), yb = y0 + hb, w = x1 - x0, nf = Math.floor(w / 46);
+  const folds = Array.from({ length: nf }, (_, i) => { const x = x0 + (i + .5) * w / nf; return `<line x1="${x}" y1="${y0}" x2="${x}" y2="${yb}" stroke="#1d050a" stroke-width="5" opacity=".55"/>`; }).join('');
+  const sc = Array.from({ length: nf }, (_, i) => `a${w / nf / 2} 12 0 0 1 ${w / nf} 0`).join(' ');
+  const bunch = frac > .05 ? Array.from({ length: 3 }, (_, i) => `<path d="M${x0} ${y0 + 8 + i * 7} q${w / 4} 6 ${w / 2} 0 t${w / 2} 0" stroke="#3a0d16" stroke-width="4" fill="none" opacity="${.4 + frac * .4}"/>`).join('') : '';
+  const strings = [0.2, 0.5, 0.8].map(k => `<line x1="${x0 + w * k}" y1="${y0 - 6}" x2="${x0 + w * k}" y2="${yb}" stroke="#d9c79a" stroke-width="2" opacity=".7"/>`).join('');
+  return `<rect x="${x0}" y="${y0}" width="${w}" height="${hb}" fill="url(#dyFold)"/>${folds}${bunch}
+    <path d="M${x0} ${yb} ${sc} V ${yb - 8} H ${x0}z" fill="#d9ae4b" opacity=".85"/>${strings}
+    <rect x="${x0 - 10}" y="${y0 - 18}" width="${w + 20}" height="24" rx="12" fill="#2a1a0c"/><circle cx="${x0 + 6}" cy="${y0 - 6}" r="9" fill="#8a611f"/><circle cx="${x1 - 6}" cy="${y0 - 6}" r="9" fill="#8a611f"/>`;
 }
 
 /* ---------- الديوراما الكاملة (المشهد البطل) ---------- */
 // الحالة الكاملة للعرض عند الزمن t (دورة ٤٠ ث)، تُحسب من t وحده
-const HP = 65, SW = 11.5;            // دورة المشهد، ومدة كل محطة (أطول مقطع محطة ١٠٫٧ ث)
-const WIN = [[11.5, 23], [25, 36.5], [38.5, 50]];
+const HP = 69, SW = 11.5;            // دورة المشهد، ومدة كل محطة (أطول مقطع محطة ١٠٫٧ ث)
+const WIN = [[15.5, 27], [29, 40.5], [42.5, 54]];
 function heroState(t) {
   const ph = t % HP, loop = Math.floor(t / HP);
-  const cur = ph < 5 ? 0 : ph < 9.5 ? (ph - 5) / 4.5 : ph < 62 ? 1 : 1 - (ph - 62) / 3;
+  const cur = ph < .5 ? 0 : ph < 4.5 ? (ph - .5) / 4 : ph < 66 ? 1 : 1 - (ph - 66) / 3;
   let st = -1, since = 0;
   WIN.forEach(([a, b], i) => { if (ph >= a && ph < b) { st = i; since = ph - a; } });
-  const path = [[9.5, 1760], [11.5, ST[0].x], [23, ST[0].x], [25, ST[1].x], [36.5, ST[1].x], [38.5, ST[2].x], [50, ST[2].x], [52, 250], [62, 250], [64.5, -80]];
+  const path = [[13.5, 1760], [15.5, ST[0].x], [27, ST[0].x], [29, ST[1].x], [40.5, ST[1].x], [42.5, ST[2].x], [54, ST[2].x], [56, 250], [66, 250], [68.5, -80]];
   let vx = null, walking = false;
-  if (ph >= 9.5 && ph < 64.5) for (let i = 0; i < path.length - 1; i++) {
+  if (ph >= 13.5 && ph < 68.5) for (let i = 0; i < path.length - 1; i++) {
     const [ta, xa] = path[i], [tb, xb] = path[i + 1];
     if (ph >= ta && ph < tb) { vx = lerp(xa, xb, ease((ph - ta) / (tb - ta))); walking = xa !== xb; }
   }
   const choice = 1 + loop % 3;
-  const press = ph >= 53.5 && ph < 54.2;
-  const result = ph >= 53.5 && ph < 62;
+  const press = ph >= 57.5 && ph < 58.2;
+  const result = ph >= 57.5 && ph < 66;
   let track = 0;
-  if (ph < 9.5) track = 1;
+  if (ph < 4) track = 12;
+  else if (ph < 13.5) track = 1;
   else if (st >= 0 && since > .8) track = ST[st].trk;
   else if (result) track = BTN[choice].trk;
   const pkt = st >= 0 && since < .8 ? since / .8 : -1;
   let cap;
-  if (ph < 5) cap = ['🎙️', 'يبدأ النظام… ويرحّب بالزوار تلقائيًا (' + L('0001.mp3') + ')'];
-  else if (ph < 9.5) cap = ['⚙️', 'المحرك الخطوي 28BYJ-48 يفتح الستارة… والدرعية تنبض في الليل'];
+  if (ph < 4.5) cap = ['🚪', 'صوت باب قديم يُفتح… والمحرك الخطوي يرفع الستارة لأعلى (' + L('0012.mp3') + ')'];
+  else if (ph < 13.5) cap = ['🎙️', 'الراوي يرحّب بالزوار (' + L('0001.mp3') + ')… والدرعية تنبض في الليل'];
   else if (st >= 0) cap = since < .8 ? ['📡', `حساس IR عند «${ST[st].n}» رأى الزائر ← إرسال ${L("'" + ST[st].trk + "'")} لاسلكيًا عبر ESP-NOW`]
     : ['💡', `${ST[st].n}: الكشاف والألوان + الراوي (${L('000' + ST[st].trk + '.mp3')}) · تبقى ${AR(Math.max(0, Math.ceil(12 - since)))} ث`];
-  else if (ph >= 50 && ph < 53.5) cap = ['🤔', 'لحظة القرار: كيف نحافظ على تراث الدرعية للأجيال القادمة؟'];
-  else if (result) cap = ['🗳️', `الزائر اختار «${BTN[choice].n}» ← صوت النتيجة ${L('000' + BTN[choice].trk + '.mp3')}`];
-  else if (ph >= 62) cap = ['🌙', 'الستارة تُغلق… وتنتظر الزائر التالي'];
+  else if (ph >= 54 && ph < 57.5) cap = ['🤔', 'لحظة القرار: كيف نحافظ على تراث الدرعية للأجيال القادمة؟'];
+  else if (result) cap = ['🗳️', `الزائر اختار «${BTN[choice].n}» ← صوت النتيجة ${L('000' + BTN[choice].trk + '.mp3')} + الإضاءة تحكي الدرعية بعد ٥٠ سنة`];
+  else if (ph >= 66) cap = ['🌙', 'الستارة تنزل… وتنتظر الزائر التالي'];
   else cap = ['🚶', 'الزائر يتنقل… والنظام يراقب أين يقف'];
   return { ph, cur, st, since, vx, walking, choice, press, result, track, pkt, cap };
 }
@@ -198,7 +202,7 @@ function heroSVG(t) {
     <text x="202" y="${S.pkt >= 0 ? 214 : 214}" class="dyt" style="font-size:15px;fill:#7ee2a8">📶 ESP-NOW بلا أسلاك</text>
     ${pk}
     <g transform="translate(110 290)"><rect x="-80" y="-44" width="160" height="88" rx="10" fill="#1b2340" stroke="#3a4a80"/><text y="-14" class="dyt" style="font-size:16px;fill:#9aa8d8">DFPlayer · SD</text>
-      <text y="22" class="dyt" style="font-size:26px;fill:${S.track ? '#f0cc7a' : '#56607e'};font-family:monospace;direction:ltr">${S.track ? '000' + S.track + '.mp3' : '— — —'}</text></g>
+      <text y="22" class="dyt" style="font-size:26px;fill:${S.track ? '#f0cc7a' : '#56607e'};font-family:monospace;direction:ltr">${S.track ? String(S.track).padStart(4, '0') + '.mp3' : '— — —'}</text></g>
     ${speaker(262, 290, S.track > 0, t, 1.15)}
     <text x="196" y="398" class="dyt" style="font-size:18px;fill:#f0cc7a">أزرار القرار</text>
     ${btns}
@@ -216,9 +220,9 @@ const SYS = [
   { k: 'b', i: '🧠', n: 'ESP32 · الصوت', x: 1050, y: 250, d: 'يستقبل رقم المحطة فيشغّل مقطعها، ويقرأ أزرار القرار محليًا، ويرحّب تلقائيًا بعد ١٠ ثوانٍ من التشغيل.' },
   { k: 'df', i: '🎵', n: 'DFPlayer + سماعة', x: 1050, y: 500, d: 'مشغّل MP3 من بطاقة SD: ٨ مقاطع مرقّمة 0001…0008. يتصل عبر UART2 (16 و17) مع مقاومة 1kΩ.' },
   { k: 'btn', i: '🔘', n: 'أزرار القرار ×٤', x: 1340, y: 250, d: 'أصفر 33 للترحيب، أخضر 26 للتوعية، أزرق 27 للمشاركة، أحمر 25 للابتكار. INPUT_PULLUP وضغطة واحدة = تشغيل واحد.' },
-  { k: 'cur', i: '🎭', n: 'الستارة · 28BYJ-48', x: 1340, y: 500, d: 'محرك خطوي ودرايفر ULN2003 (IN1–IN4 = 14، 27، 26، 25): تتابع نصف الخطوة بثماني حالات، يفتح ١٠ ثوانٍ ويُغلق ١٠.' },
+  { k: 'cur', i: '🎭', n: 'لوحة ٣ · الستارة', x: 1340, y: 500, d: 'لوحة ESP32 ثالثة: محرك خطوي 28BYJ-48 ودرايفر ULN2003 (14، 27، 26، 25) يلف بكرة فترتفع الستارة لأعلى خلال ١٠ ثوانٍ، ولحظة البدء ترسل «D» فيُسمع صوت الباب القديم.' },
 ];
-const SYS_L = [['ir', 'a'], ['a', 'pca'], ['pca', 'rgb'], ['a', 'spot'], ['a', 'now'], ['now', 'b'], ['b', 'df'], ['btn', 'b']];
+const SYS_L = [['ir', 'a'], ['a', 'pca'], ['pca', 'rgb'], ['a', 'spot'], ['a', 'now'], ['now', 'b'], ['b', 'df'], ['btn', 'b'], ['cur', 'now']];
 const SYS_SEQ = ['ir', 'a', 'spot', 'pca', 'rgb', 'now', 'b', 'df', 'btn', 'cur'];
 function sysSVG(t, sel) {
   const P = SYS_SEQ.length * 2.2, auto = SYS_SEQ[Math.floor((t % P) / 2.2)];
@@ -253,22 +257,22 @@ function curtainState(t, d) {
   const ang = (mode === 1 ? steps : mode === 2 ? 10000 / d : mode === 3 ? 10000 / d - steps : 0) / 4096 * 360;
   return { ph, mode, frac, idx, ang, total, steps };
 }
-const SERIAL = ['SYSTEM READY', 'CURTAIN OPENING...', 'CURTAIN OPEN - DONE', 'CURTAIN CLOSING...', 'CURTAIN CLOSED - DONE'];
+const SERIAL = ['SYSTEM READY', 'DOOR SOUND + CURTAIN RISING...', 'CURTAIN UP - DONE', 'CURTAIN LOWERING...', 'CURTAIN DOWN - DONE'];
 function curtainSVG(t, d) {
   const S = curtainState(t, d), f = Math.min(1, S.frac);
   return `${DEFS}<rect width="900" height="560" fill="url(#dySky)"/>${stars(25, 900, 120)}
     <rect x="40" y="40" width="560" height="380" rx="10" fill="#0a0c14" stroke="#2a2416" stroke-width="8"/>
     <g opacity="${.25 + .75 * f}">${palace(320, 400, .9)}</g>
     ${curtain(50, 590, 58, 410, f)}
-    ${S.frac > 1.02 ? `<text x="320" y="250" class="dyt" style="font-size:30px;fill:#ff7b7b">⚠️ تجاوزت الستارة نهايتها!</text>` : ''}
+    ${S.frac > 1.02 ? `<text x="320" y="250" class="dyt" style="font-size:30px;fill:#ff7b7b">⚠️ تجاوزت الستارة أعلى نقطة!</text>` : ''}
     <g transform="translate(750 150)"><circle r="78" fill="#3b6fb0" stroke="#9ec5f2" stroke-width="5"/><circle r="46" fill="#9aa8b8"/>
       <g transform="rotate(${S.ang})"><rect x="-6" y="-60" width="12" height="40" rx="4" fill="#f0cc7a"/><circle r="14" fill="#f0cc7a"/></g>
       <text y="112" class="dyt" style="font-size:22px;fill:#dfe4f5">28BYJ-48</text></g>
-    <path d="M672 150 Q 620 120 600 80" stroke="#c9b48a" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
+    <path d="M672 150 Q 640 40 590 40" stroke="#c9b48a" stroke-width="3" fill="none" stroke-dasharray="6 6"/><text x="640" y="30" class="dyt" style="font-size:15px;fill:#c9b48a">البكرة</text>
     <g transform="translate(640 330)"><rect width="230" height="150" rx="10" fill="#1d6b3a" stroke="#7ee2a8" stroke-width="3"/>
       <text x="115" y="30" class="dyt" style="font-size:20px;fill:#e9fbe9">ULN2003</text>
       ${[0, 1, 2, 3].map(i => { const on = S.idx >= 0 && SEQ[S.idx][i]; return `<circle cx="${40 + i * 50}" cy="72" r="15" fill="${on ? '#ff4d4d' : '#4a1f1f'}"/>${on ? `<circle cx="${40 + i * 50}" cy="72" r="26" fill="#ff4d4d" opacity=".3"/>` : ''}<text x="${40 + i * 50}" y="112" class="dyt" style="font-size:16px;fill:#e9fbe9;font-family:monospace;direction:ltr">IN${i + 1}</text><text x="${40 + i * 50}" y="134" class="dyt" style="font-size:15px;fill:#b7e8c4;font-family:monospace;direction:ltr">${[14, 27, 26, 25][i]}</text>`; }).join('')}</g>
-    <text x="320" y="470" class="dyt" style="font-size:24px;fill:#f0cc7a">${['⏳ جاهز… ٣ ثوانٍ', '▶ تفتح: ١٠ ثوانٍ بالضبط', '⏸ مفتوحة: انتظار ٤ ثوانٍ', '◀ تُغلق: ١٠ ثوانٍ', '✓ أُغلقت'][S.mode]}</text>
+    <text x="320" y="470" class="dyt" style="font-size:24px;fill:#f0cc7a">${['⏳ جاهز… ٣ ثوانٍ', '🚪▲ صوت الباب… وتُرفع ١٠ ثوانٍ', '⏸ مرفوعة', '▼ تنزل: ١٠ ثوانٍ', '✓ نزلت'][S.mode]}</text>
     <rect x="50" y="490" width="540" height="14" rx="7" fill="#22284a"/><rect x="50" y="490" width="${540 * Math.min(1, S.frac)}" height="14" rx="7" fill="${S.frac > 1.02 ? '#ff7b7b' : '#7ee2a8'}"/>
     <text x="320" y="540" class="dyt" style="font-size:18px;fill:#9aa8d8">الإضاءات مُبطّأة لترى التتابع: الحقيقي ${AR(Math.round(1000 / d))} خطوة في الثانية</text>`;
 }
@@ -563,6 +567,158 @@ window.DECK_BIND = Object.assign(window.DECK_BIND || {}, {
         res.querySelector('code').textContent = `▶ 000${b.trk}.mp3`; res.querySelector('span').textContent = `${b.n}: ${b.r}`; }
       else { res.classList.remove('on'); res.querySelector('code').textContent = '…'; res.querySelector('span').textContent = 'اضغط زرًا (أو انتظر العرض التلقائي)'; }
     }, DP);
+  },
+});
+
+/* =====================================================================
+   الإضافات الجديدة (الإصدار ٢)
+   dyextra: الراوي يفهم الزائر (يد ثابتة أمام الحساس ⇐ شرح إضافي)
+   dyfuture: الدرعية بعد ٥٠ سنة (الإضاءة تحكي نتيجة القرار)
+   ===================================================================== */
+function hand(x, y, k = 1) {
+  return `<g transform="translate(${x} ${y}) scale(${k})"><rect x="-34" y="-10" width="68" height="70" rx="22" fill="#e9c9a3"/>
+    ${[-26, -9, 8, 25].map((fx, i) => `<rect x="${fx - 7}" y="${-58 + Math.abs(i - 1.5) * 6}" width="15" height="60" rx="7.5" fill="#e9c9a3"/>`).join('')}
+    <rect x="30" y="0" width="14" height="44" rx="7" transform="rotate(-35 37 22)" fill="#e9c9a3"/><rect x="-26" y="58" width="52" height="60" fill="#3a6fb0"/></g>`;
+}
+// نفس منطق الكود: ملخص ١٢ ث، ثم إن بقيت اليد ⇐ شرح إضافي ٢٠ ث
+const XP = 52;
+function extraSim(ph, pres) {
+  let state = 'idle', until = 0;
+  const log = [];
+  for (let x = 0; x <= ph + 1e-9; x += .05) {
+    const p = pres(x);
+    if (state === 'idle' && p) { state = 'sum'; until = x + 12; log.push([x, 'sum']); }
+    else if (state === 'sum' && x >= until) {
+      if (p) { state = 'extra'; until = x + 20; log.push([x, 'extra']); }
+      else { state = 'idle'; log.push([x, 'off']); }
+    } else if (state === 'extra' && x >= until) { state = p ? 'done' : 'idle'; log.push([x, 'off']); }
+    else if (state === 'done' && !p) state = 'idle';
+  }
+  return { state, until, log };
+}
+// السيناريو التلقائي: الدورة الأولى تبقى اليد، والثانية تُرفع بعد ٥ ث
+function extraPres(ph) { return (ph >= 1 && ph < 34) || (ph >= 35 && ph < 40); }
+function extraSVG(t, view) {
+  const { p, sim, now } = view, on = sim.state === 'sum' || sim.state === 'extra';
+  const c = css(hueRGB(now * 1000 / HUE_MS));
+  return `${DEFS}<rect width="900" height="520" fill="url(#dySky)"/>${stars(22, 900, 120)}
+    <rect x="160" y="40" width="580" height="330" rx="12" fill="#0a0c14" stroke="#2a2416" stroke-width="6"/>
+    ${on ? `<path d="M430 54 L280 360 L620 360 L470 54z" fill="url(#dyCone)"/>` : ''}
+    ${palace(450, 350, .95)}<rect x="166" y="46" width="568" height="318" fill="#050713" opacity="${on ? 0 : .6}"/>
+    ${on ? `<circle cx="450" cy="352" r="14" fill="${c}"/><circle cx="450" cy="352" r="44" fill="${c}" opacity=".3"/>` : ''}
+    ${irMod(450, 400, p, 1.3)}${p ? `<path d="M450 420 L410 470 L490 470z" fill="#ff4d4d" opacity=".3"/>` + hand(450, 470, .9) : ''}
+    <text x="450" y="30" class="dyt" style="font-size:22px;fill:#f0cc7a">١. قصر سلوى</text>`;
+}
+function futureState(t, man) {
+  const P = 16;
+  let ph, pol;
+  if (man) { ph = t - man.t0; pol = man.pol; if (ph > 15) return null; }
+  else { ph = t % P; pol = ['a', 'p', 'i'][Math.floor(t / P) % 3]; }
+  const lv = [0, 0, 0], rgb = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  let phase;
+  if (ph < 4) {
+    phase = 'neglect'; const k = ph / 4, base = 255 * (1 - k);
+    for (let i = 0; i < 3; i++) {
+      const r = Math.abs(Math.sin(Math.floor(t * 20) * 12.9898 + i * 78.233) * 43758.5453) % 1;   // ارتعاش «عشوائي» ثابت لكل لحظة
+      lv[i] = r < .25 ? base * r * 2 : base; rgb[i] = [4095 * (1 - k), 900 * (1 - k), 0];
+    }
+  } else if (ph < 14) {
+    phase = 'restore'; const k = (ph - 4) / 10, ms = (ph - 4) * 1000;
+    for (let i = 0; i < 3; i++) {
+      if (pol === 'a') { lv[i] = 255 * k; rgb[i] = [4095 * k, 1500 * k, 0]; }
+      else if (pol === 'p') { const ki = clamp((k - i * .25) / .3, 0, 1); lv[i] = 255 * ki; rgb[i] = [0, 4095 * ki, 600 * ki]; }
+      else if (k < .6) { const cur = Math.floor(ms / 400) % 3; rgb[i] = i === cur ? [0, 600, 4095] : [0, 0, 0]; lv[i] = 40; }
+      else { const kk = (k - .6) / .4; lv[i] = 255 * kk; rgb[i] = [0, 1200, 4095]; }
+    }
+  } else phase = 'end';
+  return { ph, pol, lv, rgb, phase };
+}
+const FUT_MSG = { a: '🟢 التوعية: الوعي ينتشر فتعود المحطات معًا', p: '🔵 المشاركة: كل زائر يضيف… محطة بعد محطة', i: '🔴 الابتكار: التقنية تفحص وتحرس… ثم يعود النور' };
+function futureSVG(F) {
+  const xs = [700, 450, 200];
+  const year = F.phase === 'neglect' ? 2026 + Math.round(F.ph / 4 * 50) : 2076;
+  const msg = F.phase === 'neglect' ? 'لو أهملناها… الطين يتآكل والضوء يخبو' : F.phase === 'restore' ? FUT_MSG[F.pol] : 'الدرعية باقية للأجيال ✓';
+  return `${DEFS}<rect width="900" height="520" fill="url(#dySky)"/>${stars(22, 900, 110)}
+    <rect x="20" y="70" width="860" height="330" rx="12" fill="#0a0c14" stroke="#2a2416" stroke-width="6"/>
+    ${ST.map((s, i) => { const x = xs[i], o = F.lv[i] / 255, c = css(F.rgb[i]);
+      const art = i === 0 ? palace(x, 380, .62) : `<g transform="translate(${x} 380) scale(.6) translate(${-x} -380)">${i === 1 ? mosque(x, 380) : wadi(x, 380)}</g>`;
+      return `${o > .05 ? `<path d="M${x - 12} 84 L${x - 120} 390 L${x + 120} 390 L${x + 12} 84z" fill="url(#dyCone)" opacity="${o}"/>` : ''}${art}
+        <rect x="${x - 125}" y="76" width="250" height="318" fill="#050713" opacity="${.78 * (1 - o)}"/>
+        <circle cx="${x}" cy="384" r="12" fill="${c}"/><circle cx="${x}" cy="384" r="40" fill="${c}" opacity=".3"/>
+        <text x="${x}" y="430" class="dyt" style="font-size:${s.n.length > 14 ? 17 : 21}px;fill:#c9b48a">${s.n}</text>`; }).join('')}
+    <text x="450" y="50" style="font:900 40px monospace;direction:ltr;text-anchor:middle;fill:${F.phase === 'neglect' ? '#ff8a6b' : '#f0cc7a'}">${year}</text>
+    <text x="450" y="490" class="dyt" style="font-size:26px;fill:${F.phase === 'neglect' ? '#ff8a6b' : '#7ee2a8'}">${msg}</text>`;
+}
+const POL = [{ k: 'a', b: 1 }, { k: 'p', b: 2 }, { k: 'i', b: 3 }];
+const XLOG = { sum: 'محطة نشطة ⇐ الملخص (0002)', extra: "الزائر مهتم ⇐ 'A' ⇐ شرح إضافي (0009)", off: 'انتهى — الإضاءة تُطفأ' };
+Object.assign(window.DECK_TYPES, {
+  dyextra: s => `<div class="slide light">
+      <div class="kicker">🆕 الإضافة ١ · الراوي يفهم الزائر</div>
+      <h2 class="title" style="margin-bottom:12px">${s.title}</h2>
+      <div class="dylab">
+        <div class="dygif ix"><svg viewBox="0 0 900 520" class="dysvg" id="dyxs"></svg></div>
+        <div class="dyside ix">
+          <div class="dyxt"><div class="seg s1"><i id="dyx1"></i><b>الملخص</b><span>0002 · ١٢ ث</span></div><div class="seg s2"><i id="dyx2"></i><b>شرح إضافي</b><span>0009 · ٢٠ ث</span></div></div>
+          <div class="dydec" id="dyxd"></div>
+          <div class="dybtns"><button class="dyb" id="dyxh">✋ ضع اليد</button><button class="dyb ghost" id="dyxa">▶ تلقائي</button></div>
+          <div class="dylog" id="dyxl"></div>
+        </div></div></div>`,
+  dyfuture: s => `<div class="slide light">
+      <div class="kicker">🆕 الإضافة ٢ · الدرعية بعد ٥٠ سنة</div>
+      <h2 class="title" style="margin-bottom:12px">${s.title}</h2>
+      <div class="dylab">
+        <div class="dygif ix"><svg viewBox="0 0 900 520" class="dysvg" id="dyfs"></svg></div>
+        <div class="dyside ix">
+          <div class="dyphase"><div id="dyf1"><b>١</b> ٤ ث «الإهمال»: الضوء يرتعش ويخبو</div><div id="dyf2"><b>٢</b> ١٠ ث «الاستعادة» بأسلوب القرار</div></div>
+          <div class="dypanel dypol">${POL.map(p => `<button class="dyarcade" data-p="${p.k}" data-audio="${SND(BTN[p.b].trk)}" style="--c:${BTN[p.b].c}"><i></i><b>${BTN[p.b].n}</b><small>'${p.k}'</small></button>`).join('')}</div>
+          <div class="dyfacts"><div><span>من لوحة الصوت</span><b>'a' · 'p' · 'i'</b></div><div class="g"><span>إلى لوحة الإضاءة</span><b>ESP-NOW</b></div></div>
+        </div></div></div>`,
+});
+Object.assign(window.DECK_BIND, {
+  dyextra(sl) {
+    const svg = sl.querySelector('#dyxs'), hb = sl.querySelector('#dyxh'), d = sl.querySelector('#dyxd'), lg = sl.querySelector('#dyxl');
+    const b1 = sl.querySelector('#dyx1'), b2 = sl.querySelector('#dyx2');
+    let man = null, tNow = 0, lastState = '';
+    hb.onclick = () => {
+      if (!man) man = { t0: tNow, ev: [] };
+      const p = !man.ev.length || !man.ev[man.ev.length - 1][1];
+      man.ev.push([tNow - man.t0, p]); hb.textContent = p ? '🖐️ ارفع اليد' : '✋ ضع اليد'; hb.classList.toggle('on', p);
+    };
+    sl.querySelector('#dyxa').onclick = () => { man = null; hb.textContent = '✋ ضع اليد'; hb.classList.remove('on'); stopSnd(); };
+    window.DECK_CLEANUP.push(stopSnd);
+    runLoop(t => {
+      tNow = t;
+      const pres = man ? (x => { let p = false; man.ev.forEach(([a, q]) => { if (x >= a) p = q; }); return p; }) : extraPres;
+      const now = man ? t - man.t0 : t % XP, sim = extraSim(now, pres), p = pres(now);
+      svg.innerHTML = extraSVG(t, { p, sim, now });
+      if (man && sim.state !== lastState) { if (sim.state === 'sum') playSnd(2); else if (sim.state === 'extra') playSnd(9); }
+      lastState = sim.state;
+      const lastSum = [...sim.log].reverse().find(x => x[1] === 'sum'), t0 = lastSum ? lastSum[0] : now;
+      const ex = sim.log.find(x => x[1] === 'extra' && x[0] >= t0);
+      b1.style.width = (lastSum ? Math.min(1, (now - t0) / 12) * 100 : 0) + '%';
+      b2.style.width = (ex ? Math.min(1, (now - ex[0]) / 20) * 100 : 0) + '%';
+      const left = AR(Math.max(0, Math.ceil(sim.until - now)));
+      d.innerHTML = sim.state === 'sum' ? `<b>الملخص يعمل…</b><span>${p ? '✋ اليد ما زالت موجودة' : '🖐️ رُفعت اليد'} · بعد ${left} ث يقرر النظام</span>`
+        : sim.state === 'extra' ? `<b>🧠 قرار: الزائر مهتم</b><span>بقيت اليد بعد الملخص ⇐ شرح إضافي 0009 · ${left} ث</span>`
+        : sim.state === 'done' ? '<b>✓ انتهى الشرح الإضافي</b><span>ارفع اليد لتبدأ زيارة جديدة</span>'
+        : lastSum ? '<b>🧠 قرار: يكفيه الملخص</b><span>رُفعت اليد قبل نهاية الملخص ⇐ لا شرح إضافي</span>'
+        : '<b>بانتظار زائر…</b><span>ضع يدك أمام الحساس (أو انتظر العرض التلقائي)</span>';
+      lg.innerHTML = sim.log.slice(-3).map(([x, k]) => `<div><code>${AR(x.toFixed(1))} ث</code> ${XLOG[k]}</div>`).join('');
+    }, XP);
+  },
+  dyfuture(sl) {
+    const svg = sl.querySelector('#dyfs'), f1 = sl.querySelector('#dyf1'), f2 = sl.querySelector('#dyf2');
+    let man = null, tNow = 0;
+    sl.querySelectorAll('.dypol .dyarcade').forEach(b => b.addEventListener('pointerdown', e => {
+      e.preventDefault(); man = { t0: tNow, pol: b.dataset.p }; playSnd(BTN[POL.find(x => x.k === b.dataset.p).b].trk); }));
+    window.DECK_CLEANUP.push(stopSnd);
+    runLoop(t => {
+      tNow = t;
+      let F = futureState(t, man); if (!F) { man = null; F = futureState(t); }
+      svg.innerHTML = futureSVG(F);
+      f1.classList.toggle('on', F.phase === 'neglect'); f2.classList.toggle('on', F.phase === 'restore');
+      sl.querySelectorAll('.dypol .dyarcade').forEach(b => b.classList.toggle('down', b.dataset.p === F.pol && F.ph < 1));
+    }, 48);
   },
 });
 })();

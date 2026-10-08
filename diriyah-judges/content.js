@@ -10,7 +10,7 @@ root.DECK = {
   tag: 'WRO 2026 · Future Innovators · عرض لجنة التحكيم',
   author: 'فريق مدارس الأرقم',
   sectionLabel: 'المحور',
-  parts: ['01-idea', '02-parts', '03-build', '04-labs', '05-end'],
+  parts: ['01-idea', '02-parts', '03-build', '04-labs', '04b-new', '05-end'],
   modules: [],
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = root.DECK;
