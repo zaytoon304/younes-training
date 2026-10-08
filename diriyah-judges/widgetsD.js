@@ -220,7 +220,7 @@ const SYS = [
   { k: 'b', i: '🧠', n: 'ESP32 · الصوت', x: 1050, y: 250, d: 'يستقبل رقم المحطة فيشغّل مقطعها، ويقرأ أزرار القرار محليًا، ويرحّب تلقائيًا بعد ١٠ ثوانٍ من التشغيل.' },
   { k: 'df', i: '🎵', n: 'DFPlayer + سماعة', x: 1050, y: 500, d: 'مشغّل MP3 من بطاقة SD: ٨ مقاطع مرقّمة 0001…0008. يتصل عبر UART2 (16 و17) مع مقاومة 1kΩ.' },
   { k: 'btn', i: '🔘', n: 'أزرار القرار ×٤', x: 1340, y: 250, d: 'أصفر 33 للترحيب، أخضر 26 للتوعية، أزرق 27 للمشاركة، أحمر 25 للابتكار. INPUT_PULLUP وضغطة واحدة = تشغيل واحد.' },
-  { k: 'cur', i: '🎭', n: 'لوحة ٣ · الستارة', x: 1340, y: 500, d: 'لوحة ESP32 ثالثة: محرك خطوي 28BYJ-48 ودرايفر ULN2003 (14، 27، 26، 25) يلف بكرة فترتفع الستارة لأعلى خلال ١٠ ثوانٍ، ولحظة البدء ترسل «D» فيُسمع صوت الباب القديم.' },
+  { k: 'cur', i: '🎭', n: 'لوحة ٣ · الستارة والقافلة', x: 1340, y: 500, d: 'لوحة ESP32 ثالثة: محرك خطوي 28BYJ-48 ودرايفر ULN2003 (14، 27، 26، 25) يلف بكرة فترتفع الستارة لأعلى خلال ١٠ ثوانٍ، ولحظة البدء ترسل «D» فيُسمع صوت الباب القديم. وتحرّك أيضًا القافلة على سكة أمام المحطات بمحرك NEMA17 وسير GT2.' },
 ];
 const SYS_L = [['ir', 'a'], ['a', 'pca'], ['pca', 'rgb'], ['a', 'spot'], ['a', 'now'], ['now', 'b'], ['b', 'df'], ['btn', 'b'], ['cur', 'now']];
 const SYS_SEQ = ['ir', 'a', 'spot', 'pca', 'rgb', 'now', 'b', 'df', 'btn', 'cur'];
@@ -719,6 +719,115 @@ Object.assign(window.DECK_BIND, {
       f1.classList.toggle('on', F.phase === 'neglect'); f2.classList.toggle('on', F.phase === 'restore');
       sl.querySelectorAll('.dypol .dyarcade').forEach(b => b.classList.toggle('down', b.dataset.p === F.pol && F.ph < 1));
     }, 48);
+  },
+});
+
+/* =====================================================================
+   dycaravan: القافلة على السكة — IR يراها ⇐ 'S' قف ⇐ الراوي ⇐ 'G' تحرك
+   ===================================================================== */
+function camel(x, y, k = 1, ph = 0) {
+  const l = Math.sin(ph) * 6;
+  return `<g transform="translate(${x} ${y}) scale(${k})">
+    <line x1="-18" y1="-14" x2="${-20 + l}" y2="18" stroke="#8a5a2c" stroke-width="5"/><line x1="-8" y1="-14" x2="${-8 - l}" y2="18" stroke="#8a5a2c" stroke-width="5"/>
+    <line x1="14" y1="-14" x2="${14 + l}" y2="18" stroke="#8a5a2c" stroke-width="5"/><line x1="24" y1="-14" x2="${24 - l}" y2="18" stroke="#8a5a2c" stroke-width="5"/>
+    <ellipse cx="3" cy="-22" rx="30" ry="13" fill="#c08a4e"/><path d="M-12 -30 q8 -22 18 0z" fill="#c08a4e"/>
+    <path d="M-26 -24 q-14 -8 -14 -30" stroke="#c08a4e" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-44" cy="-55" rx="10" ry="6" fill="#c08a4e"/>
+    <rect x="-6" y="-46" width="22" height="12" rx="3" fill="#b5462e"/><rect x="-6" y="-46" width="22" height="12" rx="3" fill="none" stroke="#f0cc7a" stroke-width="2"/></g>`;
+}
+// المسار: البداية عند اليمين (x=930) ثم المحطات ١ و٢ و٣ ثم نهاية السكة، ثم العودة
+const CV = { home: 930, st: [720, 470, 220], end: 90, v: 70, hold: 6, back: 220 };
+function caravanPlan() {
+  const seg = []; let t = 0, x = CV.home;
+  seg.push({ a: t, b: t + 1.2, x0: x, x1: x, k: 'start' }); t += 1.2;
+  CV.st.forEach((sx, i) => {
+    const d = (x - sx) / CV.v; seg.push({ a: t, b: t + d, x0: x, x1: sx, k: 'move', next: i }); t += d; x = sx;
+    seg.push({ a: t, b: t + CV.hold, x0: x, x1: x, k: 'hold', st: i }); t += CV.hold;
+  });
+  let d = (x - CV.end) / CV.v; seg.push({ a: t, b: t + d, x0: x, x1: CV.end, k: 'toend' }); t += d; x = CV.end;
+  seg.push({ a: t, b: t + 2.5, x0: x, x1: x, k: 'decide' }); t += 2.5;
+  d = (CV.home - x) / CV.back; seg.push({ a: t, b: t + d, x0: x, x1: CV.home, k: 'home' }); t += d;
+  seg.push({ a: t, b: t + 1, x0: CV.home, x1: CV.home, k: 'idle' }); t += 1;
+  return { seg, P: t };
+}
+const CPLAN = caravanPlan();
+function caravanState(t) {
+  const ph = t % CPLAN.P, s = CPLAN.seg.find(g => ph >= g.a && ph < g.b) || CPLAN.seg[CPLAN.seg.length - 1];
+  const k = (ph - s.a) / (s.b - s.a), x = lerp(s.x0, s.x1, k);
+  return { ph, s, k, x, since: ph - s.a };
+}
+const CMSG = {
+  start: ['🚀', "لوحة الحركة ترسل 'T': بدأت جولة القافلة"],
+  move: ['🐪', 'القافلة تسير على السكة… والحساسات تراقب'],
+  toend: ['🐪', 'انتهت المحطات… القافلة تكمل لنهاية السكة'],
+  decide: ['🗳️', 'وقت القرار: الزائر يختار كيف تُحمى الدرعية'],
+  home: ['↩️', 'العودة للبداية حتى مفتاح النهاية'],
+  idle: ['🟡', "في البداية… الزر الأصفر يرسل 'R' لجولة جديدة"],
+};
+function chip(x, y, w, lbl, on) {
+  return `<g transform="translate(${x} ${y})"><rect width="${w}" height="62" rx="10" fill="#14324f" stroke="${on ? '#7ee2a8' : '#3a5a7a'}" stroke-width="${on ? 4 : 2}"/>
+    <text x="${w / 2}" y="24" style="font:700 14px monospace;direction:ltr;text-anchor:middle;fill:#9aa8b8">ESP32</text>
+    <text x="${w / 2}" y="50" class="dyt" style="font-size:18px;fill:#f0cc7a">${lbl}</text></g>`;
+}
+function caravanSVG(t) {
+  const S = caravanState(t), g = S.s, xs = CV.st, hue = t * 1000 / HUE_MS;
+  const holdSt = g.k === 'hold' ? g.st : -1, hitSt = holdSt >= 0 && S.since < 1.2 ? holdSt : -1;
+  const pk = (from, to, ch, k) => { const x = lerp(from, to, k), y = 40 - Math.sin(k * Math.PI) * 26;
+    return `<g transform="translate(${x} ${y})"><rect x="-22" y="-16" width="44" height="32" rx="6" fill="#7ee2a8"/><text y="9" style="font:800 22px monospace;direction:ltr;text-anchor:middle;fill:#06301b">'${ch}'</text></g>`; };
+  let packet = '';
+  if (g.k === 'hold' && S.since < .8) packet = pk(150, 850, 'S', S.since / .8);
+  const prev = CPLAN.seg[CPLAN.seg.indexOf(g) - 1];
+  if (g.k === 'move' && g.next > 0 && S.since < .8 || g.k === 'toend' && S.since < .8) packet = pk(150, 850, 'G', S.since / .8);
+  if (g.k === 'start') packet = pk(850, 150, 'T', S.k);
+  return `${DEFS}<rect width="1000" height="560" fill="url(#dySky)"/>${stars(26, 1000, 60)}
+    ${chip(60, 10, 180, 'لوحة ١ · الحساسات', holdSt >= 0)}${chip(760, 10, 180, 'لوحة ٣ · الحركة', g.k !== 'hold' && g.k !== 'decide' && g.k !== 'idle')}
+    <path d="M150 40 Q 500 -10 850 40" stroke="#7ee2a8" stroke-width="2" stroke-dasharray="8 8" fill="none" opacity=".5"/>${packet}
+    <rect x="30" y="96" width="940" height="270" rx="12" fill="#0a0c14" stroke="#2a2416" stroke-width="6"/>
+    ${ST.map((s, i) => { const x = xs[i], on = holdSt === i, c = css(hueRGB(hue + i * 40));
+      const art = i === 0 ? palace(x, 350, .58) : `<g transform="translate(${x} 350) scale(.56) translate(${-x} -350)">${i === 1 ? mosque(x, 350) : wadi(x, 350)}</g>`;
+      return `${on ? `<path d="M${x - 12} 108 L${x - 110} 360 L${x + 110} 360 L${x + 12} 108z" fill="url(#dyCone)"/>` : ''}${art}
+        <rect x="${x - 118}" y="102" width="236" height="258" fill="#050713" opacity="${on ? 0 : .6}"/>
+        ${on ? `<circle cx="${x}" cy="352" r="10" fill="${c}"/><circle cx="${x}" cy="352" r="34" fill="${c}" opacity=".3"/>` : ''}
+        ${irMod(x, 392, hitSt === i, .9)}${hitSt === i ? `<path d="M${x} 404 L${x - 28} 452 L${x + 28} 452z" fill="#ff4d4d" opacity=".3"/>` : ''}
+        <text x="${x}" y="548" class="dyt" style="font-size:${s.n.length > 14 ? 16 : 20}px;fill:${on ? '#f0cc7a' : '#9aa0b8'}">${AR(i + 1)}. ${s.n}</text>
+        ${on ? `<rect x="${x - 80}" y="508" width="${160 * (1 - S.since / CV.hold)}" height="6" rx="3" fill="#7ee2a8"/>` : ''}`; }).join('')}
+    <rect x="40" y="470" width="920" height="16" rx="4" fill="#5a3a1c"/><rect x="40" y="466" width="920" height="4" fill="#8a611f"/>
+    <line x1="60" y1="478" x2="940" y2="478" stroke="#222" stroke-width="5" stroke-dasharray="6 4" stroke-dashoffset="${-S.x}"/>
+    <circle cx="955" cy="478" r="16" fill="#555" stroke="#999" stroke-width="3"/><circle cx="45" cy="478" r="12" fill="#555" stroke="#999" stroke-width="3"/>
+    <rect x="958" y="440" width="38" height="44" rx="4" fill="#2b2b33" stroke="#9aa8b8" stroke-width="2"/><text x="977" y="500" style="font:700 12px monospace;direction:ltr;text-anchor:middle;fill:#9aa8b8">NEMA17</text>
+    <rect x="${CV.home + 34}" y="452" width="12" height="16" fill="${g.k === 'idle' || g.k === 'start' ? '#ff4d4d' : '#666'}"/>
+    <g transform="translate(${S.x} 468)"><rect x="-58" y="-6" width="116" height="10" rx="3" fill="#3a2a18"/>
+      ${camel(-22, -24, .62, g.k === 'move' || g.k === 'toend' || g.k === 'home' ? t * 8 : 0)}${camel(26, -24, .62, g.k === 'move' || g.k === 'toend' || g.k === 'home' ? t * 8 + 1.5 : 0)}
+      ${person(-52, -6, '#e8dcc0', g.k === 'move' ? t * 8 : 0, .34)}</g>`;
+}
+function caravanInfo(t) {
+  const S = caravanState(t), g = S.s;
+  if (g.k === 'hold') return S.since < .8 ? ['📡', `حساس «${ST[g.st].n}» رأى القافلة ⇐ لوحة ١ ترسل 'S' ⇐ لوحة ٣ توقف المحرك`]
+    : ['💡', `${ST[g.st].n}: الكشاف والألوان + الراوي · بعد ${AR(Math.ceil((CV.hold - S.since) * 2))} ث ترسل 'G'`];
+  if (g.k === 'move' && g.next > 0 && S.since < .8) return ['📡', "انتهى الكلام ⇐ 'G' ⇐ القافلة تتحرك للمحطة التالية"];
+  return CMSG[g.k];
+}
+Object.assign(window.DECK_TYPES, {
+  dycaravan: s => `<div class="slide light">
+      <div class="kicker">🐪 القافلة على طريقها التاريخي · NEMA17 + A4988 + سير GT2</div>
+      <h2 class="title" style="margin-bottom:12px">${s.title}</h2>
+      <div class="dylab dycv">
+        <div class="dygif ix"><svg viewBox="0 0 1000 560" class="dysvg" id="dycvs"></svg>${wrapCap('dycvc')}</div>
+        <div class="dyside ix">
+          <div class="dymsgs">${[['T', 'لوحة ٣ ← لوحة ١', 'بدأت الجولة'], ['S', 'لوحة ١ ← لوحة ٣', 'قف هنا'], ['G', 'لوحة ١ ← لوحة ٣', 'تحرك'], ['R', 'لوحة ٢ ← لوحة ٣', 'جولة جديدة']].map(m => `<div data-m="${m[0]}"><code>'${m[0]}'</code><span>${m[2]}</span><small>${m[1]}</small></div>`).join('')}</div>
+          <div class="dyfacts"><div><span>السرعة</span><b>~٣ سم/ث</b></div><div class="g"><span>أمان</span><b>تقف وحدها</b></div></div>
+          <div class="dynote">إن لم يرَ الحساس القافلة خلال ٨٠ سم تقريبًا، تقف وحدها. وبعد الجولة يعود العرض لوضع «الاستكشاف باليد».</div>
+        </div></div></div>`,
+});
+Object.assign(window.DECK_BIND, {
+  dycaravan(sl) {
+    const svg = sl.querySelector('#dycvs'), cap = sl.querySelector('#dycvc'), rows = sl.querySelectorAll('.dymsgs div');
+    runLoop(t => {
+      svg.innerHTML = caravanSVG(t); setCap(cap, caravanInfo(t));
+      const S = caravanState(t), g = S.s;
+      const m = g.k === 'start' ? 'T' : g.k === 'hold' && S.since < 1.2 ? 'S' : (g.k === 'move' && g.next > 0 || g.k === 'toend') && S.since < 1.2 ? 'G' : g.k === 'idle' ? 'R' : '';
+      rows.forEach(r => r.classList.toggle('on', r.dataset.m === m));
+    }, CPLAN.P);
   },
 });
 })();

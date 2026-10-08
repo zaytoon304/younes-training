@@ -142,3 +142,14 @@
 .dytracks{padding:6px 12px}
 .dytracks div{font-size:19px;line-height:1.25;padding:0 8px}
 .dyplay{width:30px;height:30px;font-size:13px}
+
+/* القافلة */
+.dycv{grid-template-columns:1.45fr .7fr}
+.dymsgs{display:flex;flex-direction:column;gap:8px}
+.dymsgs div{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 16px}
+.dymsgs code{grid-row:span 2;align-self:center;font:800 30px "JetBrains Mono",monospace;color:#06301b;background:#7ee2a8;border-radius:10px;padding:2px 12px;direction:ltr}
+.dymsgs span{font-size:25px;font-weight:800;color:var(--navy-800)}
+.dymsgs small{font-size:18px;font-weight:700;color:var(--muted)}
+.dymsgs div.on{border-color:var(--gold);background:#fbf3dd;box-shadow:0 0 0 4px rgba(217,174,75,.25)}
+.dynote{font-size:21px;font-weight:700;color:#1d5e40;background:var(--ok-bg);border-radius:14px;padding:10px 16px;line-height:1.5}
+.dycv .dycap{font-size:23px;min-height:54px}
