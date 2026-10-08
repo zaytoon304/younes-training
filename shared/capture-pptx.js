@@ -27,7 +27,7 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
   const types = await pg.evaluate(() => SLIDES.map(s => s.t));
   const manifest = {};
   const shot = async (i, st, name) => {
-    await pg.evaluate((i, st) => { if (cur !== i) { cur = i; render(); } step = st; applySteps(); document.getElementById('bar').classList.add('hide'); const hb = document.getElementById('barbtn'); if (hb) hb.style.display = 'none'; }, i, st);
+    await pg.evaluate((i, st) => { if (cur !== i) { cur = i; render(); } step = st; applySteps(); document.getElementById('bar').classList.add('hide'); document.body.classList.add('capture'); const hb = document.getElementById('barbtn'); if (hb) hb.style.display = 'none'; }, i, st);
     await new Promise(r => setTimeout(r, 1100));
     await pg.screenshot({ path: path.join(OUT, name), type: 'jpeg', quality: 80 });
     return name;

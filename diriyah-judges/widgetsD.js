@@ -11,9 +11,9 @@ const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 
 /* ---------- حقائق المشروع من الكود الفعلي (smart-heritage-house) ---------- */
 const ST = [
-  { n: 'الطريف التاريخي', s: 'جذور الدولة السعودية الأولى', ir: 18, led: 25, ch: [2, 1, 0], trk: 2, x: 1470 },
-  { n: 'حياة الناس في الدرعية', s: 'أسواق عامرة وحِرف تقليدية', ir: 19, led: 26, ch: [5, 4, 3], trk: 3, x: 1045 },
-  { n: 'حماية التراث', s: 'كيف نحافظ عليه للأجيال؟', ir: 23, led: 27, ch: [8, 7, 6], trk: 4, x: 620 },
+  { n: 'قصر سلوى', s: 'مقر الحكم في الدولة السعودية الأولى', ir: 18, led: 25, ch: [2, 1, 0], trk: 2, x: 1470 },
+  { n: 'مسجد الإمام محمد بن سعود', s: 'الصلاة وحلقات العلم', ir: 19, led: 26, ch: [5, 4, 3], trk: 3, x: 1045 },
+  { n: 'وادي حنيفة', s: 'شريان الحياة: ماء ونخيل', ir: 23, led: 27, ch: [8, 7, 6], trk: 4, x: 620 },
 ];
 const BTN = [
   { n: 'الترحيب', c: '#f2c230', pin: 33, trk: 1, r: 'أهلًا بكم في ليالي الدرعية' },
@@ -21,8 +21,12 @@ const BTN = [
   { n: 'المشاركة', c: '#2f6fd0', pin: 27, trk: 6, r: 'كل زائر شريك في حمايتها' },
   { n: 'الابتكار', c: '#d64545', pin: 25, trk: 7, r: 'التقنية تحرس التراث' },
 ];
-const TRACKS = ['الترحيب (تلقائي بعد ١٠ ث)', 'محطة الطريف', 'محطة حياة الناس', 'محطة حماية التراث', 'نتيجة التوعية', 'نتيجة المشاركة', 'نتيجة الابتكار', 'الخاتمة'];
-const HOLD = 12;                 // HOLD_DURATION_MS = 12000
+const TRACKS = ['الترحيب (تلقائي بعد ١٠ ث)', 'محطة قصر سلوى', 'محطة المسجد', 'محطة وادي حنيفة', 'نتيجة التوعية', 'نتيجة المشاركة', 'نتيجة الابتكار', 'الخاتمة', 'شرح إضافي: قصر سلوى', 'شرح إضافي: المسجد', 'شرح إضافي: وادي حنيفة'];
+const HOLD = 12;
+const SND = n => `audio/${String(n).padStart(4, '0')}.mp3`;
+let dyAudio = null;
+function playSnd(n) { try { if (dyAudio) dyAudio.pause(); dyAudio = new Audio(SND(n)); dyAudio.play().catch(() => {}); } catch (e) {} }
+function stopSnd() { try { if (dyAudio) dyAudio.pause(); } catch (e) {} dyAudio = null; }                 // HOLD_DURATION_MS = 12000
 const HUE_MS = 15;               // rainbowHue + 1 كل 15 مللي ثانية
 
 /* ---------- أدوات رسم عامة ---------- */
@@ -49,7 +53,7 @@ const DEFS = `<defs>
 </defs>`;
 const stars = (n, w, h) => Array.from({ length: n }, (_, i) => `<circle cx="${(i * 397 + 53) % w}" cy="${(i * 131) % h + 8}" r="${i % 4 ? 1.3 : 2.2}" fill="#fff" opacity="${.3 + (i % 5) / 10}"/>`).join('');
 
-/* القصر النجدي (الطريف): كتلة طينية بشرفات مسننة ونوافذ مثلثة */
+/* قصر سلوى (حي الطريف): كتلة طينية بشرفات مسننة ونوافذ مثلثة */
 function palace(cx, by, k = 1) {
   const w = 230 * k, h = 165 * k, x = cx - w / 2, y = by - h;
   const teeth = n => Array.from({ length: n }, (_, i) => `<path d="M${x + i * w / n + 4} ${y} l${w / n / 2 - 4} -${16 * k} l${w / n / 2 - 4} ${16 * k}z" fill="#c99556"/>`).join('');
@@ -63,29 +67,31 @@ function palace(cx, by, k = 1) {
     <path d="M${cx - 22 * k} ${by} v-${50 * k} q${22 * k} -${22 * k} ${44 * k} 0 v${50 * k}z" fill="#4a2c14"/>
     <rect x="${x + w + 8 * k}" y="${by - 170 * k}" width="${9 * k}" height="${14 * k}" fill="#3b2412"/><rect x="${x + w + 28 * k}" y="${by - 120 * k}" width="${9 * k}" height="${14 * k}" fill="#3b2412"/></g>`;
 }
-/* حياة الناس: بيوت وسوق بمظلة ونخلة وجرار */
-function market(cx, by, k = 1) {
-  const house = (x, w, h) => `<rect x="${x}" y="${by - h}" width="${w}" height="${h}" fill="url(#dyMud)"/>
-    ${Array.from({ length: Math.floor(w / 22) }, (_, i) => `<rect x="${x + 4 + i * 22}" y="${by - h - 9}" width="12" height="9" fill="#c99556"/>`).join('')}
-    <rect x="${x + w / 2 - 7}" y="${by - h + 26}" width="14" height="18" fill="#3b2412"/>`;
-  const palm = (x) => `<path d="M${x} ${by} q-6 -70 4 -140" stroke="#6b4a2a" stroke-width="9" fill="none"/>
-    ${[-70, -35, 0, 35, 70, 110, -110].map(a => `<path d="M${x + 4} ${by - 140} q${Math.sin(a * Math.PI / 180) * 40} -30 ${Math.sin(a * Math.PI / 180) * 75} ${Math.cos(a * Math.PI / 180) * 18 + 12}" stroke="#3f7a3a" stroke-width="7" fill="none" stroke-linecap="round"/>`).join('')}`;
-  return `<g>${house(cx - 170 * k, 110, 150)}${house(cx + 70 * k, 120, 120)}${palm(cx + 210 * k)}
-    <path d="M${cx - 80} ${by - 98} h150 l22 32 h-194z" fill="#b5462e"/><path d="M${cx - 80} ${by - 98} h150 l22 32 h-194z" fill="none" stroke="#7e2c1c" stroke-width="3" stroke-dasharray="10 12"/>
-    <line x1="${cx - 64}" y1="${by - 66}" x2="${cx - 64}" y2="${by}" stroke="#5b3a1c" stroke-width="5"/><line x1="${cx + 76}" y1="${by - 66}" x2="${cx + 76}" y2="${by}" stroke="#5b3a1c" stroke-width="5"/>
-    <rect x="${cx - 60}" y="${by - 36}" width="132" height="36" fill="#8a5a2c"/>
-    ${[0, 1, 2, 3].map(i => `<ellipse cx="${cx - 40 + i * 32}" cy="${by - 46}" rx="11" ry="12" fill="${['#c76b3a', '#9c4e28', '#d18a4a', '#a8743f'][i]}"/>`).join('')}
-    ${person(cx - 120, by, '#e8dcc0', 0, .62)}${person(cx + 110, by, '#c9b28a', 0, .58)}</g>`;
+/* مسجد الإمام محمد بن سعود: مصلى طيني واسع بشرفات، ومئذنة نجدية مستدقة، وجسر يصله بقصر سلوى */
+function mosque(cx, by, k = 1) {
+  const x = cx - 170, w = 300, h = 120;
+  const mx = cx + 70, mw0 = 66, mw1 = 44, mh = 250;   // المئذنة تضيق كلما ارتفعت
+  return `<g><rect x="${x}" y="${by - h}" width="${w}" height="${h}" fill="url(#dyMud)"/>
+    ${Array.from({ length: 12 }, (_, i) => `<path d="M${x + i * 25} ${by - h} l12.5 -15 l12.5 15z" fill="#c99556"/>`).join('')}
+    ${Array.from({ length: 6 }, (_, i) => `<rect x="${x + 22 + i * 44}" y="${by - h + 36}" width="12" height="22" fill="#3b2412"/>`).join('')}
+    ${Array.from({ length: 4 }, (_, i) => `<path d="M${x + 40 + i * 64} ${by} v-34 q14 -16 28 0 v34z" fill="#4a2c14"/>`).join('')}
+    <path d="M${mx - mw0 / 2} ${by} L${mx - mw1 / 2} ${by - mh} H${mx + mw1 / 2} L${mx + mw0 / 2} ${by}z" fill="url(#dyMud2)"/>
+    ${[0, 1, 2, 3].map(i => `<rect x="${mx - 5}" y="${by - mh + 30 + i * 52}" width="10" height="18" fill="#3b2412"/>`).join('')}
+    <rect x="${mx - mw1 / 2 - 6}" y="${by - mh - 8}" width="${mw1 + 12}" height="10" fill="#c99556"/>
+    ${[0, 1, 2].map(i => `<path d="M${mx - mw1 / 2 - 6 + i * 19} ${by - mh - 8} l9.5 -14 l9.5 14z" fill="#c99556"/>`).join('')}
+    <path d="M${x + w} ${by - 78} h${70} v18 h-${70}z" fill="#a8743f"/><path d="M${x + w + 12} ${by - 60} v60 M${x + w + 58} ${by - 60} v60" stroke="#8f5f30" stroke-width="10"/>
+    ${person(cx - 120, by, '#e8dcc0', 0, .55)}</g>`;
 }
-/* حماية التراث: سور طيني به شق، ودرع ذهبي، ولوحة سؤال القرار */
-function guard(cx, by, k = 1) {
-  return `<g><rect x="${cx - 190}" y="${by - 130}" width="380" height="130" fill="url(#dyMud)"/>
-    ${Array.from({ length: 13 }, (_, i) => `<path d="M${cx - 190 + i * 29.2} ${by - 130} l14.6 -18 l14.6 18z" fill="#c99556"/>`).join('')}
-    <path d="M${cx + 90} ${by - 130} l-14 30 l12 18 l-16 34" stroke="#5a3518" stroke-width="4" fill="none"/>
-    <rect x="${cx - 150}" y="${by - 220}" width="70" height="220" fill="url(#dyMud2)"/>
-    ${[0, 1].map(i => `<path d="M${cx - 150 + i * 35} ${by - 220} l17.5 -18 l17.5 18z" fill="#b98348"/>`).join('')}
-    <path d="M${cx + 10} ${by - 112} h64 v34 q0 34 -32 50 q-32 -16 -32 -50z" fill="#f0cc7a" stroke="#8a611f" stroke-width="4"/>
-    <text x="${cx + 42}" y="${by - 66}" class="dyt" style="font-size:34px;fill:#5a3a0a">؟</text></g>`;
+/* وادي حنيفة: مجرى ماء بين ضفتين، ونخيل ومزارع، وبيوت طينية على الضفة البعيدة */
+function wadi(cx, by, k = 1) {
+  const palm = (x, h) => `<path d="M${x} ${by - 20} q-6 -${h / 2} 4 -${h}" stroke="#6b4a2a" stroke-width="9" fill="none"/>
+    ${[-70, -35, 0, 35, 70, 110, -110].map(a => `<path d="M${x + 4} ${by - 20 - h} q${Math.sin(a * Math.PI / 180) * 40} -30 ${Math.sin(a * Math.PI / 180) * 75} ${Math.cos(a * Math.PI / 180) * 18 + 12}" stroke="#3f7a3a" stroke-width="7" fill="none" stroke-linecap="round"/>`).join('')}`;
+  return `<g>${[0, 1, 2].map(i => `<rect x="${cx - 160 + i * 52}" y="${by - 150 - i * 6}" width="44" height="${40 + i * 6}" fill="#9c6a3a" opacity=".75"/>`).join('')}
+    <path d="M${cx - 200} ${by - 60} Q ${cx} ${by - 110} ${cx + 200} ${by - 60} V ${by} H ${cx - 200}z" fill="#8a5a2c"/>
+    <path d="M${cx - 200} ${by - 26} Q ${cx - 60} ${by - 52} ${cx + 30} ${by - 30} T ${cx + 200} ${by - 34} V ${by - 10} Q ${cx + 40} ${by - 2} ${cx - 200} ${by - 8}z" fill="#3c8fc4"/>
+    <path d="M${cx - 150} ${by - 22} q30 -6 60 0 M${cx - 20} ${by - 24} q30 -6 60 0 M${cx + 100} ${by - 26} q30 -6 60 0" stroke="#bfe6ff" stroke-width="3" fill="none" opacity=".8"/>
+    ${palm(cx - 150, 120)}${palm(cx - 70, 150)}${palm(cx + 90, 135)}${palm(cx + 165, 110)}
+    <rect x="${cx - 30}" y="${by - 62}" width="70" height="20" fill="#3f7a3a"/><rect x="${cx - 30}" y="${by - 62}" width="70" height="20" fill="none" stroke="#7a5230" stroke-width="3"/></g>`;
 }
 /* زائر بسيط يمشي (phase يحرك الساقين) */
 function person(x, by, col = '#f6e7c9', phase = 0, k = 1) {
@@ -124,35 +130,35 @@ function curtain(x0, x1, y0, y1, frac) {
 
 /* ---------- الديوراما الكاملة (المشهد البطل) ---------- */
 // الحالة الكاملة للعرض عند الزمن t (دورة ٤٠ ث)، تُحسب من t وحده
-const HP = 40;
+const HP = 65, SW = 11.5;            // دورة المشهد، ومدة كل محطة (أطول مقطع محطة ١٠٫٧ ث)
+const WIN = [[11.5, 23], [25, 36.5], [38.5, 50]];
 function heroState(t) {
   const ph = t % HP, loop = Math.floor(t / HP);
-  const cur = ph < 3 ? 0 : ph < 7 ? (ph - 3) / 4 : ph < 36 ? 1 : ph < 39 ? 1 - (ph - 36) / 3 : 0;
-  const win = [[9, 15], [17, 23], [25, 31]];
+  const cur = ph < 5 ? 0 : ph < 9.5 ? (ph - 5) / 4.5 : ph < 62 ? 1 : 1 - (ph - 62) / 3;
   let st = -1, since = 0;
-  win.forEach(([a, b], i) => { if (ph >= a && ph < b) { st = i; since = ph - a; } });
-  const path = [[7, 1760], [9, ST[0].x], [15, ST[0].x], [17, ST[1].x], [23, ST[1].x], [25, ST[2].x], [31, ST[2].x], [33, 250], [37, 250], [39.5, -80]];
+  WIN.forEach(([a, b], i) => { if (ph >= a && ph < b) { st = i; since = ph - a; } });
+  const path = [[9.5, 1760], [11.5, ST[0].x], [23, ST[0].x], [25, ST[1].x], [36.5, ST[1].x], [38.5, ST[2].x], [50, ST[2].x], [52, 250], [62, 250], [64.5, -80]];
   let vx = null, walking = false;
-  if (ph >= 7 && ph < 39.5) for (let i = 0; i < path.length - 1; i++) {
+  if (ph >= 9.5 && ph < 64.5) for (let i = 0; i < path.length - 1; i++) {
     const [ta, xa] = path[i], [tb, xb] = path[i + 1];
     if (ph >= ta && ph < tb) { vx = lerp(xa, xb, ease((ph - ta) / (tb - ta))); walking = xa !== xb; }
   }
   const choice = 1 + loop % 3;
-  const press = ph >= 33.5 && ph < 34.2;
-  const result = ph >= 33.5 && ph < 37;
+  const press = ph >= 53.5 && ph < 54.2;
+  const result = ph >= 53.5 && ph < 62;
   let track = 0;
-  if (ph < 3) track = 1;
+  if (ph < 9.5) track = 1;
   else if (st >= 0 && since > .8) track = ST[st].trk;
   else if (result) track = BTN[choice].trk;
   const pkt = st >= 0 && since < .8 ? since / .8 : -1;
   let cap;
-  if (ph < 3) cap = ['🎙️', 'يبدأ النظام… وبعد ١٠ ثوانٍ من التشغيل يرحّب بالزوار تلقائيًا (' + L('0001.mp3') + ')'];
-  else if (ph < 7) cap = ['⚙️', 'المحرك الخطوي 28BYJ-48 يفتح الستارة… والدرعية تنبض في الليل'];
-  else if (st >= 0) cap = since < .8 ? ['📡', `حساس IR عند «${ST[st].n}» رأى الزائر ← لوحة الحساسات ترسل ${L("'" + ST[st].trk + "'")} لاسلكيًا عبر ESP-NOW`]
-    : ['💡', `المحطة ${AR(st + 1)} · ${ST[st].n}: كشّاف يضيء + ألوان RGB تدور + الراوي يحكي (${L('000' + ST[st].trk + '.mp3')}) · تبقى ${AR(Math.ceil(HOLD - since * 2))} ث`];
-  else if (ph >= 31 && ph < 33.5) cap = ['🤔', 'لحظة القرار: كيف نحافظ على تراث الدرعية للأجيال القادمة؟'];
-  else if (result) cap = ['🗳️', `الزائر اختار «${BTN[choice].n}» ← يُشغَّل صوت النتيجة ${L('000' + BTN[choice].trk + '.mp3')}: ${BTN[choice].r}`];
-  else if (ph >= 36) cap = ['🌙', 'الستارة تُغلق… وتنتظر الزائر التالي'];
+  if (ph < 5) cap = ['🎙️', 'يبدأ النظام… ويرحّب بالزوار تلقائيًا (' + L('0001.mp3') + ')'];
+  else if (ph < 9.5) cap = ['⚙️', 'المحرك الخطوي 28BYJ-48 يفتح الستارة… والدرعية تنبض في الليل'];
+  else if (st >= 0) cap = since < .8 ? ['📡', `حساس IR عند «${ST[st].n}» رأى الزائر ← إرسال ${L("'" + ST[st].trk + "'")} لاسلكيًا عبر ESP-NOW`]
+    : ['💡', `${ST[st].n}: الكشاف والألوان + الراوي (${L('000' + ST[st].trk + '.mp3')}) · تبقى ${AR(Math.max(0, Math.ceil(12 - since)))} ث`];
+  else if (ph >= 50 && ph < 53.5) cap = ['🤔', 'لحظة القرار: كيف نحافظ على تراث الدرعية للأجيال القادمة؟'];
+  else if (result) cap = ['🗳️', `الزائر اختار «${BTN[choice].n}» ← صوت النتيجة ${L('000' + BTN[choice].trk + '.mp3')}`];
+  else if (ph >= 62) cap = ['🌙', 'الستارة تُغلق… وتنتظر الزائر التالي'];
   else cap = ['🚶', 'الزائر يتنقل… والنظام يراقب أين يقف'];
   return { ph, cur, st, since, vx, walking, choice, press, result, track, pkt, cap };
 }
@@ -161,7 +167,7 @@ function heroSVG(t) {
   const by = 420;
   const stations = ST.map((s, i) => {
     const on = S.st === i, c = css(hueRGB(hue + i * 40));
-    const art = i === 0 ? palace(s.x, by) : i === 1 ? market(s.x, by) : guard(s.x, by);
+    const art = i === 0 ? palace(s.x, by) : i === 1 ? mosque(s.x, by) : wadi(s.x, by);
     return `<g>${on ? `<path d="M${s.x - 26} 92 L${s.x - 190} ${by + 10} L${s.x + 190} ${by + 10} L${s.x + 26} 92z" fill="url(#dyCone)"/>` : ''}
       ${art}
       <rect x="${s.x - 210}" y="70" width="420" height="${by - 66}" fill="#050713" opacity="${on ? 0 : .62}"/>
@@ -170,8 +176,8 @@ function heroSVG(t) {
       ${irMod(s.x, by + 52, on && S.since < 2)}
       ${on && S.since < 2 ? `<path d="M${s.x} ${by + 66} L${s.x - 46} 640 L${s.x + 46} 640z" fill="#ff4d4d" opacity=".22"/>` : ''}
       <rect x="${s.x - 120}" y="${by + 82}" width="240" height="44" rx="8" fill="${on ? '#f0cc7a' : '#2a2416'}" stroke="#8a611f" stroke-width="2"/>
-      <text x="${s.x}" y="${by + 112}" class="dyt" style="font-size:22px;fill:${on ? '#2a1a05' : '#c9b48a'}">${AR(i + 1)}. ${s.n}</text>
-      ${on ? `<rect x="${s.x - 120}" y="${by + 130}" width="${240 * (1 - S.since / 6)}" height="6" rx="3" fill="#7ee2a8"/>` : ''}</g>`;
+      <text x="${s.x}" y="${by + 112}" class="dyt" style="font-size:${s.n.length > 14 ? 17 : 22}px;fill:${on ? '#2a1a05' : '#c9b48a'}">${AR(i + 1)}. ${s.n}</text>
+      ${on ? `<rect x="${s.x - 120}" y="${by + 130}" width="${240 * (1 - S.since / SW)}" height="6" rx="3" fill="#7ee2a8"/>` : ''}</g>`;
   }).join('');
   const pk = S.pkt >= 0 ? (() => { const k = S.pkt, x = lerp(115, 290, k), y = 112 - Math.sin(k * Math.PI) * 70;
     return `<g transform="translate(${x} ${y})"><circle r="26" fill="#7ee2a8" opacity=".3"/><rect x="-18" y="-15" width="36" height="30" rx="6" fill="#7ee2a8"/><text y="9" class="dyt" style="font-size:22px;fill:#06301b;font-family:monospace;direction:ltr">'${ST[S.st].trk}'</text></g>`; })() : '';
@@ -297,12 +303,12 @@ function irSVG(t, man) {
   return `${DEFS}<rect width="840" height="520" fill="url(#dySky)"/>${stars(20, 840, 100)}
     <rect x="20" y="60" width="800" height="250" rx="12" fill="#0a0c14" stroke="#2a2416" stroke-width="6"/>
     ${ST.map((s, i) => { const on = sim.act === i + 1, hit = pr.p[i], c = css(hueRGB(now * 1000 / HUE_MS + i * 40));
-      const art = i === 0 ? palace(xs[i], 290, .55) : i === 1 ? `<g transform="translate(${xs[i]} 290) scale(.55) translate(${-xs[i]} -290)">${market(xs[i], 290)}</g>` : `<g transform="translate(${xs[i]} 290) scale(.55) translate(${-xs[i]} -290)">${guard(xs[i], 290)}</g>`;
+      const art = i === 0 ? palace(xs[i], 290, .55) : i === 1 ? `<g transform="translate(${xs[i]} 290) scale(.55) translate(${-xs[i]} -290)">${mosque(xs[i], 290)}</g>` : `<g transform="translate(${xs[i]} 290) scale(.55) translate(${-xs[i]} -290)">${wadi(xs[i], 290)}</g>`;
       return `<g>${on ? `<path d="M${xs[i] - 14} 74 L${xs[i] - 115} 300 L${xs[i] + 115} 300 L${xs[i] + 14} 74z" fill="url(#dyCone)"/>` : ''}${art}
         <rect x="${xs[i] - 128}" y="64" width="256" height="242" fill="#050713" opacity="${on ? 0 : .6}"/>
         ${on ? `<circle cx="${xs[i]}" cy="300" r="12" fill="${c}"/><circle cx="${xs[i]}" cy="300" r="40" fill="${c}" opacity=".3"/>` : ''}
         ${irMod(xs[i], 336, hit, 1.1)}${hit ? `<path d="M${xs[i]} 350 L${xs[i] - 34} 470 L${xs[i] + 34} 470z" fill="#ff4d4d" opacity=".25"/>` : ''}
-        <text x="${xs[i]}" y="40" class="dyt" style="font-size:22px;fill:${on ? '#f0cc7a' : '#8f98b8'}">${AR(i + 1)}. ${s.n}</text>
+        <text x="${xs[i]}" y="40" class="dyt" style="font-size:${s.n.length > 14 ? 18 : 22}px;fill:${on ? '#f0cc7a' : '#8f98b8'}">${AR(i + 1)}. ${s.n}</text>
         ${hit ? person(xs[i] + (pr.v2 === i ? -40 : 0), 505, pr.v2 === i ? '#cfe3ff' : '#f6e7c9', 0, .9) : ''}</g>`; }).join('')}`;
 }
 
@@ -374,7 +380,7 @@ function decSVG(t, sel, script, now) {
 const wrapCap = id => `<div class="dycap" id="${id}"><span class="i"></span><span class="tx"></span></div>`;
 window.DECK_TYPES = Object.assign(window.DECK_TYPES || {}, {
   dyhero: s => `<div class="slide dark dyhero">
-      <div class="kicker">${s.kicker}</div>
+      <div class="kicker">${s.kicker}</div><button class="dysnd ix" id="dysnd">🔇 الصوت مغلق</button>
       <h1 class="dyh1">${s.title}</h1>
       <div class="dygif dyherow"><svg viewBox="0 0 1700 720" class="dysvg" id="dyhs"></svg>${wrapCap('dyhc')}</div></div>`,
 
@@ -429,7 +435,7 @@ window.DECK_TYPES = Object.assign(window.DECK_TYPES || {}, {
       <div class="dylab">
         <div class="dygif ix"><svg viewBox="0 0 860 520" class="dysvg" id="dyns"></svg></div>
         <div class="dyside ix">
-          <div class="dytracks" id="dynt">${TRACKS.map((x, i) => `<div data-t="${i + 1}"><code>000${i + 1}.mp3</code><span>${x}</span></div>`).join('')}</div>
+          <div class="dytracks" id="dynt">${TRACKS.map((x, i) => `<div data-t="${i + 1}" class="${i > 7 ? 'new' : ''}"><button class="dyplay" data-audio="${SND(i + 1)}" data-n="${i + 1}">▶</button><code>${String(i + 1).padStart(4, '0')}.mp3</code><span>${x}</span></div>`).join('')}</div>
           <div class="dybtns">${ST.map((x, i) => `<button class="dyb" data-s="${i}">أرسل '${x.trk}'</button>`).join('')}</div>
           <div class="dyfacts"><div><span>حجم الرسالة</span><b>١ بايت</b></div><div class="g"><span>راوتر؟</span><b>لا يلزم</b></div></div>
         </div></div></div>`,
@@ -439,7 +445,7 @@ window.DECK_TYPES = Object.assign(window.DECK_TYPES || {}, {
       <h2 class="title" style="margin-bottom:12px">${s.title}</h2>
       <div class="dylab">
         <div class="dyside dyarc ix">
-          <div class="dypanel">${BTN.map((b, i) => `<button class="dyarcade" data-b="${i}" style="--c:${b.c}"><i></i><b>${b.n}</b><small>GPIO ${b.pin}</small></button>`).join('')}</div>
+          <div class="dypanel">${BTN.map((b, i) => `<button class="dyarcade" data-b="${i}" data-audio="${SND(b.trk)}" style="--c:${b.c}"><i></i><b>${b.n}</b><small>GPIO ${b.pin}</small></button>`).join('')}</div>
           <div class="dyres" id="dyres"><code></code><span></span></div>
         </div>
         <div class="dygif ix"><svg viewBox="0 0 760 420" class="dysvg" id="dyds"></svg></div>
@@ -465,7 +471,11 @@ const setCap = (el, [i, tx]) => { el.querySelector('.i').textContent = i; el.que
 window.DECK_BIND = Object.assign(window.DECK_BIND || {}, {
   dyhero(sl) {
     const svg = sl.querySelector('#dyhs'), cap = sl.querySelector('#dyhc');
-    runLoop(t => { svg.innerHTML = heroSVG(t); setCap(cap, heroState(t).cap); }, HP);
+    const btn = sl.querySelector('#dysnd'); let on = false, lastTrk = 0;
+    btn.onclick = () => { on = !on; btn.textContent = on ? '🔊 الصوت يعمل' : '🔇 الصوت مغلق'; btn.classList.toggle('on', on); if (!on) stopSnd(); lastTrk = 0; };
+    runLoop(t => { svg.innerHTML = heroSVG(t); const S = heroState(t); setCap(cap, S.cap);
+      if (on && S.track && S.track !== lastTrk) playSnd(S.track); lastTrk = S.track; }, HP);
+    window.DECK_CLEANUP.push(stopSnd);
   },
   dysystem(sl) {
     const svg = sl.querySelector('#dyss'), info = sl.querySelector('#dysi');
@@ -524,7 +534,9 @@ window.DECK_BIND = Object.assign(window.DECK_BIND || {}, {
   dynow(sl) {
     const svg = sl.querySelector('#dyns'), rows = sl.querySelectorAll('.dytracks div');
     let man = null, tNow = 0;
-    sl.querySelectorAll('.dyb[data-s]').forEach(b => b.onclick = () => { man = { st: +b.dataset.s, t0: tNow }; });
+    sl.querySelectorAll('.dyb[data-s]').forEach(b => b.onclick = () => { man = { st: +b.dataset.s, t0: tNow }; playSnd(ST[+b.dataset.s].trk); });
+    sl.querySelectorAll('.dyplay').forEach(b => b.onclick = () => playSnd(+b.dataset.n));
+    window.DECK_CLEANUP.push(stopSnd);
     runLoop(t => { tNow = t; let S = nowState(t, man); if (man && S.k > 4) { man = null; S = nowState(t); }
       svg.innerHTML = nowSVG(t, S); const tr = S.k >= .9 && S.k < 3.8 ? ST[S.st].trk : 0;
       rows.forEach(r => r.classList.toggle('on', +r.dataset.t === tr)); }, NP);
@@ -533,9 +545,10 @@ window.DECK_BIND = Object.assign(window.DECK_BIND || {}, {
     const svg = sl.querySelector('#dyds'), res = sl.querySelector('#dyres');
     let man = null, tNow = 0, sel = 1;
     const btns = sl.querySelectorAll('.dyarcade');
+    window.DECK_CLEANUP.push(stopSnd);
     btns.forEach(b => {
       const i = +b.dataset.b;
-      const down = e => { e.preventDefault(); if (!man) man = { t0: tNow, script: [] }; sel = i; man.script.push([i, tNow - man.t0, 1e9]); };
+      const down = e => { e.preventDefault(); playSnd(BTN[i].trk); if (!man) man = { t0: tNow, script: [] }; sel = i; man.script.push([i, tNow - man.t0, 1e9]); };
       const up = () => { if (!man) return; const s = man.script.filter(x => x[0] === i && x[2] === 1e9).pop(); if (s) s[2] = tNow - man.t0; };
       b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up); b.addEventListener('pointerleave', up);
     });

@@ -115,3 +115,13 @@
 .numlist .it h3{font-size:34px}
 .numlist .it p{font-size:28px}
 .dym{direction:ltr;unicode-bidi:isolate}
+
+/* الصوت */
+.dysnd{position:absolute;top:66px;left:130px;font:800 24px "Cairo",sans-serif;padding:10px 22px;border-radius:999px;border:2px solid var(--gold);background:rgba(10,18,48,.6);color:var(--gold-light);cursor:pointer;z-index:3}
+.dysnd.on{background:var(--gold);color:var(--navy-900)}
+.dytracks div{padding:1px 8px;font-size:20px}
+.dytracks code{font-size:18px}
+.dytracks div.new span{color:#1d5e40}
+.dyplay{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--navy-700);color:#fff;font-size:15px;cursor:pointer}
+.dytracks div.on .dyplay{background:var(--gold-dark)}
+.capture .dysnd{display:none}
