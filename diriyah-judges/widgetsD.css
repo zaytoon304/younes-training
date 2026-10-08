@@ -1,0 +1,117 @@
+/* أدوات عرض «نبض الدرعية ولياليها» — البادئة dy */
+.dyt{text-anchor:middle;font-family:"Cairo",sans-serif;font-weight:800;direction:rtl}
+.dysvg{width:100%;height:auto;display:block}
+
+/* المشهد البطل */
+.dyhero{padding-top:60px}
+.dyhero .kicker{align-self:center;margin-bottom:6px}
+.dyh1{font-size:58px;font-weight:900;text-align:center;color:var(--gold-light);margin-bottom:8px;line-height:1.3}
+.dyherow{width:1450px;align-self:center;border-radius:22px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.5);background:#070a1c}
+.dycap{display:flex;align-items:center;gap:16px;background:#0f1733;color:#f3ead2;font-size:28px;font-weight:700;padding:10px 26px;min-height:64px;border-top:2px solid #2e4288}
+.dycap .i{font-size:34px}
+
+/* المنظومة */
+.dysys{flex:1;display:grid;grid-template-columns:1.6fr .75fr;gap:30px;min-height:0;align-items:start}
+.dysys .dygif{border-radius:22px;overflow:hidden;box-shadow:0 16px 40px rgba(16,27,69,.25)}
+.dyinfo{background:#fff;border:3px solid var(--line);border-radius:22px;padding:30px;min-height:420px;box-shadow:0 10px 30px rgba(16,27,69,.08)}
+.dyinfo .ic{font-size:80px;line-height:1.2}
+.dyinfo h3{font-size:40px;font-weight:900;color:var(--navy-800);margin:8px 0 14px}
+.dyinfo p{font-size:31px;line-height:1.6;color:#3b4460;font-weight:600}
+
+/* المختبرات: مشهد + لوحة جانبية */
+.dylab{flex:1;display:grid;grid-template-columns:1.25fr .9fr;gap:30px;min-height:0;align-items:start}
+.dylab>.dygif{border-radius:22px;overflow:hidden;box-shadow:0 16px 40px rgba(16,27,69,.25)}
+.dyside{display:flex;flex-direction:column;gap:16px}
+.dyfacts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dyfacts>div{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 18px;display:flex;flex-direction:column}
+.dyfacts span{font-size:22px;color:var(--muted);font-weight:700}
+.dyfacts b{font-size:36px;color:var(--navy-800);font-weight:900}
+.dyfacts .g{background:#fbf3dd;border-color:var(--gold)}
+.dyfacts .g b{color:var(--gold-dark)}
+.dysl{display:flex;flex-direction:column;gap:6px;font-size:25px;font-weight:700;color:var(--navy-700);background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 18px}
+.dysl b{font-family:"JetBrains Mono",monospace;color:var(--gold-dark)}
+.dysl input{width:100%;accent-color:var(--gold-dark)}
+.dybtns{display:flex;flex-wrap:wrap;gap:10px}
+.dyb{font:800 24px "Cairo",sans-serif;padding:10px 20px;border-radius:14px;border:3px solid var(--navy-600);background:#fff;color:var(--navy-700);cursor:pointer}
+.dyb.on{background:var(--navy-700);color:#fff}
+.dyb.ghost{border-color:var(--gold);color:var(--gold-dark)}
+
+/* جدول نصف الخطوة */
+.dyseq{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#0d1226;border-radius:16px;padding:12px}
+.dyseq .r{display:flex;align-items:center;gap:4px;padding:4px 6px;border-radius:8px;direction:ltr}
+.dyseq .r b{color:#7f8bb8;font-size:17px;width:20px}
+.dyseq .r i{font:700 18px "JetBrains Mono",monospace;font-style:normal;color:#56607e;width:18px;text-align:center}
+.dyseq .r i.on{color:#ff6b6b}
+.dyseq .r.now{background:#f0cc7a}
+.dyseq .r.now i,.dyseq .r.now b{color:#2a1a05}
+.dyser{background:#05080f;border-radius:14px;padding:12px 18px;font:700 21px "JetBrains Mono",monospace;color:#5fd38d;direction:ltr;min-height:150px}
+.dyser .last{color:#b6ffcf}
+.dyser .last::after{content:"▌";animation:caret .8s steps(1) infinite}
+
+/* الحساسات */
+.dypins{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dypins>div{background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px;text-align:center;display:flex;flex-direction:column}
+.dypins code{font:700 20px "JetBrains Mono",monospace;color:var(--muted)}
+.dypins b{font:800 30px "JetBrains Mono",monospace;color:var(--navy-700)}
+.dypins span{font-size:20px;font-weight:700;color:var(--muted)}
+.dypins .lo{background:#fdeaea;border-color:#d64545}
+.dypins .lo b{color:#c0392b}
+.dydec{background:var(--navy-800);color:#fff;border-radius:16px;padding:14px 20px;display:flex;flex-direction:column;gap:4px;min-height:118px}
+.dydec b{font-size:32px;color:var(--gold-light)}
+.dydec span{font-size:23px;font-weight:600;line-height:1.45}
+.dyhold{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;color:var(--navy-700)}
+.dyhold .bar{flex:1;height:18px;background:#e7e2d4;border-radius:9px;overflow:hidden}
+.dyhold .bar i{display:block;height:100%;background:linear-gradient(90deg,#2e9e6b,#7ee2a8);border-radius:9px}
+.dyhold b{font-size:24px;width:90px}
+.dylog{background:#05080f;border-radius:14px;padding:10px 16px;font-size:20px;color:#b6ffcf;font-weight:600;min-height:120px}
+.dylog code{color:#f0cc7a;font-family:"JetBrains Mono",monospace;margin-left:8px}
+
+/* الإضاءة */
+.dywheel{position:relative;width:250px;height:250px;align-self:center}
+.dywheel .w{background:conic-gradient(from 0deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+.dywheel .p{position:absolute;left:50%;top:0;width:8px;height:50%;margin-left:-4px;background:#fff;border:2px solid #222;border-radius:4px;transform-origin:50% 100%}
+.dywheel .c{position:absolute;inset:55px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.dywheel .c b{font-size:44px;font-weight:900;color:var(--navy-800)}
+.dywheel .c span{font-size:18px;color:var(--muted);font-weight:700}
+
+/* ESP-NOW */
+.dytracks{background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 14px;display:flex;flex-direction:column;gap:2px}
+.dytracks div{display:flex;gap:16px;align-items:center;font-size:23px;font-weight:700;color:var(--muted);padding:3px 10px;border-radius:10px}
+.dytracks code{font:700 21px "JetBrains Mono",monospace;color:var(--navy-600);direction:ltr}
+.dytracks div.on{background:#f0cc7a;color:#2a1a05}
+
+/* أزرار القرار */
+.dyarc{gap:20px}
+.dypanel{display:grid;grid-template-columns:1fr 1fr;gap:18px;background:#1b1209;border-radius:22px;padding:24px;box-shadow:inset 0 0 0 6px #3a2a18}
+.dyarcade{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;color:#f3ead2;font-family:"Cairo",sans-serif;touch-action:none}
+.dyarcade i{width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),var(--c);box-shadow:0 10px 0 #0006,0 0 0 8px #2a2a2a;transition:transform .08s,box-shadow .08s}
+.dyarcade.down i{transform:translateY(8px);box-shadow:0 2px 0 #0006,0 0 0 8px #2a2a2a,0 0 40px var(--c)}
+.dyarcade b{font-size:30px;font-weight:900}
+.dyarcade small{font:700 18px "JetBrains Mono",monospace;color:#c9b48a}
+.dyres{border:3px solid var(--line);border-radius:18px;padding:14px 20px;background:#fff;display:flex;flex-direction:column;gap:4px;min-height:110px}
+.dyres code{font:800 30px "JetBrains Mono",monospace;color:var(--muted);direction:ltr;text-align:right}
+.dyres span{font-size:26px;font-weight:700;color:var(--navy-700)}
+.dyres.on{border-color:var(--c);box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 25%,transparent)}
+.dyres.on code{color:var(--c)}
+
+/* تطور التصميم */
+.dyevo{display:flex;align-items:stretch;gap:10px}
+.dyevo .e{flex:1;background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 22px;display:flex;flex-direction:column;gap:6px}
+.dyevo .e .n{align-self:flex-start;background:var(--navy-700);color:#fff;font-weight:900;font-size:22px;padding:2px 16px;border-radius:999px}
+.dyevo .e h3{font-size:31px;font-weight:900;color:var(--navy-800)}
+.dyevo .e p{font-size:23px;font-weight:600;color:#3b4460;line-height:1.45}
+.dyevo .e .why{margin-top:auto;font-size:21px;font-weight:700;color:#8e2a2a;background:#fbecec;border-radius:12px;padding:6px 12px}
+.dyevo .e.fin{border-color:var(--gold);background:#fbf3dd}
+.dyevo .e.fin .n{background:var(--gold-dark)}
+.dyevo .e.fin .why{color:#1d5e40;background:#e6f4ec}
+.dyevo .arr{align-self:center;font-size:44px;color:var(--gold-dark);font-weight:900}
+.dyimg{margin-top:18px;display:flex;align-items:center;gap:24px;background:#0d1226;border-radius:20px;padding:12px 24px;color:#c9cfe6;font-size:24px;font-weight:700}
+.dyimg img{height:230px;border-radius:12px}
+
+/* ضبط الأحجام في هذا العرض فقط (الجداول والقوائم الطويلة) */
+.tbl .th{font-size:30px;padding:12px 20px}
+.tbl .td{font-size:29px;padding:9px 20px}
+.cards .card{padding:34px 40px}
+.numlist .it h3{font-size:34px}
+.numlist .it p{font-size:28px}
+.dym{direction:ltr;unicode-bidi:isolate}

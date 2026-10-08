@@ -592,9 +592,11 @@ C.modules.forEach((m, mi) => m.slides.forEach(raw => {
     if (!shot) throw new Error(`الشريحة ${n} (${sl.t}) لم تُصوَّر بعد: شغّل capture-pptx.js أولًا`);
     s.addImage({ path: path.join(CACHE, shot.base), x: 0, y: 0, w: W, h: 7.5 });
     shot.layers.forEach((f, k) => s.addImage({ path: path.join(CACHE, f), x: 0, y: 0, w: W, h: 7.5, objectName: `anim-g${k + 1}-${++uid}` }));
+    // مشهد متحرك: صورة GIF فوق مكانه في لقطة الشريحة، تتحرك وحدها أثناء العرض
+    if (shot.gif) s.addImage({ path: path.join(CACHE, shot.gif.file), x: shot.gif.x * W, y: shot.gif.y * 7.5, w: shot.gif.w * W, h: shot.gif.h * 7.5 });
     // أصوات: ملف صوتي شفاف فوق زر ▶ في الصورة، يعمل بالنقر عليه أثناء العرض
     (shot.audio || []).forEach(a => s.addMedia({ type: 'audio', path: path.join(DIR, a.src), x: a.x * W, y: a.y * 7.5, w: a.w * W, h: a.h * 7.5, cover: CLEAR, objectName: `audio-${++uid}` }));
-    const tip = shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
+    const tip = shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : shot.gif ? '🎬 المشهد يتحرك وحده أثناء العرض، وهو تفاعلي بالكامل في منصة جذور.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
     s.addNotes(((sl.notes || '') + '\n\n' + tip).trim());
   }
 }));

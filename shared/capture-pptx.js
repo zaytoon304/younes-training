@@ -21,6 +21,7 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
   fs.rmSync(OUT, { recursive: true, force: true }); fs.mkdirSync(OUT, { recursive: true });
   const b = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
   const pg = await b.newPage(); await pg.setViewport({ width: 1600, height: 900 });
+  pg.on('error', e => console.log('\n⚠️ تعطلت الصفحة:', e.message));
   await pg.goto('file:///' + path.join(DIR, 'index.html').replace(/\\/g, '/').replace(/^\//, ''), { waitUntil: 'networkidle0' });
   await new Promise(r => setTimeout(r, 1200));
   const types = await pg.evaluate(() => SLIDES.map(s => s.t));
@@ -48,6 +49,25 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
       return [...document.querySelectorAll('#stage .slide [data-audio]')].map(e => { const r = e.getBoundingClientRect();
         return { src: e.dataset.audio, x: (r.left - st.left) / st.width, y: (r.top - st.top) / st.height, w: r.width / st.width, h: r.height / st.height }; }); });
     if (audio.length) manifest[i].audio = audio;
+    // المشاهد المتحركة (window.DY_ANIM + عنصر .dygif): تُصوَّر إطارًا إطارًا وتصير صورة GIF تتحرك داخل البوربوينت
+    const anim = await pg.evaluate(() => { const a = window.DY_ANIM, el = document.querySelector('#stage .dygif');
+      if (!a || !el) return null; const st = document.getElementById('stage').getBoundingClientRect(), r = el.getBoundingClientRect();
+      return { period: a.period, fps: SLIDES[cur].gifFps, clip: { x: r.left, y: r.top, width: r.width, height: r.height },
+        x: (r.left - st.left) / st.width, y: (r.top - st.top) / st.height, w: r.width / st.width, h: r.height / st.height }; });
+    if (anim && !process.env.NOGIF) {
+      const fps = anim.fps || Math.min(10, Math.max(3, 180 / anim.period)), n = Math.round(anim.period * fps);
+      const fdir = path.join(OUT, `f${i + 1}`); fs.mkdirSync(fdir, { recursive: true });
+      await pg.evaluate(() => { window.DY_HOLD = true; });
+      for (let k = 0; k < n; k++) {
+        await pg.evaluate(t => window.DY_ANIM.draw(t), k / fps);
+        await pg.screenshot({ path: path.join(fdir, String(k).padStart(4, '0') + '.png'), clip: anim.clip });
+      }
+      await pg.evaluate(() => { window.DY_HOLD = false; });
+      const gif = `s${i + 1}.gif`;
+      require('child_process').execFileSync(process.env.PYTHON || 'python', [path.join(__dirname, 'make-gif.py'), fdir, path.join(OUT, gif), String(fps), '960'], { stdio: 'inherit' });
+      fs.rmSync(fdir, { recursive: true, force: true });
+      manifest[i].gif = { file: gif, x: anim.x, y: anim.y, w: anim.w, h: anim.h };
+    }
     process.stdout.write(`\r${i + 1}/${types.length}`);
   }
   fs.writeFileSync(path.join(OUT, 'manifest.json'), JSON.stringify(manifest));
