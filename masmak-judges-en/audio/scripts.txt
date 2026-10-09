@@ -4,3 +4,5 @@ f0.mp3: These are the four towers of Masmak… guardians of mud brick at the cor
 f1.mp3: This is the open courtyard… the heart of the fortress, surrounded by rooms, where the people of the fortress gathered.
 f2.mp3: This is the Masmak mosque… with its mud pillars, and a roof of tamarisk wood and palm fronds.
 f3.mp3: And this is the majlis… where people gathered, guests were welcomed, and Arabic coffee was served.
+ff1.mp3: The fire is bigger than expected. The leader and robot two spray, but the fire keeps growing. Time runs out, so the leader decides by itself that it needs help. It sends a Telegram message to Civil Defense, and both robots back away safely. The firefighter arrives, and leads two more robots with his hand in front of the laptop camera, until the fire is out… and the museum is safe.
+ff2.mp3: An open hand: both robots advance. A fist: they stop and start spraying. Move the fist right: the hose rises. Move it left: it lowers to the base of the fire. And if the hand disappears from the camera… everything stops. Safety first.

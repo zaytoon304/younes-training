@@ -16,6 +16,7 @@
     { id: 'eyes', name: '👁️ تتبع العين', s: [S(67), S(68)] },
     { id: 'tour', name: '🦽 القرار والجولة', s: [S(77), S(78)] },
     { id: 'safety', name: '🛡️ روبوتا السلامة', s: [T('masmakhero'), T('decisionlab'), after(T('decisionlab')), T('missionlab'), after(T('missionlab')), T('alertlcd'), T('tgphone'), T('cards', 'قواعد تحمي المتحف')] },
+    { id: 'firefighter', name: '🚒 رجل الإطفاء', s: [T('ffhero'), T('cards', 'كل روبوت يعمل'), T('code', 'متى يطلب القائد'), T('gesturelab'), T('code', 'MediaPipe')] },
     { id: 'end', name: '🏆 التحديات', s: [T('table', 'خمسة تحديات'), T('end')] },
   ];
   DECK.modules.length = 0;

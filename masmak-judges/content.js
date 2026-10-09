@@ -11,7 +11,7 @@ root.DECK = {
   author: 'فريق al arqam innovators · مدارس الأرقم',
   sectionLabel: 'المحور',
   mapStart: 0,
-  parts: ['00-open', '01-system', '02-esp32', '03-turntable', '04-leds', '05-screen', '06-udp', '07-eyes', '08-tour', '09-flame', '10-gas', '11-station', '12-car', '12b-relay', '13-espnow', '14-decision', '15a-path', '15b-mission', '15c-alert', '16-final']
+  parts: ['00-open', '01-system', '02-esp32', '03-turntable', '04-leds', '05-screen', '06-udp', '07-eyes', '08-tour', '09-flame', '10-gas', '11-station', '12-car', '12b-relay', '13-espnow', '14-decision', '15a-path', '15b-mission', '15c-alert', '15d-firefighter', '16-final']
     .map(p => '../../turath/parts/' + p).concat(['../pick']),
   modules: [],
 };

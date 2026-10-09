@@ -236,15 +236,88 @@ void fireMission() {
     ],
     notes: 'Each rule answers a “what if?”: what if the fire does not go out? What if the link drops? What if a message is lost? This is how engineers design real safety systems.' },
 ]});
+DECK.modules.push({ id: 'firefighter', name: '🚒 The firefighter', slides: [
+  { t: 'ffhero', kicker: '🚒 When the fire is bigger than the robots', title: 'The leader calls for help… the firefighter leads by hand',
+    notes: 'Let the scene run: the leader and robot 2 spray, but the fire keeps growing. The time limit (30 seconds) ends, so the leader decides by itself that it needs help and sends a Telegram message: “We could not control the fire… urgent support needed”, then both robots back away safely. The firefighter arrives with two more robots: robot 3 carries a hose and an ESP32-CAM streaming the fire to the laptop; robot 4 carries a hose only. He opens his hand at the laptop camera and they advance; he makes a fist and they stop and spray; he moves the fist right and left and the hose rises and lowers. The fire goes out, and a second message arrives: “The museum is safe.”' },
+  { t: 'cards', kicker: '🤖 Four robots… four ways', title: 'Each robot works in a different way', cols: 2,
+    cards: [
+      { icon: '🔴', h: 'Leader: decides alone', b: 'Puts out the fire, assigns tasks, and calls for help by Telegram when it is not enough' },
+      { icon: '🔵', h: 'Robot 2: follows orders', b: 'Moves only with the leader’s permission, and handles the gas' },
+      { icon: '📷', h: 'Robot 3: the firefighter’s eye', b: 'A hose on a servo + an ESP32-CAM streaming the fire to the laptop' },
+      { icon: '🧯', h: 'Robot 4: an extra hose', b: 'A hose on a servo, moving with robot 3 by the same hand gestures' },
+    ],
+    notes: 'The core idea for a security exhibition: autonomous robots that know their limits and ask for help, and a human who leads other robots from a safe distance without approaching the fire.' },
+  { t: 'code', reveal: true, kicker: '✍️ The leader knows its limits', title: 'When does the leader call for help?', file: 'Leader.ino',
+    code: `const unsigned long MAX_SPRAY_MS = 30000;   // 30 seconds at most
+
+void fireMission() {
+  unsigned long trip = goToStrip();
+  unsigned long start = millis();
+  pumpOn();
+  while (fireLevel() > 50) {                   // is the fire still there?
+    if (millis() - start > MAX_SPRAY_MS) {     // time is up
+      pumpOff();
+      sendTelegram("We could not control the fire... urgent support needed");
+      break;
+    }
+  }
+  pumpOff();
+  driveBack(trip);                             // back away safely
+}`,
+    steps: [
+      { lines: [1], text: 'Spraying limit: 30 seconds at most' },
+      { lines: [4, 5, 6], text: 'Reach the fire, start counting, turn on the pump' },
+      { lines: [7], text: 'Spray as long as the station sees fire' },
+      { lines: [8, 9, 10], text: 'Time is up and the fire is still there? It decides alone: I need help' },
+      { lines: [10], text: 'A Telegram message to Civil Defense' },
+      { lines: [14, 15], text: 'Turn off the pump and back away safely' },
+    ],
+    notes: 'A real independent decision: the robot measures, compares with its limit, and decides the mission is bigger than itself. Knowing your limits is part of safety.' },
+  { t: 'gesturelab', title: 'The firefighter leads both robots by hand… safely',
+    notes: 'Try the buttons, or let the auto demo run: open hand and both robots advance, fist and they stop and spray, fist right and the hose rises, fist left and it lowers. The water puts out the fire faster when the hose is at the right angle. The picture on the laptop comes from the ESP32-CAM on robot 3.' },
+  { t: 'code', reveal: true, kicker: '✍️ Python: from the hand to the command', title: 'MediaPipe reads the hand', file: 'firefighter.py',
+    code: `import cv2, mediapipe as mp
+cam = cv2.VideoCapture(0)                    # laptop camera
+hands = mp.solutions.hands.Hands(max_num_hands=1)
+TIPS, JOINTS = [8, 12, 16, 20], [6, 10, 14, 18]
+last_x = None
+
+def is_fist(h):
+    return all(h[t].y > h[j].y for t, j in zip(TIPS, JOINTS))
+
+while True:
+    ok, frame = cam.read()
+    res = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    if not res.multi_hand_landmarks:
+        send("S"); continue                  # no hand: stop
+    h = res.multi_hand_landmarks[0].landmark
+    if not is_fist(h):
+        send("F"); last_x = None             # open hand: advance
+    else:
+        send("W")                            # fist: stop and spray
+        if last_x is not None and h[0].x - last_x > 0.04: send("U")
+        if last_x is not None and last_x - h[0].x > 0.04: send("D")
+        last_x = h[0].x`,
+    steps: [
+      { lines: [1, 2, 3], text: 'The laptop camera + MediaPipe Hands: 21 points on the hand' },
+      { lines: [4], text: 'Fingertips and their middle joints' },
+      { lines: [7, 8], text: 'A fist = every fingertip below its joint' },
+      { lines: [13, 14], text: 'No hand in front of the camera? A safety stop' },
+      { lines: [16, 17], text: 'Open hand: advance' },
+      { lines: [19], text: 'Fist: stop and spray' },
+      { lines: [20, 21, 22], text: 'Fist moving right or left: raise or lower the hose' },
+    ],
+    notes: 'Each command is one letter flying over the network to both robots, just like the eye commands of the Masmak model. And no hand means stop: safety first.' },
+]});
 DECK.modules.push({ id: 'end', name: '🏆 Challenges', slides: [
   { t: 'table', kicker: '🧯 Our challenges', title: 'Five challenges the team faced… and how we solved them',
     head: ['The challenge', 'The solution'], widths: ['1fr', '1.5fr'],
     rows: [
-      ['🎞️ Videos shorter than the audio (2–11 s)', 'Extend each video by freezing its last frame, keeping the originals'],
-      ['🌀 One lost message = over-rotation', 'Diagnosed from the logs, plus a watchdog that stops after one second of silence'],
-      ['👁️ Reversed pupil indices', 'Verified with raw coordinates instead of trusting common sources'],
+      ['🎞️ Videos shorter than audio', 'Froze each video’s last frame, keeping the originals'],
+      ['🌀 Lost message = over-rotation', 'Read the logs + a watchdog that stops after 1 s of silence'],
+      ['👁️ Reversed pupil indices', 'Checked raw coordinates instead of common sources'],
       ['🔈 Very quiet audio', 'Raised the volume in PipeWire and in the player'],
-      ['🔑 Forgotten Raspberry Pi password', 'Reset from the memory card without losing a single file'],
+      ['🔑 Forgotten Pi password', 'Reset from the SD card without losing a file'],
     ],
     notes: 'Judges love this table more than a feature list: it shows the team really built, made mistakes, understood, and fixed them.' },
   { t: 'end', title: 'Thank you', sub: 'We look at the past… with the eyes of the future',
