@@ -1,11 +1,11 @@
 /* =====================================================================
-   «لمسات تراث: حراسة المصمك بالروبوتات الذكية» — أدوات المرحلتين ١ و٢
+   «لمسات تراث: حراسة المصمك بالروبوتات الذكية» — أدوات المرحلتين 1 و2
    الأنواع: masmakhero · archlab · esp32lab · flamelab · mq2lab · stationlab
-   دوائر البناء: stationwire (محطة الأمان على ESP32)
+   دوائر البناء: stationwire (Safety station على ESP32)
    الأطراف من مشروع أ. محمد الحقيقي: لهب 32 · MQ-2 34 · LCD 21/22 · بازر 23 · أحمر 18 · أزرق 19
    ===================================================================== */
 (function () {
-const { AR, highlight, codeBlock } = window.ARD;
+const { highlight, codeBlock } = window.ARD; const AR = n => String(n);
 const { B2, wire } = window.ARD2;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const f0 = v => AR(Math.round(v));
@@ -40,7 +40,7 @@ const heroSVG = () => `<svg viewBox="0 0 1600 600" class="mhsvg">
   ${palm(160, 480, 1.1)}${palm(1450, 480, 1.2)}${palm(1300, 485, .8)}
   ${masmak(400, 140, 1)}
   <g transform="translate(1030 330)"><rect x="-44" y="-30" width="88" height="70" rx="8" class="stbox"/><rect x="-34" y="-20" width="68" height="24" rx="3" class="stlcd"/><text x="0" y="-3" class="stlcdt" id="mhlcd">SAFE</text>
-    <circle cx="-16" cy="22" r="7" class="ledr" id="mhr"/><circle cx="16" cy="22" r="7" class="ledb" id="mhb"/><text x="0" y="62" class="mhl">محطة الأمان</text></g>
+    <circle cx="-16" cy="22" r="7" class="ledr" id="mhr"/><circle cx="16" cy="22" r="7" class="ledb" id="mhb"/><text x="0" y="62" class="mhl">Safety station</text></g>
   <g id="mhfire" opacity="0" transform="translate(500 270)"><path d="M0 0 C -24 -40, 12 -70, 0 -110 C 40 -70, 34 -30, 0 0 Z" fill="#ff7043"/><path d="M0 -6 C -10 -30, 8 -44, 0 -66 C 18 -44, 16 -24, 0 -6 Z" fill="#ffd54f"/></g>
   <g id="mhgas" opacity="0">${[0, 1, 2, 3].map(i => `<circle cx="${1060 + i * 30}" cy="${400 - i * 18}" r="${30 + i * 8}" fill="#9ccc65" opacity=".35"/>`).join('')}</g>
   <g id="mhwater" opacity="0"><path d="M0 0 Q 60 -90 120 -60" fill="none" stroke="#4fc3f7" stroke-width="8" stroke-dasharray="10 8" class="spray"/></g>
@@ -56,18 +56,18 @@ const ARCH = [
   { k: 'st', x: 340, y: 185, i: '🧠', n: 'ESP32 المحطة', d: 'داخل نموذج المصمك: يقرأ الحساسين ويقرر ويرسل إلى السيارة.' },
   { k: 'out', x: 340, y: 360, i: '🚨', n: 'الإنذار', d: 'ليد أحمر للهب (18)، وأزرق للغاز (19)، وبازر (23)، وشاشة LCD (21 و22).' },
   { k: 'radio', x: 560, y: 185, i: '📡', n: 'ESP-NOW', d: 'اتصال لاسلكي مباشر بين لوحتي ESP32 بلا راوتر، برسالة قصيرة سريعة جدًا.' },
-  { k: 'car', x: 780, y: 185, i: '🚙', n: 'الروبوت ١', d: 'القائد: يستقبل الرسالة ويقرر. اللهب له دائمًا: يذهب بنفسه ويطفئ ثم يعود للخلف بالاتجاه نفسه. والغاز يأمر به الروبوت ٢ عبر ESP-NOW.' },
-  { k: 'car2', x: 890, y: 100, i: '🚙', n: 'الروبوت ٢', d: 'يحمل المروحة: لا يتحرك وحده، بل ينتظر إذن القائد ثم يذهب إلى الغاز ويعود إلى مكانه.' },
+  { k: 'car', x: 780, y: 185, i: '🚙', n: 'الروبوت 1', d: 'القائد: يستقبل الرسالة ويقرر. اللهب له دائمًا: يذهب بنفسه ويطفئ ثم يعود للخلف بالاتجاه نفسه. والغاز يأمر به الروبوت 2 عبر ESP-NOW.' },
+  { k: 'car2', x: 890, y: 100, i: '🚙', n: 'الروبوت 2', d: 'يحمل المروحة: لا يتحرك وحده، بل ينتظر إذن القائد ثم يذهب إلى الغاز ويعود إلى مكانه.' },
   { k: 'drive', x: 780, y: 360, i: '⚙️', n: 'L298N وأربعة محركات', d: 'ENA 33 · ENB 32 · IN1/IN2 27/26 · IN3/IN4 25/14 · والجانب الأيمن معكوس في الكود.' },
   { k: 'relay', x: 1000, y: 185, i: '🔌', n: 'ريليه مزدوج', d: 'يعمل على LOW: القناة الأولى (16) للمضخة، والثانية (17) للمروحة.' },
   { k: 'pump', x: 1000, y: 70, i: '💧', n: 'المضخة', d: 'تطفئ اللهب. موجب البطارية على COM، والمضخة على NO.' },
   { k: 'fan', x: 1000, y: 300, i: '🌀', n: 'المروحة', d: 'تبدد الغاز وتطرده من المكان.' },
 ];
 const ARCH_LINKS = [['flame', 'st'], ['mq2', 'st'], ['st', 'out'], ['st', 'radio'], ['radio', 'car'], ['car', 'car2'], ['car', 'drive'], ['car', 'relay'], ['relay', 'pump'], ['relay', 'fan']];
-const FLOW = [['flame', '١. حساس اللهب يرى نارًا'], ['st', '٢. ESP32 المحطة يقرأ: GPIO32 = LOW'], ['out', '٣. الليد الأحمر والبازر والشاشة: «FLAME!»'], ['radio', '٤. رسالة لاسلكية تطير إلى السيارة'], ['car', '٥. السيارة تقرر: اللهب أخطر حدث الآن'], ['drive', '٦. المحركات الأربعة تقود السيارة إلى المكان'], ['relay', '٧. الريليه يكتب LOW على القناة الأولى'], ['pump', '٨. المضخة تطفئ النار… والمحطة تعود «آمنة»']];
+const FLOW = [['flame', '1. حساس اللهب يرى نارًا'], ['st', '2. ESP32 المحطة يقرأ: GPIO32 = LOW'], ['out', '3. الليد الأحمر والبازر والشاشة: «FLAME!»'], ['radio', '4. رسالة لاسلكية تطير إلى السيارة'], ['car', '5. السيارة تقرر: اللهب أخطر حدث الآن'], ['drive', '6. المحركات الأربعة تقود السيارة إلى المكان'], ['relay', '7. الريليه يكتب LOW على القناة الأولى'], ['pump', '8. المضخة تطفئ النار… والمحطة تعود «آمنة»']];
 const archSVG = () => { const P = Object.fromEntries(ARCH.map(a => [a.k, a]));
   return `<svg viewBox="0 0 1120 440" class="archsvg">
-  <rect x="40" y="40" width="440" height="380" rx="24" class="zone1"/><text x="260" y="30" class="zt">محطة الأمان (داخل المصمك)</text>
+  <rect x="40" y="40" width="440" height="380" rx="24" class="zone1"/><text x="260" y="30" class="zt">Safety station (داخل المصمك)</text>
   <rect x="680" y="40" width="420" height="380" rx="24" class="zone2"/><text x="890" y="30" class="zt">روبوتا الإطفاء الذكيان</text>
   ${ARCH_LINKS.map(([a, b]) => `<line x1="${P[a].x}" y1="${P[a].y}" x2="${P[b].x}" y2="${P[b].y}" class="alink" data-l="${a}-${b}"/>`).join('')}
   ${ARCH.map(a => `<g class="anode" data-k="${a.k}" transform="translate(${a.x} ${a.y})"><circle r="44" class="acirc"/><text y="12" class="aico">${a.i}</text><text y="66" class="anm">${a.n}</text></g>`).join('')}
@@ -81,7 +81,7 @@ const USE = {
   table: { 'D26': ['STEP ← A4988', '#c0392b'], 'D25': ['DIR ← A4988', '#e67e22'], 'D27': ['EN ← A4988 (LOW = يعمل)', '#8e44ad'], 'D23': ['🌈 WS2812B', '#2ecc71'] },
   car: { 'D33': ['ENA (سرعة اليسار)', '#e0b400'], 'D32': ['ENB (سرعة اليمين)', '#e0b400'], 'D27': ['IN1', '#2e9e6b'], 'D26': ['IN2', '#2e9e6b'], 'D25': ['IN3', '#16a3b5'], 'D14': ['IN4', '#16a3b5'], 'RX2 16': ['💧 ريليه المضخة', '#2b6fc0'], 'TX2 17': ['🌀 ريليه المروحة', '#8e44ad'], 'D35': ['🔥 لهب السيارة (مدخل فقط)', '#e74c3c'] },
 };
-const PININFO = { 'VP 36': 'مدخل فقط · ADC', 'VN 39': 'مدخل فقط · ADC', 'D34': 'مدخل فقط · ADC: مثالي للحساسات التماثلية', 'D35': 'مدخل فقط · ADC', 'D12': '⚠️ طرف إقلاع: تجنّبه', 'D2': '⚠️ طرف إقلاع ومتصل بليد اللوحة', 'D15': '⚠️ طرف إقلاع', 'TX0': 'منفذ الحاسوب: لا تستخدمه', 'RX0': 'منفذ الحاسوب: لا تستخدمه', 'EN': 'زر إعادة التشغيل', '3V3': 'خرج ٣٫٣ فولت', 'VIN': 'دخل ٥ فولت', 'GND': 'الأرضي', 'D21': 'SDA الافتراضي لـ I2C', 'D22': 'SCL الافتراضي لـ I2C' };
+const PININFO = { 'VP 36': 'مدخل فقط · ADC', 'VN 39': 'مدخل فقط · ADC', 'D34': 'مدخل فقط · ADC: مثالي للحساسات التماثلية', 'D35': 'مدخل فقط · ADC', 'D12': '⚠️ طرف إقلاع: تجنّبه', 'D2': '⚠️ طرف إقلاع ومتصل بليد اللوحة', 'D15': '⚠️ طرف إقلاع', 'TX0': 'منفذ الحاسوب: لا تستخدمه', 'RX0': 'منفذ الحاسوب: لا تستخدمه', 'EN': 'زر إعادة التشغيل', '3V3': 'خرج 3.3 فولت', 'VIN': 'دخل 5 فولت', 'GND': 'الأرضي', 'D21': 'SDA الافتراضي لـ I2C', 'D22': 'SCL الافتراضي لـ I2C' };
 
 /* ================== أكواد ================== */
 const FLAME_CODE = `int flame = 32, red = 18, buzzer = 23;
@@ -122,10 +122,10 @@ const espBoard = (x, y) => `<g transform="translate(${x} ${y})"><rect width="150
   ${LEFT.map((p, i) => `<circle cx="12" cy="${100 + i * 13.5}" r="4" fill="#f0cc7a"/>`).join('')}${RIGHT.map((p, i) => `<circle cx="138" cy="${100 + i * 13.5}" r="4" fill="#f0cc7a"/>`).join('')}</g>`;
 const PR = n => 100 + RIGHT.indexOf(n) * 13.5, PL = n => 100 + LEFT.indexOf(n) * 13.5;
 B2.stationwire = { flow: 7, steps: [
-  { h: 'لوحة ESP32 ولوح التوصيل', b: 'لوحة ESP32 DevKit V1 بثلاثين طرفًا، وهي دماغ محطة الأمان.' },
+  { h: 'لوحة ESP32 ولوح التوصيل', b: 'لوحة ESP32 DevKit V1 بثلاثين طرفًا، وهي دماغ Safety station.' },
   { h: 'حساس اللهب ← GPIO32', b: 'VCC إلى 3V3، وGND إلى GND، وDO إلى D32.' },
-  { h: 'حساس الغاز MQ-2 ← GPIO34', b: 'AO إلى D34 (مدخل تماثلي فقط). سخّانه يحتاج ٥ فولت من VIN.' },
-  { h: 'الليد الأحمر ← 18 · الأزرق ← 19', b: 'كل ليد مع مقاومة ٢٢٠ أوم.' },
+  { h: 'حساس الغاز MQ-2 ← GPIO34', b: 'AO إلى D34 (مدخل تماثلي فقط). سخّانه يحتاج 5 فولت من VIN.' },
+  { h: 'الليد الأحمر ← 18 · الأزرق ← 19', b: 'كل ليد مع مقاومة 220 أوم.' },
   { h: 'البازر ← 23', b: 'بازر نشط يصفّر بإشارة HIGH.' },
   { h: 'الشاشة: SDA ← 21 · SCL ← 22', b: 'طرفا I2C الافتراضيان في ESP32.' },
   { h: 'شغّل المحطة!', b: 'المصمك آمن… حتى يظهر لهب أو غاز.' },
@@ -179,7 +179,7 @@ Object.assign(window.DECK_TYPES, {
             <path id="flcone" d="M124 180 L700 40 L700 320 Z" class="flcone"/>
             <g id="flcandle"><rect x="-12" y="0" width="24" height="70" rx="4" fill="#f4f1ea"/><line x1="0" y1="0" x2="0" y2="-8" stroke="#1b2340" stroke-width="3"/><g class="flick"><path d="M0 -6 C -14 -28, 6 -44, 0 -66 C 20 -40, 16 -22, 0 -6 Z" fill="#ff7043"/><path d="M0 -10 C -6 -24, 4 -32, 0 -44 C 10 -30, 8 -20, 0 -10 Z" fill="#ffd54f"/></g><text y="100" class="mhl">↔ اسحب الشمعة</text></g>
             <text x="400" y="340" class="mhl" id="fldist"></text></svg>
-          <label class="lsl"><span>🎚️ حساسية الحساس (المقبض الأزرق): <b id="flsv">٥</b></span><input type="range" id="fls" min="1" max="9" value="5"></label></div>
+          <label class="lsl"><span>🎚️ حساسية الحساس (المقبض الأزرق): <b id="flsv">5</b></span><input type="range" id="fls" min="1" max="9" value="5"></label></div>
         <div class="flright ix"><div class="sofacts"><div class="ac"><span>digitalRead(32)</span><b id="flr">HIGH</b></div><div class="ac gold"><span>الليد الأحمر 18</span><b id="flled">مطفأ</b></div><div class="ac"><span>البازر 23</span><b id="flbz">صامت</b></div></div>
           <div class="irbar"><span>شدة الأشعة تحت الحمراء</span><div class="btbar"><i id="flir"></i><em id="flth"></em></div></div>
           <button class="sndbtn" id="flsnd">🔇 تشغيل الصوت</button>
@@ -195,19 +195,19 @@ Object.assign(window.DECK_TYPES, {
             <g transform="translate(640 250)"><rect x="-46" y="-30" width="92" height="64" rx="8" fill="#1f5fae"/><circle cx="0" cy="0" r="20" fill="#c9ccd3" stroke="#78909c" stroke-width="4"/><circle cx="-34" cy="-20" r="6" class="ledb2" id="mqled"/><text y="56" class="mhl">MQ-2</text></g>
             <g transform="translate(120 300)"><rect x="-30" y="-20" width="60" height="40" rx="6" fill="#78909c"/><g id="mqknob"><rect x="-3" y="-18" width="6" height="16" fill="#c62828"/></g><text y="38" class="mhl">مصدر الغاز</text></g>
             <text x="380" y="40" class="mhl" id="mqwarm"></text></svg>
-          <label class="lsl"><span>💨 تسرّب الغاز: <b id="mqlv">٠</b></span><input type="range" id="mql" min="0" max="10" value="0"></label></div>
-        <div class="flright ix"><div class="sofacts"><div class="ac"><span>analogRead(34)</span><b id="mqr">—</b></div><div class="ac gold"><span>الليد الأزرق 19</span><b id="mqb">مطفأ</b></div><div class="ac"><span>الحد</span><b>١٨٠٠</b></div></div>
-          <div class="plot4"><div class="plh"><i style="background:#9ccc65"></i>قراءة MQ-2 من ٠ إلى ٤٠٩٥ <i style="background:#f0cc7a"></i>الحد</div><svg viewBox="0 0 600 170" class="chart4" id="mqch" preserveAspectRatio="none"><line x1="0" x2="600" class="cm" id="mqth"/><polyline class="cl" style="stroke:#9ccc65" id="mqpl" points=""/></svg></div>
+          <label class="lsl"><span>💨 تسرّب الغاز: <b id="mqlv">0</b></span><input type="range" id="mql" min="0" max="10" value="0"></label></div>
+        <div class="flright ix"><div class="sofacts"><div class="ac"><span>analogRead(34)</span><b id="mqr">—</b></div><div class="ac gold"><span>الليد الأزرق 19</span><b id="mqb">مطفأ</b></div><div class="ac"><span>الحد</span><b>1800</b></div></div>
+          <div class="plot4"><div class="plh"><i style="background:#9ccc65"></i>قراءة MQ-2 من 0 إلى 4095 <i style="background:#f0cc7a"></i>الحد</div><svg viewBox="0 0 600 170" class="chart4" id="mqch" preserveAspectRatio="none"><line x1="0" x2="600" class="cm" id="mqth"/><polyline class="cl" style="stroke:#9ccc65" id="mqpl" points=""/></svg></div>
           ${codeBlock(MQ2_CODE, 'micro')}</div>
       </div></div>`,
 
   stationlab: s => `<div class="slide light">
-      <div class="kicker">🛡️ محطة الأمان الحية</div>
+      <div class="kicker">🛡️ Safety station الحية</div>
       <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
       <div class="stgrid2">
         <div class="stdev ix"><div class="stcase"><div class="stleds"><div><i class="lr" id="sr"></i><span>لهب</span></div><div><i class="lb" id="sb"></i><span>غاز</span></div><div><i class="bz" id="sz"></i><span>بازر</span></div></div>
             ${lcdHTML('stlcd')}<div class="stname">لمسات تراث · محطة المصمك</div></div>
-          <div class="stctl"><button class="clap" id="stfire">🔥 لهب</button><label class="lsl"><span>💨 غاز: <b id="stgv">٠٪</b></span><input type="range" id="stg" min="0" max="4095" value="600" step="50"></label><button class="sndbtn" id="stsnd">🔇 الصوت</button></div></div>
+          <div class="stctl"><button class="clap" id="stfire">🔥 لهب</button><label class="lsl"><span>💨 غاز: <b id="stgv">0%</b></span><input type="range" id="stg" min="0" max="4095" value="600" step="50"></label><button class="sndbtn" id="stsnd">🔇 الصوت</button></div></div>
         <div class="stcode2">${codeBlock(STATION_CODE, 'micro')}</div>
       </div></div>`,
 });
@@ -215,8 +215,8 @@ Object.assign(window.DECK_TYPES, {
 Object.assign(window.DECK_BIND, {
   masmakhero(sl) {
     const $ = id => sl.querySelector('#' + id), car = $('mhcar'), car2 = $('mhcar2');
-    const SCRIPT = [[0, 'patrol', '🌙 ليل هادئ… المحطة تراقب، وروبوتان يحرسان'], [5, 'alarm', '🔥💨 لهب عند البرج وتسرّب غاز معًا!'], [7, 'decide', '🧠 القائد: اللهب لي ← أذهب بنفسي · 📡 وأأمر الروبوت ٢: إلى الغاز'],
-      [9.5, 'go', '🚙🚙 الروبوتان ينطلقان معًا'], [12, 'act', '💧 المضخة تطفئ النار… 🌀 والمروحة تبدد الغاز'], [17, 'safe', '✅ المصمك آمن… ويعود كلٌّ إلى مكانه بالاتجاه نفسه'], [21, 'patrol', '🛡️ لمسة تراث: تقنية تحمي التاريخ']];
+    const SCRIPT = [[0, 'patrol', '🌙 A quiet night… the station watches, two robots guard'], [5, 'alarm', '🔥💨 A flame at the tower and a gas leak at once!'], [7, 'decide', '🧠 Leader: the fire is mine → I go myself · 📡 robot 2: go to the gas'],
+      [9.5, 'go', '🚙🚙 Both robots set off together'], [12, 'act', '💧 The pump puts out the fire… 🌀 the fan clears the gas'], [17, 'safe', '✅ Masmak is safe… each robot backs up to its place'], [21, 'patrol', '🛡️ Touch of Heritage: technology protecting history']];
     let raf = 0, t0 = 0, c1 = 300, c2 = 1300, th1 = 0, th2 = Math.PI;
     const loop = ts => {
       t0 = t0 || ts; const t = ((ts - t0) / 1000) % 24; const cur = [...SCRIPT].reverse().find(([s]) => t >= s), st = cur[1]; $('mhcapt').textContent = cur[2];
@@ -250,7 +250,7 @@ Object.assign(window.DECK_BIND, {
     const show = () => {
       const U = USE[view] || {};
       sl.querySelectorAll('.e3pin').forEach(b => { const p = b.dataset.p, u = U[p]; b.classList.toggle('used', !!u); b.querySelector('i').style.background = u ? u[1] : (view === 'rules' && PININFO[p] && PININFO[p].startsWith('⚠️') ? '#e74c3c' : view === 'rules' && PININFO[p] && PININFO[p].includes('مدخل فقط') ? '#e0b400' : ''); });
-      $('e3list').innerHTML = view === 'rules' ? `<div class="e3r"><b>٣٫٣ فولت</b> منطق ESP32: لا تدخل ٥ فولت على أي طرف</div><div class="e3r"><b style="color:#b8860b">٣٤–٣٩</b> مدخلات فقط، ممتازة للحساسات التماثلية</div><div class="e3r"><b style="color:#c0392b">٠ و٢ و١٢ و١٥</b> أطراف إقلاع: تجنّبها</div><div class="e3r"><b>ADC ١٢ بت</b> القراءة من ٠ إلى ٤٠٩٥ لا ١٠٢٣</div>`
+      $('e3list').innerHTML = view === 'rules' ? `<div class="e3r"><b>3.3 فولت</b> منطق ESP32: لا تدخل 5 فولت على أي طرف</div><div class="e3r"><b style="color:#b8860b">34–39</b> مدخلات فقط، ممتازة للحساسات التماثلية</div><div class="e3r"><b style="color:#c0392b">0 و2 و12 و15</b> أطراف إقلاع: تجنّبها</div><div class="e3r"><b>ADC 12 بت</b> القراءة من 0 إلى 4095 لا 1023</div>`
         : Object.entries(U).map(([p, [n, c]]) => `<div class="e3r"><i style="background:${c}"></i><b dir="ltr">${p}</b><span>${n}</span></div>`).join('');
     };
     sl.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { view = b.dataset.v; sl.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b)); show(); });
@@ -269,7 +269,7 @@ Object.assign(window.DECK_BIND, {
     const loop = ts => {
       const dt = Math.min(40, ts - (last || ts)) / 1000; last = ts;
       const dx = x - 124, dy = (y - 40) - 180, dist = Math.hypot(dx, dy), ang = Math.abs(Math.atan2(dy, dx)) * 180 / Math.PI;
-      const ir = ang < 30 ? clamp(1 - dist / 700, 0, 1) * (1 - ang / 45) : 0;     // داخل زاوية الرؤية (نحو ٦٠ درجة) وتضعف مع البعد
+      const ir = ang < 30 ? clamp(1 - dist / 700, 0, 1) * (1 - ang / 45) : 0;     // داخل زاوية الرؤية (نحو 60 درجة) وتضعف مع البعد
       const th = 1 - $('fls').value / 10, fire = ir > th;
       candle.setAttribute('transform', `translate(${x} ${y})`);
       $('flir').style.width = ir * 100 + '%'; $('flth').style.left = th * 100 + '%'; $('flcone').classList.toggle('hit', fire);
@@ -313,7 +313,7 @@ Object.assign(window.DECK_BIND, {
     const loop = ts => {
       const dt = Math.min(40, ts - (last || ts)) / 1000; last = ts; fireT = Math.max(0, fireT - dt); if (!fireT) $('stfire').textContent = '🔥 لهب';
       const gas = +$('stg').value, gasP = clamp(Math.round((gas - 600) * 100 / (4095 - 600)), 0, 100), fireP = fireT > 0 ? 78 + Math.round(Math.sin(ts / 300) * 6) : 2, fire = fireP > 50, leak = gasP > 30;
-      $('stgv').textContent = AR(gasP) + '٪';
+      $('stgv').textContent = AR(gasP) + '%';
       $('sr').classList.toggle('on', fire); $('sb').classList.toggle('on', leak);
       lcdSet(lcd, `Fire: ${String(fireP).padStart(3)}%${fire ? ' !!' : ''}`, `Gas:  ${String(gasP).padStart(3)}%${leak ? ' !!' : ''}`);
       bt -= dt; const per = fire ? .22 : leak ? .8 : 0; const buzz = per && bt <= 0;

@@ -1,0 +1,6 @@
+welcome.mp3: Welcome to Masmak Fortress. Look right or left with your eyes, and let the fortress turn before you… then hold your gaze to hear its story.
+gate.mp3: This is the great wooden gate of Masmak. A spearhead is still lodged in its wood, a witness to the recapture of Riyadh in nineteen oh two by King Abdulaziz.
+f0.mp3: These are the four towers of Masmak… guardians of mud brick at the corners of the fortress, where watchmen once looked over the city.
+f1.mp3: This is the open courtyard… the heart of the fortress, surrounded by rooms, where the people of the fortress gathered.
+f2.mp3: This is the Masmak mosque… with its mud pillars, and a roof of tamarisk wood and palm fronds.
+f3.mp3: And this is the majlis… where people gathered, guests were welcomed, and Arabic coffee was served.
