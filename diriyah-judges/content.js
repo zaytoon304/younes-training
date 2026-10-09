@@ -8,7 +8,7 @@ root.DECK = {
   title: 'نبض الدرعية ولياليها',
   subtitle: 'عرض صوت وضوء تفاعلي… يرى الزائر ويقرر بنفسه',
   tag: 'WRO 2026 · Future Innovators · عرض لجنة التحكيم',
-  author: 'فريق مدارس الأرقم',
+  author: 'وحدة الموهبة والذكاء الاصطناعي · مدارس الأرقم',
   sectionLabel: 'المحور',
   parts: ['01-idea', '02-parts', '03-build', '04-labs', '04b-new', '04c-caravan', '05-end'],
   modules: [],
