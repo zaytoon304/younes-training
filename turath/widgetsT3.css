@@ -112,3 +112,10 @@
 .ktl{padding:6px 12px;gap:3px}.ktrow{font-size:15px}.ktbar{height:12px}
 .eymini{max-height:190px}
 .eyright .code.micro{font-size:13.5px;line-height:1.36}
+
+/* أزرار صوت الراوي في مشهد المعرض */
+.exsnd{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:-6px 0 6px}
+.exsnd .sndbtn{font-size:22px;padding:6px 18px}
+.exsnd .sndbtn.on{background:var(--gold);color:var(--navy-900)}
+.exa{font:700 20px "Cairo",sans-serif;padding:6px 14px;border-radius:999px;border:2px solid rgba(240,204,122,.6);background:rgba(10,18,48,.5);color:#f3ead2;cursor:pointer}
+.capture .exsnd .sndbtn{display:none}

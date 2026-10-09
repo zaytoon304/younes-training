@@ -44,13 +44,11 @@ const NOW_RECV = `void onReceive(const esp_now_recv_info *info,
 const DEC_CODE = `void onAlarm(int fireP, int gasP) {
   bool fire = fireP > 50, gas = gasP > 30;
   if (fire && gas) {
-    int hi = fireP >= gasP ? FIRE_ZONE : GAS_ZONE;
-    int lo = (hi == FIRE_ZONE) ? GAS_ZONE : FIRE_ZONE;
-    tellRobot2(lo);          // الثاني: الأقل خطورة
-    goTo(hi);                // الأول: الأخطر
+    tellRobot2(GO_GAS);      // إذن للثاني: إلى الغاز
+    fireMission();           // القائد بنفسه: إلى اللهب
   }
-  else if (fire) goTo(FIRE_ZONE);
-  else if (gas) goTo(GAS_ZONE);
+  else if (fire) fireMission();
+  else if (gas) tellRobot2(GO_GAS);
   else patrol();
 }`;
 
@@ -95,19 +93,14 @@ const MISSION_CODE = `void loop() {
   if (!newAlarm) return;
   newAlarm = false;
   bool fire = m.fireP > 50, gas = m.gasP > 30;
-  if (fire && gas) {
-    int hi = m.fireP >= m.gasP ? FIRE_ZONE : GAS_ZONE;
-    tellRobot2(hi == FIRE_ZONE ? GAS_ZONE : FIRE_ZONE);
-    mission(hi);
-  }
-  else if (fire) mission(FIRE_ZONE);
-  else if (gas) mission(GAS_ZONE);
+  if (gas) tellRobot2(GO_GAS);        // إذن للثاني: الغاز له
+  if (fire) fireMission();            // اللهب للقائد نفسه
 }
 
-void mission(int zone) {
-  goTo(zone);
-  if (zone == FIRE_ZONE) pumpFor(4000); else fanFor(5000);
-  goHome();
+void fireMission() {
+  unsigned long trip = goToStrip();   // للأمام حتى الشريط الأسود
+  if (trip) pumpFor(4000);            // المضخة
+  driveBack(trip);                    // للخلف بالزمن نفسه: يعود مكانه
 }`;
 
 /* ================== دائرة البناء: السيارة ================== */
@@ -195,8 +188,8 @@ void pumpOff() { digitalWrite(PUMP, HIGH); }`, 'micro')}</div>
         <div class="dczones ix">${[['A', '🔥 نسبة خطر الحريق', 'fireP', 50, '#e74c3c'], ['B', '💨 نسبة خطر الغاز', 'gasP', 30, '#1e88e5']].map(([z, n, v, th, c]) => `<div class="dcz" id="dz${z}"><h3>${n}</h3>
             <label class="lsl"><span dir="ltr">${v} = <b id="dl${z}v">٠</b>%</span><input type="range" id="dl${z}" min="0" max="100" value="${z === 'A' ? 0 : 0}"></label>
             <div class="dcscore"><span>الحد ${th}٪</span><div class="btbar"><i id="ds${z}" style="background:${c}"></i></div><b id="dn${z}">—</b></div></div>`).join('')}
-          <div class="lseg"><span>جرّب</span><button class="lsb" data-p="85,0">حريق فقط</button><button class="lsb" data-p="0,70">غاز فقط</button><button class="lsb" data-p="60,90">الاثنان: الغاز أعلى</button><button class="lsb" data-p="95,45">الاثنان: الحريق أعلى</button></div></div>
-        <div class="dcright"><div class="dcverdict" id="dcv"></div><svg viewBox="0 0 400 140" class="dcarrow"><g id="dcar2" transform="translate(240 70)">${car4('dcc2', 'r2')}</g><g id="dcar" transform="translate(160 70)">${car4('dcc')}</g><text x="200" y="22" class="dctx" style="font-size:15px">🔴 الروبوت ١ · 🔵 الروبوت ٢</text><text x="40" y="128" class="dctx">🔥 A</text><text x="360" y="128" class="dctx">B 💨</text></svg>
+          <div class="lseg"><span>جرّب</span><button class="lsb" data-p="85,0">حريق فقط</button><button class="lsb" data-p="0,70">غاز فقط</button><button class="lsb" data-p="80,70">الاثنان معًا</button></div></div>
+        <div class="dcright"><div class="dcverdict" id="dcv"></div><svg viewBox="0 0 400 140" class="dcarrow"><g id="dcar2" transform="translate(240 70)">${car4('dcc2', 'r2')}</g><g id="dcar" transform="translate(160 70)">${car4('dcc')}</g><text x="200" y="22" class="dctx" style="font-size:15px">🔴 القائد · 🔵 الروبوت ٢</text><text x="40" y="128" class="dctx">🔥 A</text><text x="360" y="128" class="dctx">B 💨</text></svg>
           ${codeBlock(DEC_CODE, 'micro')}</div>
       </div></div>`,
 
@@ -212,7 +205,7 @@ void pumpOff() { digitalWrite(PUMP, HIGH); }`, 'micro')}</div>
       <div class="kicker">🚒 المهمة الكاملة</div>
       <h2 class="title" style="margin-bottom:10px">${s.title}</h2>
       <div class="pmgrid">
-        <div class="pmleft ix">${mapSVG('ms')}<div class="mctl"><button class="clap" data-e="1A">🔥 لهب A</button><button class="clap" data-e="2B">💨 غاز B</button><button class="sndbtn" data-e="2A">💨 غاز A</button><button class="sndbtn" data-e="1B">🔥 لهب B</button><button class="sndbtn" data-e="both">🔥💨 معًا: روبوتان</button></div></div>
+        <div class="pmleft ix">${mapSVG('ms')}<div class="mctl"><button class="clap" data-e="1A">🔥 لهب A</button><button class="clap" data-e="2B">💨 غاز B</button><button class="sndbtn" data-e="2A">💨 غاز A</button><button class="sndbtn" data-e="1B">🔥 لهب B</button><button class="sndbtn" data-e="both">🔥💨 معًا: القائد والثاني</button></div></div>
         <div class="pmright"><div class="mslog" id="mslog"></div>${codeBlock(MISSION_CODE, 'micro')}<div class="sofacts"><div class="ac gold"><span>زمن الاستجابة</span><b id="msrt">—</b></div><div class="ac"><span>مهمات منجزة</span><b id="msn">٠</b></div></div></div>
       </div></div>`,
 });
@@ -221,11 +214,11 @@ void pumpOff() { digitalWrite(PUMP, HIGH); }`, 'micro')}</div>
 function mapMover(sl, id, key = 'car', home = [500, 500]) {
   const $ = k => sl.querySelector('#' + id + k);
   const st = { x: home[0], y: home[1], th: -Math.PI / 2, path: [], cb: null, junc: 0, speed: 150 };
-  st.go = (pts, cb) => { st.path = pts.map(p => [...p]); st.cb = cb; st.junc = 0; };
+  st.go = (pts, cb, back = false) => { st.path = pts.map(p => [...p]); st.cb = cb; st.junc = 0; st.back = back; };
   st.step = dt => {
     if (st.path.length) { const [tx, ty] = st.path[0], dx = tx - st.x, dy = ty - st.y, d = Math.hypot(dx, dy);
       if (d < 3) { const p = st.path.shift(); if (p[0] === 500 && p[1] === 330) st.junc++; if (!st.path.length && st.cb) { const c = st.cb; st.cb = null; c(); } }
-      else { const want = Math.atan2(dy, dx); let da = Math.atan2(Math.sin(want - st.th), Math.cos(want - st.th)); if (Math.abs(da) > 0.05) st.th += clamp(da, -5 * dt, 5 * dt); else { st.th = want; const s = Math.min(d, st.speed * dt); st.x += dx / d * s; st.y += dy / d * s; } } }
+      else { const want = Math.atan2(dy, dx) + (st.back ? Math.PI : 0); let da = Math.atan2(Math.sin(want - st.th), Math.cos(want - st.th)); if (Math.abs(da) > 0.05) st.th += clamp(da, -5 * dt, 5 * dt); else { st.th = want; const s = Math.min(d, st.speed * (st.back ? .8 : 1) * dt); st.x += dx / d * s; st.y += dy / d * s; } } }
     $(key).setAttribute('transform', `translate(${st.x} ${st.y}) rotate(${st.th * 180 / Math.PI})`);
     if (key !== 'car') return;
     const onLine = st.path.length > 0; $('sl').classList.toggle('blk', onLine && Math.sin(performance.now() / 120) > .3); $('sr').classList.toggle('blk', onLine && Math.sin(performance.now() / 120) < -.3);
@@ -291,11 +284,11 @@ Object.assign(window.DECK_BIND, {
       $('dlAv').textContent = AR(a); $('dlBv').textContent = AR(b);
       $('dsA').style.width = a + '%'; $('dsB').style.width = b + '%'; $('dnA').textContent = fire ? '🔥 نعم' : 'لا'; $('dnB').textContent = gas ? '💨 نعم' : 'لا';
       let txt, x1 = 160, x2 = 240, lines;
-      if (fire && gas) { const f = a >= b; x1 = f ? 70 : 330; x2 = f ? 330 : 70;
-        txt = f ? `🔴 الروبوت ١ إلى الحريق (${AR(a)}٪ الأخطر) · 📡 ويبلغ 🔵 الروبوت ٢: إلى الغاز` : `🔴 الروبوت ١ إلى الغاز (${AR(b)}٪ الأخطر) · 📡 ويبلغ 🔵 الروبوت ٢: إلى الحريق`; lines = [2, 3, 4, 5, 6, 7]; }
-      else if (fire) { txt = '🔴 حريق وحده: الروبوت ١ إليه، و🔵 الروبوت ٢ يبقى حارسًا'; x1 = 70; lines = [2, 9]; }
-      else if (gas) { txt = '🔴 غاز وحده: الروبوت ١ إليه، و🔵 الروبوت ٢ يبقى حارسًا'; x1 = 330; lines = [2, 10]; }
-      else { txt = '🛡️ لا خطر: الروبوتان في مكانهما يحرسان'; lines = [2, 11]; }
+      if (fire && gas) { x1 = 70; x2 = 330;
+        txt = '🔴 القائد يذهب بنفسه إلى اللهب · 📡 ويأمر 🔵 الروبوت ٢: إلى الغاز · ثم يعود كلٌّ مكانه'; lines = [2, 3, 4, 5]; }
+      else if (fire) { txt = '🔴 لهب وحده: القائد يذهب إليه ثم يعود بالاتجاه نفسه، و🔵 الروبوت ٢ يحرس'; x1 = 70; lines = [2, 7]; }
+      else if (gas) { txt = '💨 غاز وحده: القائد يبقى ويعطي 🔵 الروبوت ٢ الإذن: اذهب وتعامل معه'; x2 = 330; lines = [2, 8]; }
+      else { txt = '🛡️ لا خطر: الروبوتان في مكانهما يحرسان'; lines = [2, 9]; }
       $('dzA').classList.toggle('win', x1 === 70); $('dzB').classList.toggle('win', x1 === 330);
       $('dcv').textContent = txt;
       $('dcar').setAttribute('transform', `translate(${x1} 70) rotate(${x1 < 200 ? 180 : 0})`); $('dcar2').setAttribute('transform', `translate(${x2} 70) rotate(${x2 < 200 ? 180 : 0})`);
@@ -331,26 +324,24 @@ Object.assign(window.DECK_BIND, {
       M.go(path, () => { const type = ev[z]; say(`${NAME[r]} وصل: ${type === 1 ? '💧 المضخة تعمل' : '🌀 المروحة تعمل'}`); runLines(sl, '.pmright', [16]);
         const g = $((type === 1 ? 'msspray' : 'mswind') + (r === 1 ? '' : '2')); g.setAttribute('opacity', 1); g.setAttribute('transform', `translate(${M.x + 10} ${M.y - 40}) rotate(-60)`); beep(type === 1 ? 500 : 300, 300, .02);
         timers.push(setTimeout(() => { g.setAttribute('opacity', 0); ev[z] = 0; station(); done++; $('msn').textContent = AR(done); say(`✅ المنطقة ${z} آمنة (${NAME[r]})`); $('msrt').textContent = secs(); runLines(sl, '.pmright', [17]);
-          M.go(rev(path), () => { busy--; if (!busy) { runLines(sl, '.pmright', []); say('🏠 الروبوتان في نقطة الانطلاق'); } }); }, type === 1 ? 3200 : 3800)); }); };
+          say(`↩️ ${NAME[r]} يعود بالاتجاه نفسه للخلف`); runLines(sl, '.pmright', r === 1 ? [12] : []);
+          M.go(rev(path), () => { busy--; if (!busy) { runLines(sl, '.pmright', []); say('🏠 كلٌّ عاد إلى مكانه'); } }, true); }, type === 1 ? 3200 : 3800)); }); };
     const run = () => {
       const fire = ev.A === 1 ? 'A' : ev.B === 1 ? 'B' : null, gas = ev.A === 2 ? 'A' : ev.B === 2 ? 'B' : null;
       const st0 = { x: 500, y: 175 };
-      if (fire && gas) {
-        const hi = pc[fire] >= pc[gas] ? fire : gas, lo = hi === fire ? gas : fire;
-        say(`📡 المحطة ترسل: 🔥 ${AR(pc[fire])}٪ · 💨 ${AR(pc[gas])}٪`); runLines(sl, '.pmright', [2, 3, 4, 5]);
-        fly(st0, M1, 'FIRE+GAS', () => {
-          say(`🧠 ${NAME[1]} يقرر: ${hi === fire ? 'الحريق' : 'الغاز'} أخطر ← إليه`); runLines(sl, '.pmright', [6, 7, 8]); busy = 2;
-          fly(M1, M2, 'GO ' + lo, () => { say(`📡 ${NAME[1]} يبلغ ${NAME[2]}: إلى ${lo === fire ? 'الحريق' : 'الغاز'} (الأقل خطورة)`); mission(2, lo); });
-          mission(1, hi);
-        });
-      } else {
-        const z = fire || gas; say(`📡 المحطة ترسل: ${fire ? '🔥 حريق ' + AR(pc[z]) + '٪' : '💨 غاز ' + AR(pc[z]) + '٪'} في ${z}`); runLines(sl, '.pmright', [2, 3, 4]);
-        fly(st0, M1, (fire ? 'FIRE ' : 'GAS ') + z, () => { say(`🧠 ${NAME[1]}: خطر واحد ← إليه، و${NAME[2]} يبقى حارسًا`); runLines(sl, '.pmright', [10, 11]); busy = 1; mission(1, z); });
-      }
+      say(`📡 المحطة ترسل: ${fire ? '🔥 لهب في ' + fire : ''}${fire && gas ? ' · ' : ''}${gas ? '💨 غاز في ' + gas : ''}`); runLines(sl, '.pmright', [2, 3, 4]);
+      fly(st0, M1, fire && gas ? 'FIRE+GAS' : fire ? 'FIRE ' + fire : 'GAS ' + gas, () => {
+        busy = (fire ? 1 : 0) + (gas ? 1 : 0);
+        if (gas) {
+          say(fire ? `🧠 ${NAME[1]}: اللهب لي… 📡 وأعطي ${NAME[2]} الأمر: إلى الغاز` : `🧠 ${NAME[1]}: غاز فقط ← 📡 أعطي ${NAME[2]} الإذن: اذهب وتعامل معه`); runLines(sl, '.pmright', [5]);
+          fly(M1, M2, 'GO GAS ' + gas, () => { say(`🔵 ${NAME[2]} تلقّى الإذن ← إلى ${gas}`); mission(2, gas); });
+        }
+        if (fire) { if (!gas) say(`🧠 ${NAME[1]}: لهب ← أذهب بنفسي، و${NAME[2]} يحرس`); runLines(sl, '.pmright', [6]); mission(1, fire); }
+      });
     };
     sl.querySelectorAll('[data-e]').forEach(b => b.onclick = () => {
       if (busy) return; busy = 1; const e = b.dataset.e; t0 = performance.now(); logs = [];
-      if (e === 'both') { ev.A = 2; ev.B = 1; pc.A = 88; pc.B = 72; say('🔥💨 حدثان معًا: غاز ٨٨٪ في A ولهب ٧٢٪ في B'); }
+      if (e === 'both') { ev.A = 2; ev.B = 1; pc.A = 88; pc.B = 72; say('🔥💨 حدثان معًا: غاز في A ولهب في B'); }
       else { ev[e[1]] = +e[0]; pc[e[1]] = e[0] === '1' ? 80 : 65; }
       say(`🚨 المحطة: ${e === 'both' ? 'الأحمر والأزرق يضيئان' : e[0] === '1' ? 'الليد الأحمر والبازر' : 'الليد الأزرق والبازر'}`); station(); beep(1500, 150, .04);
       timers.push(setTimeout(run, 700));

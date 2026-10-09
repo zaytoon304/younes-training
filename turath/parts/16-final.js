@@ -28,7 +28,7 @@ DECK.modules.push({ id: 'finale', name: '🏆 المعرض والختام', slid
       ['لمن صممتم المشروع؟', 'Who is it for? Visitors with motor, hearing, and visual disabilities, all at once.'],
       ['كيف يتحكم الزائر؟', 'How does it work? The visitor only moves their eyes. The camera tracks the iris, and the model turns.'],
       ['وماذا يرى ويسمع؟', 'What do they get? A sign-language video and an audio guide for every side of the fortress.'],
-      ['وما روبوتا السلامة؟', 'And the safety robots? The first goes to the worse danger, and tells the second to handle the other one.'],
+      ['وما روبوتا السلامة؟', 'And the safety robots? The leader goes to the fire itself, and orders the second robot to handle the gas. Then both return home.'],
     ],
     notes: 'في تقرير الفريق: عضو من الفريق يطرح على نفسه سؤالًا بالإنجليزية عن المصمك ويجيب أمام الحضور. لحظة بشرية لا برمجية، تُظهر استعداد الفريق للتواصل مع زوار لا يتحدثون العربية. درّبوا الطلاب عليها بصوت عالٍ حتى تصبح طبيعية.' },
   { t: 'cards', kicker: '🌱 الأثر', title: 'لماذا يهم هذا المشروع العالم؟', cols: 2,

@@ -19,6 +19,11 @@ const FACES = [
   { n: 'الديوانية', en: 'The Majlis', c: '#a55eea', ar: 'الديوانية… حيث يجتمع الناس ويُستقبل الضيوف', e: 'The majlis, where guests were received' },
 ];
 const GATE = { n: 'البوابة', en: 'The Gate', c: '#e67e22', ar: 'البوابة الخشبية… وفيها رأس الرمح الشهير منذ ١٩٠٢م', e: 'The wooden gate, with the famous spearhead from 1902' };
+// صوت الراوي لكل جهة: الملفات في ../masmak-judges/audio (يعمل من الدورة ومن عرض المحكّمين)
+const MSND = n => `../masmak-judges/audio/${n}.mp3`;
+let mAudio = null;
+function mPlay(src) { try { if (mAudio) mAudio.pause(); mAudio = new Audio(src); mAudio.play().catch(() => {}); } catch (e) {} }
+function mStop() { try { if (mAudio) mAudio.pause(); } catch (e) {} mAudio = null; }
 const faceAt = th => { const k = Math.round((((th % TAU) + TAU) % TAU) / (Math.PI / 2)) % 4; return k; };
 window.TUR.FACES = FACES;
 
@@ -183,7 +188,8 @@ Object.assign(window.DECK_TYPES, {
   exhibithero: s => `<div class="slide dark exhero">
       <div class="kicker">${s.kicker}</div>
       <h1 class="htitle" style="font-size:70px">${s.title}</h1>
-      <div class="mhwrap"><svg viewBox="0 0 1600 560" class="exsvg">${M3DEFS}
+      <div class="exsnd ix"><button class="sndbtn" id="exsnd">🔇 الصوت مغلق</button>${[['welcome', '🎙️ الترحيب'], ['gate', '🚪 ' + GATE.n], ...FACES.map((f, i) => ['f' + i, f.n])].map(([k, n]) => `<button class="exa" data-audio="${MSND(k)}">▶ ${n}</button>`).join('')}</div>
+      <div class="mhwrap dygif"><svg viewBox="0 0 1600 560" class="exsvg">${M3DEFS}
         <rect width="1600" height="560" fill="#0d1226"/><ellipse cx="620" cy="60" rx="520" ry="560" fill="url(#m3spot)"/>
         ${Array.from({ length: 40 }, (_, i) => `<circle cx="${(i * 397) % 1600}" cy="${(i * 131) % 150 + 10}" r="${i % 3 ? 1.2 : 2}" fill="#fff" opacity=".5"/>`).join('')}
         <rect x="0" y="470" width="1600" height="90" fill="#191f3a"/>
@@ -339,22 +345,29 @@ const ringFor = (mode, th, t, face) => (i, N) => {
 Object.assign(window.DECK_BIND, {
   exhibithero(sl) {
     const m = sl.querySelector('#exm'), art = sl.querySelector('#exart'), cap = sl.querySelector('#excap'), sg = sl.querySelector('#exsg'), lab = sl.querySelector('#exface');
-    let raf = 0, t0 = 0, th = 0, last = 0, k = -1;
-    // دورة: يدور ٣ ث نحو جهة ثم يتوقف ٥ ث ويعرض محتواها
-    const loop = now => {
-      t0 = t0 || now; const t = (now - t0) / 1000, dt = Math.min(50, now - (last || now)) / 1000; last = now;
-      const cyc = t % 8, idx = Math.floor(t / 8) % 4, moving = cyc < 3;
-      const target = (Math.floor(t / 8) + 1) * Math.PI / 2; if (moving) th = Math.min(target, th + dt * (Math.PI / 2) / 3); else th = target;
+    let raf = 0, t0 = 0, k = -1, on = false, lastSnd = '';
+    const btn = sl.querySelector('#exsnd');
+    if (btn) btn.onclick = () => { on = !on; btn.textContent = on ? '🔊 الصوت يعمل' : '🔇 الصوت مغلق'; btn.classList.toggle('on', on); lastSnd = ''; if (!on) mStop(); };
+    sl.querySelectorAll('.exsnd [data-audio]').forEach(b => b.onclick = () => mPlay(b.dataset.audio));
+    // دورة: يدور ٣ ث نحو جهة ثم يتوقف ١١ ث (يتسع لصوت الراوي) ويعرض محتواها — كل شيء من الزمن t وحده (يصلح للتصوير إطارًا إطارًا)
+    const frame = t => {
+      const cyc = t % 14, moving = cyc < 3;
+      const th = Math.floor(t / 14) * Math.PI / 2 + (moving ? cyc / 3 : 1) * Math.PI / 2;
       const face = faceAt(th);
       m.innerHTML = masmak3D(th, 620, 320, 140, .4, { ring: ringFor(moving ? 'wave' : 'face', th, t, face) });
       lab.textContent = moving ? '👁️ الزائر ينظر يمينًا… المجسّم يدور' : `⏸ نظر للأمام: ${FACES[face].n}`;
       if (!moving && k !== face) { k = face; art.innerHTML = `<g>${masmak3D(face * Math.PI / 2 - .5, 190, 150, 62, .4, { noTable: true })}</g>`; sg.setAttribute('class', 'signer sg' + (face % 3)); }
       if (moving && k !== -1) { k = -1; art.innerHTML = ''; }
       cap.textContent = moving ? '…' : (Math.floor(cyc / 2.5) % 2 ? FACES[face].e : FACES[face].ar);
-      raf = requestAnimationFrame(loop);
+      const snd = moving ? '' : MSND('f' + face);
+      if (on && snd && snd !== lastSnd) mPlay(snd);
+      lastSnd = snd || lastSnd;
+      if (moving) lastSnd = '';
     };
+    const loop = now => { t0 = t0 || now; if (!window.DY_HOLD) frame((now - t0) / 1000); raf = requestAnimationFrame(loop); };
     raf = requestAnimationFrame(loop);
-    window.DECK_CLEANUP.push(() => cancelAnimationFrame(raf));
+    window.DY_ANIM = { draw: frame, period: 56 };
+    window.DECK_CLEANUP.push(() => { cancelAnimationFrame(raf); mStop(); window.DY_ANIM = null; });
   },
 
   systemlab(sl) {
