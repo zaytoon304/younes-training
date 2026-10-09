@@ -15,7 +15,7 @@
     { id: 'guard', name: '📶 الحارس الأمني', s: [S(57), S(58)] },
     { id: 'eyes', name: '👁️ تتبع العين', s: [S(67), S(68)] },
     { id: 'tour', name: '🦽 القرار والجولة', s: [S(77), S(78)] },
-    { id: 'safety', name: '🛡️ روبوتا السلامة', s: [T('masmakhero'), T('decisionlab'), after(T('decisionlab')), T('missionlab'), after(T('missionlab'))] },
+    { id: 'safety', name: '🛡️ روبوتا السلامة', s: [T('masmakhero'), T('decisionlab'), after(T('decisionlab')), T('missionlab'), after(T('missionlab')), T('alertlcd'), T('tgphone'), T('cards', 'قواعد تحمي المتحف')] },
     { id: 'end', name: '🏆 التحديات', s: [T('table', 'خمسة تحديات'), T('end')] },
   ];
   DECK.modules.length = 0;

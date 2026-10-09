@@ -223,6 +223,18 @@ void fireMission() {
       { lines: [12], text: 'Then backwards, the same way and for the same time: home without turning around' },
     ],
     notes: 'And robot 2? It waits for the GO GAS message from the leader, then goes to the gas, runs the fan and backs up the same way. The decision belongs to the leader; the work is shared by both.' },
+  { t: 'alertlcd', kicker: '📟 The station screen', title: 'The screen tells the story… one page every two seconds',
+    notes: 'Click step by step. Normally the screen says the museum is safe. When a fire starts, the screen turns red and announces “FIRE ALERT” with its level, then “Robots on their way”, then “Civil Defense notified”. Once the fire is out and the robot is home: “Mission complete”, then “Museum is SAFE now”. The pages flip by themselves every two seconds, like an advert board.' },
+  { t: 'tgphone', kicker: '📱 Reporting to Civil Defense', title: 'One message when danger starts… one when it is safe',
+    notes: 'This phone plays the role of the Civil Defense phone. The moment a fire is detected, the station itself sends a Telegram message with the type of danger, its level, and that the robots are handling it. When the fire is gone and every robot is back home, a second message arrives: “The museum is safe, no need to come.” Read both messages aloud to the judges; even better, let a real phone ring in front of them.' },
+  { t: 'cards', kicker: '🛡️ Safety first', title: 'Rules that protect the museum… and the robot', cols: 2,
+    cards: [
+      { icon: '💧', h: 'Spray until the danger is gone', b: 'The pump and fan run until the station says the danger is over' },
+      { icon: '⏱️', h: '30 seconds at most', b: 'Then the robot stops and returns, even if the danger remains' },
+      { icon: '📡', h: 'Lost the link? Stop', b: 'No message from the station for 2 seconds: the pump stops at once' },
+      { icon: '🔁', h: 'No reply? Send again', b: 'The leader repeats the order until robot 2 answers “received”' },
+    ],
+    notes: 'Each rule answers a “what if?”: what if the fire does not go out? What if the link drops? What if a message is lost? This is how engineers design real safety systems.' },
 ]});
 DECK.modules.push({ id: 'end', name: '🏆 Challenges', slides: [
   { t: 'table', kicker: '🧯 Our challenges', title: 'Five challenges the team faced… and how we solved them',

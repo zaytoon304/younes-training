@@ -1,0 +1,45 @@
+/* «لمسة تراث» — شاشة المحطة وبلاغ الدفاع المدني (widgetsT4.js) */
+
+/* ---------- alertlcd ---------- */
+.algrid{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start}
+.alscreen{display:flex;flex-direction:column;gap:22px}
+.allcd .lcd2{padding:18px 22px;transition:box-shadow .3s}
+.allcd .lcdglass i{font-size:52px}
+.allcd.alert .lcd2{background:#8e2a2a;box-shadow:0 0 0 6px rgba(214,69,69,.25),0 14px 34px rgba(214,69,69,.35);animation:alpulse 1s ease-in-out infinite}
+.allcd.done .lcd2{background:#1d5e40;box-shadow:0 0 0 6px rgba(46,158,107,.25),0 14px 34px rgba(46,158,107,.3)}
+@keyframes alpulse{50%{box-shadow:0 0 0 14px rgba(214,69,69,.12),0 14px 34px rgba(214,69,69,.35)}}
+body.capture .allcd.alert .lcd2{animation:none}
+.alled{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:700;color:var(--muted);flex-wrap:wrap}
+.alled .dot{width:26px;height:26px;border-radius:50%;background:#ddd;border:3px solid #bbb;margin-inline-start:10px}
+.alled .dot.red.on{background:#ff3b3b;border-color:#b31f1f;box-shadow:0 0 18px #ff3b3b}
+.alled .bz{font-size:30px;filter:grayscale(1);opacity:.5;margin-inline-start:10px}
+.alled .bz.on{filter:none;opacity:1;animation:alring .3s ease-in-out infinite alternate}
+@keyframes alring{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.alnote{align-self:flex-start;background:#F6EBCF;color:var(--gold-dark);font-size:24px;font-weight:800;padding:10px 24px;border-radius:999px}
+.alsteps{display:flex;flex-direction:column;gap:14px}
+.alstep{display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px 18px;transition:border-color .3s,transform .3s}
+.alstep .aln{width:48px;height:48px;border-radius:50%;background:var(--navy-800);color:var(--gold-light);font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.alstep .alt{font-size:26px;font-weight:800;color:var(--navy-800);line-height:1.35}
+.alstep code{display:inline-block;direction:ltr;margin-top:4px;font-family:var(--mono);font-size:18px;color:var(--muted);background:#f3f4f8;padding:2px 10px;border-radius:8px}
+.alstep.alert.now{border-color:#d64545;transform:scale(1.02)}
+.alstep.done.now{border-color:#2e9e6b;transform:scale(1.02)}
+
+/* ---------- tgphone ---------- */
+.tggrid{display:grid;grid-template-columns:1fr 520px;gap:50px;align-items:center}
+.tgside{display:flex;flex-direction:column;gap:22px}
+.tgpt{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:22px;padding:16px 22px}
+.tgpt>span{font-size:46px;text-align:center}
+.tgpt b{display:block;font-size:32px;color:var(--navy-800);margin-bottom:4px}
+.tgpt div{font-size:24px;color:var(--body);line-height:1.4}
+.tgdev{background:#111;border-radius:56px;padding:14px;box-shadow:0 24px 50px rgba(11,16,38,.3)}
+.tgscreen{background:#cfe0b8;border-radius:42px;overflow:hidden;height:560px;display:flex;flex-direction:column}
+.tghead{display:flex;align-items:center;gap:14px;background:#2AABEE;color:#fff;padding:16px 24px 12px}
+.tghead .tgav{width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:30px}
+.tghead b{display:block;font-size:26px}
+.tghead small{font-size:18px;opacity:.85}
+.tgchat{flex:1;padding:18px 18px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(#d9e8c4,#c4dbab)}
+.tgday{align-self:center;background:rgba(0,0,0,.18);color:#fff;font-size:17px;font-weight:700;padding:3px 14px;border-radius:999px}
+.tgb{position:relative;align-self:flex-start;max-width:94%;background:#fff;border-radius:20px;padding:12px 18px 24px;font-size:21px;line-height:1.45;color:#1b1f2a;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.tgb.ok{background:#e9f8ee;border:2px solid #9fdcb4}
+.tgb i{position:absolute;bottom:6px;inset-inline-end:14px;font-style:normal;font-size:15px;color:#4fae4e}
+.tgwork{align-self:center;background:rgba(255,255,255,.75);font-size:20px;font-weight:700;color:var(--navy-800);padding:8px 18px;border-radius:999px}

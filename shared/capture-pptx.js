@@ -11,7 +11,7 @@ const puppeteer = require('puppeteer-core');
 const DIR = path.resolve(process.argv[2] || '.');
 const NATIVE = require('./pptx-native.json');          // الأنواع التي يرسمها البوربوينت نصًا قابلًا للتعديل
 const OUT = path.join(DIR, '.pptx-cache');
-const STEPPED = ['build', 'build2', 'code', 'codecheck']; // تُصوَّر كل خطوة، وتظهر بالنقر في البوربوينت
+const STEPPED = ['build', 'build2', 'code', 'codecheck', 'alertlcd', 'tgphone']; // تُصوَّر كل خطوة، وتظهر بالنقر في البوربوينت
 const START = { board: 1, ide: 1, breadboard: 5 };       // خطوة مختارة لأدوات الجولات
 const CHROME = process.env.CHROME || (process.platform === 'win32'
   ? 'C:/Program Files/Google/Chrome/Application/chrome.exe'
