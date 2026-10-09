@@ -1,0 +1,14 @@
+/* English (left-to-right) adjustments */
+.dyt{direction:ltr}
+.dyxt .seg i{right:auto;left:0}
+.dysnd{left:auto;right:130px}
+.light::after{right:auto;left:0}
+.dyphase b{margin-left:0;margin-right:8px}
+.dylog code{margin-left:0;margin-right:8px}
+.kicker{font-family:"Cairo",sans-serif}
+.title{letter-spacing:-.5px}
+.cover h1{font-size:118px;line-height:1.1}
+.cover .subt{font-size:44px}
+.cards .card p{font-size:28px}
+.cards .card h3{font-size:36px}
+.cards{gap:26px}.cards .card{padding:26px 34px}

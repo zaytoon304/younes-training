@@ -25,6 +25,7 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
   await pg.goto('file:///' + path.join(DIR, 'index.html').replace(/\\/g, '/').replace(/^\//, ''), { waitUntil: 'networkidle0' });
   await new Promise(r => setTimeout(r, 1200));
   const types = await pg.evaluate(() => SLIDES.map(s => s.t));
+  if (await pg.evaluate(() => C.lang === 'en')) NATIVE.length = 0;   // الإنجليزية: تُصوَّر كل الشرائح
   const manifest = {};
   const shot = async (i, st, name) => {
     await pg.evaluate((i, st) => { if (cur !== i) { cur = i; render(); } step = st; applySteps(); document.getElementById('bar').classList.add('hide'); document.body.classList.add('capture'); const hb = document.getElementById('barbtn'); if (hb) hb.style.display = 'none'; }, i, st);

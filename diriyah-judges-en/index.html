@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pulse of Diriyah and Its Nights — Juthoor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/deck.css">
+<link rel="stylesheet" href="../arduino/widgets.css">
+<link rel="stylesheet" href="../diriyah-judges/widgetsD.css">
+<link rel="stylesheet" href="en.css">
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="stage"></div></div>
+<div id="bar">
+  <button onclick="location.href='../index.html'" title="Back to Juthoor">🌳 Juthoor</button>
+  <button onclick="toggleMenu()" title="Sections (M)">☰ Sections</button>
+  <button onclick="window.open('../diriyah-judges/index.html','_blank')" title="Arabic version">🇸🇦 العربية</button>
+  <button onclick="prev()" title="Previous">←</button>
+  <span class="cnt" id="cnt"></span>
+  <button onclick="next()" title="Next">→</button>
+  <button onclick="fullscreen()" title="Full screen (F)">⛶ Full screen</button>
+</div>
+<div id="menu"><h3>Sections</h3><div class="mods" id="mods"></div></div>
+
+<script src="content.js"></script>
+<script>DECK.parts.forEach(p => document.write('<script src="parts/' + p + '.js"><\/script>'));</script>
+<script src="../arduino/widgets.js"></script>
+<script src="../diriyah-judges/widgetsD_en.js"></script>
+<script src="en.js"></script>
+<script src="../shared/deck.js"></script>
+</body>
+</html>

@@ -16,7 +16,8 @@ const JSZip = require('jszip');
 const DIR = path.resolve(process.argv[2] || '.');
 const C = require(path.join(DIR, 'content.js'));
 C.parts.forEach(p => require(path.join(DIR, 'parts', p + '.js')));
-const NATIVE = require('./pptx-native.json');
+// النسخة الإنجليزية (C.lang = 'en'): كل الشرائح صور من المنصة نفسها (اتجاه من اليسار لليمين صحيح)
+const NATIVE = C.lang === 'en' ? [] : require('./pptx-native.json');
 const CACHE = path.join(DIR, '.pptx-cache');
 const SHOTS = fs.existsSync(path.join(CACHE, 'manifest.json')) ? JSON.parse(fs.readFileSync(path.join(CACHE, 'manifest.json'))) : {};
 
@@ -24,7 +25,7 @@ const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE';            // 13.333 × 7.5 بوصة (16:9)
 pres.title = C.title;
 pres.author = C.author;
-pres.rtlMode = true;
+pres.rtlMode = C.lang !== 'en';
 
 /* الألوان (نفس هوية جذور) */
 const K = {

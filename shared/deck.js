@@ -3,7 +3,8 @@
 const C = window.DECK || window.MAWAQIF;   // بيانات الدورة الحالية
 const SLIDES = [];                       // كل شرائح الدورة بالترتيب
 C.modules.forEach((m, mi) => m.slides.forEach(s => SLIDES.push({ ...s, mi })));
-const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);   // أرقام عربية
+const EN = C.lang === 'en';             // نسخة إنجليزية (من اليسار لليمين، وأرقام لاتينية)
+const AR = n => EN ? String(n) : String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);   // أرقام عربية
 const LETTERS = ['أ', 'ب', 'ج', 'د', 'هـ'];
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
@@ -20,7 +21,7 @@ const R = {
       <h1>${C.title}</h1>
       <div class="subt">${C.subtitle}</div>
       <div class="goldline"></div>
-      <div class="by">إعداد وتقديم: <b>${C.author}</b></div></div>`,
+      <div class="by">${EN ? 'Presented by' : 'إعداد وتقديم'}: <b>${C.author}</b></div></div>`,
 
   bio: s => `<div class="slide light">
       <div class="kicker">مقدّم الدورة</div>
@@ -208,7 +209,7 @@ Object.assign(R, {
       <h1 style="font-size:150px">${s.title}</h1>
       <div class="subt">${s.sub}</div>
       <div class="goldline"></div>
-      <div class="by">${C.title} · إعداد وتقديم: <b>${C.author}</b></div></div>`,
+      <div class="by">${C.title} · ${EN ? 'Presented by' : 'إعداد وتقديم'}: <b>${C.author}</b></div></div>`,
 });
 function quadCell(c) {
   return `<div class="cell f ${c.best ? 'best' : ''}"><div class="ci">${c.icon}</div><h3>${c.name}</h3><p>${c.desc}</p></div>`;
@@ -223,7 +224,7 @@ function fmt(sec) { return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(
 /* ========== العرض والتنقل ========== */
 function footer(s) {
   if (s.t === 'cover') return '';
-  return `<div class="foot"><div class="brand">🌳 <b>جذور</b> · ${C.title}</div><div class="sp"></div>
+  return `<div class="foot"><div class="brand">🌳 <b>${EN ? 'Juthoor' : 'جذور'}</b> · ${C.title}</div><div class="sp"></div>
     <div>${C.modules[s.mi].name}</div><div>·</div><div>${AR(cur + 1)}</div></div>`;
 }
 /* الأدوات التفاعلية تسجّل هنا ما يجب إيقافه عند مغادرة الشريحة (مؤقتات المحاكاة) */
@@ -300,7 +301,7 @@ function toggleMenu(force) {
     let idx = 0;
     document.getElementById('mods').innerHTML = C.modules.map((mod, mi) => {
       const first = idx; idx += mod.slides.length;
-      return `<button class="${SLIDES[cur].mi === mi ? 'cur' : ''}" onclick="goTo(${first})">${mod.name}<small>${AR(mod.slides.length)} شريحة</small></button>`;
+      return `<button class="${SLIDES[cur].mi === mi ? 'cur' : ''}" onclick="goTo(${first})">${mod.name}<small>${AR(mod.slides.length)} ${EN ? 'slides' : 'شريحة'}</small></button>`;
     }).join('');
   }
   m.classList.toggle('open', open);
