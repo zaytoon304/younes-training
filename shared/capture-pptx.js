@@ -53,9 +53,11 @@ const CHROME = process.env.CHROME || (process.platform === 'win32'
     // المشاهد المتحركة (window.DY_ANIM + عنصر .dygif): تُصوَّر إطارًا إطارًا وتصير صورة GIF تتحرك داخل البوربوينت
     const anim = await pg.evaluate(() => { const a = window.DY_ANIM, el = document.querySelector('#stage .dygif');
       if (!a || !el) return null; const st = document.getElementById('stage').getBoundingClientRect(), r = el.getBoundingClientRect();
-      return { period: a.period, fps: SLIDES[cur].gifFps, clip: { x: r.left, y: r.top, width: r.width, height: r.height },
+      return { period: a.period, fps: SLIDES[cur].gifFps, video: SLIDES[cur].video, clip: { x: r.left, y: r.top, width: r.width, height: r.height },
         x: (r.left - st.left) / st.width, y: (r.top - st.top) / st.height, w: r.width / st.width, h: r.height / st.height }; });
-    if (anim && !process.env.NOGIF) {
+    // شريحة لها فيديو جاهز بالصوت (sl.video داخل مجلد العرض، مثل story.mp4): لا GIF، والبوربوينت يضع الفيديو بعرض الشريحة
+    if (anim && anim.video && fs.existsSync(path.join(DIR, anim.video))) manifest[i].video = anim.video;
+    else if (anim && !process.env.NOGIF) {
       const fps = anim.fps || Math.min(10, Math.max(3, 180 / anim.period)), n = Math.round(anim.period * fps);
       const fdir = path.join(OUT, `f${i + 1}`); fs.mkdirSync(fdir, { recursive: true });
       await pg.evaluate(() => { window.DY_HOLD = true; });

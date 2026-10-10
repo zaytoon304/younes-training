@@ -595,9 +595,12 @@ C.modules.forEach((m, mi) => m.slides.forEach(raw => {
     shot.layers.forEach((f, k) => s.addImage({ path: path.join(CACHE, f), x: 0, y: 0, w: W, h: 7.5, objectName: `anim-g${k + 1}-${++uid}` }));
     // مشهد متحرك: صورة GIF فوق مكانه في لقطة الشريحة، تتحرك وحدها أثناء العرض
     if (shot.gif) s.addImage({ path: path.join(CACHE, shot.gif.file), x: shot.gif.x * W, y: shot.gif.y * 7.5, w: shot.gif.w * W, h: shot.gif.h * 7.5 });
+    // فيديو بالصوت بعرض الشريحة (غلافه لقطة الشريحة)، ويبدأ وحده عند فتحها: shared/pptx-audio-triggers.ps1
+    if (shot.video) s.addMedia({ type: 'video', path: path.join(DIR, shot.video), x: 0, y: 0, w: W, h: 7.5,
+      cover: 'data:image/jpeg;base64,' + fs.readFileSync(path.join(CACHE, shot.base)).toString('base64'), objectName: `video-${++uid}` });
     // أصوات: ملف صوتي شفاف فوق زر ▶ في الصورة، يعمل بالنقر عليه أثناء العرض
     (shot.audio || []).forEach(a => s.addMedia({ type: 'audio', path: path.join(DIR, a.src), x: a.x * W, y: a.y * 7.5, w: a.w * W, h: a.h * 7.5, cover: CLEAR, objectName: `audio-${++uid}` }));
-    const tip = shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : shot.gif ? '🎬 المشهد يتحرك وحده أثناء العرض، وهو تفاعلي بالكامل في منصة جذور.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
+    const tip = shot.video ? '🎬 فيديو بصوت الراوي يبدأ وحده عند فتح الشريحة.' : shot.layers.length ? '🖱️ اضغط للانتقال بين الخطوات.' : shot.gif ? '🎬 المشهد يتحرك وحده أثناء العرض، وهو تفاعلي بالكامل في منصة جذور.' : '💡 هذه الأداة تفاعلية بالكامل في منصة جذور، فاعرضها من المنصة إن أمكن.';
     s.addNotes(((sl.notes || '') + '\n\n' + tip).trim());
   }
 }));

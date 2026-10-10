@@ -309,6 +309,9 @@ while True:
     ],
     notes: 'Each command is one letter flying over the network to both robots, just like the eye commands of the Masmak model. And no hand means stop: safety first.' },
 ]});
+DECK.modules[0].slides.splice(1, 0,
+  { t: 'fullstory', kicker: '🎬 The whole story', title: 'From the visitor’s eyes… to the Civil Defense officer', video: 'story.mp4',
+    notes: 'Plays first in front of the judges, with the English narrator (in PowerPoint it is a video that starts by itself; on the web press 🔊 Narrator). Chapter 0: the visitor in the LEGO wheelchair, the camera welcomes him, his eyes turn the fortress right and left with the light wave, he holds his gaze and gets sign language + audio narration together, and a blink or the watchdog stops the turntable. Then the safety station: (1) fire only: the leader puts it out and backs up. (2) gas only: the leader gives robot 2 permission. (3) fire and gas: leader to the fire, robot 2 to the gas + Telegram. (4) a fire too big: “we need help”, and the Civil Defense officer leads robots 3 and 4 by hand until “the museum is safe”. Let it run completely, then start explaining.' });
 DECK.modules.push({ id: 'end', name: '🏆 Challenges', slides: [
   { t: 'table', kicker: '🧯 Our challenges', title: 'Five challenges the team faced… and how we solved them',
     head: ['The challenge', 'The solution'], widths: ['1fr', '1.5fr'],

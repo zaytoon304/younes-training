@@ -8,7 +8,7 @@
   const T = (t, title) => all.find(s => s.t === t && (!title || (s.title || '').startsWith(title)));
   const after = s => all[all.indexOf(s) + 1];           // الشريحة التي تلي التطبيق العملي (الكود)
   const GROUPS = [
-    { id: 'idea', name: '🏰 لمسة تراث', s: [S(1), S(3), S(4), S(5), S(13)] },
+    { id: 'idea', name: '🏰 لمسة تراث', s: [S(1), T('fullstory'), S(3), S(4), S(5), S(13)] },
     { id: 'table', name: '🎠 المجسّم الدوّار', s: [S(30), S(31)] },
     { id: 'leds', name: '🌈 الإضاءة الذكية', s: [S(40), S(41)] },
     { id: 'screen', name: '🤟 لغة الإشارة والصوت', s: [S(47), S(48)] },

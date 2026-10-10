@@ -15,6 +15,13 @@ try {
     # آمن عند التكرار: نحذف مشغّلات النقر القديمة أولًا حتى لا يتضاعف الصوت
     for ($i = $s.TimeLine.InteractiveSequences.Count; $i -ge 1; $i--) { $q = $s.TimeLine.InteractiveSequences.Item($i); for ($j = $q.Count; $j -ge 1; $j--) { $q.Item($j).Delete() } }
     foreach ($sh in @($s.Shapes)) {
+      if ($sh.Type -eq 16 -and $sh.Name -like 'video-*') {    # فيديو: يبدأ وحده مع فتح الشريحة (بلا تكرار)
+        $ms = $s.TimeLine.MainSequence
+        for ($j = $ms.Count; $j -ge 1; $j--) { if ($ms.Item($j).Shape.Name -eq $sh.Name) { $ms.Item($j).Delete() } }
+        $null = $ms.AddEffect($sh, 83, 0, 2)                  # 83 = تشغيل الوسائط · 2 = مع السابق (تلقائيًا)
+        $sh.AnimationSettings.PlaySettings.HideWhileNotPlaying = 0
+        $added++
+      }
       if ($sh.Type -eq 16 -and $sh.Name -like 'audio-*') {    # 16 = msoMedia
         $seq = $s.TimeLine.InteractiveSequences.Add()
         $null = $seq.AddTriggerEffect($sh, 83, 4, $sh)         # 83 = تشغيل الوسائط · 4 = عند النقر على الشكل
