@@ -12,7 +12,7 @@ root.DECK = {
   author: 'أ. محمد زيتون',
   sectionLabel: 'الوحدة',
   mapStart: 0,
-  parts: ['00-open', '01-pi', '02-setup', '03-python', '04-gpio', '05-motors', '06-sonar', '07-camera', '08-faces', '09-voice'],
+  parts: ['00-open', '01-pi', '02-setup', '03-python', '04-gpio', '05-motors', '06-sonar', '07-camera', '08-faces', '09-voice', '10-brain', '11-final'],
   modules: [],
 };
 if (typeof module !== 'undefined' && module.exports) module.exports = root.DECK;

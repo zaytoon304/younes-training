@@ -482,3 +482,61 @@ svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
 .nb-spbot .nb-bot{max-height:560px}
 .nb-spbot.talk [data-p="speaker"]{animation:nbTalk .25s ease-in-out infinite alternate;transform-origin:400px 427px}
 @keyframes nbTalk{to{transform:scaleY(1.35)}}
+
+/* =================== الوحدة ١٠: عقل نبيه =================== */
+.nb-loop{flex:1;display:grid;grid-template-columns:1fr 0.9fr;gap:40px;align-items:center;min-height:0}
+.nb-loopsvg{width:100%;height:auto;max-height:720px;direction:ltr}
+.nb-larc{transition:stroke-dashoffset .8s ease}
+.nb-lnode circle{transition:all .4s}.nb-lnode.on circle{fill:#D9AE4B}
+.nb-ltxt{font-family:"Cairo";font-size:38px;font-weight:900;fill:#fff}.nb-ltxt.dark{fill:var(--navy-700);font-size:40px}
+.nb-loop .nb-info .nb-en{font-size:24px;margin-top:14px}
+.nb-modes{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:34px;min-height:0;align-items:start}
+.nb-mside{display:flex;flex-direction:column;gap:22px}
+.nb-mrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.nb-mrow span{font-size:28px;font-weight:900;color:var(--navy-700);width:100%}
+.nb-mbtn,.nb-ebtn{font-family:"Cairo";font-size:28px;font-weight:800;background:#fff;border:3px solid var(--line);border-radius:18px;padding:8px 18px;cursor:pointer;color:var(--navy-800)}
+.nb-mbtn{font-size:32px;padding:10px 22px}
+.nb-mbtn.on{background:var(--navy-800);color:var(--gold-light);border-color:var(--navy-800)}
+.nb-ebtn.on{background:#fff8e6;border-color:var(--gold)}
+.nb-mout{display:flex;flex-direction:column;gap:12px}
+.nb-mact{font-size:36px;font-weight:900;color:var(--navy-900);background:var(--ok-bg);border:3px solid var(--ok);border-radius:22px;padding:16px 22px}
+.nb-msay{font-size:32px;font-weight:800;color:#8a6a1c;background:#fff8e6;border:3px solid var(--gold);border-radius:22px;padding:12px 22px}
+.nb-mcode{max-height:720px;overflow:hidden}
+.nb-mcode .code.nb-small{font-size:21px;line-height:1.38}
+
+/* =================== الوحدة ١١: الجوال =================== */
+.nb-phonelab{flex:1;display:grid;grid-template-columns:0.62fr 1.38fr;gap:46px;min-height:0;align-items:center}
+.nb-phone{position:relative;justify-self:center;width:380px;background:#0A1230;border-radius:56px;padding:56px 18px 26px;box-shadow:0 30px 60px rgba(10,18,48,.4),inset 0 0 0 4px #2E4288}
+.nb-pnotch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:120px;height:26px;border-radius:99px;background:#000}
+.nb-purl{font-size:18px;color:#9fb1ff;text-align:center;margin-bottom:10px;font-family:"JetBrains Mono",monospace}
+.nb-pscreen{background:var(--navy-800);border-radius:30px;padding:16px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.nb-pscreen h4{font-size:26px;color:var(--gold-light)}
+.nb-pcam{width:100%;aspect-ratio:4/3;border-radius:16px;border:3px solid var(--gold);background:linear-gradient(180deg,#bfe3ff 55%,#5cbf5f 55%);position:relative}
+.nb-pball{position:absolute;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a80,#d63a3a);left:60%;top:55%}
+.nb-pad2{display:grid;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,64px);gap:8px}
+.nb-pad2 button{font-size:30px;border:0;border-radius:18px;background:#2E4288;cursor:pointer;touch-action:none}
+.nb-pad2 button.on{background:var(--gold)}
+.nb-pad2 .u{grid-column:2}.nb-pad2 .l{grid-column:1;grid-row:2}.nb-pad2 .s{grid-column:2;grid-row:2;background:#c0392b}.nb-pad2 .r{grid-column:3;grid-row:2}.nb-pad2 .d{grid-column:2;grid-row:3}
+.nb-ptalk{display:flex;gap:8px;width:100%}
+.nb-ptalk input{flex:1;font-family:"Cairo";font-size:20px;border:0;border-radius:12px;padding:8px 12px;min-width:0}
+.nb-ptalk button{font-size:24px;border:0;border-radius:12px;background:var(--gold);padding:0 14px;cursor:pointer}
+.nb-pright{display:flex;flex-direction:column;gap:20px}
+.nb-pfield{position:relative;height:520px;border-radius:28px;background:repeating-linear-gradient(0deg,#d8c9a8 0 2px,transparent 2px 60px),repeating-linear-gradient(90deg,#d8c9a8 0 2px,transparent 2px 60px),#efe6d2;
+  border:6px solid #b9a77f;overflow:hidden}
+.nb-pbot{position:absolute;width:150px;transition:left .04s linear,top .04s linear}
+.nb-pbot .nb-bot{width:100%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.3))}
+.nb-pbubble{position:absolute;top:20px;left:50%;transform:translateX(-50%) scale(.6);opacity:0;background:#fff;border:3px solid var(--gold);border-radius:24px;padding:10px 24px;
+  font-size:30px;font-weight:800;color:var(--navy-900);transition:all .3s}
+.nb-pbubble.show{opacity:1;transform:translateX(-50%) scale(1)}
+.nb-pnet{display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:900;color:var(--navy-800)}
+.nb-pnet i{flex:1;text-align:center;font-style:normal;font-size:24px;color:var(--muted);border-bottom:4px dashed var(--gold);margin:0 16px;padding-bottom:4px}
+.nb-plog{font-family:"JetBrains Mono",monospace;font-size:24px;background:#0b1026;color:#9ece6a;border-radius:16px;padding:12px 20px;text-align:left}
+.nb-mcode .code.nb-small{font-size:19px;line-height:1.34}
+.nb-phone{width:330px;padding:46px 16px 20px;border-radius:48px}
+.nb-pscreen{gap:10px;padding:12px}
+.nb-pcam{aspect-ratio:16/9}
+.nb-pad2{grid-template-columns:repeat(3,62px);grid-template-rows:repeat(3,52px);gap:6px}
+.nb-pfield{height:440px}
+.nb-ectl{display:flex;flex-direction:column;gap:18px}
+.nb-ectl .go{align-self:flex-start;font-size:32px}
+.nb-echo{grid-template-columns:1fr 1fr}

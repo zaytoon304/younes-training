@@ -25,8 +25,8 @@ function echoHTML() {
       <div><span>⏱️ زمن الذهاب والعودة</span><b class="nb-et">—</b></div>
       <div><span>🧮 المسافة = الزمن × سرعة الصوت ÷ ٢</span><b class="nb-ed">—</b></div>
     </div>
-    <label class="nb-slider"><span>حرّك الجدار: <b class="nb-ev">٦٠</b> سم</span><input type="range" min="5" max="150" value="60"></label>
-    <button class="nb-btn go">📢 أطلق الصوت</button>
+    <div class="nb-ectl"><label class="nb-slider"><span>حرّك الجدار: <b class="nb-ev">٦٠</b> سم</span><input type="range" min="5" max="150" value="60"></label>
+      <button class="nb-btn go">📢 أطلق الصوت</button></div>
   </div>`;
 }
 function bindEcho(sl) {

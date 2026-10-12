@@ -3,7 +3,7 @@ import nabeeh
 from time import sleep
 
 MODE = "explore"   # غيّرها إلى: "explore" (مستكشف) أو "guard" (حارس) أو "hide" (الغميضة)
-FRIEND = "سارة"    # الصديق الذي يبحث عنه نبيه في لعبة الغميضة
+FRIEND = "عمر"     # الصديق الذي يبحث عنه نبيه في لعبة الغميضة
 
 
 def explore():
