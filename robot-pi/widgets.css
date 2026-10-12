@@ -425,3 +425,60 @@ svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
 .nb-follow .code.nb-small{font-size:24px;line-height:1.45}
 .nb-fcv{width:auto;max-width:100%;max-height:450px;align-self:center}
 .nb-follow{align-items:center}
+
+/* =================== الوحدة ٨: الوجوه =================== */
+.nb-facelab{flex:1;display:flex;flex-direction:column;gap:18px;min-height:0}
+.nb-vrow{display:flex;align-items:center;gap:14px;font-size:28px;font-weight:800;color:var(--navy-700)}
+.nb-vbtn{display:flex;align-items:center;gap:10px;font-family:"Cairo";font-size:26px;font-weight:800;background:#fff;border:3px solid var(--line);border-radius:18px;padding:4px 18px 4px 8px;cursor:pointer;color:var(--navy-800)}
+.nb-vbtn.on{border-color:var(--gold);background:#fff8e6}
+.nb-face{width:150px;height:auto;direction:ltr}.nb-face.mini{width:54px}
+.nb-fstage{flex:1;display:grid;grid-template-columns:0.7fr 0.6fr 1.6fr;grid-template-rows:1fr auto;gap:18px 26px;align-items:start}
+.nb-fcol{display:flex;flex-direction:column;align-items:center;gap:10px;background:#fff;border:3px solid var(--line);border-radius:24px;padding:16px;transition:opacity .4s}
+.nb-fcol.wide{align-items:stretch}
+.nb-fcol small{font-size:24px;font-weight:900;color:var(--navy-700)}
+.nb-dim{opacity:.25}
+.nb-fcam{position:relative;background:#dfe9f7;border-radius:18px;padding:10px}
+.nb-fcam .nb-face{width:170px}
+.nb-fbox{position:absolute;inset:14px 18px 8px;border:5px solid #2ecc71;border-radius:12px;opacity:0;transition:opacity .4s}
+.nb-fcam.found .nb-fbox{opacity:1}
+.nb-print{display:flex;align-items:flex-end;gap:5px;height:150px;width:100%;padding:8px;background:#0b1026;border-radius:14px}
+.nb-print i{flex:1;background:linear-gradient(180deg,#F0CC7A,#D9AE4B);border-radius:4px 4px 0 0}
+.nb-print.mini{height:46px;width:110px;padding:4px;gap:2px}
+.nb-fnote{font-size:20px;font-weight:700;color:var(--muted)}
+.nb-frow2{display:flex;align-items:center;gap:12px;border-radius:16px;padding:4px 10px;transition:background .3s}
+.nb-frow2 b{font-size:28px;min-width:80px;color:var(--navy-800)}
+.nb-frow2.win{background:var(--ok-bg);box-shadow:0 0 0 3px var(--ok)}
+.nb-sbar{flex:1;height:22px;background:#e9ecf3;border-radius:99px;overflow:hidden;position:relative}
+.nb-sbar::after{content:"";position:absolute;top:-4px;bottom:-4px;right:60%;border-left:4px dashed var(--bad)}
+.nb-sbar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:width .6s}
+.nb-frow2 em{font-style:normal;font-size:26px;font-weight:900;min-width:70px;text-align:left;color:var(--navy-800)}
+.nb-flimit{font-size:20px;font-weight:800;color:var(--bad);text-align:left}
+.nb-fresult{grid-column:1/-1;font-size:44px;font-weight:900;text-align:center;border-radius:24px;padding:14px;opacity:0;transform:translateY(16px);transition:all .4s}
+.nb-fresult small{display:block;font-size:26px;font-weight:700}
+.nb-fresult.show{opacity:1;transform:none}
+.nb-fresult.ok{background:var(--ok-bg);color:#1e6b48;border:3px solid var(--ok)}
+.nb-fresult.bad{background:#fff8e6;color:#8a6a1c;border:3px solid var(--gold)}
+
+/* =================== الوحدة ٩: الصوت =================== */
+.nb-chain{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nb-clink{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border:3px solid var(--line);border-radius:26px;padding:20px 8px;transition:all .35s}
+.nb-cicon{font-size:72px;line-height:1}
+.nb-clink h3{font-size:30px;font-weight:900;color:var(--navy-800);text-align:center}
+.nb-clink.on{border-color:var(--gold);background:#fff8e6;transform:translateY(-10px);box-shadow:0 16px 30px rgba(176,138,46,.3)}
+.nb-clink.done{border-color:var(--ok);background:var(--ok-bg)}
+.nb-carrow{font-size:44px;color:var(--gold-dark);font-weight:900}
+.nb-cdetail{margin-top:30px}
+.nb-cmsg{background:var(--navy-800);color:#fff;border-radius:28px;padding:26px 36px;font-size:34px;font-weight:700;line-height:1.6;min-height:220px}
+.nb-cmsg b{color:var(--gold-light);font-size:40px}
+.nb-cmsg p{margin:6px 0 12px}
+.nb-cbubble{display:inline-block;background:#fff;color:var(--navy-900);border-radius:24px;padding:10px 26px;font-weight:800;margin-left:20px}
+.nb-cmsg code{display:inline-block;font-family:"JetBrains Mono",monospace;background:#0b1026;color:#5fd7e0;border-radius:14px;padding:8px 22px;font-size:30px}
+.nb-speak{flex:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;min-height:0}
+.nb-spside{display:flex;flex-direction:column;gap:16px}
+.nb-spside textarea{font-family:"Cairo";font-size:36px;font-weight:700;border:3px solid var(--line);border-radius:22px;padding:16px 22px;height:150px;resize:none;color:var(--navy-900)}
+.nb-spchips{display:flex;flex-wrap:wrap;gap:10px}
+.nb-spchip{font-family:"Cairo";font-size:22px;font-weight:800;background:#fff8e6;border:2px solid var(--gold);border-radius:999px;padding:6px 18px;cursor:pointer;color:var(--navy-800)}
+.nb-spst{font-size:26px;font-weight:800;color:var(--navy-700);min-height:40px}
+.nb-spbot .nb-bot{max-height:560px}
+.nb-spbot.talk [data-p="speaker"]{animation:nbTalk .25s ease-in-out infinite alternate;transform-origin:400px 427px}
+@keyframes nbTalk{to{transform:scaleY(1.35)}}
