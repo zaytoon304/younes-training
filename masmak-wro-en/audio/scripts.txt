@@ -1,0 +1,6 @@
+voice: en-GB-RyanNeural
+cover.mp3: Honorable judges, welcome. We are proud to present our project: Touch of Heritage… the fully interactive Masmak Fortress.
+problem.mp3: Heritage belongs to all of us… but it is not easy for everyone to reach. Visitors with motor disabilities struggle to move around fixed models. Visitors with hearing disabilities miss the guide's explanation. And visitors with visual disabilities cannot see the details on display.
+idea.mp3: Our idea is one simple, natural interface: eye movement… serving all three groups at once. And a smart safety system protects the museum and its visitors. Let’s watch the whole story.
+challenges.mp3: The road was not easy. The team faced five real challenges. Videos shorter than their audio: one command repeats the last frame, and we kept the originals. A lost message made the turntable over-rotate: we found it in the logs, and added a watchdog that stops it after one second with no message. Reversed pupil indices: we printed the raw coordinates, moved our eyes, and found the order was the opposite of common sources. Very quiet audio: we raised it in three places: the sound card, the system, and the player. A forgotten Raspberry Pi password: we booted it in a repair mode from the SD card and set a new password, without losing a single file.
+live.mp3: And now… we present the project to you, live.

@@ -66,9 +66,16 @@ async def main():
                 parts, starts, t = [], [], 0.0
                 for i, txt in enumerate(segs):
                     f = os.path.join(tmp, f'{key}_{i}.mp3')
-                    for _ in range(3):
-                        try: await edge_tts.Communicate(txt, voice).save(f); break
-                        except Exception as e: print('retry', key, i, e)
+                    # الخدمة تتعثر أحيانًا: نعيد حتى يخرج ملف صوت حقيقي
+                    for attempt in range(8):
+                        try:
+                            await edge_tts.Communicate(txt, voice).save(f)
+                            if os.path.getsize(f) > 1000: break
+                        except Exception as e:
+                            print('retry', key, i, type(e).__name__)
+                        await asyncio.sleep(2 + attempt * 2)
+                    else:
+                        raise SystemExit(f'تعذّر توليد صوت: {key} {i}')
                     if i: parts.append(sil); t += GAP
                     starts.append(round(t, 2)); parts.append(f); t += dur(f)
                 lst = os.path.join(tmp, f'{key}.txt')
