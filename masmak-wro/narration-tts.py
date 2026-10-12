@@ -20,11 +20,11 @@ AR = {
   'idea': ['فكرتنا واجهة واحدة بسيطة وطبيعية: حركة العين… تخدم الفئات الثلاث في وقت واحد. ومعها منظومة حماية ذكية تحرس المتحف وزوّاره. شاهدوا القصة كاملة.'],
   'challenges': [
     'لم يكن الطريق سهلًا. واجه الفريق خمسة تحديات حقيقية.',
-    'فيديو أقصر من صوته: فمدّدناه بتجميد آخر إطار.',
-    'ورسالة ضائعة تجعل المنصة تدور أكثر من اللازم: فأضفنا حارسًا يوقفها بعد ثانية من الصمت.',
-    'ومؤشرات البؤبؤ معكوسة: فتحققنا بالإحداثيات الخام بأنفسنا.',
-    'وصوت خافت جدًا: فرفعناه من النظام ومن المشغّل معًا.',
-    'وكلمة مرور منسية للراسبيري: فأعدنا ضبطها دون أن نفقد ملفًا واحدًا.',
+    'فيديو أقصر من صوته: فكرّرنا آخر صورة بأمر واحد، واحتفظنا بالنسخ الأصلية.',
+    'ورسالة ضائعة تجعل المنصة تدور أكثر من اللازم: اكتشفناها في سجلات التشغيل، وأضفنا حارسًا يوقفها لو مرّت ثانية بلا رسالة.',
+    'ومؤشرات البؤبؤ معكوسة: طبعنا الأرقام الخام وحرّكنا عيوننا، فوجدنا الترتيب عكس المصادر.',
+    'وصوت خافت جدًا: رفعناه من ثلاثة أماكن: كرت الصوت، والنظام، والمشغّل.',
+    'وكلمة مرور منسية للراسبيري: شغّلناه بوضع إصلاح من كرت الذاكرة، وكتبنا كلمة مرور جديدة دون أن نفقد ملفًا واحدًا.',
   ],
   'live': ['والآن… نقدّم لكم المشروع على الطبيعة.'],
 }
@@ -39,11 +39,11 @@ EN = {
   'idea': ['Our idea is one simple, natural interface: eye movement… serving all three groups at once. And a smart safety system protects the museum and its visitors. Let’s watch the whole story.'],
   'challenges': [
     'The road was not easy. The team faced five real challenges.',
-    'Videos shorter than their audio: we froze each video’s last frame.',
-    'A lost message made the turntable over-rotate: we added a watchdog that stops it after one second of silence.',
-    'Reversed pupil indices: we checked the raw coordinates ourselves.',
-    'Very quiet audio: we raised the volume in the system and in the player.',
-    'A forgotten Raspberry Pi password: we reset it without losing a single file.',
+    'Videos shorter than their audio: one command repeats the last frame, and we kept the originals.',
+    'A lost message made the turntable over-rotate: we found it in the logs, and added a watchdog that stops it after one second with no message.',
+    'Reversed pupil indices: we printed the raw coordinates, moved our eyes, and found the order was the opposite of common sources.',
+    'Very quiet audio: we raised it in three places: the sound card, the system, and the player.',
+    'A forgotten Raspberry Pi password: we booted it in a repair mode from the SD card and set a new password, without losing a single file.',
   ],
   'live': ['And now… we present the project to you, live.'],
 }
