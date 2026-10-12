@@ -1,0 +1,71 @@
+/* عنوان الغلاف: مساحة تحت السطر حتى لا تُقص نقاط الياء والجيم بالتدرّج اللوني */
+.cover h1{padding-bottom:.3em;margin-bottom:10px}
+
+/* أدوات دورة «روبوتي الذكي» — كل الأصناف تبدأ بـ nb- */
+
+/* ---------- نبيه يعرّف بنفسه ---------- */
+.nb-meet{flex:1;display:grid;grid-template-columns:1.3fr 0.7fr;gap:40px;align-items:center;min-height:0}
+.nb-talk{display:flex;flex-direction:column;gap:26px;align-items:flex-start}
+.nb-bubble{position:relative;background:#fff;color:var(--navy-900);font-size:46px;font-weight:800;line-height:1.45;
+  padding:26px 44px;border-radius:44px;box-shadow:0 18px 40px rgba(0,0,0,.35);max-width:1000px}
+.nb-bubble::after{content:"";position:absolute;left:-26px;top:34px;border:18px solid transparent;border-right:30px solid #fff;border-left:0}
+.nb-bubble:last-child{background:var(--gold-light)}
+.nb-bubble:last-child::after{border-right-color:var(--gold-light)}
+.nb-stage{display:flex;align-items:center;justify-content:center;min-height:0;height:100%}
+.nb-bot{width:100%;height:auto;max-height:760px;filter:drop-shadow(0 26px 40px rgba(5,10,28,.35))}
+.nb-wave .nb-bot{animation:nbHover 3.2s ease-in-out infinite}
+@keyframes nbHover{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+
+/* حركات صغيرة تعطي نبيه روحًا: العينان تتلفتان، وضوء النشاط يرمش، وضوء التسجيل ينبض */
+.nb-pupils{animation:nbLook 6s ease-in-out infinite}
+@keyframes nbLook{0%,40%,100%{transform:translateX(0)}50%,60%{transform:translateX(-14px)}75%,85%{transform:translateX(14px)}}
+.nb-act{animation:nbBlink 1.1s steps(2) infinite}
+.nb-rec{animation:nbBlink 1.6s ease-in-out infinite}
+@keyframes nbBlink{50%{opacity:.15}}
+.nb-tiny{fill:#fff;font-family:"Cairo";font-size:28px;font-weight:900}
+
+/* ---------- الرسمة التفاعلية + البطاقة الجانبية ---------- */
+.nb-grid{flex:1;display:grid;grid-template-columns:0.85fr 1.15fr;gap:44px;min-height:0;align-items:center}
+.nb-grid.wide{grid-template-columns:0.72fr 1.4fr}
+.nb-part{cursor:pointer;transition:opacity .25s}
+.nb-part:hover{filter:brightness(1.12)}
+svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
+.nb-part.sel{filter:drop-shadow(0 0 16px #F0CC7A) drop-shadow(0 0 5px #D9AE4B)}
+.nb-panel{display:flex;flex-direction:column;gap:24px}
+.nb-info{background:var(--navy-800);color:#fff;border-radius:34px;padding:38px 44px;min-height:420px}
+.nb-info.pop{animation:enter .45s ease both}
+.nb-icon{font-size:84px;line-height:1;margin-bottom:12px}
+.nb-info h3{font-size:62px;font-weight:900;color:var(--gold-light);line-height:1.25}
+.nb-en{font-family:"JetBrains Mono",monospace;font-size:26px;color:#9fb1ff;margin:6px 0 14px;text-align:right}
+.nb-human{display:inline-block;background:var(--gold);color:var(--navy-900);font-size:32px;font-weight:900;
+  padding:6px 24px;border-radius:999px;margin-bottom:14px}
+.nb-info p{font-size:38px;font-weight:600;line-height:1.55;color:#e3e7f6}
+.nb-hint{font-size:28px;font-weight:700;color:var(--muted);line-height:1.5;text-align:center}
+
+/* لوحة Pi 4 */
+.nb-pi{width:100%;height:auto;max-height:740px;filter:drop-shadow(0 26px 40px rgba(10,40,20,.35))}
+.nb-silk{fill:#eafbe9;font-family:"Cairo",sans-serif;font-size:22px;font-weight:800}
+.nb-silk.big{font-size:34px;font-weight:900}
+.nb-silk.dark{fill:#5E6782;font-size:20px}
+.nb-chip{fill:#5e6782;font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:700;letter-spacing:1px}
+.nb-chip.light{fill:#8a90a0;font-size:30px}
+
+/* ---------- المقارنة ---------- */
+.nb-vs{display:grid;grid-template-columns:1fr 300px 1fr;gap:12px 22px;align-items:stretch}
+.nb-vhead{display:flex;align-items:center;gap:22px;border-radius:30px;padding:16px 32px;color:#fff}
+.nb-vhead span{font-size:72px;line-height:1}
+.nb-vhead h3{font-size:46px;font-weight:900;line-height:1.2}
+.nb-vhead p{font-size:28px;font-weight:700;opacity:.85}
+.nb-vhead.a{background:linear-gradient(135deg,#25a04a,#157331)}
+.nb-vhead.b{background:linear-gradient(135deg,#1597a3,#0a6670)}
+.nb-vmid{display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:900;color:var(--gold-dark)}
+.nb-vrow{display:contents}
+.nb-vrow > div{transition:opacity .35s,transform .35s}
+.nb-vrow:not(.in) > div{opacity:0;transform:translateY(16px)}
+.nb-vc{background:#fff;border:3px solid var(--line);border-radius:24px;padding:10px 26px;font-size:33px;font-weight:700;
+  line-height:1.4;display:flex;align-items:center;color:var(--ink)}
+.nb-vq{display:flex;align-items:center;justify-content:center;text-align:center;font-size:32px;font-weight:900;
+  color:var(--navy-600);background:var(--cream);border-radius:24px;padding:10px}
+.nb-verdict{margin-top:20px;align-self:center;background:var(--navy-800);color:#fff;font-size:40px;font-weight:800;
+  padding:20px 46px;border-radius:999px}
+.nb-verdict b{color:var(--gold-light)}
