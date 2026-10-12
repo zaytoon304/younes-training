@@ -260,3 +260,108 @@ svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
 .nb-kcode{font-family:"JetBrains Mono",monospace;background:#0b1026;color:#e6e9f5;border-radius:999px;padding:2px 16px;margin-right:10px;font-size:.85em}
 .nb-py{position:relative}
 .nb-chip{font-family:"Cairo",sans-serif}
+
+/* =================== الوحدة ٤: الدبابيس والتوصيل =================== */
+.nb-gold{color:var(--gold-light)}
+.nb-pgrid{flex:1;display:grid;grid-template-columns:0.62fr 1.5fr;gap:34px;min-height:0;align-items:center;margin-top:10px}
+.nb-pgrid .nb-info{min-height:0;padding:28px 34px}.nb-pgrid .nb-info h3{font-size:48px}.nb-pgrid .nb-info p{font-size:31px}
+.nb-pwrap{display:flex;flex-direction:column;gap:22px;align-items:center}
+.nb-header{display:grid;grid-template-columns:repeat(20,1fr);grid-template-rows:56px auto auto 56px;gap:8px 6px;background:#11161f;border-radius:20px;
+  padding:14px 16px;width:100%;box-shadow:0 20px 40px rgba(11,16,38,.3)}
+.nb-pin{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border-radius:10px;padding:6px 0;transition:all .25s}
+.nb-pin i{font-style:normal;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;
+  border:3px solid #d9b44a}
+.nb-pin b{font-family:"JetBrains Mono",monospace;font-size:15px;color:#cfd5ea;font-weight:700}
+.nb-pin.v5 i{background:#d63a3a}.nb-pin.v3 i{background:#e67e22}.nb-pin.gnd i{background:#000}.nb-pin.gpio i{background:#1f8a3c}.nb-pin.id i{background:#7d8597}
+.nb-header.has-sel .nb-pin:not(.sel){opacity:.25}
+.nb-pin.sel{background:rgba(240,204,122,.18)}.nb-pin.sel i{box-shadow:0 0 0 4px var(--gold-light),0 0 18px var(--gold)}
+.nb-ptag{align-self:center;justify-self:center;font-size:16px;font-weight:900;color:var(--navy-900);background:var(--gold-light);border-radius:8px;padding:2px 6px;
+  white-space:nowrap;opacity:0;transition:opacity .3s;direction:rtl}
+.nb-ptag.on{opacity:1}
+.nb-plegend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:26px;font-weight:800}
+.nb-plegend span{display:flex;align-items:center;gap:8px;color:var(--navy-700)}
+.nb-plegend span::before{content:"";width:24px;height:24px;border-radius:50%;background:#1f8a3c}
+.nb-plegend .v5::before{background:#d63a3a}.nb-plegend .v3::before{background:#e67e22}.nb-plegend .gnd::before{background:#000}
+.nb-plegend .mine::before{display:none}
+
+/* مشهد التوصيل */
+.nb-wgrid{flex:1;display:grid;grid-template-columns:0.72fr 1.4fr;gap:34px;min-height:0;align-items:start;margin-top:8px}
+.nb-wgrid .nb-info{min-height:0;padding:26px 32px}.nb-wgrid .nb-info h3{font-size:44px}.nb-wgrid .nb-info p{font-size:30px}
+.nb-wlist{list-style:none;counter-reset:w;display:flex;flex-direction:column;gap:8px}
+.nb-wlist li{counter-increment:w;display:flex;align-items:center;gap:14px;font-size:26px;font-weight:800;color:var(--muted);background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 16px}
+.nb-wlist li::before{content:counter(w,arabic-indic);width:38px;height:38px;border-radius:50%;background:#e9ecf3;color:var(--navy-700);display:flex;align-items:center;justify-content:center;flex:none}
+.nb-wlist li.done{color:var(--ok)}.nb-wlist li.done::before{content:"✓";background:var(--ok);color:#fff}
+.nb-wlist li.now{color:var(--navy-900);border-color:var(--gold);background:#fff8e6}.nb-wlist li.now::before{background:var(--gold);color:#fff}
+.nb-wsvg{width:100%;height:auto;max-height:800px}
+.nb-wsvg [data-s]{transition:opacity .45s}
+.nb-wsvg .nb-hide{opacity:0}
+.nb-wsvg .nb-now{filter:drop-shadow(0 0 10px #F0CC7A) drop-shadow(0 0 4px #D9AE4B)}
+.nb-wl{font-family:"Cairo";font-size:22px;font-weight:800;fill:#3b4460}
+.nb-wpin{font-family:"JetBrains Mono",monospace;font-size:19px;font-weight:700;fill:#3b4460}
+.nb-wpin.w{fill:#fff}.nb-wpin.big{font-size:34px}
+.nb-glow{opacity:0;transition:opacity .4s}
+.nb-wsvg.lit .nb-glow,.nb-bigled.on .nb-glow{opacity:1}
+.nb-wsvg.lit .nb-ledbody,.nb-bigled.on .nb-ledbody{fill:#ff6b5b}
+.nb-wsvg.pressed .nb-cap{transform:translateY(4px);fill:#1b3f86}
+
+/* محاكي الليد والزر */
+.nb-gsim{flex:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:44px;min-height:0;align-items:center}
+.nb-gsim .code.nb-small{font-size:28px;line-height:1.5}
+.nb-gview{display:flex;flex-direction:column;align-items:center;gap:22px}
+.nb-bigled{width:260px;height:auto}
+.nb-push{width:200px;height:200px;border-radius:50%;border:0;background:radial-gradient(circle at 40% 35%,#5b8ef0,#2E6FD8 60%,#1b3f86);color:#fff;
+  font-family:"Cairo";font-size:34px;font-weight:900;box-shadow:0 14px 0 #142f66,0 24px 40px rgba(0,0,0,.3);cursor:pointer;touch-action:none;transition:transform .08s,box-shadow .08s}
+.nb-push.down{transform:translateY(12px);box-shadow:0 2px 0 #142f66,0 8px 16px rgba(0,0,0,.3)}
+.nb-gst{font-size:32px;font-weight:800;color:var(--navy-700);background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px 26px}
+.nb-gview .nb-slider{width:100%}
+
+/* لوحة L298N */
+.nb-l298{width:100%;height:auto;max-height:720px;filter:drop-shadow(0 24px 36px rgba(80,20,10,.3))}
+
+/* مختبر القيادة */
+.nb-drive{flex:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;min-height:0;align-items:center}
+.nb-dside{display:flex;flex-direction:column;gap:22px}
+.nb-dpad{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.nb-dpad .nb-card{min-width:0}
+.nb-dpad .nb-card.on{background:var(--gold-light);border-color:var(--gold-dark)}
+.nb-truth{background:var(--navy-800);border-radius:24px;padding:16px 20px;display:flex;flex-direction:column;gap:8px}
+.nb-trow{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:10px;align-items:center;text-align:center;color:#fff;font-size:28px;font-weight:800}
+.nb-trow.head span{font-family:"JetBrains Mono",monospace;color:var(--gold-light)}
+.nb-tv{background:#22346F;border-radius:14px;padding:8px 0;font-size:40px;transition:all .25s}
+.nb-tv.hi{background:var(--ok);box-shadow:0 0 18px var(--ok)}
+.nb-trow .w2{grid-column:span 2;font-size:22px;color:#9fb1ff}
+.nb-dpy{font-family:"JetBrains Mono",monospace;font-size:36px;background:#0b1026;color:#5fd7e0;border-radius:18px;padding:14px 24px;text-align:left}
+.nb-dview{display:flex;flex-direction:column;align-items:center;gap:20px}
+.nb-topbot{width:320px;height:auto;transition:transform .6s ease}
+.nb-topbot.turnL{animation:nbTurnL 1.6s linear infinite}.nb-topbot.turnR{animation:nbTurnR 1.6s linear infinite}
+.nb-topbot.goF{animation:nbGoF 1.2s ease-in-out infinite}.nb-topbot.goB{animation:nbGoB 1.2s ease-in-out infinite}
+@keyframes nbTurnL{to{transform:rotate(-360deg)}}@keyframes nbTurnR{to{transform:rotate(360deg)}}
+@keyframes nbGoF{50%{transform:translateY(-26px)}}@keyframes nbGoB{50%{transform:translateY(26px)}}
+.nb-wheel{fill:#1b1e27;stroke:#3a3f4f;stroke-width:4;stroke-dasharray:14 10}
+.nb-wheel.fwd{animation:nbTread .5s linear infinite}.nb-wheel.back{animation:nbTread .5s linear infinite reverse}
+@keyframes nbTread{to{stroke-dashoffset:48}}
+.nb-warr{font-size:56px;fill:var(--ok);font-weight:900}
+.nb-dmsg{font-size:32px;font-weight:800;color:var(--navy-700);text-align:center;min-height:90px}
+
+/* الرسومات تُرسم من اليسار لليمين دائمًا (وإلا انقلبت محاذاة النصوص داخلها في صفحة عربية) */
+.nb-wsvg,.nb-l298,.nb-bot,.nb-pi,.nb-topbot,.nb-bigled{direction:ltr}
+/* خريطة الدبابيس: الشريط بعرض الشريحة، والشرح تحته */
+.nb-pgrid{display:flex;flex-direction:column-reverse;gap:22px;align-items:stretch;justify-content:flex-end}
+.nb-pgrid .nb-info{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:26px;align-items:center;padding:22px 34px}
+.nb-pgrid .nb-info .nb-icon{grid-row:span 3;font-size:70px;margin:0}
+.nb-pgrid .nb-info h3{font-size:44px}.nb-pgrid .nb-info p{font-size:30px}
+.nb-header{grid-template-rows:44px auto auto 44px;padding:12px 18px}
+.nb-pin i{width:58px;height:58px;font-size:23px}
+.nb-pin b{font-size:17px}
+.nb-ptag{font-size:19px;padding:3px 8px}
+/* قائمة خطوات التوصيل أصغر حتى تتسع ست خطوات */
+.nb-wlist{gap:6px}
+.nb-wlist li{font-size:23px;padding:5px 14px}
+.nb-wlist li::before{width:32px;height:32px}
+.nb-wgrid .nb-info{padding:22px 28px}.nb-wgrid .nb-info h3{font-size:40px}.nb-wgrid .nb-info p{font-size:28px}
+.nb-wpin.sm{font-size:16px}
+/* شرح الكود في هذه الدورة أقصر سطرًا حتى تتسع أربع خطوات */
+.codegrid .xp{font-size:30px;padding:14px 22px;gap:16px}
+.codegrid .xp i{width:50px;height:50px;font-size:26px}
+.codegrid .explain{gap:14px}
+.nb-wgrid .nb-stage{padding-top:22px}

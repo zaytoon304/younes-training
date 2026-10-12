@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>تحكّم بنبيه</title>
+<style>
+  :root { --navy: #101B45; --gold: #D9AE4B; }
+  * { box-sizing: border-box; margin: 0; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none }
+  body { font-family: system-ui, sans-serif; background: var(--navy); color: #fff; min-height: 100vh;
+         display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 14px }
+  h1 { font-size: 24px; color: var(--gold) }
+  img { width: 100%; max-width: 520px; border-radius: 18px; border: 3px solid var(--gold); background: #000; aspect-ratio: 4/3; object-fit: cover }
+  .pad { display: grid; grid-template-columns: repeat(3, 92px); grid-template-rows: repeat(3, 92px); gap: 10px; direction: ltr }
+  .pad button { font-size: 40px; border: 0; border-radius: 24px; background: #2E4288; color: #fff; touch-action: none }
+  .pad button:active, .pad button.on { background: var(--gold); color: var(--navy) }
+  .up { grid-column: 2 } .lt { grid-column: 1; grid-row: 2 } .st { grid-column: 2; grid-row: 2; background: #c0392b !important }
+  .rt { grid-column: 3; grid-row: 2 } .dn { grid-column: 2; grid-row: 3 }
+  form { display: flex; gap: 8px; width: 100%; max-width: 520px }
+  input { flex: 1; font-size: 18px; border-radius: 14px; border: 0; padding: 12px }
+  form button { font-size: 18px; border: 0; border-radius: 14px; padding: 0 18px; background: var(--gold); color: var(--navy); font-weight: 800 }
+</style>
+</head>
+<body>
+  <h1>🤖 تحكّم بنبيه</h1>
+  <img src="/camera" alt="ما تراه عين نبيه">
+  <div class="pad">
+    <button class="up" data-a="forward">⬆️</button>
+    <button class="lt" data-a="left">⬅️</button>
+    <button class="st" data-a="stop">⏹️</button>
+    <button class="rt" data-a="right">➡️</button>
+    <button class="dn" data-a="backward">⬇️</button>
+  </div>
+  <form id="talk"><input id="text" placeholder="اكتب جملة يقولها نبيه…"><button>🔊 قل</button></form>
+<script>
+  // ما دام الإصبع على الزر نرسل الاتجاه كل ٣٠٠ ملّي ثانية، وحين نرفعه نرسل «توقف»
+  const send = (url, data) => fetch(url, { method: 'POST', body: new URLSearchParams(data) });
+  let timer = null;
+  const stop = () => { clearInterval(timer); timer = null; document.querySelectorAll('.on').forEach(b => b.classList.remove('on')); send('/move', { action: 'stop' }); };
+  document.querySelectorAll('.pad button').forEach(b => {
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault(); stop();
+      if (b.dataset.a === 'stop') return;
+      b.classList.add('on'); send('/move', { action: b.dataset.a });
+      timer = setInterval(() => send('/move', { action: b.dataset.a }), 300);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, () => timer && stop()));
+  });
+  document.getElementById('talk').addEventListener('submit', e => {
+    e.preventDefault(); const t = document.getElementById('text');
+    if (t.value.trim()) send('/say', { text: t.value }); t.value = '';
+  });
+</script>
+</body>
+</html>

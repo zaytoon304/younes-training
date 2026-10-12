@@ -307,5 +307,5 @@ window.DECK_ONSTEP = (step, s) => {
   if (sl && s.t === 'thonny' && step > 0) thonnyShow(sl, THONNY_TOUR[step - 1]);
 };
 
-window.NB_CODE = { pyLine, pyOf, CMD, IF_CODE };
+window.NB_CODE = { pyLine, pyBlock, pyOf, CMD, IF_CODE };
 })();
