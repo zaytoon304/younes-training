@@ -68,13 +68,12 @@ function pinClick(sl, n) {
 const PX = n => 130 + Math.floor((n - 1) / 2) * 38, PY = n => n % 2 ? 104 : 70;      // مكان الدبوس n في الشريط العلوي
 const HOLE_X = k => 290 + k * 30;
 function headerStrip(used) {
-  let s = `<rect x="104" y="48" width="788" height="78" rx="10" fill="#1b1e27"/>`, k = { 0: 0, 1: 0 };
-  for (let n = 1; n <= 40; n++) {
-    const on = used[n];
-    s += `<circle cx="${PX(n)}" cy="${PY(n)}" r="${on ? 11 : 8}" fill="${on ? '#F0CC7A' : '#c4a64a'}" ${on ? 'stroke="#fff" stroke-width="3"' : ''}/>`;
-    if (on) { const odd = n % 2, lift = (k[odd]++ % 2) * 26;      // الأسماء المتجاورة: واحد أعلى وواحد أسفل
-      s += `<text x="${PX(n)}" y="${odd ? 150 + lift : 34}" class="nb-wpin${odd ? '' : ' sm'}" text-anchor="middle">${on}</text>`; }
-  }
+  let s = `<rect x="104" y="48" width="788" height="78" rx="10" fill="#1b1e27"/>`;
+  for (let n = 1; n <= 40; n++)
+    s += `<circle cx="${PX(n)}" cy="${PY(n)}" r="${used[n] ? 11 : 8}" fill="${used[n] ? '#F0CC7A' : '#c4a64a'}" ${used[n] ? 'stroke="#fff" stroke-width="3"' : ''}/>`;
+  /* أسماء الدبابيس المستعملة تحت الشريط، بالترتيب من اليسار، وكل اسم في ارتفاع مختلف عن جاره حتى لا تتداخل */
+  Object.keys(used).map(Number).sort((a, b) => PX(a) - PX(b) || a - b).forEach((n, i) =>
+    s += `<text x="${PX(n)}" y="${148 + (i % 2) * 24}" class="nb-wpin" text-anchor="middle">${used[n]}</text>`);
   return s;
 }
 function breadboard(y0 = 250) {
@@ -88,10 +87,11 @@ function breadboard(y0 = 250) {
 }
 const wire = (s, d, color) => `<g data-s="${s}"><path d="${d}" fill="none" stroke="#0005" stroke-width="13" stroke-linecap="round" transform="translate(3,4)"/>
   <path d="${d}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/></g>`;
-const resistorH = (s, x1, x2, y) => `<g data-s="${s}"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#9aa1b3" stroke-width="5"/>
+/* مقاومة أفقية: ألوان حلقاتها تدل على قيمتها (٢٢٠ = أحمر أحمر بني) */
+const resistorH = (s, x1, x2, y, label = '٢٢٠ أوم', bands = ['#c0392b', '#c0392b', '#7a4b30']) => `<g data-s="${s}"><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#9aa1b3" stroke-width="5"/>
   <rect x="${(x1 + x2) / 2 - 38}" y="${y - 14}" width="76" height="28" rx="12" fill="#d9c08a"/>
-  ${[0, 1, 2, 3].map(i => `<rect x="${(x1 + x2) / 2 - 26 + i * 14 + (i === 3 ? 8 : 0)}" y="${y - 14}" width="7" height="28" fill="${['#c0392b', '#c0392b', '#7a4b30', '#D9AE4B'][i]}"/>`).join('')}
-  <text x="${(x1 + x2) / 2}" y="${y - 22}" class="nb-wl" text-anchor="middle">٢٢٠ أوم</text></g>`;
+  ${[...bands, '#D9AE4B'].map((c, i) => `<rect x="${(x1 + x2) / 2 - 26 + i * 14 + (i === 3 ? 8 : 0)}" y="${y - 14}" width="7" height="28" fill="${c}"/>`).join('')}
+  <text x="${(x1 + x2) / 2}" y="${y - 22}" class="nb-wl" text-anchor="middle">${label}</text></g>`;
 
 const SCENES = {
   led: {
@@ -164,6 +164,29 @@ const SCENES = {
       { h: 'الأرضي المشترك ⚠️', b: 'سلك من الدبوس <b>٣٩ (GND)</b> إلى نفس فتحة GND في اللوحة. بدونه لا تفهم اللوحة أوامر الـ Pi!' },
       { h: 'أسلاك الأوامر الأربعة', b: 'الدبابيس <b>٢٩ و٣١</b> إلى IN1 وIN2 (اليسار)، و<b>٣٨ و٤٠</b> إلى IN3 وIN4 (اليمين).' },
       { h: 'ارفع نبيه وشغّل ✨', b: 'نضع نبيه على علبة حتى لا تلمس العجلات الأرض، ثم نشغّل برنامج اختبار المحركات.', glow: true },
+    ],
+  },
+  sonar: {
+    view: '0 0 1000 620',
+    svg: () => `${headerStrip({ 2: '5V', 6: 'GND', 16: 'TRIG', 18: 'ECHO' })}${breadboard()}
+      <g data-s="1"><rect x="${HOLE_X(5) - 10}" y="168" width="${HOLE_X(10) - HOLE_X(5) + 20}" height="78" rx="8" fill="#2E6FD8"/>
+        <circle cx="${HOLE_X(6) + 4}" cy="207" r="30" fill="#e4e8f2" stroke="#9aa3b5" stroke-width="4"/><circle cx="${HOLE_X(9) - 4}" cy="207" r="30" fill="#e4e8f2" stroke="#9aa3b5" stroke-width="4"/>
+        ${['VCC', 'TRIG', 'ECHO', 'GND'].map((t, i) => `<line x1="${HOLE_X(6 + i)}" y1="246" x2="${HOLE_X(6 + i)}" y2="276" stroke="#c4a64a" stroke-width="5"/><text x="${HOLE_X(6 + i)}" y="${i % 2 ? 262 : 240}" class="nb-wpin sm w" text-anchor="middle">${t}</text>`).join('')}</g>
+      ${wire(2, `M${PX(2)} ${PY(2)} C ${PX(2)} 230, ${HOLE_X(6)} 300, ${HOLE_X(6)} 388`, '#e74c3c')}
+      ${wire(3, `M${PX(6)} ${PY(6)} C ${PX(6) + 20} 300, ${HOLE_X(9)} 430, ${HOLE_X(9)} 388`, '#1b1e27')}
+      ${wire(4, `M${PX(16)} ${PY(16)} C ${PX(16)} 240, ${HOLE_X(7)} 300, ${HOLE_X(7)} 388`, '#2ecc71')}
+      ${resistorH(5, HOLE_X(8), HOLE_X(12), 332, '١ كيلو', ['#7a4b30', '#1b1e27', '#c0392b'])}
+      ${resistorH(5, HOLE_X(9), HOLE_X(12), 360, '', ['#c0392b', '#1b1e27', '#c0392b'])}
+      <text data-s="5" x="${HOLE_X(13) + 6}" y="368" class="nb-wl">٢ كيلو</text>
+      ${wire(6, `M${PX(18)} ${PY(18)} C ${PX(18) + 30} 210, ${HOLE_X(12)} 200, ${HOLE_X(12)} 276`, '#3498db')}`,
+    steps: [
+      { h: 'حساس المسافة', b: 'نضع الحساس في لوح التوصيل، فتكون دبابيسه الأربعة في أربعة أعمدة.' },
+      { h: 'الكهرباء: VCC', b: 'السلك الأحمر من الدبوس <b>٢ (5V)</b> إلى VCC. الحساس يحتاج ٥ فولت ليعمل.' },
+      { h: 'الأرضي: GND', b: 'السلك الأسود من الدبوس <b>٦ (GND)</b> إلى GND في الحساس.' },
+      { h: 'الصرخة: TRIG', b: 'السلك الأخضر من الدبوس <b>١٦ (GPIO23)</b> إلى TRIG. منه يأمر الـ Pi الحساس: «اصرخ!».' },
+      { h: 'الدرع الواقي: مقاومتان', b: 'ECHO يخرج ٥ فولت، فنضع مقاومة <b>١ كيلو</b> من ECHO، ومقاومة <b>٢ كيلو</b> إلى GND.' },
+      { h: 'السماع: ECHO', b: 'السلك الأزرق من نقطة التقاء المقاومتين إلى الدبوس <b>١٨ (GPIO24)</b>. الآن يصله ٣٫٣ فولت فقط ✅' },
+      { h: 'جرّب ✨', b: 'نشغّل 06_distance.py ونقرّب أيدينا من الحساس… فتتغير الأرقام!', glow: true },
     ],
   },
 };

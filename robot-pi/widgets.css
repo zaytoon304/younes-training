@@ -365,3 +365,63 @@ svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
 .codegrid .xp i{width:50px;height:50px;font-size:26px}
 .codegrid .explain{gap:14px}
 .nb-wgrid .nb-stage{padding-top:22px}
+
+/* =================== الوحدة ٦: حاسّة الخفاش =================== */
+.nb-echowrap{flex:1;display:flex;align-items:center}
+.nb-echo{width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:26px 40px;align-items:center}
+.nb-echosvg{grid-column:1/-1;width:100%;height:auto;direction:ltr;background:linear-gradient(180deg,#f7f9fd,#e9edf6);border-radius:28px}
+.nb-ewl{font-family:"Cairo";font-size:30px;font-weight:900;fill:#fff}.nb-ewl.dark{fill:#5c3721}
+.nb-pulse{opacity:0}
+.nb-ecalc{display:flex;flex-direction:column;gap:12px}
+.nb-ecalc div{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px 22px}
+.nb-ecalc span{font-size:28px;font-weight:800;color:var(--muted)}
+.nb-ecalc b{font-size:32px;font-weight:900;color:var(--navy-800)}
+.nb-echo .nb-slider{align-self:start}
+.nb-echo .go{grid-column:2;justify-self:start;font-size:34px}
+.nb-divsvg{width:100%;height:auto;max-height:760px;direction:ltr}
+.nb-dvt{font-family:"Cairo";font-size:30px;font-weight:900;fill:var(--navy-800)}
+.nb-dvt.w{fill:#fff}.nb-dvt.sm{font-size:24px;font-weight:700}.nb-dvt.big{font-size:38px;fill:#B08A2E}
+.nb-dvt.w.sm{fill:#e3e7f6}
+
+/* نبيه يتجول وحده */
+.nb-avoid{flex:1;display:grid;grid-template-columns:0.85fr 1.15fr;gap:36px;min-height:0;align-items:start}
+.nb-aside{display:flex;flex-direction:column;gap:18px}
+.nb-aside .code.nb-small{font-size:25px}
+.nb-amain{display:flex;flex-direction:column;gap:14px}
+.nb-amain canvas{width:100%;height:auto;border-radius:24px;box-shadow:0 18px 40px rgba(60,45,10,.25)}
+.nb-astats{display:flex;gap:18px;justify-content:space-between;font-size:28px;font-weight:800;color:var(--navy-700)}
+.nb-astats b{color:var(--navy-900)}
+
+/* =================== الوحدة ٧: الكاميرا والألوان =================== */
+.nb-px{flex:1;display:grid;grid-template-columns:1.35fr 0.65fr;gap:40px;align-items:center;min-height:0}
+.nb-pxwrap{position:relative}
+.nb-pxcv{width:100%;height:auto;border-radius:24px;cursor:crosshair;box-shadow:0 18px 40px rgba(11,16,38,.25);display:block}
+.nb-lens{position:absolute;width:56px;height:56px;border:5px solid #fff;border-radius:10px;transform:translate(-50%,-50%);box-shadow:0 0 0 3px #0A1230;pointer-events:none}
+.nb-pxside{display:flex;flex-direction:column;gap:16px;align-items:center}
+.nb-zoom{width:100%;max-width:360px;border-radius:20px;background:#0A1230;padding:6px}
+.nb-rgb{display:flex;gap:10px;width:100%}
+.nb-rgb span{flex:1;text-align:center;border-radius:16px;padding:8px 4px;font-size:24px;font-weight:800;color:#fff}
+.nb-rgb b{display:block;font-size:40px}
+.nb-rgb .r{background:#d63a3a}.nb-rgb .g{background:#2E9E6B}.nb-rgb .b{background:#2E6FD8}
+.nb-pxnote{font-size:28px;font-weight:800;color:var(--navy-700);text-align:center;min-height:80px}
+.nb-color{flex:1;display:grid;grid-template-columns:1.45fr 0.55fr;gap:34px;align-items:center;min-height:0}
+.nb-cview{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.nb-cview small{display:block;font-size:24px;font-weight:800;color:var(--muted);margin-bottom:6px}
+.nb-cview canvas{width:100%;height:auto;border-radius:18px;box-shadow:0 12px 26px rgba(11,16,38,.25);display:block}
+.nb-cside{display:flex;flex-direction:column;gap:22px}
+.nb-cbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.nb-cbtn{font-family:"Cairo";font-size:30px;font-weight:900;border:4px solid transparent;border-radius:18px;padding:12px;color:#fff;cursor:pointer}
+.nb-cbtn.red{background:#d63a3a}.nb-cbtn.yellow{background:#e8b923;color:#3b2a00}.nb-cbtn.green{background:#2E9E6B}.nb-cbtn.blue{background:#2E6FD8}
+.nb-cbtn.on{border-color:var(--navy-900);box-shadow:0 0 0 4px var(--gold-light)}
+.nb-cres{font-size:28px;font-weight:800;line-height:1.6;color:var(--navy-800);background:#fff;border:3px solid var(--line);border-radius:20px;padding:14px 18px}
+.nb-cres code{font-family:"JetBrains Mono",monospace;font-size:24px;background:#0b1026;color:#9ece6a;border-radius:10px;padding:2px 10px}
+.nb-follow{flex:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:36px;align-items:start;min-height:0}
+.nb-fview{display:flex;flex-direction:column;gap:14px}
+.nb-fcv{width:100%;height:auto;border-radius:22px;cursor:grab;touch-action:none;box-shadow:0 18px 40px rgba(11,16,38,.25)}
+.nb-frow{display:flex;gap:20px;align-items:end}
+.nb-frow .nb-slider{flex:1;font-size:28px}
+.nb-fact{display:flex;align-items:center;gap:16px;font-size:30px;font-weight:800;color:var(--navy-800);background:#fff8e6;border:3px solid var(--gold);border-radius:20px;padding:12px 20px}
+.nb-fico{font-size:50px}
+.nb-follow .code.nb-small{font-size:24px;line-height:1.45}
+.nb-fcv{width:auto;max-width:100%;max-height:450px;align-self:center}
+.nb-follow{align-items:center}
