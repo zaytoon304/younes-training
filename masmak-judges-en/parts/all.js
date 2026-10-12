@@ -1,6 +1,11 @@
 /* "Touch of Heritage" — English judging deck: the same slides as ../masmak-judges, in English */
 DECK.modules.push({ id: 'idea', name: '🏰 Touch of Heritage', slides: [
   { t: 'cover', notes: 'Good morning, honorable judges. We are proud to present our project: Touch of Heritage — the fully interactive Masmak Fortress.' },
+  { t: 'team', kicker: 'The team', title: 'Team Al Arqam Innovators',
+    school: 'Al-Arqam Schools',
+    members: [{ name: 'Meshari Turki Al-Buqami' }, { name: 'Saleh Sulaiman Al-Tayyar' }],
+    coach: 'Mr. Mohammed Zaytoon',
+    notes: 'Each student introduces himself in one sentence: his name and the part of the project he built.' },
   { t: 'exhibithero', kicker: '“We look at the past… with the eyes of the future”', title: 'Touch of Heritage: the interactive Masmak',
     notes: 'Let the scene run: a visitor in a wheelchair in front of a camera. They look right with their eyes and the model turns, with a golden light wave around the turntable. They hold their gaze, the model stops, the face lights up in its color, and a sign-language video with audio narration starts on the screen. Turn the sound on to hear the narrator. Then ask: “Who is in control here?” The answer: only the visitor’s eyes. In the corner, a safety robot guards the exhibition.' },
   { t: 'cards', kicker: 'The problem', title: 'Heritage belongs to all of us… but it is not easy for everyone to reach', cols: 3,
@@ -309,7 +314,8 @@ while True:
     ],
     notes: 'Each command is one letter flying over the network to both robots, just like the eye commands of the Masmak model. And no hand means stop: safety first.' },
 ]});
-DECK.modules[0].slides.splice(1, 0,
+// the story plays right after the cover and the team slide
+DECK.modules[0].slides.splice(DECK.modules[0].slides.findIndex(s => s.t === 'team') + 1, 0,
   { t: 'fullstory', kicker: '🎬 The whole story', title: 'From the visitor’s eyes… to the Civil Defense officer', video: 'story.mp4',
     notes: 'Plays first in front of the judges, with the English narrator (in PowerPoint it is a video that starts by itself; on the web press 🔊 Narrator). Chapter 0: the visitor in the LEGO wheelchair, the camera welcomes him, his eyes turn the fortress right and left with the light wave, he holds his gaze and gets sign language + audio narration together, and a blink or the watchdog stops the turntable. Then the safety station: (1) fire only: the leader puts it out and backs up. (2) gas only: the leader gives robot 2 permission. (3) fire and gas: leader to the fire, robot 2 to the gas + Telegram. (4) a fire too big: “we need help”, and the Civil Defense officer leads robots 3 and 4 by hand until “the museum is safe”. Let it run completely, then start explaining.' });
 DECK.modules.push({ id: 'end', name: '🏆 Challenges', slides: [
