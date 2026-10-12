@@ -69,3 +69,194 @@ svg:has(.nb-part.sel) .nb-part:not(.sel){opacity:.35}
 .nb-verdict{margin-top:20px;align-self:center;background:var(--navy-800);color:#fff;font-size:40px;font-weight:800;
   padding:20px 46px;border-radius:999px}
 .nb-verdict b{color:var(--gold-light)}
+
+/* =================== الوحدة ٢: تجهيز العقل =================== */
+.nb-stepno{display:inline-block;font-size:26px;font-weight:800;color:var(--navy-900);background:var(--gold-light);border-radius:999px;padding:4px 18px;margin-bottom:14px}
+/* نافذة برنامج (مشتركة: Imager وThonny) */
+.nb-win{width:100%;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 26px 60px rgba(11,16,38,.3);border:2px solid #d8dbe6;direction:ltr}
+.nb-wbar{display:flex;align-items:center;gap:16px;background:#e9ecf3;padding:12px 20px;font-size:24px;font-weight:800;color:#3b4460;font-family:"Cairo"}
+.nb-dots b{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:7px;background:#ff5f56}
+.nb-dots b:nth-child(2){background:#ffbd2e}.nb-dots b:nth-child(3){background:#27c93f}
+.nb-imgwrap{display:block}
+.nb-wbody{min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:34px;
+  background:linear-gradient(180deg,#c51a4a,#a01540);color:#fff;font-family:"Cairo"}
+.nb-wbody.set{background:#f6f7fb;color:var(--ink);align-items:stretch;justify-content:flex-start;gap:14px}
+.nb-ilogo{font-size:110px;line-height:1}
+.nb-irow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%}
+.nb-ibtn{background:rgba(255,255,255,.14);border:3px solid rgba(255,255,255,.4);border-radius:16px;padding:16px;text-align:center;transition:all .35s}
+.nb-ibtn small{display:block;font-size:19px;font-weight:700;opacity:.85}
+.nb-ibtn b{display:block;font-size:21px;font-weight:900;margin-top:6px;font-family:"JetBrains Mono",monospace}
+.nb-ibtn.set{background:#fff;color:#a01540}
+.nb-ibtn.hl,.nb-inext.hl,.nb-ifield.hl{box-shadow:0 0 0 6px var(--gold-light),0 0 30px var(--gold);transform:scale(1.04)}
+.nb-inext{align-self:flex-end;background:#fff;color:#a01540;font-weight:900;font-size:24px;border-radius:12px;padding:10px 36px;transition:all .35s}
+.nb-wbody.set .nb-inext{background:#a01540;color:#fff}
+.nb-itabs{display:flex;gap:10px;margin-bottom:8px}
+.nb-itabs span{font-size:22px;font-weight:800;padding:8px 22px;border-radius:10px;background:#e4e7f0;color:#5e6782}
+.nb-itabs span.on{background:#a01540;color:#fff}
+.nb-ifield{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:700;background:#fff;border:2px solid #e1e4ee;border-radius:14px;padding:14px 20px;transition:all .35s}
+.nb-ifield u{text-decoration:none;background:#eef1fa;color:#22346F;border-radius:8px;padding:0 10px;font-family:"JetBrains Mono",monospace}
+.nb-tick{font-style:normal;width:30px;height:30px;border-radius:7px;background:#a01540;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
+.nb-iprog{width:80%;font-size:30px;font-weight:800}
+.nb-iprog span{display:block;height:26px;background:rgba(255,255,255,.25);border-radius:99px;margin-top:12px;overflow:hidden}
+.nb-iprog i{display:block;height:100%;width:64%;background:#fff;border-radius:99px;animation:nbFill 3s ease-in-out infinite alternate}
+@keyframes nbFill{from{width:30%}to{width:92%}}
+.nb-iwarn{direction:rtl;font-size:30px;font-weight:800;background:rgba(0,0,0,.2);padding:10px 26px;border-radius:14px}
+
+/* سطح مكتب الـ Pi */
+.nb-desk{width:100%;aspect-ratio:16/10;border-radius:22px;overflow:hidden;box-shadow:0 26px 60px rgba(11,16,38,.3);display:flex;flex-direction:column;direction:ltr;border:6px solid #1b1e27}
+.nb-dbar{display:flex;align-items:center;gap:10px;background:#f2f3f7;padding:8px 14px;font-size:38px}
+.nb-dsp{flex:1}
+.nb-dp{cursor:pointer;border-radius:12px;padding:4px 10px;transition:all .3s;position:relative}
+.nb-dp.txt{font-size:28px;font-weight:800;color:#3b4460;font-family:"Cairo"}
+.nb-dp:hover{background:#e1e5f0}
+.nb-dp.sel{background:var(--gold-light);box-shadow:0 0 0 4px var(--gold),0 0 26px var(--gold)}
+.nb-desk.has-sel .nb-dp:not(.sel){opacity:.45}
+.nb-dwall{flex:1;position:relative;background:linear-gradient(180deg,#6fb7ff 0%,#bfe3ff 55%,#fff3d6 100%);overflow:hidden}
+.nb-dhill{position:absolute;border-radius:50%}
+.nb-dhill.a{width:90%;height:70%;left:-15%;bottom:-38%;background:#4caf6a}
+.nb-dhill.b{width:80%;height:60%;right:-20%;bottom:-36%;background:#3a9a58}
+.nb-dp.icon{position:absolute;left:24px;top:22px;display:flex;flex-direction:column;align-items:center;font-size:64px;z-index:2}
+.nb-dp.icon small{font-size:18px;font-weight:800;color:#fff;text-shadow:0 1px 3px #000;font-family:"Cairo"}
+
+/* لعبة الترتيب */
+.nb-ohint{font-size:32px;font-weight:700;color:var(--muted);margin-bottom:18px}
+.nb-order{display:grid;gap:22px}
+.nb-ocard{position:relative;background:#fff;border:3px solid var(--line);border-radius:28px;padding:24px 28px;cursor:pointer;transition:all .3s;
+  display:flex;flex-direction:column;gap:6px;user-select:none}
+.nb-ocard:hover{border-color:var(--gold);transform:translateY(-4px)}
+.nb-oicon{font-size:58px;line-height:1.1}
+.nb-ocard h3{font-size:38px;font-weight:900;color:var(--navy-800);line-height:1.3}
+.nb-ocard p{font-size:28px;font-weight:600;color:var(--muted);line-height:1.4}
+.nb-onum{position:absolute;left:22px;top:20px;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:40px;font-weight:900;background:var(--ok);color:#fff;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.nb-ocard.ok{border-color:var(--ok);background:var(--ok-bg)}
+.nb-ocard.ok .nb-onum{transform:scale(1)}
+.nb-ocard.no{animation:nbShake .45s;border-color:var(--bad)}
+@keyframes nbShake{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.nb-omsg{display:flex;align-items:center;gap:24px;margin-top:22px;min-height:70px;font-size:36px;font-weight:800;color:var(--navy-700)}
+.nb-omsg span{flex:1}
+.nb-omsg.win span{color:var(--ok)}
+
+/* أزرار عامة */
+.nb-btn{font-family:"Cairo";font-size:30px;font-weight:900;border:0;border-radius:999px;padding:12px 32px;cursor:pointer;background:var(--ok);color:#fff;transition:transform .15s}
+.nb-btn:active{transform:scale(.95)}
+.nb-btn.ghost{background:#fff;color:var(--navy-700);border:3px solid var(--line)}
+.nb-btn.mini{font-size:22px;padding:6px 22px}
+.nb-nbtn{font-family:"Cairo";width:52px;height:52px;border-radius:50%;border:0;background:var(--navy-700);color:#fff;font-size:34px;font-weight:900;cursor:pointer;line-height:1}
+
+/* =================== الوحدة ٣: البرمجة =================== */
+.nb-out{background:#05081a;color:#7CF29A;padding:14px 26px;display:flex;gap:18px;align-items:baseline;font-size:30px;border-top:2px solid #1d2550;direction:rtl}
+.nb-out span{font-family:"Cairo";font-size:24px;font-weight:800;color:#8a94c4;flex:none}
+.nb-out pre{font-family:"JetBrains Mono",monospace;white-space:pre-wrap;flex:1;text-align:left;min-height:1.4em}
+.code.nb-small{font-size:24px;line-height:1.5;padding:12px 0;border-radius:0}
+
+/* Thonny */
+.nb-ttools{display:flex;align-items:center;gap:8px;background:#f2f3f7;padding:8px 14px;border-bottom:2px solid #e1e4ee}
+.nb-tb{display:flex;flex-direction:column;align-items:center;font-size:36px;padding:4px 12px;border-radius:12px;cursor:pointer}
+.nb-tb small{font-size:15px;font-weight:800;color:#5e6782;font-family:"Cairo"}
+.nb-tb.run{background:#e3f7e9}
+.nb-tz{font-size:20px;font-weight:800;color:#8a90a0;font-family:"JetBrains Mono",monospace}
+.nb-ted{cursor:pointer;border-bottom:4px solid #e1e4ee}
+.nb-tshell{cursor:pointer;background:#fff;padding:10px 20px 18px;min-height:150px}
+.nb-shtitle{font-size:20px;font-weight:800;color:#8a90a0;font-family:"Cairo";margin-bottom:6px}
+.nb-tshell pre{font-family:"JetBrains Mono",monospace;font-size:28px;color:#1b1e27;white-space:pre-wrap}
+.nb-prompt{color:#8a90a0}
+.nb-res{color:#0e7c86;font-weight:700;opacity:0;transition:opacity .4s}
+.nb-thonny.ran .nb-res{opacity:1}
+.nb-tp{transition:all .3s}
+.nb-tp.sel{box-shadow:inset 0 0 0 5px var(--gold),0 0 26px var(--gold);background-color:#fff8e6}
+.nb-thonny.has-sel .nb-tp:not(.sel){opacity:.5}
+
+/* برمج نبيه */
+.nb-sim{flex:1;display:grid;grid-template-columns:0.78fr 1.22fr;gap:34px;min-height:0}
+.nb-simside{display:flex;flex-direction:column;gap:16px;min-height:0}
+.nb-pal{display:flex;gap:14px;flex-wrap:wrap}
+.nb-card{flex:1;min-width:150px;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:"Cairo";background:#fff;border:3px solid var(--navy-500);
+  border-radius:22px;padding:12px 8px;cursor:pointer;box-shadow:0 6px 0 var(--navy-700);transition:transform .1s}
+.nb-card span{font-size:54px;line-height:1.1}
+.nb-card b{font-size:28px;font-weight:900;color:var(--navy-800)}
+.nb-card:active{transform:translateY(5px);box-shadow:0 1px 0 var(--navy-700)}
+.nb-prog{background:var(--navy-800);border-radius:24px;padding:16px;min-height:150px}
+.nb-loophead{display:flex;align-items:center;gap:12px;color:var(--gold-light);font-size:32px;font-weight:900;margin-bottom:12px}
+.nb-loophead b{color:#fff;font-size:40px;min-width:40px;text-align:center}
+.nb-chips{display:flex;flex-wrap:wrap;gap:10px}
+.nb-chips.inloop{border-right:6px solid var(--gold);padding-right:14px}
+.nb-chip{display:flex;align-items:center;gap:8px;background:#fff;color:var(--navy-800);font-size:25px;font-weight:800;border-radius:14px;padding:6px 14px;cursor:pointer;transition:all .25s}
+.nb-chip i{font-style:normal;font-size:20px;background:var(--navy-700);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.nb-chip.now{background:var(--gold-light);transform:scale(1.1);box-shadow:0 0 18px var(--gold)}
+.nb-empty{color:#9aa6d6;font-size:26px;font-weight:700}
+.nb-ctl{display:flex;gap:10px;flex-wrap:wrap}
+.nb-ctl .nb-btn{font-size:26px;padding:10px 24px}
+.nb-msg{font-size:31px;font-weight:800;color:var(--navy-700);background:#fff;border:3px dashed var(--line);border-radius:22px;padding:14px 22px;line-height:1.45}
+.nb-msg.win{color:var(--ok);background:var(--ok-bg);border:3px solid var(--ok)}
+.nb-msg.bad{color:var(--bad);background:var(--bad-bg);border:3px solid var(--bad)}
+.nb-sim.running .nb-card,.nb-sim.running .nb-ctl .ghost{opacity:.5;pointer-events:none}
+.nb-simmain{display:flex;flex-direction:column;gap:16px;min-height:0;align-items:center}
+.nb-board{position:relative;display:grid;width:100%;max-height:540px;max-width:100%;direction:ltr;background:#e9f2e6;border-radius:24px;overflow:hidden;
+  border:6px solid #b9a77f;box-shadow:0 18px 40px rgba(60,45,10,.25)}
+.nb-cell{border:1px dashed rgba(60,90,50,.25);display:flex;align-items:center;justify-content:center;transition:background .4s}
+.nb-cell.trail{background:rgba(217,174,75,.35)}
+.nb-cell.wall{background:repeating-linear-gradient(45deg,#8d5a3b 0 14px,#7a4b30 14px 28px);border:3px solid #5c3721}
+.nb-goal{font-size:60px;animation:nbPulse 1.4s ease-in-out infinite}
+@keyframes nbPulse{50%{transform:scale(1.18)}}
+.nb-robot{position:absolute;display:flex;align-items:center;justify-content:center;transition:left .55s ease,top .55s ease;pointer-events:none}
+.nb-robot svg{width:82%;height:82%;transition:transform .45s ease;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.nb-robot.bump{animation:nbShake .45s}
+.nb-robot.win svg{animation:nbSpin 1s ease}
+@keyframes nbSpin{to{transform:rotate(720deg) scale(1.1)}}
+.nb-pywrap{width:100%;border-radius:20px;overflow:hidden;box-shadow:0 14px 30px rgba(11,16,38,.25)}
+.nb-pyt{background:#141a3a;color:#aab2d6;font-size:22px;font-weight:800;padding:8px 20px}
+.nb-py .code{font-size:23px;line-height:1.42;padding:10px 0;border-radius:0;min-height:140px}
+
+/* المتغير صندوق */
+.nb-var{flex:1;display:grid;grid-template-columns:0.8fr 1.2fr;gap:40px;min-height:0}
+.nb-boxes{display:flex;flex-direction:column;gap:30px;justify-content:center}
+.nb-vbox{position:relative;background:linear-gradient(180deg,#e9c27a,#c8963f);border-radius:20px 20px 30px 30px;padding:66px 30px 24px;text-align:center;
+  box-shadow:0 18px 30px rgba(120,80,20,.3)}
+.nb-vlid{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--navy-800);color:var(--gold-light);font-family:"JetBrains Mono",monospace;
+  font-size:34px;font-weight:700;padding:6px 34px;border-radius:14px}
+.nb-vin{width:100%;font-family:"JetBrains Mono",monospace;font-size:46px;font-weight:700;text-align:center;border:0;border-radius:16px;padding:10px;color:var(--navy-800)}
+.nb-vbox small{display:block;margin-top:10px;font-size:26px;font-weight:800;color:#5b3d10}
+.nb-vnum{display:flex;align-items:center;justify-content:center;gap:26px;background:#fff;border-radius:16px;padding:8px}
+.nb-vnum b{font-size:58px;font-weight:900;color:var(--navy-800);min-width:60px}
+.nb-vright{display:flex;flex-direction:column;gap:20px}
+.nb-vright .codebar .nb-btn{font-size:22px}
+.nb-track{position:relative;height:110px;background:#e9f2e6;border:4px solid #b9a77f;border-radius:20px;display:flex;align-items:flex-end;justify-content:space-around;padding:0 0 6px 110px;direction:ltr}
+.nb-track span{font-size:24px;font-weight:900;color:#7b8a6f}
+.nb-tbot{position:absolute;left:0;top:6px;width:100px;height:96px}
+.nb-tbot svg{width:100%;height:100%;transform:rotate(90deg)}
+
+/* نبيه يقرر */
+.nb-if{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;min-height:0;align-items:start}
+.nb-ifr{display:flex;flex-direction:column;gap:24px}
+.nb-road{position:relative;height:200px;background:linear-gradient(180deg,#d9dde6,#c3c8d4);border-radius:24px;overflow:hidden;direction:ltr}
+.nb-road::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:6px dashed #fff;opacity:.8}
+.nb-wall{position:absolute;right:0;top:0;bottom:0;width:100px;display:flex;align-items:center;justify-content:center;font-size:90px;background:#8d5a3b}
+.nb-rbot{position:absolute;top:30px;width:140px;height:140px;transition:right .25s;z-index:2}
+.nb-rbot svg{width:100%;height:100%;transform:rotate(90deg)}
+.nb-waves{position:absolute;right:110px;top:70px;display:flex;gap:8px;opacity:.7}
+.nb-waves i{width:16px;height:60px;border:5px solid #2E6FD8;border-left:0;border-radius:0 60px 60px 0}
+.nb-road.near .nb-wall{box-shadow:inset 0 0 0 8px var(--bad)}
+.nb-slider{display:flex;flex-direction:column;gap:10px;font-size:34px;font-weight:800;color:var(--navy-800)}
+.nb-slider input{width:100%;accent-color:var(--gold-dark);height:30px}
+.nb-ifst{font-size:32px;font-weight:700;line-height:1.5;border-radius:22px;padding:18px 24px}
+.nb-ifst.win{background:var(--ok-bg);color:#1e6b48;border:3px solid var(--ok)}
+.nb-ifst.bad{background:var(--bad-bg);color:#9b2c2c;border:3px solid var(--bad)}
+.nb-qcode{display:inline-block;margin-top:14px;font-family:"JetBrains Mono",monospace;font-size:.62em;background:#0b1026;color:#e6e9f5;padding:8px 24px;border-radius:14px}
+
+/* الشبكة العريضة (لوحة Pi، Imager، سطح المكتب، Thonny): بطاقة شرح أصغر حتى لا تتجاوز ارتفاع الشريحة */
+.nb-grid.wide .nb-info{min-height:0;padding:30px 36px}
+.nb-grid.wide .nb-icon{font-size:64px}
+.nb-grid.wide .nb-info h3{font-size:50px}
+.nb-grid.wide .nb-info p{font-size:32px}
+.nb-grid.wide .nb-hint{font-size:25px}
+.nb-grid{margin-top:14px}
+
+/* لوحة اللعبة بارتفاع ثابت، وعرضها يتبع عدد الأعمدة، فيبقى مكان لكود Python تحتها */
+.nb-simmain .nb-board{height:370px;width:auto;max-height:none}
+.nb-pywrap{flex:1;min-height:0;display:flex;flex-direction:column}
+.nb-py{flex:1;min-height:0;overflow:auto;background:var(--code-bg)}
+.nb-py .code{min-height:0}
+.nb-kcode{font-family:"JetBrains Mono",monospace;background:#0b1026;color:#e6e9f5;border-radius:999px;padding:2px 16px;margin-right:10px;font-size:.85em}
+.nb-py{position:relative}
+.nb-chip{font-family:"Cairo",sans-serif}

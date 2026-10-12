@@ -244,6 +244,11 @@ window.DECK_ONSTEP = (step, s) => {
   if (s.t === 'piboard' && step > 0) showInfo(sl, PI_PARTS, PI_TOUR[step - 1]);
 };
 
+/* الأدوات التفاعلية تعيد رسم أجزائها عند النقر، فيصل النقر للمحرك من عنصر لم يعد في الصفحة
+   فيظنه نقرًا عاديًّا وينقل الشريحة. نوقف النقر عند حدود كل أداة تفاعلية (ix) */
+window.DECK_HOOKS = (window.DECK_HOOKS || []).concat(sl =>
+  sl.querySelectorAll('.ix').forEach(el => el.addEventListener('click', e => e.stopPropagation())));
+
 /* للاختبار خارج المتصفح */
 window.NB = { NB_PARTS, NB_TOUR, PI_PARTS, PI_TOUR, nabeehSVG, pi4SVG };
 })();
