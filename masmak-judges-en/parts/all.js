@@ -4,7 +4,7 @@ DECK.modules.push({ id: 'idea', name: '🏰 Touch of Heritage', slides: [
   { t: 'team', kicker: 'The team', title: 'Team Al Arqam Innovators',
     school: 'Al-Arqam Schools',
     members: [{ name: 'Meshari Turki Al-Buqami' }, { name: 'Saleh Sulaiman Al-Tayyar' }],
-    coach: 'Mr. Mohammed Zaytoon',
+    coach: 'Mr. Mohammed Deif',
     notes: 'Each student introduces himself in one sentence: his name and the part of the project he built.' },
   { t: 'exhibithero', kicker: '“We look at the past… with the eyes of the future”', title: 'Touch of Heritage: the interactive Masmak',
     notes: 'Let the scene run: a visitor in a wheelchair in front of a camera. They look right with their eyes and the model turns, with a golden light wave around the turntable. They hold their gaze, the model stops, the face lights up in its color, and a sign-language video with audio narration starts on the screen. Turn the sound on to hear the narrator. Then ask: “Who is in control here?” The answer: only the visitor’s eyes. In the corner, a safety robot guards the exhibition.' },

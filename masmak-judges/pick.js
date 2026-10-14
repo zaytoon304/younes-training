@@ -10,7 +10,7 @@
   const TEAM = { t: 'team', kicker: 'فريق المشروع', title: 'فريق al arqam innovators',
     school: 'مدارس الأرقم',
     members: [{ name: 'مشاري تركي البقمي' }, { name: 'صالح سليمان الطيار' }],
-    coach: 'أ. محمد زيتون',
+    coach: 'أ. محمد ضيف',
     notes: 'يعرّف كل طالب بنفسه في جملة واحدة: اسمه، والجزء الذي بناه في المشروع.' };
   const GROUPS = [
     { id: 'idea', name: '🏰 لمسة تراث', s: [S(1), TEAM, T('fullstory'), S(3), S(4), S(5), S(13)] },
