@@ -39,7 +39,7 @@ const SC = [
   { k: 'f1',     r: 's', a: 45, b: 50 },
   { k: 'f2',     r: 's', a: 50, b: 59 },
   { k: 'f3',     r: 's', a: 59, b: 70 },
-  { k: 'rescue', r: 'rescue', a: 0, b: 14 },
+  { k: 'rescue', r: 'rescue', a: 0, b: 15 },
   { k: 'f4',     r: 's', a: 70, b: 80 },
   { k: 'end',    r: 'end', a: 0, b: 8 },
 ];
@@ -67,7 +67,8 @@ function person(x, y, col, band, walk) {
   return `<g transform="translate(${x} ${y})"><line x1="-8" y1="-6" x2="${-10 - st}" y2="34" stroke="#2a3150" stroke-width="9" stroke-linecap="round"/>
     <line x1="8" y1="-6" x2="${10 + st}" y2="34" stroke="#2a3150" stroke-width="9" stroke-linecap="round"/>
     <rect x="-18" y="-70" width="36" height="66" rx="14" fill="${col}"/><circle cy="-88" r="18" fill="#c99a74"/>
-    <rect x="12" y="-40" width="12" height="9" rx="3" fill="${band ? '#7ee2a8' : '#f0cc7a'}" stroke="#0d1226" stroke-width="2"/></g>`;
+    <rect x="10" y="-42" width="18" height="12" rx="3" fill="#fff" stroke="${band ? '#7ee2a8' : '#0d1226'}" stroke-width="${band ? 4 : 2}"/>
+    ${[13, 16, 18, 21, 24].map(v => `<rect x="${v}" y="-40" width="${v % 2 ? 1.5 : 2.5}" height="8" fill="#111"/>`).join('')}</g>`;
 }
 // البوابة: عمودان + قارئ + حاجز يرتفع (open ٠..١)
 function gateSVG(x, open, state) {
@@ -76,8 +77,10 @@ function gateSVG(x, open, state) {
     <rect x="-20" y="-214" width="240" height="22" rx="8" fill="#2a3150"/>${txt(100, -198, L('مدخل المصمك', 'Masmak entrance'), 15, '#f0cc7a')}
     <g transform="translate(0 -96) rotate(${-82 * open})"><rect x="0" y="-9" width="196" height="18" rx="9" fill="#f3ead2" stroke="#c62828" stroke-width="3"/>
       ${[30, 80, 130].map(v => `<rect x="${v}" y="-9" width="22" height="18" fill="#c62828"/>`).join('')}</g>
-    <g transform="translate(-58 -120)"><rect x="-26" y="-36" width="52" height="72" rx="10" fill="#1c1f27" stroke="${glow}" stroke-width="4"/>
-      ${txt(0, -6, '📡', 22, '#fff')}<circle cy="20" r="7" fill="${glow}"/></g></g>`;
+    <g transform="translate(-58 -120)"><rect x="-30" y="-38" width="60" height="76" rx="10" fill="#1c1f27" stroke="${glow}" stroke-width="4"/>
+      ${[-16, -11, -7, -2, 3, 7, 12, 16].map((v, i) => `<rect x="${v}" y="-26" width="${i % 3 ? 2 : 3.5}" height="22" fill="#f3ead2"/>`).join('')}
+      <circle cy="20" r="7" fill="${glow}"/>${state === 'ok' ? '<path d="M30 -4 L 100 -30 L 100 22 Z" fill="#ff5252" opacity=".35"/><line x1="30" y1="-4" x2="100" y2="-4" stroke="#ff1744" stroke-width="3"/>' : ''}
+      ${txt(0, 60, L('قارئ باركود', 'Barcode reader'), 14, '#9aa8d8')}</g></g>`;
 }
 function counter(x, y, n, names, alarm) {
   return `<g transform="translate(${x} ${y})"><rect x="-170" y="-60" width="340" height="${names ? 190 : 110}" rx="18" fill="#1c1f27" stroke="${alarm ? '#ff5252' : '#f0cc7a'}" stroke-width="4"/>
@@ -101,7 +104,7 @@ function gateScene(c, t) {
   });
   const names = NAMES.slice(0, n);
   const cap = c < 1 ? ['🚪', L('البوابة الذكية: لكل زائر أسورة باسمه', 'The smart gate: every visitor gets a wristband with his name')]
-    : c < 12 ? ['🎫', L(`يمرّر أسورته… الحاجز يفتح، والعدد يزيد: ${N(n)}`, `He taps his wristband… the barrier opens, the count goes up: ${n}`)]
+    : c < 12 ? ['🎫', L(`يمرّر باركود أسورته… الحاجز يفتح، والعدد يزيد: ${N(n)}`, `He scans his wristband barcode… the barrier opens, the count goes up: ${n}`)]
     : ['🔢', L('المتحف يعرف دائمًا من بداخله', 'The museum always knows who is inside')];
   return { svg: BG + gateSVG(GX, open, state) + people.map((p, i) => person(p.x, 560, COLS[i], p.at, p.walk)).join('')
       + counter(1300, 200, n, names) + (state === 'ok' ? txt(GX - 58, 370, L('أهلًا ✅', 'Welcome ✅'), 24, '#7ee2a8', 900) : ''), cap };
@@ -131,29 +134,48 @@ function careScene(c, t) {
       + gauge(1150, '💨', L('الهواء', 'Air'), air, false) + box + fan + screen + warn, cap };
 }
 
-/* 🤖 الإنقاذ: البوابة تفتح وحدها، روبوت الإنقاذ يرشد الزوار للخروج، وأسماؤهم تصل للدفاع المدني */
+/* 🤖 الإنقاذ: لكل زائر طريقته
+   🧏 الأصم: ضوء وامض + سهم مضيء + شاشة طوارئ بلغة الإشارة · 🦯 الكفيف: صوت «اتبع صوتي» · 🦽 القعيد: الكرسي يلحق الروبوت وحده */
+function blindP(x, y, walk) {   // زائر كفيف بعصا بيضاء
+  return person(x, y, '#3aa6a0', false, walk) + `<g transform="translate(${x} ${y})"><line x1="-20" y1="-40" x2="-52" y2="34" stroke="#fff" stroke-width="5"/><line x1="-46" y1="20" x2="-52" y2="34" stroke="#e53935" stroke-width="5"/></g>`;
+}
 function rescueScene(c, t) {
-  const GX = 300;
+  const GX = 300, FX = 1270;
   const fk = 1.1 + Math.sin(t * 2) * .05;
-  const open = seg(c, .5, 1.5);
-  const rx = c < 2 ? lerp(-120, 120, ease(seg(c, .5, 2))) : c < 5.5 ? lerp(120, 900, ease(seg(c, 2, 5.5))) : c < 6.5 ? 900 : lerp(900, -200, ease(seg(c, 6.5, 12.5)));
-  const out = [0, 1, 2].map(i => c >= 6.5 + i * .4);
-  const px = i => out[i] ? lerp(1000 + i * 70, -200 + i * 70, ease(seg(c, 6.5 + i * .4, 12.5 + i * .4))) : 1000 + i * 70;
-  const gone = [0, 1, 2].filter(i => px(i) < GX - 30).length;
-  const n = 3 - gone;
-  const beacon = Math.sin(t * 10) > 0 ? '#ff5252' : '#3b8bff';
-  const robot = `<g transform="translate(${rx} 560)">${car4('rsc', 'r2')}<circle cx="0" cy="-48" r="12" fill="${beacon}"/>
-      ${c >= 5.5 && c < 9 ? `<g transform="translate(0 -130)"><rect x="-120" y="-34" width="240" height="56" rx="18" fill="#f3ead2"/>${txt(0, 4, L('🔊 اتبعوني إلى المخرج!', '🔊 Follow me to the exit!'), 22, '#0d1226', 900)}</g>` : ''}
-      ${txt(0, 60, L('روبوت الإنقاذ', 'Rescue robot'), 18, '#82b1ff')}</g>`;
-  const msg = c < 9 ? L(`🚨 حريق في متحف المصمك.<br>👥 بالداخل ٣: ${NAMES.join('، ')}<br>🚪 البوابة مفتوحة للإخلاء`, `🚨 Fire at Masmak Museum.<br>👥 3 inside: ${NAMES.join(', ')}<br>🚪 Gate open for evacuation`)
+  const open = seg(c, .4, 1.4);
+  // الروبوت: يدخل ← يقف عند الزوار ← يقود الجميع للمخرج
+  const rx = c < 4 ? lerp(-140, 740, ease(seg(c, .8, 4))) : c < 7 ? 740 : lerp(740, -320, ease(seg(c, 7, 14)));
+  const lead = c >= 7;
+  const follow = (gap, x0) => lead ? Math.min(x0, rx + gap) : x0;   // كل زائر يلحق الروبوت بمسافة ثابتة
+  const deafX = follow(130, 870), blindX = follow(250, 970), chairX = follow(390, 1090);
+  const gone = [deafX, blindX, chairX].filter(x => x < GX - 20).length, n = 3 - gone;
+  const beacon = Math.sin(t * 12) > 0 ? '#ff1744' : '#2979ff';
+  const waves = c >= 4.5 && c < 13 ? [0, 1, 2].map(i => `<path d="M${rx + 46 + i * 22} ${500 - i * 10} q ${16 + i * 5} ${28 + i * 8} 0 ${56 + i * 16}" stroke="#f0cc7a" stroke-width="4" fill="none" opacity="${.35 + .65 * ((Math.sin(t * 7 - i) + 1) / 2)}"/>`).join('') : '';
+  const arrow = `<g transform="translate(${rx - 4} 486)"><rect x="-40" y="-20" width="80" height="34" rx="8" fill="#111" stroke="${beacon}" stroke-width="3"/>${txt(0, 8, EN ? '⬅ EXIT' : '⬅ مخرج', 18, '#7ee2a8', 900)}</g>`;
+  const robot = `<g transform="translate(${rx} 560)">${car4('rsc', 'r2')}<circle cx="0" cy="-60" r="14" fill="${beacon}"/><circle cx="0" cy="-60" r="${26 + Math.sin(t * 12) * 6}" fill="${beacon}" opacity=".25"/>
+      ${txt(0, 60, L('روبوت الإنقاذ', 'Rescue robot'), 18, '#82b1ff')}</g>${arrow}${waves}
+    ${c >= 4.5 && c < 13 ? `<g transform="translate(${rx + 10} 390)"><rect x="-160" y="-34" width="320" height="54" rx="18" fill="#f3ead2"/>${txt(0, 2, L('🔊 اتبع صوتي… المخرج هنا', '🔊 Follow my voice… exit here'), 20, '#0d1226', 900)}</g>` : ''}`;
+  // شاشة الطوارئ بلغة الإشارة (للأصم)
+  const sign = `<g transform="translate(760 130)"><rect x="-150" y="-70" width="300" height="140" rx="14" fill="#1c1f27" stroke="#ff5252" stroke-width="4"/>
+      <rect x="-138" y="-58" width="276" height="34" fill="#ff5252"/>${txt(0, -34, L('🤟 طوارئ: حريق! اتبع الروبوت', '🤟 Emergency: fire! Follow the robot'), 17, '#fff', 900)}
+      <g transform="translate(-70 30)"><circle cy="-10" r="14" fill="#c99a74"/><rect x="-16" y="4" width="32" height="34" rx="8" fill="#2b6fc0"/>
+        <line x1="-14" y1="10" x2="${-34 + Math.sin(t * 6) * 10}" y2="-12" stroke="#2b6fc0" stroke-width="8" stroke-linecap="round"/><line x1="14" y1="10" x2="${34 + Math.cos(t * 5) * 10}" y2="-12" stroke="#2b6fc0" stroke-width="8" stroke-linecap="round"/></g>
+      ${txt(50, 30, L('شاشة المصمك', 'Masmak screen'), 16, '#9aa8d8')}</g>`;
+  const tag = (x, ic, lbl) => `<g transform="translate(${x} 680)">${txt(0, 0, ic + ' ' + lbl, 18, '#f3ead2')}</g>`;
+  const walkD = lead && deafX > -150 ? t : 0, walkB = lead && blindX > -150 ? t : 0;
+  const msg = c < 13 ? L('🚨 حريق في متحف المصمك.<br>👥 بالداخل ٣: زائر أصم، زائر كفيف، زائر على كرسي<br>🚪 البوابة مفتوحة للإخلاء', '🚨 Fire at Masmak Museum.<br>👥 3 inside: a deaf visitor, a blind visitor, a wheelchair user<br>🚪 Gate open for evacuation')
     : L('✅ تم إخلاء جميع الزوار.<br>👥 بالداخل: ٠', '✅ All visitors are out.<br>👥 Inside: 0');
-  const cap = c < 2 ? ['🚪', L('حريق! البوابة تفتح وحدها… ولا تُغلق على أحد', 'Fire! The gate opens by itself… it never locks anyone in')]
-    : c < 6 ? ['🤖', L('روبوت الإنقاذ ينطلق إلى الزوار', 'The rescue robot drives to the visitors')]
-    : c < 12.5 ? ['🔊', L('«اتبعوني إلى المخرج»… والعدد ينقص', '“Follow me to the exit”… and the count goes down')]
-    : ['✅', L('الجميع في الخارج… ورسالة للدفاع المدني', 'Everyone is out… and Civil Defense is told')];
-  return { svg: BG + `<g transform="translate(1250 560)">${smoke(0, 0, fk, t)}${fire(0, 0, fk, t)}</g>` + gateSVG(GX, open, 'alarm')
-      + [0, 1, 2].map(i => person(px(i), 560, COLS[i], false, out[i] && px(i) > -150 ? t : 0)).join('') + robot
-      + counter(800, 150, n, null, true) + phone(1440, 300, msg, true), cap };
+  const cap = c < 1.6 ? ['🚪', L('حريق! البوابة تفتح وحدها… ولا تُغلق على أحد', 'Fire! The gate opens by itself… it never locks anyone in')]
+    : c < 4.5 ? ['🤖', L('روبوت الإنقاذ يدخل بضوء وامض وسهم يشير للمخرج', 'The rescue robot drives in with a flashing light and an exit arrow')]
+    : c < 7 ? ['🧏🦯', L('الأصم يرى الضوء وشاشة الإشارة… والكفيف يسمع: اتبع صوتي', 'The deaf visitor sees the light and the sign screen… the blind visitor hears: follow my voice')]
+    : c < 13 ? ['🦽', L('وكرسي القعيد يلحق الروبوت وحده بحساس المسافة… والعدد ينقص', 'And the wheelchair follows the robot by itself with its distance sensor… the count goes down')]
+    : ['✅', L('الجميع في الخارج… والدفاع المدني يعرف ذلك', 'Everyone is out… and Civil Defense knows it')];
+  return { svg: BG + `<g transform="translate(${FX} 560)">${smoke(0, 0, fk, t)}${fire(0, 0, fk, t)}</g>` + gateSVG(GX, open, 'alarm') + sign
+      + person(deafX, 560, '#ef8f3a', false, walkD) + `<g transform="translate(${deafX} 440)">${txt(0, 0, '🧏', 26, '#fff')}</g>`
+      + blindP(blindX, 560, walkB) + `<g transform="translate(${blindX} 440)">${txt(0, 0, '🦯', 26, '#fff')}</g>`
+      + `<g transform="translate(${chairX} 545) scale(1.7)">${T5.chair(false)}</g>` + `<g transform="translate(${chairX - 20} 400)">${txt(0, 0, '🦽', 26, '#fff')}</g>`
+      + (lead ? `<line x1="${rx + 30}" y1="548" x2="${chairX - 50}" y2="548" stroke="#7ee2a8" stroke-width="3" stroke-dasharray="8 8" opacity=".7"/>` : '')
+      + robot + counter(1180, 150, n, null, true) + phone(1460, 330, msg, true), cap };
 }
 
 function endScene(c, t) {
