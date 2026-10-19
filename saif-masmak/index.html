@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المصمك الذكي · سيف 2026 — جذور</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/deck.css">
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="stage"></div></div>
+<div id="bar">
+  <button onclick="location.href='../index.html'" title="العودة لمنصة جذور">🌳 جذور</button>
+  <button onclick="toggleMenu()" title="المحاور (M)">☰ المحاور</button>
+  <button onclick="window.open('../saif-masmak-en/index.html','_blank')" title="النسخة الإنجليزية">🇬🇧 English</button>
+  <button onclick="prev()" title="السابق">→</button>
+  <span class="cnt" id="cnt"></span>
+  <button onclick="next()" title="التالي">←</button>
+  <button onclick="fullscreen()" title="ملء الشاشة (F)">⛶ ملء الشاشة</button>
+</div>
+<div id="menu"><h3>محاور العرض</h3><div class="mods" id="mods"></div></div>
+
+<script src="content.js"></script>
+<script src="../masmak-judges/team.js"></script>
+<script src="saif-types.js"></script>
+<script src="audio/cues.js"></script>
+<script src="../masmak-wro/narrate.js"></script>
+<script src="../shared/deck.js"></script>
+</body>
+</html>

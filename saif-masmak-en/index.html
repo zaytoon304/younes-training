@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Al Masmak · SAIF 2026 — Juthoor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/deck.css">
+<link rel="stylesheet" href="../diriyah-judges-en/en.css">
+<link rel="stylesheet" href="../masmak-judges-en/en.css">
+</head>
+<body>
+<div id="progress"></div>
+<div id="viewport"><div id="stage"></div></div>
+<div id="bar">
+  <button onclick="location.href='../index.html'" title="Back to Juthoor">🌳 Juthoor</button>
+  <button onclick="toggleMenu()" title="Sections (M)">☰ Sections</button>
+  <button onclick="window.open('../saif-masmak/index.html','_blank')" title="Arabic version">🇸🇦 العربية</button>
+  <button onclick="prev()" title="Previous">←</button>
+  <span class="cnt" id="cnt"></span>
+  <button onclick="next()" title="Next">→</button>
+  <button onclick="fullscreen()" title="Full screen (F)">⛶ Full screen</button>
+</div>
+<div id="menu"><h3>Sections</h3><div class="mods" id="mods"></div></div>
+
+<script src="content.js"></script>
+<script src="../masmak-judges/team.js"></script>
+<script src="../saif-masmak/saif-types.js"></script>
+<script src="audio/cues.js"></script>
+<script src="../masmak-wro/narrate.js"></script>
+<script src="../shared/deck.js"></script>
+</body>
+</html>
