@@ -143,7 +143,8 @@ function storyState(t) {
     lx = rx = lerp(HOME, STOP, ease(seg(ph, 32, 35.5)));
     lspray = ph >= 35.5; fan = ph >= 35.5 && ph < 40;
     msg = ph >= 31.5 ? 1 : 0;
-    timer = ph >= 35.5 ? Math.max(0, Math.ceil(30 - (ph - 35.5) * 30 / 9.5)) : 0;
+    const LIM = window.STORY_LIMIT || 30;   // مهلة الرش بالثواني (عرض سيف يضبطها ١٥)
+    timer = ph >= 35.5 ? Math.max(0, Math.ceil(LIM - (ph - 35.5) * LIM / 9.5)) : 0;
   } else {
     fire = ph < 61 ? 1.25 + Math.sin(ph * 2) * .04 : 1.25 * (1 - seg(ph, 61, 70));
     msg = ph < 70 ? 2 : 3;
@@ -216,7 +217,7 @@ function storySVG(t) {
       <text y="74" style="font:800 17px Cairo,sans-serif;fill:#f0cc7a;text-anchor:middle">${L('محطة الأمان', 'Safety station')}</text></g>
     ${S.timer ? `<g transform="translate(${FIRE_X} 150)"><rect x="-80" y="-30" width="160" height="52" rx="12" fill="#1c1f27" stroke="#ff5252" stroke-width="3"/><text y="6" style="font:900 28px monospace;fill:#ff5252;text-anchor:middle">⏱ ${S.timer}s</text></g>` : ''}
     ${S.ff > 0 ? `<g opacity="${S.ff}">${laptop(200, 600, camView, .68)}<text x="200" y="500" style="font:800 22px Cairo,sans-serif;fill:#f0cc7a;text-anchor:middle">🧑‍🚒 ${L('رجل الدفاع المدني', 'Civil Defense officer')}</text></g>` : ''}
-    ${phone(1470, 330, MSGS[S.msg], S.msg > 0)}
+    ${phone(1470, 330, (window.STORY_MSGS || MSGS)[S.msg], S.msg > 0)}
 `;
 }
 
@@ -351,6 +352,9 @@ function gestureSVG(t, st) {
     <g transform="translate(130 330)"><rect x="-110" y="-24" width="220" height="48" rx="12" fill="#7ee2a8"/><text y="8" style="font:900 24px monospace;fill:#06301b;text-anchor:middle">${st.cmd}</text></g>
     <text x="130" y="390" style="font:700 15px Cairo,sans-serif;fill:#9aa8d8;text-anchor:middle">${L('الأمر عبر الشبكة إلى الروبوتين', 'command over Wi-Fi to both robots')}</text>`;
 }
+
+// عرض سيف (saif-masmak/saif-story.js) يعيد استخدام هذه الرسومات في قصته الأطول
+window.TUR5 = { visitorSVG, visitorState, storySVG, storyState, fire, smoke, water, helper, hand, laptop, phone, chair, runLoop, ffPlay, lerp, ease, clamp, seg };
 
 Object.assign(window.DECK_TYPES, {
   // القصة الكاملة: المشهد يملأ الشريحة، و🔊 يشغّل صوت الراوي متزامنًا (يبدأ المشهد من أوله). في البوربوينت: فيديو MP4 بالصوت (sl.video)

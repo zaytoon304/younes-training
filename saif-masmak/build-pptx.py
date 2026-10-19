@@ -123,7 +123,7 @@ for i, m in enumerate(meta):
         s.shapes.add_picture(f'{work}/s{i}-{m["steps"]}.png', 0, 0, p.slide_width, p.slide_height)
         set_notes(s, m['notes'])
         new.append(s); continue
-    if m['t'] == 'fullstory':
+    if m['t'] in ('fullstory', 'saifstory'):   # القصة: فيديو story.mp4 (يصنعه saif-masmak/story-video.js)
         # فيديو القصة الجديد (بالترقيم الصحيح) والغلاف من هذا العرض
         for rid, r in story.part.rels.items():
             if r.reltype.endswith('/video') or r.reltype.endswith('/media'):
