@@ -8,7 +8,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYS = ['intro', 'gate', 'v2', 'v3', 'v4', 'care', 's1', 's2', 's3', 'f1', 'f2', 'f3', 'rescue', 'f4', 'end']
 EN = [
     "Welcome to Smart Al Masmak. Heritage belongs to everyone, so we built one museum that works for visitors with motor, hearing and visual disabilities, and keeps every visitor safe.",
-    "It starts at the smart gate. Every visitor gets a wristband with his name. He scans its barcode at the reader, the barrier opens, and the counter goes up. The museum always knows how many people are inside, and who they are.",
+    "It starts at the smart gate. Every visitor gets a wristband with his name. He scans its barcode at the reader, the barrier opens, and the counter goes up. Everyone enters the same way: the deaf visitor, the blind visitor, and the visitor in his wheelchair. The museum always knows how many people are inside, and who they are.",
     "A visitor arrives in a LEGO wheelchair. The chair brings him close to the model. The camera sees his face and welcomes him in Arabic and English.",
     "Now his eyes are in control. He looks right, and the palace turns right, with a golden wave of light. He looks left, and it turns left.",
     "He holds his gaze. The palace stops, the side lights up in its own color, and the story begins: sign language for deaf visitors, and audio narration for blind visitors, together.",
@@ -25,7 +25,7 @@ EN = [
 ]
 AR = [
     "أهلًا بكم في المصمك الذكي. التراث للجميع، لذلك بنينا متحفًا واحدًا يخدم ذوي الإعاقة الحركية والسمعية والبصرية، ويحمي كل زائر.",
-    "تبدأ الرحلة عند البوابة الذكية. كل زائر يأخذ أسورة باسمه، يمرّر الباركود على القارئ، فيفتح الحاجز، ويزيد العدّاد. والمتحف يعرف في كل لحظة كم شخصًا بداخله، ومن هم.",
+    "تبدأ الرحلة عند البوابة الذكية. كل زائر يأخذ أسورة باسمه، يمرّر الباركود على القارئ، فيفتح الحاجز، ويزيد العدّاد. والجميع يدخلون بالطريقة نفسها: الأصم، والكفيف، وصاحب الكرسي المتحرك. والمتحف يعرف في كل لحظة كم شخصًا بداخله، ومن هم.",
     "يصل زائر على كرسي متحرك من ليغو. يقرّبه الكرسي من المجسّم، فترى الكاميرا وجهه، وترحّب به بالعربية والإنجليزية.",
     "الآن عيناه هما المتحكّم. ينظر يمينًا فيدور القصر يمينًا، مع موجة ضوء ذهبية. وينظر يسارًا فيدور يسارًا.",
     "يثبّت نظره، فيتوقف القصر، وتضيء الجهة بلونها، وتبدأ الحكاية: لغة إشارة للصم، وسرد صوتي للمكفوفين، معًا.",

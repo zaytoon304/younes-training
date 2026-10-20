@@ -1,6 +1,6 @@
 voice: en-GB-RyanNeural
 story_intro.mp3: Welcome to Smart Al Masmak. Heritage belongs to everyone, so we built one museum that works for visitors with motor, hearing and visual disabilities, and keeps every visitor safe.
-story_gate.mp3: It starts at the smart gate. Every visitor gets a wristband with his name. He scans its barcode at the reader, the barrier opens, and the counter goes up. The museum always knows how many people are inside, and who they are.
+story_gate.mp3: It starts at the smart gate. Every visitor gets a wristband with his name. He scans its barcode at the reader, the barrier opens, and the counter goes up. Everyone enters the same way: the deaf visitor, the blind visitor, and the visitor in his wheelchair. The museum always knows how many people are inside, and who they are.
 story_v2.mp3: A visitor arrives in a LEGO wheelchair. The chair brings him close to the model. The camera sees his face and welcomes him in Arabic and English.
 story_v3.mp3: Now his eyes are in control. He looks right, and the palace turns right, with a golden wave of light. He looks left, and it turns left.
 story_v4.mp3: He holds his gaze. The palace stops, the side lights up in its own color, and the story begins: sign language for deaf visitors, and audio narration for blind visitors, together.

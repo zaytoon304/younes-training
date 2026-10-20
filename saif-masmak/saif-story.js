@@ -88,6 +88,10 @@ function counter(x, y, n, names, alarm) {
     ${names ? txt(0, 90, names.join(' · '), 22, '#f3ead2') : ''}</g>`;
 }
 
+function blindP(x, y, walk) {   // زائر كفيف بعصا بيضاء
+  return person(x, y, '#3aa6a0', false, walk) + `<g transform="translate(${x} ${y})"><line x1="-20" y1="-40" x2="-52" y2="34" stroke="#fff" stroke-width="5"/><line x1="-46" y1="20" x2="-52" y2="34" stroke="#e53935" stroke-width="5"/></g>`;
+}
+
 /* 🚪 البوابة الذكية: ثلاثة زوار يمرّرون أساورهم */
 function gateScene(c, t) {
   const GX = 640;
@@ -95,7 +99,7 @@ function gateScene(c, t) {
   const people = [0, 1, 2].map(i => {
     const t0 = 1 + i * 3.6;                         // كل زائر: يمشي للقارئ ← يمرّر ← يعبر
     const k1 = seg(c, t0, t0 + 1.4), k2 = seg(c, t0 + 2, t0 + 3.4);
-    const x = k2 > 0 ? lerp(GX - 70, GX + 330 + i * 70, ease(k2)) : lerp(-60, GX - 70, ease(k1));
+    const x = k2 > 0 ? lerp(GX - 70, GX + 290 + i * 150, ease(k2)) : lerp(-60, GX - 70, ease(k1));
     const at = c >= t0 + 1.4 && c < t0 + 2.4;
     if (c >= t0 + 1.6) n = i + 1;
     if (c >= t0 + 1.5 && c < t0 + 3.2) { open = Math.max(open, seg(c, t0 + 1.5, t0 + 2) * (1 - seg(c, t0 + 2.8, t0 + 3.2))); }
@@ -106,7 +110,12 @@ function gateScene(c, t) {
   const cap = c < 1 ? ['🚪', L('البوابة الذكية: لكل زائر أسورة باسمه', 'The smart gate: every visitor gets a wristband with his name')]
     : c < 12 ? ['🎫', L(`يمرّر باركود أسورته… الحاجز يفتح، والعدد يزيد: ${N(n)}`, `He scans his wristband barcode… the barrier opens, the count goes up: ${n}`)]
     : ['🔢', L('المتحف يعرف دائمًا من بداخله', 'The museum always knows who is inside')];
-  return { svg: BG + gateSVG(GX, open, state) + people.map((p, i) => person(p.x, 560, COLS[i], p.at, p.walk)).join('')
+  // نفس زوار مشهد الإنقاذ: الأصم، والكفيف بعصاه، والقعيد بكرسيه (كلهم يدخلون بالطريقة نفسها)
+  const draw = (p, i) => i === 0 ? person(p.x, 560, COLS[0], p.at, p.walk) + `<g transform="translate(${p.x} 440)">${txt(0, 0, '🧏', 26, '#fff')}</g>`
+    : i === 1 ? blindP(p.x, 560, p.walk) + `<g transform="translate(${p.x} 440)">${txt(0, 0, '🦯', 26, '#fff')}</g>`
+    : `<g transform="translate(${p.x} 545) scale(1.7)">${T5.chair(p.at)}</g><g transform="translate(${p.x - 20} 400)">${txt(0, 0, '🦽', 26, '#fff')}</g>`
+      + (p.at ? `<g transform="translate(${p.x + 6} 470)"><rect x="-10" y="-7" width="20" height="13" rx="3" fill="#fff" stroke="#7ee2a8" stroke-width="3"/></g>` : '');
+  return { svg: BG + gateSVG(GX, open, state) + people.map(draw).join('')
       + counter(1300, 200, n, names) + (state === 'ok' ? txt(GX - 58, 370, L('أهلًا ✅', 'Welcome ✅'), 24, '#7ee2a8', 900) : ''), cap };
 }
 
@@ -136,9 +145,6 @@ function careScene(c, t) {
 
 /* 🤖 الإنقاذ: لكل زائر طريقته
    🧏 الأصم: ضوء وامض + سهم مضيء + شاشة طوارئ بلغة الإشارة · 🦯 الكفيف: صوت «اتبع صوتي» · 🦽 القعيد: الكرسي يلحق الروبوت وحده */
-function blindP(x, y, walk) {   // زائر كفيف بعصا بيضاء
-  return person(x, y, '#3aa6a0', false, walk) + `<g transform="translate(${x} ${y})"><line x1="-20" y1="-40" x2="-52" y2="34" stroke="#fff" stroke-width="5"/><line x1="-46" y1="20" x2="-52" y2="34" stroke="#e53935" stroke-width="5"/></g>`;
-}
 function rescueScene(c, t) {
   const GX = 300, FX = 1270;
   const fk = 1.1 + Math.sin(t * 2) * .05;
