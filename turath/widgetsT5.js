@@ -215,7 +215,7 @@ function storySVG(t) {
       <rect x="-104" y="-42" width="208" height="40" rx="4" fill="${lcd === 'SAFE' ? '#9fd356' : '#ff5252'}"/><text y="-14" style="font:900 22px monospace;fill:#111;text-anchor:middle">${lcd}</text>
       <circle cx="-40" cy="24" r="10" fill="${S.fire > .05 ? '#ff3b3b' : '#4a1f1f'}"/><circle cx="40" cy="24" r="10" fill="${S.gas > .05 ? '#3b8bff' : '#1f2a4a'}"/>
       <text y="74" style="font:800 17px Cairo,sans-serif;fill:#f0cc7a;text-anchor:middle">${L('محطة الأمان', 'Safety station')}</text></g>
-    ${S.timer ? `<g transform="translate(${FIRE_X} 150)"><rect x="-80" y="-30" width="160" height="52" rx="12" fill="#1c1f27" stroke="#ff5252" stroke-width="3"/><text y="6" style="font:900 28px monospace;fill:#ff5252;text-anchor:middle">⏱ ${S.timer}s</text></g>` : ''}
+    ${S.timer && !window.STORY_NO_TIMER ? `<g transform="translate(${FIRE_X} 150)"><rect x="-80" y="-30" width="160" height="52" rx="12" fill="#1c1f27" stroke="#ff5252" stroke-width="3"/><text y="6" style="font:900 28px monospace;fill:#ff5252;text-anchor:middle">⏱ ${S.timer}s</text></g>` : ''}
     ${S.ff > 0 ? `<g opacity="${S.ff}">${laptop(200, 600, camView, .68)}<text x="200" y="500" style="font:800 22px Cairo,sans-serif;fill:#f0cc7a;text-anchor:middle">🧑‍🚒 ${L('رجل الدفاع المدني', 'Civil Defense officer')}</text></g>` : ''}
     ${phone(1470, 330, (window.STORY_MSGS || MSGS)[S.msg], S.msg > 0)}
 `;

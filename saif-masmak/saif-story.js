@@ -17,6 +17,7 @@ const AUD = k => `../${EN ? 'saif-masmak-en' : 'saif-masmak'}/audio/story_${k}.m
 
 // مهلة الرش ١٥ ثانية، ورسائل تلجرام فيها عدد من بالداخل
 window.STORY_LIMIT = 15;
+window.STORY_NO_TIMER = true;   // لا نعرض عدّادًا بالثواني: القائد يقرر لما يحس إن النار تزيد
 window.STORY_MSGS = ['',
   L('🚨 بلاغ: لهب وغاز في متحف المصمك.<br>👥 بالداخل: ٣ أشخاص<br>🤖 الروبوتات تتعامل الآن', '🚨 Report: fire and gas at Masmak Museum.<br>👥 Inside: 3 people<br>🤖 Robots are handling it'),
   L('🚨 لم نستطع السيطرة على الحريق.<br><b>نحتاج دعمًا عاجلًا</b> 🚒<br>الجهة الشرقية · ممر آمن', '🚨 We could not control the fire.<br><b>Urgent support needed</b> 🚒<br>East side · safe passage'),
@@ -31,7 +32,6 @@ const SC = [
   { k: 'v2',     r: 'v', a: 8,  b: 18 },
   { k: 'v3',     r: 'v', a: 18, b: 30 },
   { k: 'v4',     r: 'v', a: 30, b: 42 },
-  { k: 'v5',     r: 'v', a: 42, b: 50 },
   { k: 'care',   r: 'care', a: 0, b: 13 },
   { k: 's1',     r: 's', a: 0,  b: 15 },
   { k: 's2',     r: 's', a: 15, b: 30 },
@@ -195,6 +195,8 @@ function frame(t) {
   if (s.r === 'v') F = { svg: T5.visitorSVG(c, t), cap: T5.visitorState(c).cap };
   else if (s.r === 's') F = { svg: T5.storySVG(c), cap: T5.storyState(c).cap };
   else F = ({ gate: gateScene, care: careScene, rescue: rescueScene, end: endScene })[s.r](c, t);
+  if (s.k === 's3' && c >= 40) F.cap = ['🔥', L('النار تكبر… والقائد يشعر بزيادتها', 'The fire keeps growing… and the leader feels it')];
+  if (s.k === 'f1' && c < 46.5) F.cap = ['🚨', L('القائد لم يستطع السيطرة على النار… فيقرر وحده: نحتاج الدفاع المدني', 'The leader cannot control the fire… it decides by itself: we need Civil Defense')];
   if (s.k === 'f4' && c >= 72) F.cap = ['🛡️', L('كل روبوت يعود إلى مكانه… المصمك الذكي: تقنية تحمي الإنسان والأثر', 'Every robot returns home… Smart Al Masmak: technology protecting people and heritage')];
   if (s.k === 'intro') F.cap = ['🏰', L('المصمك الذكي: تجربة واحدة لذوي الإعاقة الحركية والسمعية والبصرية… وأمان للجميع', 'Smart Al Masmak: one experience for motor, hearing and visual disabilities… and safety for all')];
   const p = partOf(s.k), W = EN ? 400 : 360;
