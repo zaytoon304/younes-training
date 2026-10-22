@@ -41,6 +41,26 @@ root.DECK = {
       ['Fire + gas: both robots at once', '✅ Pass'],
       ['Fire not out: hand-driven support robots', '✅ Pass'] ] },
 
+    { t: 'table', say: 'challenges1', kicker: '🧯 Challenges 1', title: 'Building Masmak: challenges and fixes',
+      head: ['Challenge', 'Fix'], widths: ['1fr', '1.3fr'], rows: [
+      ['🔑 Forgot the Raspberry Pi password', 'Repair mode from the SD card, no file lost'],
+      ['📷 Camera failed on the Raspberry Pi', 'Moved eye tracking to the laptop camera, commands over Wi‑Fi'],
+      ['👁️ Reversed pupil indices', 'Printed the raw numbers and fixed the order'],
+      ['🌀 Lost message = over-rotation', 'Watchdog stops Masmak after 1 s with no message'],
+      ['🎞️ Videos shorter than their audio', 'Repeat the last frame, keep the originals'],
+      ['🔈 Audio far too quiet', 'Raised in 3 places: card, system, player'],
+      ['💤 Camera drops when the laptop sleeps', 'Sleep blocked + a guard restarts it'],
+      ['🔀 Board and Pi swapped addresses', 'A fixed address for every device'] ] },
+
+    { t: 'table', say: 'challenges2', kicker: '🧯 Challenges 2', title: 'Robots and add-ons: challenges and fixes',
+      head: ['Challenge', 'Fix'], widths: ['1fr', '1.3fr'], rows: [
+      ['🔥 “Flame” sensor was a heat sensor', 'Candle test, then a real flame sensor'],
+      ['⚡ Board burned: battery 7.4 V, not 5', 'Multimeter, 5 V converter, power bank'],
+      ['🌀 Wheels ran alone at full speed', 'A separate ground wire'],
+      ['📶 The Leader missed the black line', 'Turned off Wi‑Fi power saving'],
+      ['📱 Robots missed the iPhone hotspot', '“Maximize compatibility”, hotspot page open'],
+      ['🦽 Wheelchair worked only by cable', 'Pybricks over Bluetooth, stops if the link drops'] ] },
+
     { t: 'statement', say: 'impact', kicker: '🌍 Impact', text: 'Masmak is only our model… any museum in the world can use it' },
 
     { t: 'statement', say: 'live', kicker: '🎬 Live demonstration', text: 'And now… the project, live',
