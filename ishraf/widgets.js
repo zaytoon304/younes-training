@@ -47,6 +47,16 @@ Object.assign(window.DECK_TYPES = window.DECK_TYPES || {}, {
         <div class="ipside">${s.points.map(p => `<div class="ipp f">${p}</div>`).join('')}</div>
       </div></div>`,
 
+  /* لعبة تدريبية: باركود للعب من الجوال + لوحة صدارة حيّة */
+  game: s => { const g = (window.ISHRAF_GAMES || {})[s.game] || {};
+    return `<div class="slide light gameslide">
+      <div class="kicker">🎮 لعبة تدريبية · ${AR((g.qs || []).length)} ${(g.qs || []).length > 10 ? 'سؤالًا' : 'أسئلة'}</div>
+      <h2 class="title" style="margin-bottom:14px">${g.icon || ''} ${g.title || s.game}</h2>
+      <div class="gmgrid">
+        <div class="srqr ix gmqr">${window.LIVE && LIVE.ok ? '<div class="srcode"></div><b>امسح وابدأ اللعب</b><span class="gmn">لا لاعبين بعد</span>' : '<b>يحتاج اتصالًا بالإنترنت</b>'}</div>
+        <div class="gmboard"><div class="gmrules">${g.rules || ''}</div><div class="gmhead">🏆 لوحة الصدارة</div><div class="gmlist"><div class="gmwait">في انتظار أول لاعب…</div></div></div>
+      </div></div>`; },
+
   /* شريحة المثل: المثل ← معناه ← تطبيقه في الإشراف (حتى لا يُترك المعنى للتخمين) */
   mathal: s => `<div class="slide dark mathal">
       <div class="kicker">${s.kicker || '🪶 مثلٌ وحكمة'}</div>
@@ -78,6 +88,27 @@ Object.assign(window.DECK_TYPES = window.DECK_TYPES || {}, {
       </div>
       <div class="nsrc">المصدر: ${s.src}</div></div>`,
 });
+
+/* ربط اللعبة: الباركود ولوحة الصدارة الحية (أعلى ٨) */
+window.DECK_BIND.game = (sl, s) => {
+  if (!(window.LIVE && LIVE.ok)) return;
+  const sid = LIVE.session().id, link = LIVE.url(`play.html?g=${s.game}&s=${sid}`);
+  sl.querySelector('.srcode').innerHTML = LIVE.qr(link, 280);
+  sl.querySelector('.gmqr').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(link); LIVE.bigQR(link, 'امسح وابدأ اللعب · نُسخ الرابط للدردشة'); };
+  const medal = ['🥇', '🥈', '🥉'];
+  const un = firebase.firestore().collection('courses').doc(LIVE.course).collection('games').doc(`${s.game}-${sid}`).collection('results')
+    .onSnapshot(snap => {
+      const rows = snap.docs.map(d => d.data()).sort((a, b) => b.score - a.score);
+      sl.querySelector('.gmn').textContent = rows.length ? LIVE.count(rows.length, ['لاعب واحد', 'لاعبان', 'لاعبين', 'لاعبًا']) : 'لا لاعبين بعد';
+      if (!rows.length) return;
+      sl.querySelector('.gmrules').style.display = 'none';
+      const max = rows[0].score || 1;
+      sl.querySelector('.gmlist').innerHTML = rows.slice(0, 5).map((r, i) => `<div class="gmrow ${i < 3 ? 'top' : ''}" style="animation-delay:${i * 60}ms">
+        <span class="gmm">${medal[i] || AR(i + 1)}</span><span class="gmname">${String(r.groupName).replace(/</g, '&lt;')}</span>
+        <span class="gmbar"><i style="width:${r.score / max * 100}%"></i></span><b>${AR(r.score)}</b></div>`).join('');
+    }, e => console.warn('game board', e.message));
+  window.DECK_CLEANUP.push(un);
+};
 
 /* ربط باركود التدريب: رابط ثابت يُرسل في دردشة كل غرفة */
 window.DECK_BIND = window.DECK_BIND || {};

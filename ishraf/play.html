@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لعبة — المشرف المطوِّر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/mobile.css">
+<style>
+  .gk{display:inline-block;background:#F6EBCF;color:#B08A2E;font-weight:900;font-size:14px;border-radius:999px;padding:4px 14px;margin-bottom:8px}
+  .card h1{font-size:24px;font-weight:900;line-height:1.5;margin-bottom:8px}
+  .big{font-size:64px;text-align:center;line-height:1.2}
+  .go{width:100%;font-family:inherit;font-size:20px;font-weight:900;color:#fff;background:var(--navy);border:0;border-radius:16px;padding:15px;cursor:pointer;margin-top:12px}
+  .top{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:8px}
+  .top .sc{background:var(--navy);color:var(--goldl);border-radius:999px;padding:3px 14px}
+  .tbar{height:10px;border-radius:99px;background:#EEE6D3;overflow:hidden;margin-bottom:14px}.tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E36B6B);transition:width .1s linear}
+  .q{font-size:22px;font-weight:900;line-height:1.6;margin-bottom:14px;min-height:70px}
+  .q.mathal{font-family:Amiri,serif;font-size:28px;color:var(--navy);text-align:center}
+  .ch button{display:block;width:100%;font-family:inherit;font-size:19px;font-weight:800;color:var(--navy);background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;text-align:center;transition:transform .1s}
+  .ch button:active{transform:scale(.97)}
+  .ch button.ok{background:#E6F4EC;border-color:var(--ok);color:#1d5e40}
+  .ch button.no{background:#FBECEC;border-color:#D64545;color:#8e2a2a}
+  .why{font-weight:800;color:var(--muted);text-align:center;min-height:26px}
+  .pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  .shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(8px)}75%{transform:translateX(-8px)}}
+</style>
+</head>
+<body>
+<main class="m">
+  <header><span class="logo">🌳</span><b>جذور</b><span>المشرف المطوِّر</span></header>
+  <section id="who" class="card" hidden></section>
+  <section id="card" class="card" hidden></section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="../shared/qrcode.js"></script>
+<script src="content.js"></script>
+<script src="games.js"></script>
+<script src="../shared/live.js"></script>
+<script src="../shared/who.js"></script>
+<script>
+/* لعبة تدريبية على الجوال: أسئلة سريعة بمؤقت، نقاط للصحيح وللسرعة، ثم تُرسل النتيجة إلى لوحة الصدارة على الشاشة
+   النتائج: courses/ishraf/games/<اللعبة>-<الجلسة>/results ← { groupName: الاسم, score, t, n } */
+(async function () {
+  const P = new URLSearchParams(location.search), gid = (P.get('g') || '').replace(/[^\w]/g, ''), sid = (P.get('s') || 'x').replace(/[^\w]/g, '');
+  const G = ISHRAF_GAMES[gid], card = document.getElementById('card');
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'), AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+  LIVE.course = 'ishraf';
+  if (!G) { card.hidden = false; card.innerHTML = '<h1>رابط اللعبة غير صحيح</h1>'; return; }
+  await WHO.ensure('ishraf', document.getElementById('who'));
+  card.hidden = false;
+  const doneKey = `game.${gid}.${sid}`;
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let prev = null; try { prev = JSON.parse(localStorage.getItem(doneKey)); } catch (e) {}
+  if (prev) { card.innerHTML = `<div class="big">🏁</div><h1 style="text-align:center">لعبتَ هذه الجولة</h1><p style="text-align:center;font-weight:800">نتيجتك: ${AR(prev.score)} نقطة · انظر لوحة الصدارة على الشاشة</p>`; return; }
+
+  card.innerHTML = `<div class="gk">🎮 لعبة تدريبية</div><div class="big">${G.icon}</div><h1 style="text-align:center">${G.title}</h1>
+    <p style="font-weight:700;line-height:1.7">${G.rules}</p>
+    <p style="font-weight:800;color:var(--muted)">${AR(G.qs.length)} أسئلة · ${AR(G.sec)} ثانية لكل سؤال · الإجابة الأسرع تأخذ نقاطًا أكثر</p>
+    <button class="go" id="start">ابدأ اللعب ▶</button>`;
+  await new Promise(r => document.getElementById('start').onclick = r);
+
+  const qs = shuffle(G.qs).map(q => { const opts = (q.opts || G.opts).map((o, i) => ({ o, ok: i === q.a })); return { q: q.q, why: q.why, opts: q.opts ? shuffle(opts) : opts }; });
+  let score = 0, right = 0;
+  for (let i = 0; i < qs.length; i++) {
+    const Q = qs[i];
+    card.innerHTML = `<div class="top"><span>السؤال ${AR(i + 1)} من ${AR(qs.length)}</span><span class="sc">${AR(score)}</span></div>
+      <div class="tbar"><i id="tb" style="width:100%"></i></div>
+      <div class="q pop ${gid === 'mathal' ? 'mathal' : ''}">${esc(Q.q)}</div>
+      <div class="ch">${Q.opts.map((o, k) => `<button data-k="${k}">${esc(o.o)}</button>`).join('')}</div><div class="why" id="why"></div>`;
+    const t0 = Date.now(), lim = G.sec * 1000;
+    const pick = await new Promise(res => {
+      const tick = setInterval(() => { const left = Math.max(0, lim - (Date.now() - t0)); document.getElementById('tb').style.width = (left / lim * 100) + '%'; if (!left) { clearInterval(tick); res(-1); } }, 100);
+      card.querySelectorAll('.ch button').forEach(b => b.onclick = () => { clearInterval(tick); res(+b.dataset.k); });
+    });
+    const left = Math.max(0, lim - (Date.now() - t0)), btns = card.querySelectorAll('.ch button');
+    btns.forEach((b, k) => { b.disabled = true; if (Q.opts[k].ok) b.classList.add('ok'); });
+    if (pick >= 0 && Q.opts[pick].ok) { right++; score += 100 + Math.round(left / lim * 100); }
+    else { if (pick >= 0) btns[pick].classList.add('no'); card.querySelector('.q').classList.add('shake'); }
+    document.getElementById('why').textContent = (pick < 0 ? '⏱️ انتهى الوقت · ' : '') + Q.why;
+    await new Promise(r => setTimeout(r, 1700));
+  }
+  card.innerHTML = `<div class="big">${right >= qs.length - 1 ? '🏆' : right >= qs.length / 2 ? '🌟' : '💪'}</div>
+    <h1 style="text-align:center">${AR(score)} نقطة</h1><p style="text-align:center;font-weight:800">أصبتَ ${AR(right)} من ${AR(qs.length)}</p>
+    <p style="text-align:center;color:var(--muted);font-weight:700" id="st">جارٍ إرسال نتيجتك…</p>`;
+  try { localStorage.setItem(doneKey, JSON.stringify({ score })); } catch (e) {}
+  try {
+    await firebase.firestore().collection('courses').doc('ishraf').collection('games').doc(`${gid}-${sid}`).collection('results')
+      .add({ groupName: WHO.name.slice(0, 38), score, n: right, t: Date.now() });
+    document.getElementById('st').textContent = 'وصلت نتيجتك… انظر لوحة الصدارة على الشاشة 👀';
+  } catch (e) { document.getElementById('st').textContent = 'تعذّر إرسال النتيجة: ' + e.message; }
+})();
+</script>
+</body>
+</html>

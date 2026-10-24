@@ -73,3 +73,19 @@
 .mbox h3{font-size:38px;font-weight:900;color:var(--gold-light);margin-bottom:8px}
 .mbox p{font-size:36px;font-weight:600;line-height:1.55;color:#e3e7f5}
 .mbox.apply{background:rgba(217,174,75,.12);border-color:var(--gold)}
+
+/* اللعبة ولوحة الصدارة */
+.gmgrid{flex:1;display:grid;grid-template-columns:0.7fr 1.6fr;gap:40px;align-items:stretch}
+.gmqr{align-self:center}.gmqr .qr{width:300px;height:300px}.gmqr .gmn{font-size:30px;font-weight:800;color:var(--gold-dark)}
+.gmboard{min-height:0;overflow:hidden;background:linear-gradient(170deg,var(--navy-700),var(--navy-900));border-radius:36px;padding:30px 36px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(16,27,69,.25)}
+.gmrules{font-size:30px;font-weight:700;color:#c9cfe6;line-height:1.5}
+.gmhead{font-size:40px;font-weight:900;color:var(--gold-light);margin-top:6px}
+.gmlist{display:flex;flex-direction:column;gap:10px}
+.gmwait{font-size:34px;font-weight:700;color:#8a93b8;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.4}}
+.gmrow{display:grid;grid-template-columns:70px 1.2fr 1.4fr 120px;gap:16px;align-items:center;background:rgba(255,255,255,.07);border-radius:20px;padding:6px 18px;color:#fff;font-size:30px;font-weight:800;animation:rowin .45s both}
+.gmrow.top{background:rgba(217,174,75,.18)}
+.gmrow .gmm{font-size:40px;text-align:center}.gmrow b{color:var(--gold-light);text-align:left;font-size:36px}
+.gmname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gmbar{height:18px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}.gmbar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--gold-light),var(--gold));transition:width .8s}
+@keyframes rowin{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
