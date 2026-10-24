@@ -1,0 +1,44 @@
+/* تصميم أدوات «المشرف المطوِّر» */
+
+/* نشاط النقطة */
+.dotslide .title{margin-bottom:10px}
+.dotboard{flex:1;background:#fff;border:3px solid var(--line);border-radius:40px;position:relative;box-shadow:inset 0 0 0 14px #FBF7EE}
+.thedot{position:absolute;width:46px;height:46px;border-radius:50%;background:var(--navy-800);top:38%;right:62%}
+.dotfoot{display:flex;align-items:center;gap:40px;margin-top:24px}
+.dotfoot .timer{width:230px;flex:none;background:var(--navy-800);border-width:10px}
+.dotfoot .timer .t{font-size:60px}
+.dotfoot .timer .h{font-size:17px;text-align:center;padding:0 22px}
+.dotfoot p{font-size:38px;font-weight:700;color:var(--muted);line-height:1.5}
+
+/* الجسر بين الواقع والمأمول */
+.gapwrap{flex:1;display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:30px;align-items:center;margin-bottom:28px}
+.gside{border-radius:36px;padding:44px 40px;min-height:430px;display:flex;flex-direction:column;gap:18px;box-shadow:0 16px 40px rgba(16,27,69,.10)}
+.gside.now{background:linear-gradient(160deg,#EEF1FA,#D9DFF0);border:3px solid #9AA6C8}
+.gside.want{background:linear-gradient(160deg,#FBEFD2,#F3DCA3);border:3px solid var(--gold)}
+.gl{font-size:50px;font-weight:900;color:var(--navy-800)}
+.gside p{font-size:36px;font-weight:600;line-height:1.55;color:#3b4460}
+.gmid{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+.gline{width:100%;height:16px;border-radius:8px;background:repeating-linear-gradient(90deg,var(--bad) 0 34px,transparent 34px 54px)}
+.gbadge{background:var(--bad);color:#fff;font-size:48px;font-weight:900;padding:16px 46px;border-radius:999px;box-shadow:0 12px 30px rgba(214,69,69,.3)}
+.gmid p{font-size:36px;font-weight:700;line-height:1.5;color:var(--navy-700)}
+
+/* تطور الإشراف */
+.evo{flex:1;display:grid;gap:26px;align-items:stretch}
+.ev{background:#fff;border:2px solid var(--line);border-radius:34px;padding:36px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;box-shadow:0 16px 40px rgba(16,27,69,.08);position:relative}
+.ev .evn{position:absolute;top:-26px;right:30px;width:58px;height:58px;border-radius:50%;background:var(--navy-800);color:var(--gold-light);font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.ev .evi{font-size:84px;line-height:1.1}
+.ev h3{font-size:46px;font-weight:900;color:var(--navy-800)}
+.ev .evq{font-size:34px;font-weight:800;color:var(--gold-dark);line-height:1.4}
+.ev p{font-size:31px;font-weight:600;line-height:1.5;color:#3b4460}
+.ev.now{background:linear-gradient(170deg,var(--navy-700),var(--navy-900));border-color:var(--gold)}
+.ev.now h3,.ev.now p{color:#fff}.ev.now .evq{color:var(--gold-light)}
+.evarrow{margin-top:26px;text-align:center;font-size:40px;font-weight:900;color:var(--navy-800);background:#F6EBCF;border-radius:999px;padding:16px 30px}
+
+/* الهرم المقلوب */
+.ipgrid{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:50px;align-items:center}
+.ipyr{display:flex;flex-direction:column;align-items:center;gap:12px}
+.ipl{height:104px;border-radius:24px;display:flex;align-items:center;justify-content:center;gap:18px;font-size:40px;font-weight:900;color:#fff;background:linear-gradient(90deg,var(--navy-600),var(--navy-800))}
+.ipl:first-child{background:linear-gradient(90deg,var(--gold),var(--gold-dark));font-size:46px}
+.ipl span{font-size:46px}
+.ipside{display:flex;flex-direction:column;gap:22px}
+.ipp{background:#fff;border:2px solid var(--line);border-right:12px solid var(--gold);border-radius:26px;padding:26px 34px;font-size:36px;font-weight:700;line-height:1.5;color:var(--navy-800)}
