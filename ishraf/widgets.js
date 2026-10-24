@@ -47,6 +47,16 @@ Object.assign(window.DECK_TYPES = window.DECK_TYPES || {}, {
         <div class="ipside">${s.points.map(p => `<div class="ipp f">${p}</div>`).join('')}</div>
       </div></div>`,
 
+  /* شريحة المثل: المثل ← معناه ← تطبيقه في الإشراف (حتى لا يُترك المعنى للتخمين) */
+  mathal: s => `<div class="slide dark mathal">
+      <div class="kicker">${s.kicker || '🪶 مثلٌ وحكمة'}</div>
+      <div class="mtext">${s.text}</div>
+      ${s.src ? `<div class="msrc">${s.src}</div>` : ''}
+      <div class="mgrid">
+        <div class="mbox f"><h3>📖 معناه</h3><p>${s.meaning}</p></div>
+        <div class="mbox apply f"><h3>🧭 وفي الإشراف…</h3><p>${s.apply}</p></div>
+      </div></div>`,
+
   /* تدريب الغرف الجانبية: باركود/رابط للتدريب + خطوات + مؤقت */
   task: s => `<div class="slide light">
       <div class="kicker">🚪 ${s.kicker || 'تدريب الغرف الجانبية'} · ${AR(Math.round(s.timer / 60))} دقيقة</div>

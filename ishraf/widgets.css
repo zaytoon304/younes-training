@@ -62,3 +62,14 @@
 .tksteps{display:flex;flex-direction:column;gap:16px}
 .tktimer{width:240px;background:var(--navy-800);border-width:10px}
 .tktimer .t{font-size:64px}.tktimer .h{font-size:18px;text-align:center;padding:0 20px}
+
+/* شريحة المثل */
+.mathal{align-items:center;text-align:center;justify-content:center}
+.mathal .kicker{align-self:center}
+.mtext{font-family:var(--naskh);font-weight:700;font-size:84px;line-height:1.55;color:var(--gold-light);max-width:1550px;margin-top:6px}
+.msrc{font-size:30px;font-weight:700;color:var(--gold);margin-top:6px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:36px;width:100%;margin-top:56px;text-align:right}
+.mbox{background:rgba(255,255,255,.07);border:2px solid rgba(217,174,75,.35);border-radius:32px;padding:30px 38px}
+.mbox h3{font-size:38px;font-weight:900;color:var(--gold-light);margin-bottom:8px}
+.mbox p{font-size:36px;font-weight:600;line-height:1.55;color:#e3e7f5}
+.mbox.apply{background:rgba(217,174,75,.12);border-color:var(--gold)}
