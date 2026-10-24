@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تدريب — جذور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+<style>
+  .kick{display:inline-block;background:#F6EBCF;color:#B08A2E;font-weight:900;font-size:14px;border-radius:999px;padding:4px 14px;margin-bottom:8px}
+  .card h1{font-size:22px;font-weight:900;line-height:1.5;margin-bottom:10px}
+  .steps{margin:10px 0 14px;padding-right:20px}.steps li{font-size:16px;font-weight:700;line-height:1.7;margin-bottom:4px}
+  .field{margin-bottom:12px}.field label{display:block;font-weight:900;font-size:15px;margin-bottom:6px}
+  .field textarea{width:100%;min-height:90px;font-family:inherit;font-size:16px;font-weight:600;line-height:1.6;border:2px solid var(--line);border-radius:14px;padding:10px;background:#fff;resize:vertical}
+  .go{width:100%;font-family:inherit;font-size:19px;font-weight:900;color:#fff;background:var(--navy);border:0;border-radius:16px;padding:14px;cursor:pointer}
+  .go:disabled{opacity:.5}
+  .note{font-size:13px;font-weight:700;color:var(--muted);margin-top:10px;line-height:1.6}
+  .big{font-size:56px;text-align:center}
+</style>
+</head>
+<body>
+<main class="m">
+  <header><span class="logo">🌳</span><b>جذور</b><span id="course"></span></header>
+  <section id="who" class="card" hidden></section>
+  <section id="card" class="card" hidden></section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="qrcode.js"></script>
+<script>
+  var P = new URLSearchParams(location.search), C = (P.get('c') || '').replace(/[^\w-]/g, ''), T = (P.get('t') || '').replace(/[^\w-]/g, '');
+  window.DECK_HOOKS = [];
+  document.write('<script src="../' + C + '/content.js"><\/script><script src="../' + C + '/insight-key.js"><\/script>');
+</script>
+<script src="live.js"></script>
+<script src="who.js"></script>
+<script>
+/* صفحة «تدريب الغرف الجانبية»: المتدرب يكتب إجابته باسمه، ويراها المدرب في تقريره.
+   الإجابة تُحفظ في items/task-<التدريب> داخل حقل vals (قائمة نصوص) — تُكتب مرة واحدة ولا تُعدّل. */
+(async function () {
+  LIVE.course = C;
+  const task = DECK.insight && DECK.insight.tasks && DECK.insight.tasks[T];
+  const card = document.getElementById('card'), esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  document.getElementById('course').textContent = DECK.title;
+  if (!task) { card.hidden = false; card.innerHTML = '<h1>رابط التدريب غير صحيح</h1>'; return; }
+  await WHO.ensure(C, document.getElementById('who'));
+  card.hidden = false;
+  const done = () => { card.innerHTML = `<div class="big">✓</div><h1 style="text-align:center">شكرًا ${esc(WHO.name.split(' ')[0])}</h1><p class="note" style="text-align:center">وصلت إجابتك إلى المدرب، وستُناقَش عند العودة من الغرف.</p>`; };
+  if (await WHO.get('task-' + T).catch(() => null)) return done();
+  card.innerHTML = `<div class="kick">🚪 تدريب الغرف الجانبية</div><h1>${task.title}</h1>
+    <ol class="steps">${task.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+    ${task.fields.map((f, i) => `<div class="field"><label for="f${i}">${f.label}</label><textarea id="f${i}" maxlength="900" placeholder="${f.hint || ''}"></textarea></div>`).join('')}
+    <button class="go" id="send">إرسال إجابتي</button>
+    <p class="note">تُرسل مرة واحدة فقط، ويراها المدرب باسمك. لا تستعجل… راجعها قبل الإرسال.</p>`;
+  document.getElementById('send').onclick = async e => {
+    const vals = task.fields.map((_, i) => document.getElementById('f' + i).value.trim());
+    if (vals.every(v => !v)) { alert('اكتب إجابتك أولًا'); return; }
+    e.target.disabled = true; e.target.textContent = 'جارٍ الإرسال…';
+    try { await WHO.record('task-' + T, { vals }); done(); }
+    catch (err) { e.target.disabled = false; e.target.textContent = 'إرسال إجابتي'; alert('تعذّر الإرسال، حاول مرة أخرى: ' + err.message); }
+  };
+})();
+</script>
+</body>
+</html>

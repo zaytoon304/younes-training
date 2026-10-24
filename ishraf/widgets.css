@@ -42,3 +42,23 @@
 .ipl span{font-size:46px}
 .ipside{display:flex;flex-direction:column;gap:22px}
 .ipp{background:#fff;border:2px solid var(--line);border-right:12px solid var(--gold);border-radius:26px;padding:26px 34px;font-size:36px;font-weight:700;line-height:1.5;color:var(--navy-800)}
+
+/* بطاقة الدولة */
+.nhead{display:flex;align-items:center;gap:40px;margin-bottom:26px}
+.nflag{font-size:150px;line-height:1}
+.nidea{font-size:42px;font-weight:800;color:var(--gold-dark);margin-top:8px;line-height:1.4}
+.ngrid{flex:1;display:grid;grid-template-columns:1.35fr 1fr;gap:34px}
+.nbox{background:#fff;border:2px solid var(--line);border-radius:34px;padding:34px 40px;box-shadow:0 16px 40px rgba(16,27,69,.08)}
+.nbox h3{font-size:40px;font-weight:900;color:var(--navy-800);margin-bottom:14px}
+.nbox p{font-size:34px;font-weight:600;line-height:1.55;color:#3b4460;margin-bottom:10px}
+.nbox.take{background:linear-gradient(170deg,var(--navy-700),var(--navy-900));border-color:var(--gold)}
+.nbox.take h3{color:var(--gold-light)}.nbox.take p{color:#fff;font-size:38px;font-weight:700}
+.nsrc{font-size:24px;font-weight:600;color:var(--muted);margin-top:14px;direction:rtl}
+
+/* تدريب الغرف الجانبية */
+.tkgrid{flex:1;display:grid;grid-template-columns:0.75fr 1.5fr 0.6fr;gap:36px;align-items:center}
+.tkqr .qr{width:280px;height:280px}
+.tkqr .tklink{font-size:18px;font-weight:700;color:var(--muted);direction:ltr;word-break:break-all}
+.tksteps{display:flex;flex-direction:column;gap:16px}
+.tktimer{width:240px;background:var(--navy-800);border-width:10px}
+.tktimer .t{font-size:64px}.tktimer .h{font-size:18px;text-align:center;padding:0 20px}

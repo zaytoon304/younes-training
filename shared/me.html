@@ -43,7 +43,7 @@
 <script src="insight.js"></script>
 <script>
 (async function () {
-  const K = DECK.insight, card = document.getElementById('card');
+  const K = DECK.insight, L = K.labels || {}, card = document.getElementById('card');
   document.getElementById('course').textContent = DECK.title;
   await WHO.ensure(C, document.getElementById('who'));
   card.hidden = false;
@@ -56,7 +56,7 @@
   const cell = (k, l, t, bg) => `<div class="cell" style="right:${l}px;top:${t}px;background:${bg}${k === dom ? ';outline:3px solid var(--gold)' : ''}"><span style="font-size:24px">${S[k].icon}</span>${S[k].name}</div>`;
   const styled = Object.values(R.styles).reduce((a, b) => a + b, 0) || 1;
   const miss = R.decisions.filter(d => d.eff < 4 && d.kind === 'act');
-  card.innerHTML = `<div class="kick">🧭 نمطي في إدارة الصف</div>
+  card.innerHTML = `<div class="kick">🧭 ${L.me || 'نمطي في إدارة الصف'}</div>
     <h1>${WHO.name}، نمطك الغالب: ${S[dom].icon} ${S[dom].name}</h1>
     <p>بناءً على ${R.n} قرارًا اتخذتها في مواقف الدورة. اخترت الحل الأمثل في ${R.decisions.filter(d => d.eff === 4).length} منها.</p>
     <div class="quadbox">${cell('auth', 0, 0, '#F3E1DE')}${cell('firm', 132, 0, '#DDF0E6')}${cell('perm', 0, 132, '#E9E6F0')}${cell('emo', 132, 132, '#FBEFD5')}
@@ -67,7 +67,7 @@
     ${R.weakAreas.length ? `<div class="sec"><h2>🌱 مجالات تستحق اهتمامك</h2>${R.weakAreas.map(a => `<div class="li">${a}</div>`).join('')}</div>` : ''}
     <div class="sec"><h2>🎯 خطواتك القادمة</h2>${R.tips.map(t => `<div class="li">${t}</div>`).join('')}</div>
     ${miss.length ? `<div class="sec"><h2>🔁 راجع هذه المواقف</h2>${miss.map(d => `<div class="li">${d.title}<small>اخترت: ${d.chosen}</small><small class="ok">الأنسب: ${d.best}</small></div>`).join('')}</div>` : ''}
-    <p style="margin-top:14px;font-size:14px">هذه قراءة لقراراتك في مواقف الدورة لتساعدك على النمو، وليست حكمًا عليك. كل معلم قادر على التحسن.</p>`;
+    <p style="margin-top:14px;font-size:14px">${L.meFoot || 'هذه قراءة لقراراتك في مواقف الدورة لتساعدك على النمو، وليست حكمًا عليك. كل معلم قادر على التحسن.'}</p>`;
 })();
 </script>
 </body>

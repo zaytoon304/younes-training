@@ -10,7 +10,7 @@ const ISHRAF = root.ISHRAF = root.DECK = {
   subtitle: 'سدّ الفجوة بين الواقع والمأمول',
   tag: 'الإشراف التربوي الحديث',
   author: 'أ. محمد زيتون',
-  parts: ['01-intro', '02-why'],
+  parts: ['01-intro', '02-why', '03-world', '04-gap', '05-visit', '06-styles', '08-clinic', '07-experts'],
   modules: [],
   /* عبارات التقييم الذاتي (قبل الدورة وبعدها) — خمس عبارات بالضبط */
   selfrate: { items: [

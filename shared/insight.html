@@ -57,7 +57,7 @@ th{font-size:13px;color:var(--muted)}tr.r{cursor:pointer}tr.r:hover{background:#
 <script>
 (function () {
 const TRAINER = 'zaytoon304@gmail.com';
-const K = DECK.insight, CATS = INSIGHT.CATS, app = document.getElementById('app'), auth = firebase.auth(), db = firebase.firestore();
+const K = DECK.insight, L = K.labels || {}, CATS = K.cats || INSIGHT.CATS, app = document.getElementById('app'), auth = firebase.auth(), db = firebase.firestore();
 const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 const col = v => v == null ? '#ccc' : v >= 80 ? '#2E9E6B' : v >= 65 ? '#3B7DD8' : v >= 45 ? '#D99A2B' : '#C0392B';
@@ -107,7 +107,7 @@ async function load() {
     const ts = await ref.get();
     ALL = await Promise.all(ts.docs.map(async d => {
       const it = {}; (await d.ref.collection('items').get()).forEach(x => it[x.id] = x.data());
-      return Object.assign({ id: d.id }, d.data(), { R: INSIGHT.analyze(DECK, it) });
+      return Object.assign({ id: d.id }, d.data(), { items: it, R: INSIGHT.analyze(DECK, it) });
     }));
     list();
   } catch (e) { app.innerHTML = `<div class="card msg e">تعذّر التحميل: ${esc(e.message)}</div>`; }
@@ -119,7 +119,7 @@ function list(filter) {
     .sort((a, b) => ORDER.indexOf(a.R.category.id) - ORDER.indexOf(b.R.category.id) || (a.R.judgment || 0) - (b.R.judgment || 0));
   const count = c => ALL.filter(t => t.R.category.id === c).length;
   app.innerHTML = `
-    <div class="card warn">⚖️ هذه مؤشرات مبنية على قرارات المتدرب داخل الدورة وفق منهجية اختبارات الحكم على المواقف ونموذج سلوك المعلم (وبلز) وأيديولوجية ضبط الطلاب. هي قراءة قوية لطريقة التفكير، <b>لكنها ليست حكمًا نهائيًا</b>؛ قبل أي قرار إداري تُستكمل بملاحظة صفية فعلية (البطاقة في آخر كل تقرير).</div>
+    <div class="card warn">${L.warn || `⚖️ هذه مؤشرات مبنية على قرارات المتدرب داخل الدورة وفق منهجية اختبارات الحكم على المواقف ونموذج سلوك المعلم (وبلز) وأيديولوجية ضبط الطلاب. هي قراءة قوية لطريقة التفكير، <b>لكنها ليست حكمًا نهائيًا</b>؛ قبل أي قرار إداري تُستكمل بملاحظة صفية فعلية (البطاقة في آخر كل تقرير).`}</div>
     <div class="sum noprint">${['star', 'good', 'support', 'direct', 'insufficient'].map(c => `<div data-c="${c}" style="background:${CATS[c].color}"><b>${AR(count(c))}</b><span>${CATS[c].icon} ${CATS[c].name}</span></div>`).join('')}</div>
     <div class="card" style="margin-top:18px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2>المتدربون (${AR(rows.length)})${filter ? ' · ' + CATS[filter].name : ''}</h2>
@@ -159,7 +159,7 @@ const OBS = [
 function report(t) {
   const R = t.R, c = CATS[R.category.id], S = K.styles;
   const styled = Object.values(R.styles).reduce((a, b) => a + b, 0) || 1;
-  const mind = INSIGHT.mindText(R, K);
+  const mind = (K.mindText || INSIGHT.mindText)(R, K);
   app.innerHTML = `<div class="noprint" style="margin-bottom:12px"><button class="btn ghost" id="back">→ رجوع للقائمة</button> <button class="btn ghost" onclick="print()">🖨️ طباعة التقرير</button></div>
   <div class="card rep">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
@@ -169,12 +169,12 @@ function report(t) {
     <h3>🧠 كيف يفكر؟</h3>${mind.map(x => `<div class="li">${x}</div>`).join('') || '<div class="li">—</div>'}
     <h3>📌 أسباب التصنيف</h3>${R.category.reasons.map(x => `<div class="li">${x}</div>`).join('')}
     <div class="grid2">
-      <div><h3>🧭 نمط القيادة الصفية (وبلز)</h3>${Object.keys(S).map(k => bar(S[k].icon + ' ' + S[k].name, Math.round(R.styles[k] / styled * 100))).join('')}
+      <div><h3>🧭 ${L.style || 'نمط القيادة الصفية (وبلز)'}</h3>${Object.keys(S).map(k => bar(S[k].icon + ' ' + S[k].name, Math.round(R.styles[k] / styled * 100))).join('')}
         <p style="font-weight:700;color:var(--muted);margin-top:6px">الحزم: ${R.control >= 0.3 ? 'مرتفع' : R.control <= -0.3 ? 'منخفض' : 'متوسط'} · الدفء: ${R.warmth >= 0.3 ? 'مرتفع' : R.warmth <= -0.3 ? 'منخفض' : 'متوسط'}</p></div>
       <div><h3>📊 جودة القرار حسب المجال</h3>${bar('الإجمالي', R.judgment)}${Object.values(R.areas).map(a => bar(a.name, a.score)).join('')}</div>
     </div>
     <div class="grid2">
-      <div><h3>💭 القناعات التربوية</h3>${R.poll ? Object.values(R.poll).map(p => bar(p.name, p.score)).join('') : '<div class="li">لم يُجب عن استطلاع القناعات</div>'}
+      <div><h3>💭 ${L.beliefs || 'القناعات التربوية'}</h3>${R.poll ? Object.values(R.poll).map(p => bar(p.name, p.score)).join('') : '<div class="li">لم يُجب عن استطلاع القناعات</div>'}
         ${bar('سلامة المفاهيم (صح أم خطأ)', R.mythScore)}
         ${R.mythsBelieved.length ? R.mythsBelieved.map(m => `<div class="li red">يرى صحة: «${m.text}»<small>${K.beliefNames[m.tag]}</small></div>`).join('') : ''}</div>
       <div><h3>🪞 الوعي بالذات والقابلية للتطوير</h3>
@@ -185,16 +185,18 @@ function report(t) {
         ${bar('القابلية للتطوير (مؤشر مركّب)', R.coach)}</div>
     </div>
     <h3>🚩 الإشارات الحمراء</h3>${R.flags.length ? R.flags.map(f => `<div class="li red"><b>${K.flags[f.flag] || 'اختيار ضار'}</b> — ${f.title}<small>اختار: ${f.chosen}</small></div>`).join('') : '<div class="li">لا توجد ✓</div>'}
+    ${K.tasks ? `<h3>🚪 تدريبات الغرف الجانبية</h3>${Object.keys(K.tasks).map(k => { const a = t.items && t.items['task-' + k];
+      return `<div class="li"><b>${K.tasks[k].title}</b>${a && a.vals ? K.tasks[k].fields.map((f, i) => `<small><b>${f.label}:</b> ${esc(a.vals[i] || '—').replace(/\n/g, '<br>')}</small>`).join('') : '<small>لم يُرسل</small>'}</div>`; }).join('')}` : ''}
     <h3>📋 قراراته في المواقف</h3>
     <table><tr><th>الموقف</th><th>اختياره</th><th>النمط</th><th>الفاعلية</th></tr>
       ${R.decisions.map(d => `<tr><td>${d.title}</td><td>${d.chosen}</td><td>${d.style ? S[d.style].icon + ' ' + S[d.style].name : '—'}</td><td style="color:${col((d.eff - 1) / 3 * 100)};font-weight:900">${'●'.repeat(d.eff)}${'○'.repeat(4 - d.eff)}</td></tr>`).join('')}</table>
-    <h3>🎯 توصيات للمشرف</h3>${ADVICE[R.category.id].map(x => `<div class="li">${x}</div>`).join('')}
+    <h3>🎯 توصيات للمشرف</h3>${(L.advice || ADVICE)[R.category.id].map(x => `<div class="li">${x}</div>`).join('')}
     ${R.weakAreas.length ? `<div class="li">المجالات التي تحتاج تطويرًا: ${R.weakAreas.join('، ')}</div>` : ''}
     ${R.tips.length ? `<div class="li">نصائح عملية تناسب نمطه: ${R.tips.join(' · ')}</div>` : ''}
   </div>
-  <div class="card obs"><h3 style="margin-top:0">👁️ بطاقة الملاحظة الصفية (للتحقق قبل أي قرار)</h3>
-    <p style="font-weight:700;color:var(--muted);margin-bottom:10px">مؤشرات سلوكية مستلهمة من مجالات الدعم العاطفي وتنظيم الفصل في أداة CLASS (Pianta وزملاؤه، جامعة فيرجينيا). ضع علامة أثناء زيارة حصة كاملة.</p>
-    <table><tr><th>المؤشر</th><th>دائمًا</th><th>أحيانًا</th><th>نادرًا</th></tr>${OBS.map(o => `<tr><td>${o}</td><td>☐</td><td>☐</td><td>☐</td></tr>`).join('')}</table>
+  <div class="card obs"><h3 style="margin-top:0">👁️ ${L.obsTitle || 'بطاقة الملاحظة الصفية (للتحقق قبل أي قرار)'}</h3>
+    <p style="font-weight:700;color:var(--muted);margin-bottom:10px">${L.obsNote || 'مؤشرات سلوكية مستلهمة من مجالات الدعم العاطفي وتنظيم الفصل في أداة CLASS (Pianta وزملاؤه، جامعة فيرجينيا). ضع علامة أثناء زيارة حصة كاملة.'}</p>
+    <table><tr><th>المؤشر</th><th>دائمًا</th><th>أحيانًا</th><th>نادرًا</th></tr>${(L.obs || OBS).map(o => `<tr><td>${o}</td><td>☐</td><td>☐</td><td>☐</td></tr>`).join('')}</table>
     <p style="margin-top:12px;font-weight:700">ملاحظات المشرف: ...........................................................................................</p></div>`;
   document.getElementById('back').onclick = () => list();
   scrollTo(0, 0);
