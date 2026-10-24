@@ -1,7 +1,7 @@
 /* =====================================================================
    "Smart Al Masmak" — SAIF 2026 judging presentation (English, narrated, plays on the booth screen during the live demo)
    Built on the SAIF workshop "From prototype to competition" (2026-10-24):
-   Problem → Solution (transforms the visit) → Two claims → Story → How we tested → Evidence chain per claim
+   Problem → Solution (transforms the visit) → Every visitor his own way → Two claims → Story → How we tested → Evidence chain per claim
    → Four angles (reliable) → Improvement cycle: all challenges (one change at a time) → Limits of our evidence → Impact → Live
    Every number comes from the team's real tests and project reports.
    Narration: saif-masmak/narration-tts.py writes audio/<say>.mp3 + audio/cues.js
@@ -30,9 +30,16 @@ root.DECK = {
       { icon: '🔥', h: 'Fire risk', b: 'mud and wood burn fast, and crowds need time to leave' } ] },
 
     { t: 'cards', say: 'solution', kicker: 'Our solution', title: 'One smart museum that protects people and heritage', cols: 3, cards: [
-      { icon: '👁️', h: 'Explore', b: 'the visitor turns the palace with his eyes, hand or voice, with sign language and audio' },
+      { icon: '👁️', h: 'Explore', b: 'every visitor turns the palace his own way: eyes, hand or voice, and hears the story in his headset' },
       { icon: '🛡️', h: 'Protect people', b: 'a gate that knows who is inside, and robots that fight fire and help visitors out' },
       { icon: '🏺', h: 'Protect the artifact', b: 'sensors watch the air around the model, day and night' } ] },
+
+    { t: 'table', say: 'modes', kicker: '🎯 Every visitor, his own way', title: 'Masmak adapts to the visitor… not the other way round',
+      head: ['Visitor', 'Runs Masmak with', 'Gets the story through'], widths: ['1fr', '1.1fr', '1.5fr'], rows: [
+      ['🦽 Wheelchair user', '👁️ eye pupil', '🎧 headset + screen'],
+      ['🧏 Deaf visitor', '✋ hand gesture', '🤟 sign-language video'],
+      ['🦯 Blind visitor', '🎙️ his voice', '🎧 audio narration in the headset'],
+      ['🙂 Any visitor', 'the way he likes', '🎧 a headset at every artifact: no noise for others'] ] },
 
     { t: 'cards', say: 'claims', kicker: '🎯 Our claims', title: 'Two claims… backed by evidence', cols: 2, cards: [
       { icon: '1️⃣', h: 'Explore without help', b: 'a visitor with a disability explores Masmak alone: with eyes, hand or voice' },

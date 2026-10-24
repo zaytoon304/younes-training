@@ -32,6 +32,7 @@ const SC = [
   { k: 'v2',     r: 'v', a: 8,  b: 18 },
   { k: 'v3',     r: 'v', a: 18, b: 30 },
   { k: 'v4',     r: 'v', a: 30, b: 42 },
+  { k: 'modes',  r: 'modes', a: 0, b: 13 },
   { k: 'care',   r: 'care', a: 0, b: 13 },
   { k: 's1',     r: 's', a: 0,  b: 15 },
   { k: 's2',     r: 's', a: 15, b: 30 },
@@ -185,6 +186,36 @@ function rescueScene(c, t) {
       + robot + counter(1180, 150, n, null, true) + phone(1460, 330, msg, true), cap };
 }
 
+/* 🎯 كل زائر بطريقته: القعيد بعينه، والأصم بيده، والكفيف بصوته، والزائر العادي بما يحب
+   🎧 ولكل أثر سماعة: يسمع ما يريد دون أن يزعج غيره */
+function modesScene(c, t) {
+  const ST = [
+    { x: 330,  on: [1, 4.5],   ic: '👁️', lbl: L('بؤبؤ العين', 'Eye pupil'),  who: L('القعيد', 'Wheelchair user') },
+    { x: 800,  on: [4.5, 8],   ic: '✋', lbl: L('حركة اليد', 'Hand gesture'), who: L('الأصم', 'Deaf visitor') },
+    { x: 1270, on: [8, 11.5],  ic: '🎙️', lbl: L('الصوت', 'Voice'),          who: L('الكفيف', 'Blind visitor') },
+  ];
+  const all = c >= 11.5;
+  const dir = c < 4.5 ? 1 : c < 8 ? -1 : 1;
+  const draw = (st, i) => {
+    const act = all || (c >= st.on[0] && c < st.on[1]), op = c >= st.on[0] || all ? 1 : .25;
+    const fig = i === 0 ? `<g transform="translate(${st.x} 585) scale(1.7)">${T5.chair(act)}</g>`
+      : i === 1 ? person(st.x, 600, COLS[0], false, 0) : blindP(st.x, 600, 0);
+    const hy = i === 0 ? 472 : 500;
+    return `<g opacity="${op}">${fig}
+      <g transform="translate(${st.x + 4} ${hy})">${txt(0, 0, '🎧', 34, '#fff')}</g>
+      <g transform="translate(${st.x} 690)"><rect x="-120" y="-36" width="240" height="50" rx="16" fill="${act ? '#f0cc7a' : '#2a3150'}"/>
+        ${txt(0, -3, st.ic + ' ' + st.lbl, 22, act ? '#0d1226' : '#9aa8d8', 900)}</g>
+      ${txt(st.x, 395, st.who, 20, '#f3ead2')}
+      ${act ? `<line x1="${st.x}" y1="345" x2="${800 + (st.x - 800) * .25}" y2="250" stroke="#f0cc7a" stroke-width="3" stroke-dasharray="6 8" opacity=".8"/>` : ''}</g>`;
+  };
+  const cap = c < 1 ? ['🎯', L('كل زائر يدير المصمك بطريقته', 'Every visitor runs Masmak in his own way')]
+    : c < 4.5 ? ['🦽', L('القعيد: ببؤبؤ عينه', 'The wheelchair user: with his eye pupil')]
+    : c < 8 ? ['🧏', L('الأصم: بحركة يده… ويرى لغة الإشارة', 'The deaf visitor: with a hand gesture… and sees sign language')]
+    : c < 11.5 ? ['🦯', L('الكفيف: بصوته… ويسمع الشرح', 'The blind visitor: with his voice… and hears the narration')]
+    : ['🎧', L('ولكل أثر سماعة: يسمع ما يريد… دون أن يزعج غيره', 'A headset at every artifact: each hears what he wants… without disturbing others')];
+  return { svg: GRAD + BG + (TUR.masmak3D ? TUR.masmak3D(t * .5 * dir, 800, 200, 70, .42, {}) : '') + ST.map(draw).join(''), cap };
+}
+
 function endScene(c, t) {
   const o = seg(c, .3, 1.8);
   return { svg: GRAD + BG + (TUR.masmak3D ? TUR.masmak3D(t * .5, 800, 430, 120, .42, { ring: (i) => ((i + Math.floor(t * 6)) % 4 === 0 ? '#f0cc7a' : null) }) : '')
@@ -194,14 +225,14 @@ function endScene(c, t) {
     cap: ['🇸🇦', L('فكرة مبتكرة من السعودية، أرض الإبداع', 'An innovative idea from Saudi Arabia, the land of innovation')] };
 }
 
-const PARTS = [L('الدخول', 'Entry'), L('الزائر وعيناه', 'The visitor'), L('حماية الأثر', 'Artifact care'), L('الروبوتات', 'The robots'), L('الدفاع المدني', 'Civil Defense'), L('الخاتمة', 'Ending')];
-const partOf = k => ['intro', 'gate'].includes(k) ? 0 : /^v/.test(k) ? 1 : k === 'care' ? 2 : /^s/.test(k) ? 3 : k === 'end' ? 5 : 4;
+const PARTS = [L('الدخول', 'Entry'), L('كل زائر بطريقته', 'Every visitor'), L('حماية الأثر', 'Artifact care'), L('الروبوتات', 'The robots'), L('الدفاع المدني', 'Civil Defense'), L('الخاتمة', 'Ending')];
+const partOf = k => ['intro', 'gate'].includes(k) ? 0 : (/^v/.test(k) || k === 'modes') ? 1 : k === 'care' ? 2 : /^s/.test(k) ? 3 : k === 'end' ? 5 : 4;
 function frame(t) {
   const { i, c } = clock(t), s = SC[i];
   let F;
   if (s.r === 'v') F = { svg: T5.visitorSVG(c, t), cap: T5.visitorState(c).cap };
   else if (s.r === 's') F = { svg: T5.storySVG(c), cap: T5.storyState(c).cap };
-  else F = ({ gate: gateScene, care: careScene, rescue: rescueScene, end: endScene })[s.r](c, t);
+  else F = ({ gate: gateScene, care: careScene, modes: modesScene, rescue: rescueScene, end: endScene })[s.r](c, t);
   if (s.k === 's3' && c >= 40) F.cap = ['🔥', L('النار تكبر… والقائد يشعر بزيادتها', 'The fire keeps growing… and the leader feels it')];
   if (s.k === 'f1' && c < 46.5) F.cap = ['🚨', L('القائد لم يستطع السيطرة على النار… فيقرر وحده: نحتاج الدفاع المدني', 'The leader cannot control the fire… it decides by itself: we need Civil Defense')];
   if (s.k === 'f4' && c >= 72) F.cap = ['🛡️', L('كل روبوت يعود إلى مكانه… المصمك الذكي: تقنية تحمي الإنسان والأثر', 'Every robot returns home… Smart Al Masmak: technology protecting people and heritage')];

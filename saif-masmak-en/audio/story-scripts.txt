@@ -4,6 +4,7 @@ story_gate.mp3: It starts at the smart gate. Every visitor gets a wristband with
 story_v2.mp3: A visitor arrives in a LEGO wheelchair. The chair brings him close to the model. The camera sees his face and welcomes him in Arabic and English.
 story_v3.mp3: Now his eyes are in control. He looks right, and the palace turns right, with a golden wave of light. He looks left, and it turns left.
 story_v4.mp3: He holds his gaze. The palace stops, the side lights up in its own color, and the story begins: sign language for deaf visitors, and audio narration for blind visitors, together.
+story_modes.mp3: And every visitor runs Masmak in his own way. The wheelchair user with his eye pupil. The deaf visitor with a hand gesture, while he watches sign language. The blind visitor with his voice, while he hears the story. And any visitor can choose the way he likes. At every artifact there is a headset, so each visitor hears what he wants, without disturbing anyone.
 story_care.mp3: The artifact is protected too. Inside its case, sensors watch the temperature, the humidity and the air. When the humidity rises, the screen warns, and the system turns on a fan by itself, until the air is safe again.
 story_s1.mp3: A safety station watches for fire and gas. A flame appears. The leader robot drives itself to the black line, sprays until the fire is out, then returns home.
 story_s2.mp3: Now a gas leak. The leader stays in place and sends robot two over ESP-NOW. Robot two drives to the gas, clears it with its fan, and returns.

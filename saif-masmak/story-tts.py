@@ -5,13 +5,14 @@ import asyncio, json, os, subprocess
 import edge_tts
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-KEYS = ['intro', 'gate', 'v2', 'v3', 'v4', 'care', 's1', 's2', 's3', 'f1', 'f2', 'f3', 'rescue', 'f4', 'end']
+KEYS = ['intro', 'gate', 'v2', 'v3', 'v4', 'modes', 'care', 's1', 's2', 's3', 'f1', 'f2', 'f3', 'rescue', 'f4', 'end']
 EN = [
     "Welcome to Smart Al Masmak. Heritage belongs to everyone, so we built one museum that works for visitors with motor, hearing and visual disabilities, and keeps every visitor safe.",
     "It starts at the smart gate. Every visitor gets a wristband with his name. He shows its code to the gate camera, the barrier opens, and the counter goes up. Everyone enters the same way: the deaf visitor, the blind visitor, and the visitor in his wheelchair. The museum always knows how many people are inside, and who they are.",
     "A visitor arrives in a LEGO wheelchair. The chair brings him close to the model. The camera sees his face and welcomes him in Arabic and English.",
     "Now his eyes are in control. He looks right, and the palace turns right, with a golden wave of light. He looks left, and it turns left.",
     "He holds his gaze. The palace stops, the side lights up in its own color, and the story begins: sign language for deaf visitors, and audio narration for blind visitors, together.",
+    "And every visitor runs Masmak in his own way. The wheelchair user with his eye pupil. The deaf visitor with a hand gesture, while he watches sign language. The blind visitor with his voice, while he hears the story. And any visitor can choose the way he likes. At every artifact there is a headset, so each visitor hears what he wants, without disturbing anyone.",
     "The artifact is protected too. Inside its case, sensors watch the temperature, the humidity and the air. When the humidity rises, the screen warns, and the system turns on a fan by itself, until the air is safe again.",
     "A safety station watches for fire and gas. A flame appears. The leader robot drives itself to the black line, sprays until the fire is out, then returns home.",
     "Now a gas leak. The leader stays in place and sends robot two over ESP-NOW. Robot two drives to the gas, clears it with its fan, and returns.",
@@ -29,6 +30,7 @@ AR = [
     "يصل زائر على كرسي متحرك من ليغو. يقرّبه الكرسي من المجسّم، فترى الكاميرا وجهه، وترحّب به بالعربية والإنجليزية.",
     "الآن عيناه هما المتحكّم. ينظر يمينًا فيدور القصر يمينًا، مع موجة ضوء ذهبية. وينظر يسارًا فيدور يسارًا.",
     "يثبّت نظره، فيتوقف القصر، وتضيء الجهة بلونها، وتبدأ الحكاية: لغة إشارة للصم، وسرد صوتي للمكفوفين، معًا.",
+    "وكل زائر يدير المصمك بطريقته. القعيد ببؤبؤ عينه. والأصم بحركة يده، وهو يشاهد لغة الإشارة. والكفيف بصوته، وهو يسمع الحكاية. وأي زائر يختار الطريقة التي يحبها. وعند كل أثر سماعة، فيسمع كل زائر ما يريد، دون أن يزعج أحدًا.",
     "والأثر نفسه محميّ أيضًا. داخل صندوقه حساسات تراقب الحرارة والرطوبة والهواء. وعندما ترتفع الرطوبة، تنبّه الشاشة، ويشغّل النظام مروحة بنفسه، حتى يعود الجو آمنًا.",
     "ومحطة أمان تراقب اللهب والغاز. يظهر لهب، فيذهب الروبوت القائد بنفسه حتى الخط الأسود، ويرش حتى تنطفئ النار، ثم يعود إلى مكانه.",
     "والآن تسرّب غاز. يبقى القائد مكانه، ويرسل الروبوت الثاني عبر إي إس بي ناو. فيذهب إلى الغاز، ويبدده بمروحته، ثم يعود.",

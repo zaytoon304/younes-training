@@ -20,9 +20,16 @@ AR = {
   ],
   'solution': [
     'فبنينا متحفًا ذكيًا واحدًا يحمي الإنسان والأثر.',
-    'الزائر يدير القصر بعينه أو يده أو صوته، مع لغة الإشارة والشرح الصوتي.',
+    'كل زائر يدير القصر بطريقته: بعينه أو يده أو صوته، ويسمع الشرح في سماعته.',
     'وبوابة تعرف من بالداخل، وروبوتات تواجه الحريق وتساعد الزوار على الخروج.',
     'وحساسات تحمي الأثر. التقنية هنا لا تحسّن تجربة موجودة… بل تصنع تجربة لم تكن ممكنة.',
+  ],
+  'modes': [
+    'والمصمك يتكيّف مع الزائر… لا العكس.',
+    'القعيد يديره ببؤبؤ عينه، ويسمع في سماعته.',
+    'والأصم يديره بحركة يده، ويشاهد لغة الإشارة.',
+    'والكفيف يديره بصوته، ويسمع الشرح في السماعة.',
+    'وأي زائر يختار الطريقة التي يحبها. وعند كل أثر سماعة، فيسمع كل زائر ما يريد، دون أن يزعج غيره.',
   ],
   'claims': [
     'ونقدّم لكم ادعاءين، ونثبتهما بالدليل.',
@@ -100,9 +107,16 @@ EN = {
   ],
   'solution': [
     'So we built one smart museum that protects people and heritage.',
-    'The visitor turns the palace with his eyes, hand or voice, with sign language and audio.',
+    'Every visitor turns the palace his own way: eyes, hand or voice, and hears the story in his headset.',
     'A gate that knows who is inside, and robots that fight fire and help visitors out.',
     'And sensors that protect the artifact. Technology here does not improve an old experience… it creates one that was not possible.',
+  ],
+  'modes': [
+    'And Masmak adapts to the visitor… not the other way round.',
+    'The wheelchair user runs it with his eye pupil, and listens in his headset.',
+    'The deaf visitor runs it with a hand gesture, and watches sign language.',
+    'The blind visitor runs it with his voice, and hears the narration in the headset.',
+    'Any visitor can choose the way he likes. And every artifact has a headset, so each visitor hears what he wants, without disturbing others.',
   ],
   'claims': [
     'We make two claims, and we back them with evidence.',
