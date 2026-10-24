@@ -8,7 +8,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYS = ['intro', 'gate', 'v2', 'v3', 'v4', 'care', 's1', 's2', 's3', 'f1', 'f2', 'f3', 'rescue', 'f4', 'end']
 EN = [
     "Welcome to Smart Al Masmak. Heritage belongs to everyone, so we built one museum that works for visitors with motor, hearing and visual disabilities, and keeps every visitor safe.",
-    "It starts at the smart gate. Every visitor gets a wristband with his name. He scans its barcode at the reader, the barrier opens, and the counter goes up. Everyone enters the same way: the deaf visitor, the blind visitor, and the visitor in his wheelchair. The museum always knows how many people are inside, and who they are.",
+    "It starts at the smart gate. Every visitor gets a wristband with his name. He shows its code to the gate camera, the barrier opens, and the counter goes up. Everyone enters the same way: the deaf visitor, the blind visitor, and the visitor in his wheelchair. The museum always knows how many people are inside, and who they are.",
     "A visitor arrives in a LEGO wheelchair. The chair brings him close to the model. The camera sees his face and welcomes him in Arabic and English.",
     "Now his eyes are in control. He looks right, and the palace turns right, with a golden wave of light. He looks left, and it turns left.",
     "He holds his gaze. The palace stops, the side lights up in its own color, and the story begins: sign language for deaf visitors, and audio narration for blind visitors, together.",
@@ -19,13 +19,13 @@ EN = [
     "The leader cannot control the fire, and it feels the fire getting bigger. So it decides by itself to ask Civil Defense for support on Telegram, and both robots back away safely.",
     "A Civil Defense officer arrives with two more robots. Robot three carries a hose and a camera that streams the fire to his laptop. Robot four carries a second hose.",
     "He drives them with his hands in front of the laptop camera. An open hand: the robots advance. A fist: they stop and spray. Moving the fist raises or lowers the hose.",
-    "And the visitors? The gate opens by itself, and never locks anyone in. The rescue robot comes in, and helps each visitor in his own way. The deaf visitor sees its flashing light, its exit arrow, and an emergency message in sign language on the screen. The blind visitor hears its voice: follow my voice. And the wheelchair follows the robot by itself, with its distance sensor. As each visitor leaves, the counter goes down, and Civil Defense knows exactly who is still inside.",
+    "And the visitors? The gate opens by itself, and never locks anyone in. The rescue robot comes in, and helps each visitor in his own way. The deaf visitor sees its flashing light, its exit arrow, and an emergency message in sign language on the screen. The blind visitor hears its voice: follow my voice. And the rescue car grabs the wheelchair with its arm, and pulls it out. As each visitor leaves, the counter goes down, and Civil Defense knows exactly who is still inside.",
     "The fire is out. The last message arrives: Masmak Museum is safe now. Every robot returns home.",
     "Smart Al Masmak: a museum that welcomes everyone, and protects everyone. An innovative idea from Saudi Arabia, the land of innovation.",
 ]
 AR = [
     "أهلًا بكم في المصمك الذكي. التراث للجميع، لذلك بنينا متحفًا واحدًا يخدم ذوي الإعاقة الحركية والسمعية والبصرية، ويحمي كل زائر.",
-    "تبدأ الرحلة عند البوابة الذكية. كل زائر يأخذ أسورة باسمه، يمرّر الباركود على القارئ، فيفتح الحاجز، ويزيد العدّاد. والجميع يدخلون بالطريقة نفسها: الأصم، والكفيف، وصاحب الكرسي المتحرك. والمتحف يعرف في كل لحظة كم شخصًا بداخله، ومن هم.",
+    "تبدأ الرحلة عند البوابة الذكية. كل زائر يأخذ أسورة باسمه، يُري رمزها لكاميرا البوابة، فيفتح الحاجز، ويزيد العدّاد. والجميع يدخلون بالطريقة نفسها: الأصم، والكفيف، وصاحب الكرسي المتحرك. والمتحف يعرف في كل لحظة كم شخصًا بداخله، ومن هم.",
     "يصل زائر على كرسي متحرك من ليغو. يقرّبه الكرسي من المجسّم، فترى الكاميرا وجهه، وترحّب به بالعربية والإنجليزية.",
     "الآن عيناه هما المتحكّم. ينظر يمينًا فيدور القصر يمينًا، مع موجة ضوء ذهبية. وينظر يسارًا فيدور يسارًا.",
     "يثبّت نظره، فيتوقف القصر، وتضيء الجهة بلونها، وتبدأ الحكاية: لغة إشارة للصم، وسرد صوتي للمكفوفين، معًا.",
@@ -36,7 +36,7 @@ AR = [
     "لم يستطع القائد السيطرة على النار، وشعر بأنها تزداد. فيقرر وحده أن يطلب الدعم من الدفاع المدني بتلجرام، ويعود الروبوتان للخلف بأمان.",
     "يصل رجل الدفاع المدني ومعه روبوتان آخران. الروبوت الثالث يحمل خرطومًا وكاميرا تبث الحريق إلى حاسوبه المحمول، والروبوت الرابع يحمل خرطومًا ثانيًا.",
     "يحرّكهما بيديه أمام كاميرا الحاسوب. يد مفتوحة: يتقدم الروبوتان. قبضة: يقفان ويرشّان. وتحريك القبضة يرفع الخرطوم أو يخفضه.",
-    "والزوار؟ تفتح البوابة وحدها، ولا تُغلق على أحد. ويدخل روبوت الإنقاذ، فيساعد كل زائر بطريقته. الأصم يرى ضوءه الوامض، وسهمه نحو المخرج، ورسالة طوارئ بلغة الإشارة على الشاشة. والكفيف يسمع صوته: اتبع صوتي. وكرسي القعيد يلحق الروبوت وحده، بحساس المسافة. ومع خروج كل زائر ينقص العدّاد، ويعرف الدفاع المدني بالضبط من بقي في الداخل.",
+    "والزوار؟ تفتح البوابة وحدها، ولا تُغلق على أحد. ويدخل روبوت الإنقاذ، فيساعد كل زائر بطريقته. الأصم يرى ضوءه الوامض، وسهمه نحو المخرج، ورسالة طوارئ بلغة الإشارة على الشاشة. والكفيف يسمع صوته: اتبع صوتي. وسيارة الإنقاذ تمسك كرسي القعيد بذراعها، وتسحبه إلى الخارج. ومع خروج كل زائر ينقص العدّاد، ويعرف الدفاع المدني بالضبط من بقي في الداخل.",
     "انطفأت النار. وتصل الرسالة الأخيرة: متحف المصمك آمن الآن. ويعود كل روبوت إلى مكانه.",
     "المصمك الذكي: متحف يرحّب بالجميع، ويحمي الجميع. فكرة مبتكرة من المملكة العربية السعودية، أرض الإبداع.",
 ]

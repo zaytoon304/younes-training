@@ -10,30 +10,66 @@ import edge_tts
 GAP = 0.35   # سكتة بين المقاطع (ثانية)
 
 AR = {
-  'cover': ['السادة أعضاء لجنة التحكيم، أهلًا بكم. يسعدنا أن نقدّم لكم مشروعنا: المصمك الذكي… متحف تراثي يرحّب بالجميع، ويحمي الجميع.'],
+  'cover': ['السادة أعضاء لجنة التحكيم، أهلًا بكم. نقدّم لكم: المصمك الذكي… متحف تراثي يرحّب بالجميع، ويحمي الجميع.'],
   'problem': [
-    'التراث لنا جميعًا… لكن الوصول إليه ليس سهلًا للجميع.',
-    'صاحب الإعاقة الحركية يصعب عليه التنقّل حول المجسمات الثابتة.',
+    'التراث لنا جميعًا… لكن ليس الجميع يصل إليه.',
+    'صاحب الإعاقة الحركية لا يستطيع التنقّل حول المجسّم.',
     'وصاحب الإعاقة السمعية لا يصله شرح المرشد.',
-    'وصاحب الإعاقة البصرية لا يرى التفاصيل المعروضة.',
-    'والتراث المبني من الطين والخشب يحترق بسرعة، والزوار في الزحام يحتاجون وقتًا للخروج.',
+    'وصاحب الإعاقة البصرية لا يرى التفاصيل.',
+    'والطين والخشب يحترقان بسرعة، والزحام يحتاج وقتًا للخروج.',
   ],
   'solution': [
-    'فبنينا متحفًا ذكيًا واحدًا يحمي الإنسان والأثر معًا.',
-    'أولًا: الاستكشاف. الزائر يدير القصر بعينه، مع لغة الإشارة والشرح الصوتي.',
-    'ثانيًا: حماية الإنسان. بوابة ذكية تعرف من بالداخل، وفريق روبوتات يواجه الحريق.',
-    'وثالثًا: حماية الأثر. حساسات تراقب الجو حول المجسم ليلًا ونهارًا. شاهدوا القصة كاملة.',
+    'فبنينا متحفًا ذكيًا واحدًا يحمي الإنسان والأثر.',
+    'الزائر يدير القصر بعينه أو يده أو صوته، مع لغة الإشارة والشرح الصوتي.',
+    'وبوابة تعرف من بالداخل، وروبوتات تواجه الحريق وتساعد الزوار على الخروج.',
+    'وحساسات تحمي الأثر. التقنية هنا لا تحسّن تجربة موجودة… بل تصنع تجربة لم تكن ممكنة.',
   ],
-  'testing': [
-    'جرّبنا كل جزء وحده، ثم جرّبنا المنظومة كاملة.',
-    'التحكم بالعين على الجهات الأربع: نجح.',
-    'النار وحدها: القائد يرش ويعود. نجح.',
-    'الغاز وحده: روبوت الغاز يطرده ويعود. نجح.',
-    'النار والغاز معًا: الروبوتان في وقت واحد. نجح.',
-    'والنار التي لم تنطفئ: روبوتا الدعم بحركة اليد. نجح.',
+  'claims': [
+    'ونقدّم لكم ادعاءين، ونثبتهما بالدليل.',
+    'الأول: الزائر من ذوي الإعاقة يستكشف المصمك وحده، بلا مساعدة.',
+    'والثاني: الحريق يُكتشف ويُعالج تلقائيًا في ثوانٍ، والدفاع المدني يُبلَّغ وحده. شاهدوا القصة.',
   ],
+  'method': [
+    'اختبرنا كل جزء وحده بالظروف نفسها، ثم المنظومة كاملة، وسجّلنا رقمًا لكل اختبار.',
+    'التحكم بالمصمك: بالعين ثم اليد ثم الصوت.',
+    'ومحطة الأمان: بلهب ولّاعة، وغاز، والاثنين معًا.',
+    'والدفاع المدني: بنار لا تنطفئ.',
+    'والكرسي: بأمر صوتي، وحاجز، وقطع الاتصال.',
+  ],
+  'claim1': [
+    'الدليل الأول.',
+    'افترضنا أن الزائر يستطيع إدارة المصمك وحده.',
+    'فاختبرنا العين، ثم اليد، ثم الصوت، على الجهات الأربع.',
+    'ووجدنا أنه يدور ويقف بالطرق الثلاث، والمعايرة تستغرق ثانيتين ونصفًا فقط.',
+    'لكن رسالة ضائعة جعلت المنصة تدور أكثر من اللازم، فأضفنا حارسًا يوقفها خلال ثانية.',
+    'والنتيجة: زائر لم يكن يستطيع… صار يستطيع.',
+    'بلا أزرار، ولا تدريب، والصوت يعمل دون إنترنت.',
+  ],
+  'claim2': [
+    'الدليل الثاني: مقارنة بين متحف بدون نظامنا، ومتحف معه.',
+    'بدون نظامنا ننتظر أن يلاحظ أحد الخطر. ومعه، تقرأ المحطة اللهب والغاز كل خُمس ثانية.',
+    'وأمام الولاعة قفزت قراءة حساس الغاز من مئتين وخمسة وخمسين إلى ثلاثة آلاف وستمئة وسبعة وعشرين.',
+    'ثم يذهب الروبوت القائد وحده، ويرش خمس عشرة ثانية كحدٍّ أقصى.',
+    'ويصل الدفاعَ المدني بلاغ تلجرام تلقائي، فيه مكان الحريق والممر الآمن.',
+    'وإن لم تنطفئ النار، لا يقاتلها الروبوت بلا نهاية: بعد خمس عشرة ثانية يطلب الدعم ويتراجع.',
+  ],
+  'reliable': [
+    'وسألنا أنفسنا الأسئلة الأربعة.',
+    'هل يعمل؟ نجحت السيناريوهات الخمسة كلها.',
+    'هل هو سهل؟ معايرة تلقائية، والكرسي يفهم خمسة أوامر صوتية.',
+    'هل هو مفيد؟ تجربة واحدة لثلاث إعاقات، وحماية للزائر والأثر.',
+    'وهل يُعتمد عليه؟ إن انقطع الاتصال يقف وحده: روبوت الدعم خلال نصف ثانية، والكرسي خلال ثانية ونصف.',
+  ],
+  'limits': [
+    'ونقولها بصراحة: هذه حدود دليلنا اليوم.',
+    'جرّبه فريقنا، والخطوة التالية خمسة زوار من خارج الفريق.',
+    'والصوت يلتقط كلام من حوله، والحل سماعة بمايك قريب.',
+    'وهو نموذج مصغّر، والخطوة التالية متحف حقيقي.',
+  ],
+  'impact': ['المصمك مجرد نموذج… وأي متحف في العالم يستطيع استخدام نظامنا. فكرة مبتكرة من المملكة العربية السعودية، أرض الإبداع.'],
+  'live': ['والآن… نقدّم لكم المشروع على الطبيعة.'],
   'challenges1': [
-    'لم يكن الطريق سهلًا. هذه تحديات واجهناها في بناء المصمك، وكيف حللناها.',
+    'لم يكن الطريق سهلًا. وفي كل مشكلة غيّرنا شيئًا واحدًا فقط، ثم جرّبنا من جديد. هذه تحديات بناء المصمك، وكيف حللناها.',
     'نسينا كلمة مرور الراسبيري: فشغّلناه بوضع الإصلاح من كرت الذاكرة، وكتبنا كلمة مرور جديدة دون أن نفقد ملفًا واحدًا.',
     'والكاميرا لم تعمل على الراسبيري مباشرة: فنقلنا تتبع العين إلى كاميرا اللابتوب، وهي ترسل الأوامر بالواي فاي.',
     'ومؤشرات البؤبؤ كانت معكوسة: فطبعنا الأرقام الخام وحرّكنا عيوننا، وصحّحنا الترتيب.',
@@ -52,34 +88,68 @@ AR = {
     'والروبوتات لم تجد شبكة الآيفون: فشغّلنا وضع زيادة التوافق، وفتحنا صفحة الهوت سبوت قبل التشغيل.',
     'والكرسي كان يعمل بالسلك فقط: فركّبنا عليه نظامًا يعمل بالبلوتوث، ويقف وحده إن انقطع الاتصال.',
   ],
-  'impact': ['المصمك مجرد نموذج… وأي متحف في العالم يستطيع استخدام نظامنا. فكرة مبتكرة من المملكة العربية السعودية، أرض الإبداع.'],
-  'live': ['والآن… نقدّم لكم المشروع على الطبيعة.'],
 }
 EN = {
-  'cover': ['Honorable judges, welcome. We are proud to present our project: Smart Al Masmak… a heritage museum that welcomes everyone, and protects everyone.'],
+  'cover': ['Honorable judges, welcome. We present: Smart Al Masmak… a heritage museum that welcomes everyone, and protects everyone.'],
   'problem': [
     'Heritage belongs to all of us… but not everyone can reach it.',
-    'Visitors with motor disabilities struggle to move around fixed models.',
-    "Visitors with hearing disabilities miss the guide's explanation.",
-    'Visitors with visual disabilities cannot see the details on display.',
-    'And heritage built of mud and wood burns fast, while crowds need time to get out.',
+    'A visitor with a motor disability cannot move around the model.',
+    "A visitor with a hearing disability misses the guide's explanation.",
+    'A visitor with a visual disability cannot see the details.',
+    'And mud and wood burn fast, while crowds need time to get out.',
   ],
   'solution': [
-    'So we built one smart museum that protects people and heritage together.',
-    'First: explore. The visitor turns the palace with his eyes, with sign language and audio.',
-    'Second: protect people. A smart gate knows who is inside, and a team of robots fights fire.',
-    'Third: protect the artifact. Sensors watch the air around the model, day and night. Let us watch the whole story.',
+    'So we built one smart museum that protects people and heritage.',
+    'The visitor turns the palace with his eyes, hand or voice, with sign language and audio.',
+    'A gate that knows who is inside, and robots that fight fire and help visitors out.',
+    'And sensors that protect the artifact. Technology here does not improve an old experience… it creates one that was not possible.',
   ],
-  'testing': [
-    'We tested every part alone, then the whole system together.',
-    'Eye control on all four sides: passed.',
-    'Fire only: the Leader sprays and returns. Passed.',
-    'Gas only: the gas robot fans it away and returns. Passed.',
-    'Fire and gas together: both robots at once. Passed.',
-    'And a fire that does not go out: the hand-driven support robots. Passed.',
+  'claims': [
+    'We make two claims, and we back them with evidence.',
+    'First: a visitor with a disability explores Masmak alone, without help.',
+    'Second: fire is detected and handled automatically in seconds, and Civil Defense is alerted by itself. Watch the story.',
   ],
+  'method': [
+    'We tested each part alone under the same conditions, then the whole system, and recorded a number for every test.',
+    'Masmak control: eyes, then hand, then voice.',
+    'The safety station: a lighter flame, gas, and both together.',
+    'Civil Defense: a fire that does not go out.',
+    'The wheelchair: a voice command, an obstacle, and a cut link.',
+  ],
+  'claim1': [
+    'Evidence one.',
+    'We assumed the visitor could run Masmak alone.',
+    'So we tested eyes, then hand, then voice, on all four sides.',
+    'We found it turns and stops all three ways, and calibration takes only two and a half seconds.',
+    'But a lost message made the turntable over-rotate, so we added a watchdog that stops it within one second.',
+    'The result: a visitor who could not… now can.',
+    'No buttons, no training, and voice works with no internet.',
+  ],
+  'claim2': [
+    'Evidence two: a museum without our system, and with it.',
+    'Without it, we wait for someone to notice. With it, the station reads flame and gas every fifth of a second.',
+    'At the lighter, the gas sensor jumped from two hundred fifty-five to three thousand six hundred twenty-seven.',
+    'Then the Leader robot goes by itself, and sprays for fifteen seconds at most.',
+    'Civil Defense gets an automatic Telegram report, with the fire location and a safe passage.',
+    'And if the fire does not go out, the robot does not fight forever: after fifteen seconds it asks for help and backs away.',
+  ],
+  'reliable': [
+    'Then we asked the four questions.',
+    'Does it work? All five scenarios passed.',
+    'Is it easy? Automatic calibration, and the wheelchair understands five voice commands.',
+    'Is it useful? One experience for three disabilities, protecting visitors and heritage.',
+    'Is it reliable? If the link drops, it stops by itself: the support robot in half a second, the wheelchair in one and a half.',
+  ],
+  'limits': [
+    'And honestly: these are the limits of our evidence today.',
+    'Our team tested it; next, five visitors from outside the team.',
+    'Voice hears people nearby; the fix is a headset microphone.',
+    'It is a scale model; next, a real museum.',
+  ],
+  'impact': ['Masmak is only our model… any museum in the world can use our system. An innovative idea from Saudi Arabia, the land of innovation.'],
+  'live': ['And now… we present the project to you, live.'],
   'challenges1': [
-    'The road was not easy. These are the challenges we faced building Masmak, and how we solved them.',
+    'The road was not easy. For every problem, we changed one thing only, then tested again. These are the challenges of building Masmak, and how we solved them.',
     'We forgot the Raspberry Pi password: we booted it in repair mode from the SD card and set a new one, without losing a single file.',
     'The camera did not work on the Raspberry Pi: so we moved eye tracking to the laptop camera, which sends commands over Wi-Fi.',
     'The pupil indices were reversed: we printed the raw numbers, moved our eyes, and fixed the order.',
@@ -98,8 +168,6 @@ EN = {
     'The robots could not find the iPhone hotspot: we turned on maximize compatibility, and opened the hotspot page before starting.',
     'The wheelchair worked only by cable: we installed a system that works over Bluetooth, and it stops by itself if the link drops.',
   ],
-  'impact': ['Masmak is only our model… any museum in the world can use our system. An innovative idea from Saudi Arabia, the land of innovation.'],
-  'live': ['And now… we present the project to you, live.'],
 }
 LANGS = {'ar': ('saif-masmak', 'ar-SA-HamedNeural', AR), 'en': ('saif-masmak-en', 'en-GB-RyanNeural', EN)}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,7 +197,8 @@ async def main():
                     # الخدمة تتعثر أحيانًا: نعيد حتى يخرج ملف صوت حقيقي
                     for attempt in range(8):
                         try:
-                            await edge_tts.Communicate(txt, voice).save(f)
+                            # حد زمني: الخدمة أحيانًا تعلق بلا رد
+                            await asyncio.wait_for(edge_tts.Communicate(txt, voice).save(f), 60)
                             if os.path.getsize(f) > 1000: break
                         except Exception as e:
                             print('retry', key, i, type(e).__name__)

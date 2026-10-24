@@ -2,7 +2,7 @@
    «المصمك الذكي · سيف 2026» — القصة الكاملة المتحركة بصوت الراوي (العربي والإنجليزي)
    تعيد استخدام مشاهد قصة WRO (window.TUR5 من turath/widgetsT5.js) وتضيف ثلاثة مشاهد جديدة:
      🚪 البوابة الذكية (أسورة + حاجز + عدّاد)  ·  🏺 حماية الأثر (حرارة/رطوبة/هواء + مروحة)
-     🤖 روبوت الإنقاذ (البوابة تفتح وحدها + أسماء من بالداخل للدفاع المدني)
+     🤖 روبوت الإنقاذ (البوابة تفتح وحدها + سيارة إنقاذ تسحب كرسي القعيد + عدد من بالداخل للدفاع المدني)
    لكل مشهد مقطع صوت audio/story_<key>.mp3، ومدته الحقيقية في story-dur.js (يولّدها story-tts.py)
    النوع: { t: 'saifstory', kicker, title }  ·  في البوربوينت: فيديو MP4 (story-video.js)
    ===================================================================== */
@@ -68,7 +68,7 @@ function person(x, y, col, band, walk) {
     <line x1="8" y1="-6" x2="${10 + st}" y2="34" stroke="#2a3150" stroke-width="9" stroke-linecap="round"/>
     <rect x="-18" y="-70" width="36" height="66" rx="14" fill="${col}"/><circle cy="-88" r="18" fill="#c99a74"/>
     <rect x="10" y="-42" width="18" height="12" rx="3" fill="#fff" stroke="${band ? '#7ee2a8' : '#0d1226'}" stroke-width="${band ? 4 : 2}"/>
-    ${[13, 16, 18, 21, 24].map(v => `<rect x="${v}" y="-40" width="${v % 2 ? 1.5 : 2.5}" height="8" fill="#111"/>`).join('')}</g>`;
+    ${[[12, -40], [22, -40], [12, -34], [17, -37], [22, -34]].map(([x, y]) => `<rect x="${x}" y="${y}" width="4" height="4" fill="#111"/>`).join('')}</g>`;
 }
 // البوابة: عمودان + قارئ + حاجز يرتفع (open ٠..١)
 function gateSVG(x, open, state) {
@@ -80,7 +80,7 @@ function gateSVG(x, open, state) {
     <g transform="translate(-58 -120)"><rect x="-30" y="-38" width="60" height="76" rx="10" fill="#1c1f27" stroke="${glow}" stroke-width="4"/>
       ${[-16, -11, -7, -2, 3, 7, 12, 16].map((v, i) => `<rect x="${v}" y="-26" width="${i % 3 ? 2 : 3.5}" height="22" fill="#f3ead2"/>`).join('')}
       <circle cy="20" r="7" fill="${glow}"/>${state === 'ok' ? '<path d="M30 -4 L 100 -30 L 100 22 Z" fill="#ff5252" opacity=".35"/><line x1="30" y1="-4" x2="100" y2="-4" stroke="#ff1744" stroke-width="3"/>' : ''}
-      ${txt(0, 60, L('قارئ باركود', 'Barcode reader'), 14, '#9aa8d8')}</g></g>`;
+      ${txt(0, 60, L('كاميرا الأسورة', 'Wristband camera'), 14, '#9aa8d8')}</g></g>`;
 }
 function counter(x, y, n, names, alarm) {
   return `<g transform="translate(${x} ${y})"><rect x="-170" y="-60" width="340" height="${names ? 190 : 110}" rx="18" fill="#1c1f27" stroke="${alarm ? '#ff5252' : '#f0cc7a'}" stroke-width="4"/>
@@ -108,7 +108,7 @@ function gateScene(c, t) {
   });
   const names = NAMES.slice(0, n);
   const cap = c < 1 ? ['🚪', L('البوابة الذكية: لكل زائر أسورة باسمه', 'The smart gate: every visitor gets a wristband with his name')]
-    : c < 12 ? ['🎫', L(`يمرّر باركود أسورته… الحاجز يفتح، والعدد يزيد: ${N(n)}`, `He scans his wristband barcode… the barrier opens, the count goes up: ${n}`)]
+    : c < 12 ? ['🎫', L(`الكاميرا تقرأ رمز أسورته… الحاجز يفتح، والعدد يزيد: ${N(n)}`, `The camera reads his wristband code… the barrier opens, the count goes up: ${n}`)]
     : ['🔢', L('المتحف يعرف دائمًا من بداخله', 'The museum always knows who is inside')];
   // نفس زوار مشهد الإنقاذ: الأصم، والكفيف بعصاه، والقعيد بكرسيه (كلهم يدخلون بالطريقة نفسها)
   const draw = (p, i) => i === 0 ? person(p.x, 560, COLS[0], p.at, p.walk) + `<g transform="translate(${p.x} 440)">${txt(0, 0, '🧏', 26, '#fff')}</g>`
@@ -144,7 +144,8 @@ function careScene(c, t) {
 }
 
 /* 🤖 الإنقاذ: لكل زائر طريقته
-   🧏 الأصم: ضوء وامض + سهم مضيء + شاشة طوارئ بلغة الإشارة · 🦯 الكفيف: صوت «اتبع صوتي» · 🦽 القعيد: الكرسي يلحق الروبوت وحده */
+   🧏 الأصم: ضوء وامض + سهم مضيء + شاشة طوارئ بلغة الإشارة · 🦯 الكفيف: صوت «اتبع صوتي»
+   🦽 القعيد: سيارة الإنقاذ تمسك كرسيه بذراعها وتسحبه للخارج (الكرسي أقرب زائر للروبوت، والذراع خط أصفر بينهما) */
 function rescueScene(c, t) {
   const GX = 300, FX = 1270;
   const fk = 1.1 + Math.sin(t * 2) * .05;
@@ -153,7 +154,7 @@ function rescueScene(c, t) {
   const rx = c < 4 ? lerp(-140, 740, ease(seg(c, .8, 4))) : c < 7 ? 740 : lerp(740, -320, ease(seg(c, 7, 14)));
   const lead = c >= 7;
   const follow = (gap, x0) => lead ? Math.min(x0, rx + gap) : x0;   // كل زائر يلحق الروبوت بمسافة ثابتة
-  const deafX = follow(130, 870), blindX = follow(250, 970), chairX = follow(390, 1090);
+  const chairX = follow(150, 870), deafX = follow(300, 1000), blindX = follow(420, 1110);
   const gone = [deafX, blindX, chairX].filter(x => x < GX - 20).length, n = 3 - gone;
   const beacon = Math.sin(t * 12) > 0 ? '#ff1744' : '#2979ff';
   const waves = c >= 4.5 && c < 13 ? [0, 1, 2].map(i => `<path d="M${rx + 46 + i * 22} ${500 - i * 10} q ${16 + i * 5} ${28 + i * 8} 0 ${56 + i * 16}" stroke="#f0cc7a" stroke-width="4" fill="none" opacity="${.35 + .65 * ((Math.sin(t * 7 - i) + 1) / 2)}"/>`).join('') : '';
@@ -174,13 +175,13 @@ function rescueScene(c, t) {
   const cap = c < 1.6 ? ['🚪', L('حريق! البوابة تفتح وحدها… ولا تُغلق على أحد', 'Fire! The gate opens by itself… it never locks anyone in')]
     : c < 4.5 ? ['🤖', L('روبوت الإنقاذ يدخل بضوء وامض وسهم يشير للمخرج', 'The rescue robot drives in with a flashing light and an exit arrow')]
     : c < 7 ? ['🧏🦯', L('الأصم يرى الضوء وشاشة الإشارة… والكفيف يسمع: اتبع صوتي', 'The deaf visitor sees the light and the sign screen… the blind visitor hears: follow my voice')]
-    : c < 13 ? ['🦽', L('وكرسي القعيد يلحق الروبوت وحده بحساس المسافة… والعدد ينقص', 'And the wheelchair follows the robot by itself with its distance sensor… the count goes down')]
+    : c < 13 ? ['🦽', L('وسيارة الإنقاذ تمسك كرسي القعيد بذراعها وتسحبه للخارج… والعدد ينقص', 'And the rescue car grabs the wheelchair with its arm and pulls it out… the count goes down')]
     : ['✅', L('الجميع في الخارج… والدفاع المدني يعرف ذلك', 'Everyone is out… and Civil Defense knows it')];
   return { svg: BG + `<g transform="translate(${FX} 560)">${smoke(0, 0, fk, t)}${fire(0, 0, fk, t)}</g>` + gateSVG(GX, open, 'alarm') + sign
       + person(deafX, 560, '#ef8f3a', false, walkD) + `<g transform="translate(${deafX} 440)">${txt(0, 0, '🧏', 26, '#fff')}</g>`
       + blindP(blindX, 560, walkB) + `<g transform="translate(${blindX} 440)">${txt(0, 0, '🦯', 26, '#fff')}</g>`
       + `<g transform="translate(${chairX} 545) scale(1.7)">${T5.chair(false)}</g>` + `<g transform="translate(${chairX - 20} 400)">${txt(0, 0, '🦽', 26, '#fff')}</g>`
-      + (lead ? `<line x1="${rx + 30}" y1="548" x2="${chairX - 50}" y2="548" stroke="#7ee2a8" stroke-width="3" stroke-dasharray="8 8" opacity=".7"/>` : '')
+      + (lead ? `<line x1="${rx + 40}" y1="540" x2="${chairX - 40}" y2="540" stroke="#f0cc7a" stroke-width="8" stroke-linecap="round"/>` : '')
       + robot + counter(1180, 150, n, null, true) + phone(1460, 330, msg, true), cap };
 }
 
