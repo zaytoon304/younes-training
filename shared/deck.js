@@ -130,8 +130,8 @@ const R = {
       <div class="flow"><span>🎬 القصة</span><span>🗳️ تصويت</span><span>🔍 لماذا؟</span><span>⏱️ أول ١٠ ثوانٍ</span><span>💬 ماذا تقول؟</span><span>🪜 سلّم التدخّل</span></div></div>`,
 
   story: s => {
-    if (s.img) return `<div class="slide dark story-full">
-      <div class="bgimg kb"><img src="${s.img}" alt=""></div>
+    if (s.img || s.video) return `<div class="slide dark story-full">
+      <div class="bgimg ${s.video ? '' : 'kb'}">${s.video ? `<video src="${s.video}" ${s.img ? `poster="${s.img}"` : ''} autoplay muted loop playsinline></video>` : `<img src="${s.img}" alt="">`}</div>
       <div class="kicker">🎬 القصة · ${s.title}</div>
       <div class="cap">${s.paras.map((p, i) => `<div class="sp ${i ? 'f' : ''} ${i === s.paras.length - 1 ? 'last' : ''}">${p}</div>`).join('')}</div>
       <div class="capdots">${s.paras.map(() => '<i></i>').join('')}</div></div>`;

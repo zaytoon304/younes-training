@@ -89,6 +89,28 @@ Object.assign(window.DECK_TYPES = window.DECK_TYPES || {}, {
       <div class="nsrc">المصدر: ${s.src}</div></div>`,
 });
 
+/* غلاف الدورة بفيديو افتتاحي متحرك */
+window.DECK_TYPES.cover = () => `<div class="slide dark cover vcover">
+      <div class="vbg"><video src="assets/media/opening.mp4" poster="assets/media/opening.jpg" autoplay muted loop playsinline></video></div>
+      <div class="logo">🌳</div>
+      <div class="tag">${DECK.tag}</div>
+      <h1>${DECK.title}</h1>
+      <div class="subt">${DECK.subtitle}</div>
+      <div class="goldline"></div>
+      <div class="by">إعداد وتقديم: <b>${DECK.author}</b></div></div>`;
+
+/* صوت الراوي للقصص: زر «استمع للقصة» يظهر في كل شريحة لها ملف صوتي */
+window.DECK_HOOKS = window.DECK_HOOKS || [];
+window.DECK_HOOKS.push((sl, s) => {
+  if (!s.audio) return;
+  const au = new Audio(s.audio);
+  sl.insertAdjacentHTML('beforeend', '<button class="narr ix" title="صوت الراوي">🔊 استمع للقصة</button>');
+  const btn = sl.querySelector('.narr');
+  btn.onclick = e => { e.stopPropagation(); if (au.paused) { au.play(); btn.classList.add('on'); btn.textContent = '⏸ إيقاف الراوي'; } else { au.pause(); btn.classList.remove('on'); btn.textContent = '🔊 استمع للقصة'; } };
+  au.onended = () => { btn.classList.remove('on'); btn.textContent = '🔁 أعد الاستماع'; };
+  window.DECK_CLEANUP.push(() => au.pause());
+});
+
 /* ربط اللعبة: الباركود ولوحة الصدارة الحية (أعلى ٨) */
 window.DECK_BIND.game = (sl, s) => {
   if (!(window.LIVE && LIVE.ok)) return;
