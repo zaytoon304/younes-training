@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حقيبة المشرف — المشرف المطوِّر</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* كراسة المتدرب: صفحات A4 للطباعة، تُبنى من بيانات الدورة نفسها */
+:root{--navy:#101B45;--navy2:#182658;--navy6:#22346F;--gold:#D9AE4B;--goldd:#B08A2E;--goldl:#F0CC7A;--cream:#FBF7EE;--line:#E4DCC8;--ink:#131B34;--muted:#5E6782;--ok:#2E9E6B;--okbg:#E6F4EC;--bad:#D64545;--badbg:#FBECEC;--chip:#F6EBCF}
+@page{size:A4;margin:14mm 14mm 16mm}
+@page{@bottom-center{content:"جذور · حقيبة المشرف · المشرف المطوِّر  —  " counter(page);font-family:Cairo;font-size:8.5pt;color:#8a90a3}}
+@page :first{@bottom-center{content:none}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Cairo",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.65;background:#e9ebf1}
+.page{background:#fff;width:210mm;min-height:297mm;margin:10mm auto;padding:14mm;box-shadow:0 6px 30px rgba(0,0,0,.12);break-after:page;position:relative}
+@media print{body{background:#fff}.page{margin:0;width:auto;min-height:auto;padding:0;box-shadow:none}.noprint{display:none!important}}
+h1{font-size:30pt;font-weight:900;line-height:1.2}
+h2{font-size:19pt;font-weight:900;color:var(--navy);line-height:1.3;margin-bottom:3mm}
+h3{font-size:12.5pt;font-weight:900;color:var(--navy);margin-bottom:1.5mm}
+p{margin-bottom:2mm}
+.kick{display:inline-block;background:var(--chip);color:var(--goldd);font-weight:800;font-size:9pt;border-radius:99px;padding:.6mm 4mm;margin-bottom:2mm}
+.rule{height:1.2mm;width:22mm;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:2mm;margin:2mm 0 5mm}
+.box{border:.4mm solid var(--line);border-radius:4mm;padding:4mm 5mm;margin-bottom:4mm;break-inside:avoid}
+.box.gold{border-color:var(--gold);background:#FFFBF0}
+.box.navy{background:var(--navy);color:#fff;border:0}.box.navy h3{color:var(--goldl)}
+.box.ok{background:var(--okbg);border-color:#CDE9D9}.box.bad{background:var(--badbg);border-color:#f3cfcf}
+.lines{margin-top:2mm}
+.lines i{display:block;height:8.5mm;border-bottom:.3mm dashed #c9cdd8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm}
+.num{display:inline-flex;width:6.5mm;height:6.5mm;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:900;font-size:9pt;align-items:center;justify-content:center;margin-left:2mm;flex:none}
+ul.clean{list-style:none}ul.clean li{display:flex;gap:1mm;align-items:flex-start;margin-bottom:1.5mm}
+.check li::before{content:"☐";color:var(--goldd);font-size:12pt;margin-left:2mm;line-height:1.3}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:9.5pt;break-inside:avoid;margin-bottom:4mm}
+th{background:var(--navy);color:#fff;font-weight:800;padding:2mm 3mm;text-align:right}
+th:first-child{border-radius:0 3mm 0 0}th:last-child{border-radius:3mm 0 0 0}
+td{border-bottom:.3mm solid var(--line);padding:2mm 3mm;vertical-align:top}
+td.blank{height:9mm}
+.say{background:var(--navy);color:#fff;border-radius:3mm;padding:2mm 4mm;margin-bottom:2mm;font-weight:700}
+.say small{display:block;color:var(--goldl);font-weight:800;font-size:8.5pt}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-bottom:2mm}
+.dd div{border-radius:2.5mm;padding:1.8mm 3mm;font-size:9.5pt;font-weight:700}
+.dd .x{background:var(--badbg);color:#8e2a2a}.dd .v{background:var(--okbg);color:#1d5e40}
+.scale{display:flex;gap:2mm;margin-top:1mm}.scale span{width:9mm;height:9mm;border:.4mm solid var(--line);border-radius:2mm;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
+.opt{display:flex;gap:2mm;align-items:flex-start;margin-bottom:1.5mm}.opt b{flex:none;width:6mm;height:6mm;border:.4mm solid var(--navy);border-radius:1.5mm}
+.story p{border-right:1mm solid var(--line);padding-right:3mm}
+.story p:last-child{border-right-color:var(--bad);color:var(--bad);font-weight:800}
+.hadith{font-family:Amiri,serif;font-size:15pt;font-weight:700;line-height:1.9;text-align:center;color:var(--navy)}
+.src{text-align:center;color:var(--goldd);font-weight:800;font-size:9pt}
+.scene{width:100%;height:58mm;object-fit:cover;border-radius:4mm;margin-bottom:3mm}
+.tagrow{display:flex;gap:2mm;flex-wrap:wrap;margin-bottom:3mm}.tagrow span{background:#EEF1FA;color:var(--navy6);font-size:8.5pt;font-weight:800;border-radius:99px;padding:.5mm 3mm}
+/* الغلاف */
+.cover{background:radial-gradient(120mm 90mm at 85% 10%,rgba(46,66,136,.6),transparent 60%),linear-gradient(160deg,#101B45,#0A1230);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20mm}
+@media print{.cover{min-height:0;height:250mm;overflow:hidden;border-radius:6mm;break-after:page}}
+.cover .logo{width:26mm;height:26mm;border-radius:7mm;background:linear-gradient(145deg,var(--goldl),var(--gold));display:flex;align-items:center;justify-content:center;font-size:15mm;margin-bottom:8mm}
+.cover h1{font-size:46pt;background:linear-gradient(180deg,#fff 30%,var(--goldl));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover .sub{font-size:15pt;font-weight:700;margin-top:3mm}
+.cover .tag{color:var(--goldl);font-weight:800;font-size:12pt;margin-bottom:2mm}
+.cover .name{margin-top:18mm;border:.4mm dashed rgba(240,204,122,.6);border-radius:4mm;padding:4mm 8mm;width:120mm;text-align:right;font-weight:700;color:#c9cfe6}
+.cover .name i{display:block;border-bottom:.3mm solid rgba(255,255,255,.35);height:9mm;margin-bottom:2mm}
+.cover .by{margin-top:14mm;font-weight:700;color:#c9cfe6}.cover .by b{color:var(--gold)}
+.cert{border:2mm solid var(--gold);outline:.6mm solid var(--navy);outline-offset:-5mm;border-radius:4mm;text-align:center;padding:22mm 16mm;min-height:250mm;display:flex;flex-direction:column;justify-content:center}
+.cert h1{color:var(--navy);font-size:34pt}
+.cert .who{font-size:18pt;font-weight:900;border-bottom:.4mm solid var(--line);margin:8mm auto;width:130mm;height:14mm}
+.bar{position:fixed;top:0;left:0;right:0;background:var(--navy);color:#fff;padding:10px 20px;display:flex;gap:14px;align-items:center;z-index:9;font-weight:700}
+.bar button,.bar a{font-family:inherit;font-weight:800;font-size:15px;background:var(--gold);color:var(--navy);border:0;border-radius:99px;padding:8px 18px;cursor:pointer;text-decoration:none}
+.bar a.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+body.screen{padding-top:56px}
+/* بطاقة التدخّل المرجعية: أكثف قليلًا لتتسع لصفحة واحدة */
+.ref{font-size:9pt;line-height:1.5}
+.ref .box{padding:2.5mm 3.5mm;margin-bottom:2.5mm}
+.ref h3{font-size:10.5pt;margin-bottom:1mm}
+.ref .say{padding:1.3mm 3mm;margin-bottom:1.3mm;font-size:9pt}
+.ref .dd{gap:1.5mm;margin-bottom:1.3mm}.ref .dd div{padding:1.2mm 2.5mm;font-size:8.6pt}
+.ref ul.clean li{margin-bottom:.8mm}
+.ref .num{width:5.2mm;height:5.2mm;font-size:8pt}
+.ref p{margin-bottom:1mm}
+.scene{height:50mm}
+</style>
+
+<style>
+/* إضافات حقيبة المشرف */
+.cover h1{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--goldl)}
+.lvl td:first-child{width:24mm;font-weight:900;color:var(--navy)}
+.refs li{margin-bottom:2.2mm;font-size:9.3pt;line-height:1.5;direction:ltr;text-align:left}
+.refs li small{display:block;direction:rtl;text-align:right;color:var(--muted);font-weight:700}
+.refs a{color:var(--navy6);word-break:break-all}
+.stage4{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:3mm}
+.stage4 div{border-radius:3mm;padding:2.5mm;text-align:center;font-size:9pt;font-weight:700;background:#EEF1FA}
+.stage4 div b{display:block;font-size:11pt;color:var(--navy)}
+.stage4 div:last-child{background:var(--okbg)}
+</style>
+</head>
+<body class="screen">
+<div class="bar noprint"><span>🧰 حقيبة المشرف · المشرف المطوِّر</span><span style="flex:1"></span>
+  <a class="ghost" href="index.html">↩ العرض</a><a class="ghost" href="حقيبة المشرف - المشرف المطوِّر.pdf" download>⬇ PDF</a><button onclick="print()">🖨️ طباعة</button></div>
+
+<!-- الغلاف -->
+<section class="page cover">
+  <div class="logo">🌳</div>
+  <div class="tag">الإشراف التربوي الحديث</div>
+  <h1>حقيبة المشرف</h1>
+  <div class="sub">المشرف المطوِّر · سدّ الفجوة بين الواقع والمأمول</div>
+  <div class="name">اسم المشرف<i></i>المدارس التي أشرف عليها<i></i></div>
+  <div class="by">إعداد وتقديم: <b>أ. محمد زيتون</b> · منصة جذور</div>
+</section>
+
+<!-- كيف تستخدم الحقيبة -->
+<section class="page">
+  <div class="kick">قبل أن تبدأ</div><h2>كيف تستخدم هذه الحقيبة؟</h2><div class="rule"></div>
+  <div class="box navy"><h3>الفكرة التي تقوم عليها الدورة</h3>
+    <p style="font-size:13pt;font-weight:800">المشرف ليس مقيّمًا… التقييم أداة من أدواته. دوره الأساسي التطوير: سدّ الفجوة بين الواقع والمأمول.</p></div>
+  <div class="grid2">
+    <div class="box"><h3>📖 الجزء الأول: خلاصات المحطات</h3><p>صفحة لكل محطة: أهم الأفكار والشواهد، ومساحة لملاحظاتك.</p></div>
+    <div class="box"><h3>🧰 الجزء الثاني: أدوات الميدان</h3><p>ست أدوات جاهزة للطباعة تأخذها معك في زيارتك القادمة.</p></div>
+  </div>
+  <div class="box gold"><h3>🪞 تقييمي الذاتي (من ١ إلى ٥)</h3>
+    <table><tr><th>العبارة</th><th>قبل الدورة</th><th>بعدها</th><th>بعد شهر</th></tr>
+      <tr><td>أبدأ زيارتي بمعايير اتفقتُ عليها مع المعلم مسبقًا</td><td class="blank"></td><td></td><td></td></tr>
+      <tr><td>أحدّد فجوة أداء المعلم بالأدلة… لا بالانطباع</td><td class="blank"></td><td></td><td></td></tr>
+      <tr><td>يخرج المعلم من جلستي بخطوات عملية… ومتحمسًا</td><td class="blank"></td><td></td><td></td></tr>
+      <tr><td>أنوّع أسلوبي الإشرافي حسب المعلم والموقف</td><td class="blank"></td><td></td><td></td></tr>
+      <tr><td>أصنع من المعلمين المتميزين خبراء يدرّبون زملاءهم</td><td class="blank"></td><td></td><td></td></tr>
+    </table></div>
+  <div class="box"><p class="hadith">سُئل سفيان بن عيينة: من أحوجُ الناس إلى طلب العلم؟ قال: أعلمُهم؛ لأن الخطأ منه أقبح</p><p class="src">ابن عبد البر، جامع بيان العلم وفضله</p></div>
+</section>
+
+<!-- المحطة ١ -->
+<section class="page">
+  <div class="kick">المحطة ١</div><h2>لماذا وُجد الإشراف؟</h2><div class="rule"></div>
+  <div class="stage4"><div><b>🔦 التفتيش</b>«هل أنت موجود؟»</div><div><b>📢 التوجيه</b>«افعل كذا»</div><div><b>📊 الإشراف</b>«ماذا تحقق؟»</div><div><b>🌱 التطوير</b>«كيف ننمو معًا؟»</div></div>
+  <div class="grid3">
+    <div class="box"><h3>🔒 نظرية X</h3><p>المعلم لا يعمل إلا تحت الرقابة ← مشرف يفتّش</p></div>
+    <div class="box"><h3>🌤️ نظرية Y</h3><p>المعلم يحب النجاح إن وجد الدعم ← مشرف يوجّه</p></div>
+    <div class="box ok"><h3>🤝 نظرية Z</h3><p>ثقة وقرار مشترك واهتمام بالإنسان ← مشرف يبني فريقًا</p></div>
+  </div>
+  <h3>ما هكذا تُورَد الإبل… وهكذا تُورَد</h3>
+  <div class="dd"><div class="x">«هذا قرار المدير، نفّذ وخلاص»</div><div class="v">«القرار هدفه كذا… ما أصعب شيء سيواجهك في تطبيقه؟»</div></div>
+  <div class="dd"><div class="x">«لازم تسوي كذا وإلا بكتبها»</div><div class="v">«أتوقع منك كذا في زيارتي القادمة… وأنا معك في التحضير»</div></div>
+  <div class="dd"><div class="x">«الوزارة تبيها كذا»</div><div class="v">«الطالب يحتاجها لأن… وهذه طريقة جرّبها زميلك ونجحت»</div></div>
+  <div class="dd"><div class="x">«أنت دايم مقصّر في…»</div><div class="v">«لاحظتُ في حصة اليوم أن… ما رأيك؟»</div></div>
+  <div class="grid2" style="margin-top:3mm">
+    <div class="box"><p class="hadith" style="font-size:13pt">﴿فَبِمَا رَحْمَةٍ مِّنَ اللَّهِ لِنتَ لَهُمْ ۖ وَلَوْ كُنتَ فَظًّا غَلِيظَ الْقَلْبِ لَانفَضُّوا مِنْ حَوْلِكَ﴾</p><p class="src">آل عمران: ١٥٩</p></div>
+    <div class="box"><p class="hadith" style="font-size:13pt">من وعظ أخاه سرًّا فقد نصحه وزانه، ومن وعظه علانية فقد فضحه وشانه</p><p class="src">الإمام الشافعي</p></div>
+  </div>
+  <h3>ماذا تعلّمتُ من هذه المحطة؟</h3><div class="lines"><i></i><i></i><i></i></div>
+</section>
+
+<!-- المحطة ٢ -->
+<section class="page">
+  <div class="kick">المحطة ٢</div><h2>جولة حول العالم</h2><div class="rule"></div>
+  <table><tr><th>الدولة</th><th>الفكرة</th><th>ماذا نأخذ منها غدًا؟</th></tr>
+    <tr><td>🇫🇮 فنلندا</td><td>الثقة بدل التفتيش؛ لا جهاز تفتيش، والمدير معلّم أولًا</td><td>اختر بعناية، ثم ثِق، ثم قِس الأثر لا الحركات</td></tr>
+    <tr><td>🇸🇬 سنغافورة</td><td>سُلّم مهني قمّته «معلم المعلمين» (Master Teacher)</td><td>المتميز لا يخرج من الفصل… بل يدرّب زملاءه</td></tr>
+    <tr><td>🇯🇵 اليابان</td><td>«دراسة الدرس»: نخطط حصة واحدة معًا ونلاحظ الطلاب</td><td>اسأل: كيف تعلّم الطلاب؟ لا: كيف أدّى المعلم؟</td></tr>
+    <tr><td>🇨🇳 شنغهاي</td><td>مجموعة بحث تدريسي في كل مدرسة منذ ١٩٥٢، ومرشد لكل معلم</td><td>الحصة المفتوحة بين الزملاء عادة أسبوعية</td></tr>
+    <tr><td>🇬🇧 بريطانيا</td><td>منذ ٢٠١٤ لا تُعطى درجة لحصة معلم واحدة</td><td>احكم بعدة زيارات وأدلة متنوعة</td></tr>
+    <tr><td>🇺🇸 أمريكا</td><td>«الجولات التعليمية»: أنماط لا أشخاص، أدلة لا أحكام</td><td>اكتب ما رأيته وسمعته بالأرقام</td></tr>
+  </table>
+  <div class="box navy"><h3>ثلاثة تحولات تجمعهم</h3><p>من الحكم إلى التطوير · من الفرد إلى الجماعة · من الانطباع إلى الدليل</p></div>
+  <div class="box gold"><h3>📊 ماذا تقول الأبحاث؟</h3><p>تحليل لـ٦٠ دراسة سببية: مرافقة المعلم وتوجيهه (Coaching) تحسّن جودة التدريس بوضوح (٠٫٤٩ انحرافًا معياريًا) وتحصيل الطلاب (٠٫١٨)، والأثر يضعف حين يتوسع البرنامج دون جودة. (كرافت وزملاؤه، ٢٠١٨)</p></div>
+  <h3>تجربة واحدة سأبدأ بها هذا الفصل، وما أحتاجه لنجاحها:</h3><div class="lines"><i></i><i></i><i></i><i></i></div>
+</section>
+
+<!-- الأداة ١ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ١</div><h2>بطاقة التشخيص: لماذا لا ينجز المعلم؟</h2><div class="rule"></div>
+  <div class="grid3">
+    <div class="box"><h3>📖 لا يعرف؟</h3><p>لم يُشرح له المطلوب أو لا يعرف كيف ← تدريب ونموذج</p></div>
+    <div class="box"><h3>💔 لا يريد؟</h3><p>يعرف ويستطيع لكنه محبط ← تحفيز وحوار</p></div>
+    <div class="box"><h3>🧱 لا يستطيع؟</h3><p>البيئة تمنعه ← حلّ العائق</p></div>
+  </div>
+  <div class="box gold"><p style="font-weight:800">💡 اسأل: لو عُرضت عليه مكافأة كبيرة… هل سيؤديها؟ إن «نعم» فالمشكلة ليست في مهارته. (ماغر وبايب، ١٩٧٠)</p></div>
+  <h3>نموذج جيلبرت: ست خانات</h3>
+  <table><tr><th></th><th>المعلومات</th><th>الأدوات والموارد</th><th>الحوافز</th></tr>
+    <tr><td><b>🏫 في البيئة</b></td><td>هل المطلوب واضح؟ وهل تصله تغذية راجعة؟</td><td>هل لديه الوقت والأجهزة والمواد؟</td><td>هل يُقدَّر المتميز ويُحاسَب المقصّر؟</td></tr>
+    <tr><td><b>👤 في المعلم</b></td><td>هل يملك المعرفة والمهارة؟</td><td>هل يناسب الدور قدراته؟</td><td>هل لديه دافع داخلي؟</td></tr></table>
+  <h3>مصفوفة الفاعلية والكفاءة</h3>
+  <table><tr><th></th><th>كفء (بأقل جهد)</th><th>غير كفء (يهدر الجهد)</th></tr>
+    <tr><td><b>فعّال</b></td><td>⭐ النجم ← تمتين وتكريم وتدريب زملائه</td><td>🔥 متحمس بلا توجيه ← تدريب وتنظيم</td></tr>
+    <tr><td><b>غير فعّال</b></td><td>😴 الماهر الفاتر ← تحفيز وحوار عن المعنى</td><td>⚠️ المتعثر ← حزم ونموذج ومتابعة لصيقة</td></tr></table>
+  <h3>✍️ طبّق على معلم (دون اسم):</h3>
+  <table><tr><th>ما رأيته (أدلة)</th><th>التشخيص</th><th>خطوتي القادمة</th></tr><tr><td class="blank" style="height:30mm"></td><td></td><td></td></tr></table>
+</section>
+
+<!-- الأداة ٢ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ٢</div><h2>استمارة ملاحظة مهارة واحدة</h2><div class="rule"></div>
+  <p>تُصنع هذه الاستمارة <b>مع المعلمين</b> ويوقّعون عليها قبل الزيارة («نفس الديك»). عناصرها من ٥ إلى ٩ فقط (٧±٢).</p>
+  <table><tr><th>المهارة المستهدفة (محددة وتُرى وتُعدّ)</th></tr><tr><td class="blank" style="height:14mm"></td></tr></table>
+  <table class="lvl"><tr><th>المستوى</th><th>ما يُرى في الحصة</th></tr>
+    <tr><td>١ · بداية</td><td class="blank" style="height:13mm"></td></tr>
+    <tr><td>٢ · نامٍ</td><td class="blank" style="height:13mm"></td></tr>
+    <tr><td>٣ · متمكن</td><td class="blank" style="height:13mm"></td></tr>
+    <tr><td>٤ · خبير</td><td class="blank" style="height:13mm"></td></tr></table>
+  <table><tr><th>الزيارة</th><th>التاريخ</th><th>الأدلة المرصودة (أرقام وأوقات)</th><th>المستوى</th></tr>
+    <tr><td>الأولى (تشخيصية)</td><td></td><td class="blank" style="height:16mm"></td><td></td></tr>
+    <tr><td>الثانية (تكوينية)</td><td></td><td class="blank" style="height:16mm"></td><td></td></tr>
+    <tr><td>الثالثة (تقييمية)</td><td></td><td class="blank" style="height:16mm"></td><td></td></tr></table>
+  <div class="grid2"><div class="box">توقيع المعلم:<div class="lines"><i></i></div></div><div class="box">توقيع المشرف:<div class="lines"><i></i></div></div></div>
+  <div class="box ok"><b>مثال:</b> «طرح ٣ أسئلة تفكير عليا على الأقل، وانتظار ٣–٥ ثوانٍ قبل قبول الإجابة» = مستوى ٣.</div>
+</section>
+
+<!-- الأداة ٣ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ٣</div><h2>دليل الزيارة: قبل · أثناء · بعد</h2><div class="rule"></div>
+  <div class="grid3">
+    <div class="box"><h3>١ · قبل</h3><ul class="clean check"><li>اتفقنا على المعايير مسبقًا</li><li>مهارة أو مهارتان فقط</li><li>سألت عن السياق (الدرس السابق، حالات خاصة)</li><li>المعلم فطر وليس مرهقًا</li><li>لم أبدّل جدوله</li></ul></div>
+    <div class="box"><h3>٢ · أثناء</h3><ul class="clean check"><li>ابتسمت ولم أعلّق أمام الطلاب</li><li>لم أقاطع الحصة</li><li>دوّنت أدلة بالأرقام</li><li>لاحظت الطلاب لا المعلم فقط</li><li>لم أنشغل بالجوال</li></ul></div>
+    <div class="box"><h3>٣ · بعد</h3><ul class="clean check"><li>مكان خاص وجلسة متساوية</li><li>سألت: ماذا تعلّمنا؟</li><li>قالب: أعجبني ← لاحظت ← الأثر ← أقترح</li><li>اقتراح واحد إجرائي</li><li>موعد متابعة</li></ul></div>
+  </div>
+  <h3>مسار المداولة: كل زيارة تبدأ من (٤)</h3>
+  <div class="stage4"><div><b>٤ التنافر</b>دفاع وتجمّل</div><div><b>٣ التقبّل</b>ابدأ بنقاط الاتفاق</div><div><b>٢ التفاوض</b>نقطة التقاء</div><div><b>١ الاقتناع</b>يتبنى الفكرة</div></div>
+  <div class="box gold"><ul class="clean"><li><span class="num">١</span>لا تدخل في الموضوع مباشرة… ثلاث دقائق «مقبلات»</li><li><span class="num">٢</span>ادخل بسقف عالٍ ولا تتنازل عن المعيار</li><li><span class="num">٣</span>«لا تُهزم في الصباح»: الزيارة جولة طويلة، وكلمة جارحة واحدة تنهيها</li><li><span class="num">٤</span>إن لم يُسمح لك إلا بسؤال واحد فاسأل: ماذا تعلّمنا؟</li></ul></div>
+  <div class="box navy"><p class="hadith" style="color:#fff;font-size:13pt">«دعوه، وأريقوا على بوله سَجْلًا من ماء؛ فإنما بُعثتم ميسّرين ولم تُبعثوا معسّرين»</p><p class="src">رواه البخاري — النبي ﷺ مع الأعرابي في المسجد</p></div>
+</section>
+
+<!-- الأداة ٤ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ٤</div><h2>التغذية الراجعة: FEEDBACK والقالب</h2><div class="rule"></div>
+  <table><tr><th>الحرف</th><th>القاعدة</th><th>بالمثال</th></tr>
+    <tr><td>F</td><td>الإطار: شراكة تحسين</td><td>مكان خاص، جلسة متساوية، «جلستنا للتحسين»</td></tr>
+    <tr><td>E</td><td>الأدلة</td><td>«قلتَ (تمام) ٣٦ مرة»</td></tr>
+    <tr><td>E</td><td>الأثر</td><td>«الطالب في الصف الثالث كان شاردًا»</td></tr>
+    <tr><td>D</td><td>التشخيص والعلاج</td><td>أين الفجوة؟ وما الخطوة لسدّها؟</td></tr>
+    <tr><td>B</td><td>الدقة البالغة</td><td>الحصة ٤٥ دقيقة فقط… لا تاريخه الشخصي</td></tr>
+    <tr><td>A</td><td>الأداء لا الشخص</td><td>لا تيار ولا قبيلة ولا جنسية</td></tr>
+    <tr><td>C</td><td>السرية</td><td>للمعلم والمدير ومدير الإشراف فقط</td></tr>
+    <tr><td>K</td><td>الإيجاز</td><td>كالتغريدة: الخلاصة أولًا</td></tr></table>
+  <h3>من الانطباع إلى الدليل</h3>
+  <div class="dd"><div class="x">«أداؤك اليوم ما عجبني»</div><div class="v">«كررتَ (تمام) ٣٦ مرة فتشتّت الطلاب»</div></div>
+  <div class="dd"><div class="x">«الحركة داخل الفصل ضعيفة»</div><div class="v">«بقيتَ عند السبورة ٣٨ دقيقة من ٤٥»</div></div>
+  <h3>✍️ قالبي للجلسة القادمة (لا تقل «لكن» بعد المديح)</h3>
+  <div class="say"><small>١ · أعجبني</small><div class="lines"><i style="border-color:rgba(255,255,255,.4)"></i></div></div>
+  <div class="say"><small>٢ · لاحظتُ (دليل رقمي)</small><div class="lines"><i style="border-color:rgba(255,255,255,.4)"></i></div></div>
+  <div class="say"><small>٣ · الأثر</small><div class="lines"><i style="border-color:rgba(255,255,255,.4)"></i></div></div>
+  <div class="say"><small>٤ · أقترح (إجرائي + موعد متابعة)</small><div class="lines"><i style="border-color:rgba(255,255,255,.4)"></i></div></div>
+</section>
+
+<!-- الأداة ٥ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ٥</div><h2>علبة الألوان: الأسلوب المناسب للمعلم المناسب</h2><div class="rule"></div>
+  <h3>الإشراف التطوري (غليكمان)</h3>
+  <table><tr><th>مستوى المعلم</th><th>الأسلوب</th><th>ماذا تفعل؟</th></tr>
+    <tr><td>مبتدئ أو متعثر</td><td>🧭 موجِّه</td><td>تحدد المعيار وتعرض النموذج وتتابع بخطوات</td></tr>
+    <tr><td>متوسط الخبرة</td><td>🤝 تشاركي</td><td>تعرض وتسمع وتتفاوضان على خطة (الأنسب لأغلبهم)</td></tr>
+    <tr><td>خبير متأمل</td><td>🌱 غير موجِّه</td><td>تستمع وتوضّح وتشجّع… وهو يقرر</td></tr></table>
+  <h3>مفتاح كل شخصية</h3>
+  <table><tr><th>النمط</th><th>كيف تعرفه؟</th><th>مفتاحه</th></tr>
+    <tr><td>🦁 الحازم</td><td>رسمي، «ندٌّ بالند»</td><td>التحدي: «أتحداك أن تدخل المسابقة»</td></tr>
+    <tr><td>🎤 المؤثر</td><td>متحمس وله جمهور، يتوه في الوقت</td><td>جدول جلسة محدد ومتابعة</td></tr>
+    <tr><td>🤝 المستقر</td><td>يهمه الود ويتدرج</td><td>علاقة ووقت وكلمة المدير</td></tr>
+    <tr><td>📐 الدقيق</td><td>منظم يخاف التغيير</td><td>نموذج مكتوب ودرس نموذجي يشاهده</td></tr></table>
+  <h3>متى أستخدم كل نمط؟</h3>
+  <table><tr><th>النمط</th><th>متى؟</th><th>النمط</th><th>متى؟</th></tr>
+    <tr><td>🔦 التفتيشي</td><td>الغياب والخروج على النظام</td><td>🩹 التصحيحي</td><td>يحل المشكلة لا يرصدها فقط</td></tr>
+    <tr><td>🗳️ الديمقراطي</td><td>مع المتمكنين والقرارات الجديدة</td><td>🛡️ الوقائي</td><td>قبل تطبيق نظام جديد</td></tr>
+    <tr><td>🔬 العلمي</td><td>موضوع مهني دقيق يحتاج بيانات</td><td>🏗️ البنائي</td><td>المعلمون شركاء في بناء الخطة</td></tr>
+    <tr><td>💡 الإبداعي</td><td>حين لا نص في النظام</td><td>🩺 العيادي</td><td>جلسة فردية: تشخيص ومشورة</td></tr></table>
+  <div class="box gold"><b>تذكّر:</b> المشرف بأسلوب واحد… ربعُ مشرف. والعدل ليس المساواة.</div>
+</section>
+
+<!-- الأداة ٦ -->
+<section class="page">
+  <div class="kick">🧰 الأداة ٦</div><h2>خطة «مهارة الأسبوع»: صانع الخبراء</h2><div class="rule"></div>
+  <ul class="clean"><li><span class="num">١</span>مهارة واحدة كل أسبوع… بعمق</li><li><span class="num">٢</span>شاشة في غرفة المعلمين: المهارة ومستوياتها ومقطع قصير</li><li><span class="num">٣</span>درس نموذجي ٥ دقائق بداية الأسبوع يقدّمه معلم متمكن</li><li><span class="num">٤</span>زيارات قصيرة تركّز على هذه المهارة فقط</li><li><span class="num">٥</span>المتميز يقدّم ورشة لزملائه… وأنت بين الحضور</li><li><span class="num">٦</span>وثّق «نموذج مدرستنا» ثم انتقل للمهارة التالية</li></ul>
+  <table><tr><th>الأسبوع</th><th>المهارة</th><th>المعلم الخبير</th><th>الدرس النموذجي</th><th>النتيجة</th></tr>
+    <tr><td>١</td><td class="blank" style="height:12mm"></td><td></td><td></td><td></td></tr>
+    <tr><td>٢</td><td class="blank" style="height:12mm"></td><td></td><td></td><td></td></tr>
+    <tr><td>٣</td><td class="blank" style="height:12mm"></td><td></td><td></td><td></td></tr>
+    <tr><td>٤</td><td class="blank" style="height:12mm"></td><td></td><td></td><td></td></tr></table>
+  <h3>الملف التكويني للمعلم (لكل معلم صفحة)</h3>
+  <table><tr><th>المعلم</th><th>نقاط قوته</th><th>فجوته الحالية</th><th>التشخيص</th><th>الخطوة القادمة</th></tr>
+    <tr><td class="blank" style="height:12mm"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="blank" style="height:12mm"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="blank" style="height:12mm"></td><td></td><td></td><td></td><td></td></tr></table>
+  <div class="box"><p class="hadith" style="font-size:13pt">من دعا إلى هدى، كان له من الأجر مثلُ أجور من تبعه، لا ينقص ذلك من أجورهم شيئًا</p><p class="src">رواه مسلم</p></div>
+</section>
+
+<!-- التزامي -->
+<section class="page">
+  <div class="kick">الختام</div><h2>التزامي… ومتابعتي</h2><div class="rule"></div>
+  <div class="box gold"><h3>في زيارتي القادمة سأ…</h3><div class="lines"><i></i><i></i><i></i></div>
+    <div class="grid2"><div>المعلم: <div class="lines"><i></i></div></div><div>الموعد: <div class="lines"><i></i></div></div></div></div>
+  <div class="box"><h3>بعد أسبوعين: ماذا حدث؟</h3><div class="lines"><i></i><i></i><i></i><i></i></div></div>
+  <div class="box"><h3>ماذا تعلّمتُ عن نفسي كمشرف؟</h3><div class="lines"><i></i><i></i><i></i></div></div>
+  <div class="box navy" style="text-align:center"><p style="font-size:16pt;font-weight:900;color:var(--goldl)">رُبَّ همّةِ مشرفٍ… أحيت أمّة</p></div>
+</section>
+
+<!-- المراجع -->
+<section class="page">
+  <div class="kick">📚 للاستزادة</div><h2>المراجع الكاملة</h2><div class="rule"></div>
+  <ol class="refs" style="padding-left:6mm">
+    <li>Glickman, C., Gordon, S. & Ross-Gordon, J. <i>SuperVision and Instructional Leadership: A Developmental Approach</i>. Pearson.<small>الإشراف التطوري وتاريخ الإشراف</small></li>
+    <li>Glickman, C. (1980). The Developmental Approach to Supervision. <i>Educational Leadership</i>. <a href="https://files.ascd.org/staticfiles/ascd/pdf/journals/ed_lead/el_198011_glickman.pdf">files.ascd.org</a><small>الأساليب الثلاثة</small></li>
+    <li>Goldhammer, R. (1969). <i>Clinical Supervision</i> · Cogan, M. (1973). <i>Clinical Supervision</i>.<small>دورة الزيارة: قبل · أثناء · بعد</small></li>
+    <li>Kraft, M., Blazar, D. & Hogan, D. (2018). The Effect of Teacher Coaching on Instruction and Achievement. <i>Review of Educational Research</i>, 88(4), 547–588. <a href="https://annenberg.brown.edu/publications/effect-teacher-coaching-instruction-and-achievement-meta-analysis-causal-evidence">annenberg.brown.edu</a><small>أثر التوجيه والمرافقة</small></li>
+    <li>City, R., Elmore, R., Fiarman, S. & Teitel, L. (2009). <i>Instructional Rounds in Education</i>. Harvard Education Press.<small>الجولات التعليمية</small></li>
+    <li>Hattie, J. & Timperley, H. (2007). The Power of Feedback. <i>Review of Educational Research</i>, 77(1).<small>التغذية الراجعة</small></li>
+    <li>McGregor, D. (1960). <i>The Human Side of Enterprise</i> · Ouchi, W. (1981). <i>Theory Z</i>.<small>نظريات X وY وZ</small></li>
+    <li>Mager, R. & Pipe, P. (1970). <i>Analyzing Performance Problems</i> · Gilbert, T. (1978). <i>Human Competence</i>.<small>أسباب عدم الإنجاز</small></li>
+    <li>Miller, G. (1956). The Magical Number Seven, Plus or Minus Two. <i>Psychological Review</i>, 63(2).<small>عدد عناصر الاستمارة</small></li>
+    <li>Drucker, P. (1967). <i>The Effective Executive</i>.<small>الفاعلية والكفاءة</small></li>
+    <li>Finnish Ministry of Education and Culture. Special features of the Finnish education system. <a href="https://stm.fi/en/web/okm/koulutusjarjestelman-erityispiirteet">stm.fi/en/web/okm</a><small>فنلندا</small></li>
+    <li>Academy of Singapore Teachers. Teacher Growth Model. <a href="https://academyofsingaporeteachers.moe.edu.sg/professional-excellence/teacher-growth-model/">academyofsingaporeteachers.moe.edu.sg</a><small>سنغافورة</small></li>
+    <li>Lewis, C. <i>Lesson Study: A Handbook of Teacher-Led Instructional Change</i>.<small>اليابان — دراسة الدرس</small></li>
+    <li>NCEE. Teaching and Research Groups in Shanghai. <a href="https://ncee.org/teaching-and-research-groups-in-shanghai/">ncee.org</a><small>شنغهاي</small></li>
+    <li>Ofsted scraps grades for individual lessons (2014). TES. <a href="https://www.tes.com/magazine/archive/ofsted-scraps-grades-individual-lessons">tes.com</a><small>بريطانيا</small></li>
+    <li>Marston, W. (1928). <i>Emotions of Normal People</i> · Mills, H. <i>Artful Persuasion</i>.<small>أنماط الشخصية والإقناع</small></li>
+    <li>DuFour, R. <i>Learning by Doing: A Handbook for Professional Learning Communities</i>.<small>مجتمعات التعلم المهنية</small></li>
+    <li>صحيح البخاري · صحيح مسلم · ابن عبد البر، <i>جامع بيان العلم وفضله</i> · الميداني، <i>مجمع الأمثال</i>.<small>الشواهد والأمثال</small></li>
+  </ol>
+</section>
+
+<!-- شهادة -->
+<section class="page"><div class="cert">
+  <div style="font-size:30pt">🌳</div>
+  <h1>شهادة إتمام</h1>
+  <p style="font-size:13pt;font-weight:700">تشهد منصة جذور بأن المشرف/ة</p>
+  <div class="who"></div>
+  <p style="font-size:13pt;font-weight:700">أتمّ دورة «المشرف المطوِّر: سدّ الفجوة بين الواقع والمأمول»<br>(٣ ساعات تدريبية)</p>
+  <p style="margin-top:14mm;font-weight:800">إعداد وتقديم: أ. محمد زيتون</p>
+  <p style="font-weight:700;color:var(--muted)">التاريخ: ........................</p>
+</div></section>
+</body>
+</html>
