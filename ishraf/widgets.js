@@ -99,6 +99,16 @@ window.DECK_TYPES.cover = () => `<div class="slide dark cover vcover">
       <div class="goldline"></div>
       <div class="by">إعداد وتقديم: <b>${DECK.author}</b></div></div>`;
 
+/* خلفيات متحركة هادئة: شرائح المحطات (s.bg)، والآيات والأحاديث ومواقف النبي ﷺ (مسجد بلا أشخاص)، وبطاقات الدول (s.video) */
+const BGV = { hadith: 'mosque', ayah: 'mosque', prophet: 'mosque' };
+window.DECK_HOOKS = window.DECK_HOOKS || [];
+window.DECK_HOOKS.push((sl, s) => {
+  const v = s.bg || s.video && s.t === 'nation' && s.video || BGV[s.t];
+  if (!v) return;
+  sl.classList.add('hasbg', 'bg-' + s.t);
+  sl.insertAdjacentHTML('afterbegin', `<div class="vbgx"><video src="assets/media/${v}.mp4" poster="assets/media/${v}.jpg" autoplay muted loop playsinline></video></div>`);
+});
+
 /* صوت الراوي للقصص: زر «استمع للقصة» يظهر في كل شريحة لها ملف صوتي */
 window.DECK_HOOKS = window.DECK_HOOKS || [];
 window.DECK_HOOKS.push((sl, s) => {

@@ -99,3 +99,18 @@
 .narr{position:absolute;top:56px;left:80px;z-index:5;font-family:inherit;font-size:30px;font-weight:900;color:var(--navy-900);background:linear-gradient(145deg,var(--gold-light),var(--gold));border:0;border-radius:999px;padding:14px 34px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3)}
 .narr.on{animation:pulse 1.2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 18px rgba(217,174,75,.25)}}
+
+/* الخلفيات المتحركة */
+.hasbg{isolation:isolate}
+.vbgx{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.vbgx video{width:100%;height:100%;object-fit:cover}
+.vbgx::after{content:"";position:absolute;inset:0}
+.bg-section .vbgx video{opacity:.5}.bg-section .vbgx::after{background:linear-gradient(90deg,rgba(10,18,48,.25),rgba(10,18,48,.92) 70%)}
+.bg-hadith .vbgx video,.bg-ayah .vbgx video,.bg-prophet .vbgx video{opacity:.35}
+.bg-hadith .vbgx::after,.bg-ayah .vbgx::after,.bg-prophet .vbgx::after{background:radial-gradient(ellipse at center,rgba(10,18,48,.55),rgba(10,18,48,.92))}
+.bg-nation .vbgx video{opacity:.9}.bg-nation .vbgx::after{background:linear-gradient(180deg,rgba(251,247,238,.82),rgba(251,247,238,.93) 45%)}
+.bg-nation .nbox{background:rgba(255,255,255,.94)}
+.bg-nation .nbox.take{background:linear-gradient(170deg,rgba(24,38,88,.96),rgba(10,18,48,.96))}
+
+/* مواقف النبي ﷺ: صندوق الدروس أصغر قليلًا حتى لا يلامس التذييل */
+.prophet .lessons{padding:34px 40px}.prophet .lessons h4{margin-bottom:18px}.prophet .lessons .l{font-size:34px;margin-bottom:16px}

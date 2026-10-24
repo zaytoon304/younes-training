@@ -1,7 +1,7 @@
 /* المحطة الرابعة: الزيارة التي تطوّر */
 ISHRAF.modules.push(
   { id: 'visit', name: 'الزيارة التي تطوّر', slides: [
-    { t: 'section', num: '٤', title: 'الزيارة التي تطوّر', sub: 'قبل الزيارة · أثناءها · وبعدها',
+    { t: 'section', num: '٤', title: 'الزيارة التي تطوّر', bg: 'silent', sub: 'قبل الزيارة · أثناءها · وبعدها',
       notes: 'مرحبًا بعودتكم من الاستراحة. قل: «هذه المحطة عن الزيارة نفسها: قبلها وأثناءها وبعدها، والمحطة القادمة عن الكلمات التي نقولها فيها».' },
     { t: 'story', title: 'الزيارة الصامتة', video: 'assets/media/silent.mp4', img: 'assets/media/silent.jpg', audio: 'assets/media/silent.mp3',
       paras: [
